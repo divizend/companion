@@ -1,5 +1,5 @@
 import React from "react";
-import { ActivityIndicator, View, Text } from "react-native";
+import { View, Text } from "react-native";
 import * as WebBrowser from "expo-web-browser";
 import { router } from "expo-router";
 import { Button, Alert } from "react-native";
@@ -13,6 +13,7 @@ import {
 import { usedConfig } from "./common/config";
 import { useFetch } from "./common/api";
 import FullScreenActivityIndicator from "./components/FullScreenActivityIndicator";
+import { t } from "./i18n";
 
 const queryClient = new QueryClient();
 
@@ -25,17 +26,21 @@ function MainContent() {
 
   return (
     <View>
-      <Text>{isLoading ? "Loading..." : "Hello, " + data.email}</Text>
+      <Text>
+        {isLoading
+          ? t("common.loading")
+          : t("main.greeting", { name: data.email })}
+      </Text>
       <Button
-        title="Logout"
+        title={t("common.logout")}
         onPress={() => {
-          Alert.alert("Logout", "Are you sure you want to log out?", [
+          Alert.alert(t("common.logout"), t("common.logoutConfirmation"), [
             {
-              text: "Cancel",
+              text: t("common.cancel"),
               style: "cancel",
             },
             {
-              text: "Yes",
+              text: t("common.yes"),
               onPress: async () => {
                 const sessionToken = await getSessionToken();
                 const resp = await WebBrowser.openAuthSessionAsync(

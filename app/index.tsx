@@ -5,6 +5,7 @@ import { router } from "expo-router";
 import { Button, View, Alert } from "react-native";
 import { usedConfig } from "./common/config";
 import { useSessionToken, setSessionToken } from "./common/sessionToken";
+import { t } from "./i18n";
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -66,7 +67,7 @@ export default function Index() {
       router.replace("/main");
     } catch (error: any) {
       if (error.message !== "cancel") {
-        Alert.alert("Error", error.message);
+        Alert.alert(t("common.error"), error.message);
       }
     }
   };
@@ -78,7 +79,7 @@ export default function Index() {
   return (
     <View>
       <Button
-        title="Login!"
+        title={t("common.login")}
         disabled={!request}
         onPress={() => handleLogin()}
       />
