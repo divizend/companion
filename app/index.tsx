@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import * as WebBrowser from "expo-web-browser";
 import { useAuthRequest, useAutoDiscovery } from "expo-auth-session";
 import { router } from "expo-router";
-import { Button, View, Alert } from "react-native";
-import { usedConfig } from "./common/config";
-import { useSessionToken, setSessionToken } from "./common/sessionToken";
-import { t } from "./i18n";
+import { View, Alert, StyleSheet, Image } from "react-native";
+import { Button } from "@rneui/themed";
+import { usedConfig } from "../common/config";
+import { useSessionToken, setSessionToken } from "../common/sessionToken";
+import { t } from "../i18n";
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -14,13 +15,12 @@ export default function Index() {
   const [sessionToken, sessionTokenLoading] = useSessionToken();
 
   useEffect(() => {
-    // when session token already exists, redirect to main immediately
     if (sessionToken && !sessionTokenLoading) {
       router.replace("/main");
     }
   }, [sessionToken, sessionTokenLoading]);
 
-  const [request, result, promptAsync] = useAuthRequest(
+  const [request, _, promptAsync] = useAuthRequest(
     {
       clientId: usedConfig.auth.clientId,
       redirectUri: "divizend://authcallback",
@@ -44,25 +44,18 @@ export default function Index() {
 
       const { publicTokenGetterCode } = await (
         await fetch(
-          usedConfig.api.url +
-            "/" +
-            usedConfig.api.versionCode +
-            "/auth/callback?" +
-            new URLSearchParams(response.params).toString()
+          `${usedConfig.api.url}/${
+            usedConfig.api.versionCode
+          }/auth/callback?${new URLSearchParams(response.params).toString()}`
         )
       ).json();
 
       const { sessionToken } = await (
         await fetch(
-          usedConfig.api.url +
-            "/" +
-            usedConfig.api.versionCode +
-            "/auth/sessionToken/" +
-            publicTokenGetterCode
+          `${usedConfig.api.url}/${usedConfig.api.versionCode}/auth/sessionToken/${publicTokenGetterCode}`
         )
       ).json();
 
-      // save session token to secure store and redirect to main
       await setSessionToken(sessionToken);
       router.replace("/main");
     } catch (error: any) {
@@ -77,12 +70,43 @@ export default function Index() {
   }
 
   return (
-    <View>
+    <View style={styles.container}>
+      <Image
+        source={require("../assets/images/logo.png")}
+        style={styles.logo}
+        resizeMode="contain"
+      />
       <Button
         title={t("common.login")}
         disabled={!request}
-        onPress={() => handleLogin()}
+        onPress={handleLogin}
+        buttonStyle={styles.button}
+        titleStyle={styles.buttonText}
       />
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#f5f5f5",
+  },
+  logo: {
+    width: "60%",
+    height: 100,
+    marginBottom: 0,
+  },
+  button: {
+    backgroundColor: "#007AFF",
+    paddingHorizontal: 30,
+    paddingVertical: 15,
+    borderRadius: 10,
+  },
+  buttonText: {
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+});

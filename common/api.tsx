@@ -30,10 +30,10 @@ const apiFetch = async (endpoint: string, options: any = {}) => {
   return response.json();
 };
 
-export const useFetch = (key: string, endpoint: string) => {
+export const useFetch = (key: string, endpoint?: string) => {
   return useQuery({
     queryKey: [key],
-    queryFn: () => apiFetch(endpoint),
+    queryFn: endpoint ? () => apiFetch(endpoint) : undefined,
   });
 };
 
