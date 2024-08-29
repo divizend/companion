@@ -6,7 +6,8 @@
     "login": "Login",
     "logout": "Logout",
     "yes": "Yes",
-    "logoutConfirmation": "Are you sure you want to log out?"
+    "logoutConfirmation": "Are you sure you want to log out?",
+    "retry": "Retry"
   },
   "main": {
     "greeting": "Hello {{name}}!"

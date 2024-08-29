@@ -1,6 +1,9 @@
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { getSessionToken } from "./sessionToken";
 import { usedConfig } from "./config";
+import * as WebBrowser from "expo-web-browser";
+import { router } from "expo-router";
+import { deleteSessionToken } from "./sessionToken";
 
 const apiFetch = async (endpoint: string, options: any = {}) => {
   const token = await getSessionToken();
@@ -44,3 +47,20 @@ export const usePost = (key: string, endpoint: string) => {
       }),
   });
 };
+
+export async function logout(throwOnError?: boolean) {
+  const sessionToken = await getSessionToken();
+  const resp = await WebBrowser.openAuthSessionAsync(
+    `${usedConfig.api.url}/${usedConfig.api.versionCode}/auth/logout/${sessionToken}?` +
+      new URLSearchParams({
+        postLogoutRedirectUri: "divizend://authcallback",
+      }).toString()
+  );
+
+  if (resp.type === "success") {
+    await deleteSessionToken();
+    router.replace("/");
+  } else if (throwOnError) {
+    throw new Error("Logout failed");
+  }
+}

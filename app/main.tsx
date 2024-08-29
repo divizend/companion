@@ -1,36 +1,57 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { View, Text } from "react-native";
 import * as WebBrowser from "expo-web-browser";
 import { router } from "expo-router";
 import { Button, Alert } from "react-native";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-import {
-  withSessionToken,
-  deleteSessionToken,
-  getSessionToken,
-} from "./common/sessionToken";
-import { usedConfig } from "./common/config";
-import { useFetch } from "./common/api";
+import { withSessionToken } from "./common/sessionToken";
+import { useFetch, logout } from "./common/api";
 import FullScreenActivityIndicator from "./components/FullScreenActivityIndicator";
 import { t } from "./i18n";
 
 const queryClient = new QueryClient();
 
 function MainContent() {
-  const { data, isLoading } = useFetch("userProfile", "/users/me");
+  const { data, error, isLoading } = useFetch("userProfile", "/users/me");
+
+  const doErrorAlert = () =>
+    Alert.alert(t("common.error"), error?.message, [
+      {
+        text: t("common.retry"),
+        onPress: () => {
+          queryClient.invalidateQueries({ queryKey: ["userProfile"] });
+        },
+      },
+      {
+        text: t("common.logout"),
+        onPress: async () => {
+          try {
+            await logout(true);
+          } catch (error) {
+            doErrorAlert();
+          }
+        },
+      },
+    ]);
+
+  useEffect(() => {
+    if (error) {
+      doErrorAlert();
+    }
+  }, [error]);
 
   if (isLoading) {
     return <FullScreenActivityIndicator />;
   }
 
+  if (!data) {
+    return null;
+  }
+
   return (
     <View>
-      <Text>
-        {isLoading
-          ? t("common.loading")
-          : t("main.greeting", { name: data.email })}
-      </Text>
+      <Text>{data ? t("main.greeting", { name: data.email }) : null}</Text>
       <Button
         title={t("common.logout")}
         onPress={() => {
@@ -41,20 +62,7 @@ function MainContent() {
             },
             {
               text: t("common.yes"),
-              onPress: async () => {
-                const sessionToken = await getSessionToken();
-                const resp = await WebBrowser.openAuthSessionAsync(
-                  `${usedConfig.api.url}/${usedConfig.api.versionCode}/auth/logout/${sessionToken}?` +
-                    new URLSearchParams({
-                      postLogoutRedirectUri: "divizend://authcallback",
-                    }).toString()
-                );
-
-                if (resp.type === "success") {
-                  await deleteSessionToken();
-                  router.replace("/");
-                }
-              },
+              onPress: async () => logout(),
             },
           ]);
         }}
