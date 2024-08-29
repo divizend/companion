@@ -16,6 +16,8 @@ import sv from "./sv.json";
 
 const i18n = new I18n({ en, de, es, da, fi, fr, is, it, nl, no, pt, sv });
 i18n.locale = Localization.getLocales()[0].languageCode!;
+i18n.defaultLocale = "en";
+i18n.enableFallback = true;
 
 export function t(key: string, options?: any) {
   return i18n.t(key, options);
