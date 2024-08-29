@@ -1,0 +1,14 @@
+{
+  "common": {
+    "cancel": "Cancel",
+    "error": "Error",
+    "loading": "Loading...",
+    "login": "Login",
+    "logout": "Logout",
+    "logoutConfirmation": "Are you sure you want to log out?",
+    "yes": "Yes"
+  },
+  "main": {
+    "greeting": "Hello {{name}}!"
+  }
+}
