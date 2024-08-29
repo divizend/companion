@@ -1,5 +1,7 @@
 export default ({ config }) => {
-  const isProduction = process.env.APP_ENV !== "development";
+  const isProduction =
+    process.env.NODE_ENV !== "development" &&
+    process.env.APP_ENV !== "development";
 
   const appConfig = isProduction
     ? {
