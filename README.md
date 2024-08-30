@@ -2,8 +2,6 @@
 
 ## Tasks
 
-- fix secure storage in production
-
 - make sure that user registration is easy and works
 - allow storing password instead of hiding login dialog immediately
 - add FaceID login
