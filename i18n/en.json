@@ -7,9 +7,38 @@
     "logout": "Logout",
     "yes": "Yes",
     "logoutConfirmation": "Are you sure you want to log out?",
-    "retry": "Retry"
+    "retry": "Retry",
+    "close": "Close",
+    "ok": "OK",
+    "comingSoon": "Coming soon",
+    "stayTuned": "Stay tuned for the revolution of financial intelligence with Divizend!",
+    "understand": "I Understand",
+    "next": "Next"
   },
   "main": {
     "greeting": "Hello {{name}}!"
+  },
+  "settings": {
+    "title": "Settings",
+    "accountSection": {
+      "title": "Account",
+      "email": "Email",
+      "bottomText": "To modify your email address and for other profile settings, please visit app.divizend.com."
+    }
+  },
+  "tabs": {
+    "learn": "Learn",
+    "analyze": "Analyze",
+    "track": "Track",
+    "decide": "Decide",
+    "discover": "Discover"
+  },
+  "disclaimer": {
+    "intro": {
+      "title": "Welcome to Divizend",
+      "message": "Before we get started, we'd like to inform you about how our AI-powered app works."
+    },
+    "title": "AI-Native App Disclaimer",
+    "message": "This app is AI-native. All information entered will be shared with OpenAI to provide you with the best experience. By continuing to use this app, you agree to these terms."
   }
 }

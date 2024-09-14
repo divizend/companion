@@ -5,7 +5,7 @@ import * as WebBrowser from "expo-web-browser";
 import { router } from "expo-router";
 import { deleteSessionToken } from "./sessionToken";
 
-const apiFetch = async (endpoint: string, options: any = {}) => {
+export const apiFetch = async (endpoint: string, options: any = {}) => {
   const token = await getSessionToken();
 
   // Set default headers and add the session token
@@ -23,11 +23,23 @@ const apiFetch = async (endpoint: string, options: any = {}) => {
     }
   );
 
-  if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`);
+  const text = await response.text();
+  let json;
+  try {
+    json = JSON.parse(text);
+  } catch (e) {
+    // ignore
   }
 
-  return response.json();
+  if (!response.ok) {
+    throw new Error(
+      `HTTP error! status: ${response.status}${
+        json?.error?.message ? ` (${json?.error?.message})` : ""
+      }`
+    );
+  }
+
+  return json;
 };
 
 export const useFetch = (key: string, endpoint?: string) => {

@@ -31,3 +31,10 @@ Production build:
 eas build --profile production --platform ios
 eas submit --platform ios
 ```
+
+Register a new device and build for internal distribution (https://docs.expo.dev/build/internal-distribution/):
+
+```
+eas device:create
+eas build --profile preview --platform ios
+```
