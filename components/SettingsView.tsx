@@ -1,9 +1,8 @@
 import React from "react";
-import { View, ScrollView, Alert } from "react-native";
+import { View, ScrollView, Alert, TouchableOpacity } from "react-native";
 import { Text, ListItem, Icon, Header } from "@rneui/themed";
 import { t } from "@/i18n";
 import { useFetch, logout } from "@/common/api";
-import { colors } from "@/common/colors";
 
 interface SettingsViewProps {
   onClose: () => void;
@@ -54,16 +53,18 @@ export default function SettingsView({
           </View>
         }
         rightComponent={
-          <View
-            style={{
-              backgroundColor: "#e0e0e0",
-              borderRadius: 15,
-              padding: 4,
-              margin: 5,
-            }}
-          >
-            <Icon name="close" size={16} color="#666" onPress={onClose} />
-          </View>
+          <TouchableOpacity onPress={onClose}>
+            <View
+              style={{
+                backgroundColor: "#e0e0e0",
+                borderRadius: 15,
+                padding: 4,
+                margin: 5,
+              }}
+            >
+              <Icon name="close" size={16} color="#666" />
+            </View>
+          </TouchableOpacity>
         }
         containerStyle={{
           backgroundColor: "#f2f2f2",

@@ -40,5 +40,12 @@
     },
     "title": "AI-Native App Disclaimer",
     "message": "This app is AI-native. All information entered will be shared with OpenAI to provide you with the best experience. By continuing to use this app, you agree to these terms."
+  },
+  "chat": {
+    "title": "AI Chat",
+    "connectingMessage": "Connecting to chat server...",
+    "inputPlaceholder": "Type a message...",
+    "connectingPlaceholder": "Connecting...",
+    "sendButton": "Send"
   }
 }

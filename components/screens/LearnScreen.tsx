@@ -1,47 +1,30 @@
-import React, { useEffect, useState } from "react";
-import { View, Text, Button, SafeAreaView } from "react-native";
-import { usedConfig } from "@/common/config";
-
-import { useSocket } from "@/hooks/useSocket";
+import React, { useState } from "react";
+import { View, Text, Button, SafeAreaView, Modal } from "react-native";
+import ChatModal from "@/components/ChatModal";
 
 export default function LearnScreen() {
-  const socket = useSocket(usedConfig.api.url, {
-    path: "/ai-chat",
-  });
-
-  const [messages, setMessages] = useState<string[]>([]);
-
-  useEffect(() => {
-    if (socket) {
-      // Listen for incoming messages
-      socket.on("response", (data: any) => {
-        setMessages((prevMessages) => [...prevMessages, data.message]);
-      });
-
-      // Cleanup
-      return () => {
-        socket.off("response");
-      };
-    }
-  }, [socket]);
-
-  const sendMessage = () => {
-    if (socket) {
-      socket.emit("message", { text: "Hello, server!" });
-    }
-  };
+  const [chatModalVisible, setChatModalVisible] = useState(false);
 
   return (
-    <SafeAreaView>
-      <View>
-        <Text>{socket ? "Connected to WebSocket" : "Disconnected"}</Text>
-
-        {messages.map((message, index) => (
-          <Text key={index}>{message}</Text>
-        ))}
-
-        <Button title="Send Message" onPress={sendMessage} />
+    <SafeAreaView style={{ flex: 1 }}>
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <Text>Welcome to the Learn Screen!</Text>
+        <Button
+          title="Open AI Chat"
+          onPress={() => setChatModalVisible(true)}
+        />
       </View>
+      <Modal
+        visible={chatModalVisible}
+        animationType="slide"
+        presentationStyle="pageSheet"
+        onRequestClose={() => setChatModalVisible(false)}
+      >
+        <ChatModal
+          onClose={() => setChatModalVisible(false)}
+          chatId="66e6da4fc7383490c3387dca"
+        />
+      </Modal>
     </SafeAreaView>
   );
 }

@@ -21,6 +21,7 @@
     "@rneui/base": "^4.0.0-rc.7",
     "@rneui/themed": "^4.0.0-rc.8",
     "@tanstack/react-query": "^5.52.2",
+    "event-target-polyfill": "^0.0.4",
     "expo": "~51.0.28",
     "expo-auth-session": "~5.5.2",
     "expo-constants": "~16.0.2",
@@ -45,7 +46,8 @@
     "react-native-safe-area-context": "^4.10.5",
     "react-native-screens": "3.31.1",
     "react-native-web": "~0.19.10",
-    "socket.io-client": "^4.7.5"
+    "socket.io-client": "^4.7.5",
+    "sse.js": "^2.5.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

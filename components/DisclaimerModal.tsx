@@ -42,7 +42,7 @@ export const DisclaimerModal: React.FC<DisclaimerModalProps> = ({
   const handleUnderstand = async () => {
     setIsLoading(true);
     try {
-      const response = await apiFetch("/users/flag", {
+      await apiFetch("/users/flag", {
         method: "POST",
         body: JSON.stringify({ name: "allowedCompanionAI", value: true }),
       });
