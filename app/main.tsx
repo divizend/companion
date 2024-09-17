@@ -6,7 +6,7 @@ import { withUserProfile } from "@/common/withUserProfile";
 import { useFetch } from "@/common/api";
 import { colors } from "@/common/colors";
 import SettingsView from "@/components/SettingsView";
-import LearnScreen from "@/components/screens/LearnScreen";
+import LearnScreen from "@/components/screens/learn/LearnScreen";
 import AnalyzeScreen from "@/components/screens/AnalyzeScreen";
 import TrackScreen from "@/components/screens/TrackScreen";
 import DecideScreen from "@/components/screens/DecideScreen";

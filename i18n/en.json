@@ -13,7 +13,8 @@
     "comingSoon": "Coming soon",
     "stayTuned": "Stay tuned for the revolution of financial intelligence with Divizend!",
     "understand": "I Understand",
-    "next": "Next"
+    "next": "Next",
+    "remove": "Remove"
   },
   "main": {
     "greeting": "Hello {{name}}!"
@@ -47,5 +48,73 @@
     "inputPlaceholder": "Type a message...",
     "connectingPlaceholder": "Connecting...",
     "sendButton": "Send"
+  },
+  "learn": {
+    "title": "Learn",
+    "explanationIntro": "With Divizend, your financial learning is fully personalized. To do this, you need to answer a few questions first, guided by the following. When you tap on a question, you can also generate new ones based on it. If you have several things you want to respond to a question, separate them into multiple answers.",
+    "inspirationTitle": "Inspiration for questions",
+    "defaultQuestions": [
+      {
+        "category": "Reality",
+        "question": "What is your current financial situation?"
+      },
+      {
+        "category": "Visions",
+        "question": "What are your financial goals, dreams and aspirations?"
+      },
+      {
+        "category": "Motivation",
+        "question": "Why do you want to learn more about finance?"
+      },
+      {
+        "category": "Emotions",
+        "question": "How do financial topics currently make you feel?"
+      },
+      {
+        "category": "Knowledge",
+        "question": "What do you already know about finance?"
+      },
+      {
+        "category": "Values",
+        "question": "Which values guide your financial decision-making?"
+      },
+      {
+        "category": "Interests",
+        "question": "Which financial topics are you interested in?"
+      },
+      {
+        "category": "Security",
+        "question": "What do you need to feel financially secure?"
+      },
+      {
+        "category": "Independence",
+        "question": "In which areas of your financial life do you want to be more independent?"
+      },
+      {
+        "category": "Habits",
+        "question": "Which financial habits do you want to cultivate?"
+      }
+    ],
+    "questionOptions": {
+      "answer": "Answer",
+      "getSimilar": "Get similar questions"
+    },
+    "financialInsightsTitle": "Insights about your financial life",
+    "insightsBottomText": "Your answers have been reformulated into clear statements about your financial life, which will be used to customize your learning experience. Of course you can also always add and remove insights later.",
+    "confirmButton": "Happy with these insights? Then let's confirm and continue!",
+    "noInsightsAlert": {
+      "title": "No Insights",
+      "message": "Please answer at least one question before confirming."
+    },
+    "inputDialog": {
+      "title": "Your Answer",
+      "placeholder": "Type your answer here...",
+      "confirm": "Submit",
+      "cancel": "Cancel"
+    },
+    "removeInsight": {
+      "title": "Remove Insight",
+      "message": "Are you sure you want to remove this insight?"
+    }
   }
 }

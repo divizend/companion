@@ -85,6 +85,20 @@ const DownArrowIndicator = ({
   );
 };
 
+/**
+ * Usage:
+ * const [chatModalVisible, setChatModalVisible] = useState(false);
+ * ...
+ * <Modal
+ *   visible={chatModalVisible}
+ *   animationType="slide"
+ *   presentationStyle="pageSheet"
+ *   onRequestClose={() => setChatModalVisible(false)}
+ * >
+ *   <ChatModal onClose={() => setChatModalVisible(false)} />
+ * </Modal>
+ */
+
 export default function ChatModal({
   onClose,
   chatId: givenChatId,
