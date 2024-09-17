@@ -11,6 +11,7 @@ import { t } from "@/i18n";
 interface DialogItem {
   text: string;
   onPress: () => void | Promise<void>;
+  style?: "default" | "destructive";
 }
 
 interface CustomDialogProps {
@@ -55,7 +56,15 @@ const CustomDialog: React.FC<CustomDialogProps> = ({
               {loadingIndex === index ? (
                 <ActivityIndicator color="#007AFF" />
               ) : (
-                <Text style={styles.buttonText}>{item.text}</Text>
+                <Text
+                  style={[
+                    styles.buttonText,
+                    item.style === "destructive" &&
+                      styles.destructiveButtonText,
+                  ]}
+                >
+                  {item.text}
+                </Text>
               )}
             </TouchableOpacity>
           </View>
@@ -111,6 +120,9 @@ const styles = StyleSheet.create({
   },
   cancelButtonText: {
     fontWeight: "600",
+  },
+  destructiveButtonText: {
+    color: "#FF3B30",
   },
 });
 

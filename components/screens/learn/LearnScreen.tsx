@@ -12,8 +12,9 @@ import { t } from "@/i18n";
 import StyledButton from "@/components/StyledButton";
 import SectionList from "@/components/SectionList";
 import CustomDialog from "@/components/CustomDialog";
-import { getSimilarQuestions, generateInsight } from "./prompts";
 import { showInputDialog } from "./inputDialog";
+import { apiPost, useFetch } from "@/common/api";
+import { useQueryClient } from "@tanstack/react-query";
 
 export interface Question {
   category: string;
@@ -22,19 +23,28 @@ export interface Question {
 }
 
 export default function LearnScreen() {
+  const queryClient = useQueryClient();
   const [questions, setQuestions] = useState<Question[]>(
     t("learn.defaultQuestions") as unknown as Question[]
   );
-  const [financialInsights, setFinancialInsights] = useState<string[]>([
-    "Hello",
-    "world",
-  ]);
+  const { data: userProfile } = useFetch("userProfile");
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const [dialogVisible, setDialogVisible] = useState(false);
   const [selectedQuestion, setSelectedQuestion] = useState<Question | null>(
     null
   );
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+  const [removeInsightDialogVisible, setRemoveInsightDialogVisible] =
+    useState(false);
+  const [insightToRemoveIndex, setInsightToRemoveIndex] = useState<
+    number | null
+  >(null);
+
+  const AI_CONTEXT = t("learn.aiContext", {
+    title: t("learn.title"),
+    explanation: t("learn.explanationIntro"),
+    questions: questions.map((q) => q.question).join("\n"),
+  });
 
   useEffect(() => {
     Animated.timing(fadeAnim, {
@@ -56,25 +66,36 @@ export default function LearnScreen() {
     if (option === "answer") {
       try {
         const answer = await showInputDialog(selectedQuestion.question);
-        const insight = await generateInsight(
-          selectedQuestion.question,
-          answer
-        );
-        setFinancialInsights([...financialInsights, insight]);
+        const { insight } = await apiPost("/companion/learn/generate-insight", {
+          context: AI_CONTEXT,
+          question: selectedQuestion.question,
+          answer,
+        });
+        queryClient.setQueryData(["userProfile"], (oldData: any) => ({
+          ...oldData,
+          companionProfile: {
+            ...oldData.companionProfile,
+            learnInsights: [...oldData.companionProfile.learnInsights, insight],
+          },
+        }));
         setDialogVisible(false);
       } catch {
         // Do nothing if the user cancels the input
       }
     } else if (option === "getSimilar") {
-      const newQuestionsWithCategory = await getSimilarQuestions(
-        selectedQuestion,
-        questions
+      const { newQuestions } = await apiPost(
+        "/companion/learn/similar-questions",
+        {
+          context: AI_CONTEXT,
+          question: selectedQuestion.question,
+        }
       );
+
       setQuestions((prevQuestions) => [
         ...prevQuestions
           .slice(0, selectedIndex + 1)
           .map((q) => ({ ...q, isNew: false })),
-        ...newQuestionsWithCategory.map((q) => ({ ...q, isNew: true })),
+        ...newQuestions.map((q: Question) => ({ ...q, isNew: true })),
         ...prevQuestions
           .slice(selectedIndex + 1)
           .map((q) => ({ ...q, isNew: false })),
@@ -94,25 +115,37 @@ export default function LearnScreen() {
   };
 
   const handleRemoveInsight = (index: number) => {
-    Alert.alert(
-      t("learn.removeInsight.title"),
-      t("learn.removeInsight.message"),
-      [
-        {
-          text: t("common.cancel"),
-          style: "cancel",
-        },
-        {
-          text: t("common.remove"),
-          onPress: () => {
-            setFinancialInsights((prevInsights) =>
-              prevInsights.filter((_, i) => i !== index)
-            );
-          },
-          style: "destructive",
-        },
-      ]
+    setInsightToRemoveIndex(index);
+    setRemoveInsightDialogVisible(true);
+  };
+
+  const handleConfirmRemoveInsight = async () => {
+    if (insightToRemoveIndex === null) return;
+
+    const newInsights = userProfile.companionProfile.learnInsights.filter(
+      (_: any, i: number) => i !== insightToRemoveIndex
     );
+
+    try {
+      await apiPost("/companion/learn/insights", {
+        newLearnInsights: newInsights,
+      });
+
+      // Update local state
+      // Note: You might want to refetch the userProfile here instead
+      userProfile.companionProfile.learnInsights = newInsights;
+    } catch (error) {
+      console.error("Failed to remove insight:", error);
+      // Handle error (e.g., show an error message to the user)
+    }
+
+    setRemoveInsightDialogVisible(false);
+    setInsightToRemoveIndex(null);
+  };
+
+  const handleCancelRemoveInsight = () => {
+    setRemoveInsightDialogVisible(false);
+    setInsightToRemoveIndex(null);
   };
 
   return (
@@ -140,15 +173,17 @@ export default function LearnScreen() {
           ItemComponent={Animated.View}
         />
 
-        {financialInsights.length > 0 && (
+        {userProfile.companionProfile.learnInsights.length > 0 && (
           <>
             <SectionList
               title={t("learn.financialInsightsTitle")}
-              items={financialInsights.map((insight, index) => ({
-                title: insight,
-                removable: true,
-                onRemove: () => handleRemoveInsight(index),
-              }))}
+              items={userProfile.companionProfile.learnInsights.map(
+                (insight: string, index: number) => ({
+                  title: insight,
+                  removable: true,
+                  onRemove: () => handleRemoveInsight(index),
+                })
+              )}
               bottomText={t("learn.insightsBottomText")}
             />
 
@@ -156,7 +191,7 @@ export default function LearnScreen() {
               title={t("learn.confirmButton")}
               onPress={handleConfirm}
               containerStyle={styles.confirmButton}
-              disabled={financialInsights.length === 0}
+              disabled={userProfile.companionProfile.learnInsights.length === 0}
             />
           </>
         )}
@@ -173,6 +208,19 @@ export default function LearnScreen() {
             {
               text: t("learn.questionOptions.getSimilar"),
               onPress: () => handleDialogOption("getSimilar"),
+            },
+          ]}
+        />
+
+        <CustomDialog
+          isVisible={removeInsightDialogVisible}
+          onCancel={handleCancelRemoveInsight}
+          title={t("learn.removeInsight.title")}
+          items={[
+            {
+              text: t("common.remove"),
+              onPress: handleConfirmRemoveInsight,
+              style: "destructive",
             },
           ]}
         />

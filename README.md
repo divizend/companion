@@ -4,7 +4,7 @@
 
 - make sure that user registration is easy and works
 - add FaceID login
-- 
+- add userId MongoDB index to AIChat and CompanionProfile
 
 ## Possible features
 

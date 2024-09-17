@@ -19,6 +19,10 @@ export const apiFetch = async (endpoint: string, options: any = {}) => {
     `${usedConfig.api.url}/${usedConfig.api.versionCode}/${endpoint}`,
     {
       ...options,
+      body:
+        typeof options.body === "string"
+          ? options.body
+          : JSON.stringify(options.body),
       headers,
     }
   );
@@ -40,6 +44,13 @@ export const apiFetch = async (endpoint: string, options: any = {}) => {
   }
 
   return json;
+};
+
+export const apiPost = (endpoint: string, body: any) => {
+  return apiFetch(endpoint, {
+    method: "POST",
+    body,
+  });
 };
 
 export const useFetch = (key: string, endpoint?: string) => {
