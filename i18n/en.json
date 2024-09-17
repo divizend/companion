@@ -115,6 +115,9 @@
     "removeInsight": {
       "title": "Are you sure you want to remove this insight?"
     },
-    "aiContext": "The user is currently in an app on a screen titled \"{{title}}\" with the explanation \"{{explanation}}\".\n\nThe user sees the following questions:\n{{questions}}"
+    "aiContext": {
+      "view": "The user is currently in an app on a screen titled \"{{title}}\" with the explanation \"{{explanation}}\".",
+      "questions": "The user sees the following questions:\n{{questions}}"
+    }
   }
 }

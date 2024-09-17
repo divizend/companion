@@ -40,9 +40,11 @@ export default function LearnScreen() {
     number | null
   >(null);
 
-  const AI_CONTEXT = t("learn.aiContext", {
+  const AI_CONTEXT_VIEW = t("learn.aiContext.view", {
     title: t("learn.title"),
     explanation: t("learn.explanationIntro"),
+  });
+  const AI_CONTEXT_QUESTIONS = t("learn.aiContext.questions", {
     questions: questions.map((q) => q.question).join("\n"),
   });
 
@@ -67,7 +69,7 @@ export default function LearnScreen() {
       try {
         const answer = await showInputDialog(selectedQuestion.question);
         const { insight } = await apiPost("/companion/learn/generate-insight", {
-          context: AI_CONTEXT,
+          context: [AI_CONTEXT_VIEW],
           question: selectedQuestion.question,
           answer,
         });
@@ -86,7 +88,7 @@ export default function LearnScreen() {
       const { newQuestions } = await apiPost(
         "/companion/learn/similar-questions",
         {
-          context: AI_CONTEXT,
+          context: [AI_CONTEXT_VIEW, AI_CONTEXT_QUESTIONS],
           question: selectedQuestion.question,
         }
       );
