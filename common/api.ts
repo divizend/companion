@@ -38,7 +38,13 @@ export const apiFetch = async (endpoint: string, options: any = {}) => {
   if (!response.ok) {
     throw new Error(
       `HTTP error! status: ${response.status}${
-        json?.error?.message ? ` (${json?.error?.message})` : ""
+        json?.error?.message
+          ? ` (${json?.error?.message}${
+              response.status === 422
+                ? ": " + JSON.stringify(json?.error?.details)
+                : ""
+            })`
+          : ""
       }`
     );
   }

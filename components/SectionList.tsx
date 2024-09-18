@@ -17,6 +17,7 @@ interface SectionListProps {
     itemStyle?: ViewStyle | ViewStyle[];
     removable?: boolean;
     onRemove?: () => void;
+    disabled?: boolean;
   }>;
   bottomText?: string;
   containerStyle?: ViewStyle;
@@ -36,7 +37,10 @@ const SectionList: React.FC<SectionListProps> = ({
       <View style={styles.listWrapper}>
         {items.map((item, index) => (
           <ItemComponent key={index} style={item.containerStyle}>
-            <TouchableOpacity onPress={item.onPress} disabled={!item.onPress}>
+            <TouchableOpacity
+              onPress={item.onPress}
+              disabled={item.disabled || !item.onPress}
+            >
               <ListItem
                 containerStyle={[
                   item.removable ? styles.listItemWithRemove : styles.listItem,
@@ -99,7 +103,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: "#666",
     marginBottom: 6,
-    marginLeft: 20,
+    marginHorizontal: 20,
     textTransform: "uppercase",
   },
   listWrapper: {

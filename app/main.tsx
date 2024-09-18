@@ -1,32 +1,55 @@
 import React, { useEffect, useState } from "react";
 import { TouchableOpacity, Modal, View, SafeAreaView } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createStackNavigator } from "@react-navigation/stack";
 import { Avatar, Icon } from "@rneui/themed";
 import { withUserProfile } from "@/common/withUserProfile";
-import { useFetch } from "@/common/api";
 import { colors } from "@/common/colors";
 import SettingsView from "@/components/SettingsView";
-import LearnScreen from "@/components/screens/learn/LearnScreen";
-import AnalyzeScreen from "@/components/screens/AnalyzeScreen";
-import TrackScreen from "@/components/screens/TrackScreen";
-import DecideScreen from "@/components/screens/DecideScreen";
-import DiscoverScreen from "@/components/screens/DiscoverScreen";
+import InsightsScreen from "./learn/insights";
+import GoalsScreen from "./learn/goals";
+import AnalyzeScreen from "./analyze";
+import TrackScreen from "./track";
+import DecideScreen from "./decide";
+import DiscoverScreen from "./discover";
 import { DisclaimerModal } from "@/components/DisclaimerModal";
+import { useUserProfile } from "@/common/profile";
 
 const Tab = createBottomTabNavigator();
+const LearnStack = createStackNavigator();
+
+function LearnStackNavigator() {
+  return (
+    <LearnStack.Navigator
+      screenOptions={{ headerShown: false }}
+      initialRouteName="Goals"
+    >
+      <LearnStack.Screen
+        name="Insights"
+        component={InsightsScreen}
+        options={{ title: "Insights" }}
+      />
+      <LearnStack.Screen
+        name="Goals"
+        component={GoalsScreen}
+        options={{ title: "Goals" }}
+      />
+    </LearnStack.Navigator>
+  );
+}
 
 function Main() {
-  const { data } = useFetch("userProfile");
+  const { profile } = useUserProfile();
   const [settingsVisible, setSettingsVisible] = useState(false);
   const [disclaimerVisible, setDisclaimerVisible] = useState(false);
 
   useEffect(() => {
-    if (!data?.flags?.allowedCompanionAI) {
+    if (!profile?.flags?.allowedCompanionAI) {
       setDisclaimerVisible(true);
     }
-  }, [data]);
+  }, [profile]);
 
-  if (!data) {
+  if (!profile) {
     return null;
   }
 
@@ -67,7 +90,7 @@ function Main() {
           headerShown: false,
         })}
       >
-        <Tab.Screen name="Learn" component={LearnScreen} />
+        <Tab.Screen name="Learn" component={LearnStackNavigator} />
         <Tab.Screen name="Analyze" component={AnalyzeScreen} />
         <Tab.Screen name="Track" component={TrackScreen} />
         <Tab.Screen name="Decide" component={DecideScreen} />
@@ -88,7 +111,7 @@ function Main() {
         >
           <Avatar
             rounded
-            title={data.email[0].toUpperCase()}
+            title={profile.email[0].toUpperCase()}
             containerStyle={{ backgroundColor: colors.theme }}
           />
         </TouchableOpacity>

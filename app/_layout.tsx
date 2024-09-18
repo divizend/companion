@@ -2,6 +2,7 @@ import React from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { Slot } from "expo-router";
+import "react-native-gesture-handler";
 
 export const queryClient = new QueryClient();
 

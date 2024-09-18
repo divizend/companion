@@ -1,18 +1,27 @@
 import React, { useState, useRef, useEffect } from "react";
-import { StyleSheet, View, Animated } from "react-native";
+import {
+  StyleSheet,
+  View,
+  Animated,
+  SafeAreaView,
+  ScrollView,
+} from "react-native";
 import { Text } from "@rneui/themed";
 import { t } from "@/i18n";
 import StyledButton from "@/components/StyledButton";
 import SectionList from "@/components/SectionList";
 import CustomDialog from "@/components/CustomDialog";
-import { showInputDialog } from "../../../common/inputDialog";
+import { showInputDialog } from "@/common/inputDialog";
 import { apiPost } from "@/common/api";
 import {
   useUserProfile,
   CompanionProfileLearnQuestion,
+  CompanionProfileLearnInsight,
 } from "@/common/profile";
+import { useNavigation } from "@react-navigation/native";
 
 export default function GenerateInsights() {
+  const navigation = useNavigation();
   const { profile, updateCompanionProfile } = useUserProfile();
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const [dialogVisible, setDialogVisible] = useState(false);
@@ -37,7 +46,7 @@ export default function GenerateInsights() {
       ? displayedQuestions[selectedQuestionIndex]
       : null;
 
-  const displayedInsights: string[] =
+  const displayedInsights: CompanionProfileLearnInsight[] =
     profile.companionProfile?.learnInsights ?? [];
 
   const AI_CONTEXT_VIEW = t("aiContext.view", {
@@ -66,13 +75,13 @@ export default function GenerateInsights() {
       try {
         const answer = await showInputDialog(selectedQuestion.question);
         setLoading!(true);
-        const { insight } = await apiPost("/companion/learn/generate-insight", {
+        const insight = await apiPost("/companion/learn/generate-insight", {
           context: [AI_CONTEXT_VIEW],
           question: selectedQuestion.question,
           answer,
         });
-        updateCompanionProfile((draft: any) => {
-          draft.learnInsights.push(insight);
+        updateCompanionProfile((p) => {
+          p.learnInsights?.push(insight);
         });
         setDialogVisible(false);
       } catch {
@@ -92,10 +101,6 @@ export default function GenerateInsights() {
     }
   };
 
-  const handleConfirm = () => {
-    // TODO: Implement confirmation logic
-  };
-
   const handleRemoveInsight = (index: number) => {
     setInsightToRemoveIndex(index);
     setRemoveInsightDialogVisible(true);
@@ -112,8 +117,8 @@ export default function GenerateInsights() {
       await apiPost("/companion/learn/insights", {
         newLearnInsights: filteredInsights,
       });
-      updateCompanionProfile((draft: any) => {
-        draft.learnInsights = filteredInsights;
+      updateCompanionProfile({
+        learnInsights: filteredInsights,
       });
     } catch (error) {
       console.error("Failed to remove insight:", error);
@@ -129,74 +134,113 @@ export default function GenerateInsights() {
   };
 
   return (
-    <>
-      <View style={styles.explanationContainer}>
-        <Text style={styles.explanationText}>
-          {t("learn.insights.explanation")}
+    <SafeAreaView style={styles.container}>
+      <ScrollView contentContainerStyle={styles.scrollViewContent}>
+        <Text h1 style={styles.title}>
+          {t("learn.insights.title")}
         </Text>
-      </View>
+        <View style={styles.explanationContainer}>
+          <Text style={styles.explanationText}>
+            {t("learn.insights.explanation")}
+          </Text>
+        </View>
 
-      <SectionList
-        title={t("learn.insights.questionsTitle")}
-        items={displayedQuestions.map((question, index) => ({
-          title: `${question.category}: ${question.question}`,
-          onPress: () => {
-            setSelectedQuestionIndex(index);
-            setDialogVisible(true);
-          },
-          containerStyle: question.isNew ? { opacity: fadeAnim } : undefined,
-          itemStyle: question.isNew ? styles.newQuestionContainer : undefined,
-        }))}
-        containerStyle={styles.questionList}
-        ItemComponent={Animated.View}
-      />
-
-      {displayedInsights.length > 0 && (
         <SectionList
-          title={t("learn.insights.insights.title")}
-          items={displayedInsights.map((insight: string, index: number) => ({
-            title: insight,
-            removable: true,
-            onRemove: () => handleRemoveInsight(index),
+          title={t("learn.insights.questionsTitle")}
+          items={displayedQuestions.map((question, index) => ({
+            title: `${question.category}: ${question.question}`,
+            onPress: () => {
+              setSelectedQuestionIndex(index);
+              setDialogVisible(true);
+            },
+            containerStyle: question.isNew ? { opacity: fadeAnim } : undefined,
+            itemStyle: question.isNew ? styles.newQuestionContainer : undefined,
           }))}
-          bottomText={t("learn.insights.insights.bottomText")}
+          containerStyle={styles.questionList}
+          ItemComponent={Animated.View}
         />
-      )}
 
-      <CustomDialog
-        isVisible={dialogVisible}
-        onCancel={() => setDialogVisible(false)}
-        title={selectedQuestion?.question || ""}
-        items={[
-          {
-            text: t("learn.insights.questionOptions.answer"),
-            onPressWithControlledLoading: (setLoading) =>
-              handleDialogOption("answer", setLoading),
-          },
-          {
-            text: t("learn.insights.questionOptions.getSimilar"),
-            onPress: () => handleDialogOption("getSimilar"),
-          },
-        ]}
-      />
+        {displayedInsights.length > 0 && (
+          <>
+            <SectionList
+              title={t("learn.insights.insights.title")}
+              items={displayedInsights.map(
+                (insight: CompanionProfileLearnInsight, index: number) => ({
+                  title: insight.insight,
+                  removable: true,
+                  onRemove: () => handleRemoveInsight(index),
+                })
+              )}
+              bottomText={t("learn.insights.insights.bottomText")}
+            />
+            <StyledButton
+              title={t(`learn.insights.confirmButton`)}
+              onPress={() => navigation.navigate("Goals" as never)}
+              containerStyle={styles.confirmButton}
+            />
+          </>
+        )}
 
-      <CustomDialog
-        isVisible={removeInsightDialogVisible}
-        onCancel={handleCancelRemoveInsight}
-        title={t("learn.insights.removeInsight.title")}
-        items={[
-          {
-            text: t("common.remove"),
-            onPress: handleConfirmRemoveInsight,
-            style: "destructive",
-          },
-        ]}
-      />
-    </>
+        <CustomDialog
+          isVisible={dialogVisible}
+          onCancel={() => setDialogVisible(false)}
+          title={selectedQuestion?.question || ""}
+          items={[
+            {
+              text: t("learn.insights.questionOptions.answer"),
+              onPressWithControlledLoading: (setLoading) =>
+                handleDialogOption("answer", setLoading),
+            },
+            {
+              text: t("learn.insights.questionOptions.getSimilar"),
+              onPress: () => handleDialogOption("getSimilar"),
+            },
+          ]}
+        />
+
+        <CustomDialog
+          isVisible={removeInsightDialogVisible}
+          onCancel={handleCancelRemoveInsight}
+          title={
+            insightToRemoveIndex !== null &&
+            displayedInsights[insightToRemoveIndex]?.goals?.length! > 0
+              ? t("learn.insights.removeInsight.titleWithGoals")
+              : t("learn.insights.removeInsight.title")
+          }
+          items={[
+            {
+              text: t("common.remove"),
+              onPress: handleConfirmRemoveInsight,
+              style: "destructive",
+            },
+          ]}
+        />
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#f2f2f2",
+  },
+  scrollViewContent: {
+    padding: 20,
+    paddingTop: 40,
+    paddingBottom: 40,
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: "bold",
+    marginBottom: 20,
+    marginHorizontal: 5,
+  },
+  confirmButton: {
+    marginTop: 20,
+    marginBottom: 20,
+    marginHorizontal: 20,
+  },
   explanationContainer: {
     marginHorizontal: 5,
     marginBottom: 35,
