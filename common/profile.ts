@@ -8,14 +8,20 @@ export type CompanionProfileLearnQuestion = {
   isNew?: boolean;
 };
 
+export enum CompanionProfileLearnStep {
+  INSIGHTS = "insights",
+  GOALS = "goals",
+}
+
 export type CompanionProfile = {
   learnQuestions?: CompanionProfileLearnQuestion[];
   learnInsights?: string[];
+  learnStep?: CompanionProfileLearnStep;
 };
 
 export type UserProfile = {
   email: string;
-  companionProfile?: CompanionProfile;
+  companionProfile: CompanionProfile;
   // actually also many other properties, but those are not relevant for now
 };
 
@@ -34,12 +40,18 @@ export function useUserProfile() {
     queryClient.setQueryData(["userProfile"], produce(profile, fn));
   };
 
-  const updateCompanionProfile = (fn: (draft: CompanionProfile) => void) => {
+  const updateCompanionProfile = (
+    fnOrObject: ((draft: CompanionProfile) => void) | Partial<CompanionProfile>
+  ) => {
     updateProfile((draft) => {
       if (!draft.companionProfile) {
         draft.companionProfile = getEmptyCompanionProfile();
       }
-      draft.companionProfile = produce(draft.companionProfile, fn);
+      if (typeof fnOrObject === "function") {
+        draft.companionProfile = produce(draft.companionProfile, fnOrObject);
+      } else {
+        Object.assign(draft.companionProfile, fnOrObject);
+      }
     });
   };
 

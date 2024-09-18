@@ -11,12 +11,12 @@ export function showInputDialog(
       placeholder || "",
       [
         {
-          text: t("learn.inputDialog.cancel"),
+          text: t("common.cancel"),
           onPress: () => reject(),
           style: "cancel",
         },
         {
-          text: t("learn.inputDialog.confirm"),
+          text: t("common.submit"),
           onPress: (value: string | undefined) => resolve(value || ""),
         },
       ],

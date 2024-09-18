@@ -10,6 +10,8 @@ interface StyledButtonProps extends ButtonProps {
 const StyledButton: React.FC<StyledButtonProps> = ({
   containerStyle,
   titleStyle,
+  loading,
+  onPress,
   ...rest
 }) => {
   return (
@@ -19,6 +21,8 @@ const StyledButton: React.FC<StyledButtonProps> = ({
       buttonStyle={styles.button}
       containerStyle={[styles.buttonContainer, containerStyle]}
       titleStyle={[styles.buttonText, titleStyle]}
+      loading={loading}
+      onPress={loading ? undefined : onPress}
       {...rest}
     />
   );

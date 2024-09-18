@@ -1,4 +1,7 @@
 {
+  "aiContext": {
+    "view": "The user is currently in an app on a screen titled \"{{title}}\" with the explanation \"{{explanation}}\"."
+  },
   "common": {
     "error": "Error",
     "loading": "Loading...",
@@ -6,18 +9,17 @@
     "login": "Login",
     "logout": "Logout",
     "yes": "Yes",
-    "logoutConfirmation": "Are you sure you want to log out?",
+    "no": "No",
     "retry": "Retry",
     "close": "Close",
     "ok": "OK",
-    "comingSoon": "Coming soon",
-    "stayTuned": "Stay tuned for the revolution of financial intelligence with Divizend!",
-    "understand": "I Understand",
     "next": "Next",
-    "remove": "Remove"
+    "remove": "Remove",
+    "submit": "Submit"
   },
-  "main": {
-    "greeting": "Hello {{name}}!"
+  "comingSoon": {
+    "title": "Coming soon",
+    "stayTuned": "Stay tuned for the revolution of financial intelligence with Divizend!"
   },
   "settings": {
     "title": "Settings",
@@ -25,7 +27,8 @@
       "title": "Account",
       "email": "Email",
       "bottomText": "To modify your email address and for other profile settings, please visit app.divizend.com."
-    }
+    },
+    "logoutConfirmation": "Are you sure you want to log out?"
   },
   "tabs": {
     "learn": "Learn",
@@ -40,84 +43,76 @@
       "message": "Before we get started, we'd like to inform you about how our AI-powered app works."
     },
     "title": "AI-Native App Disclaimer",
-    "message": "This app is AI-native. All information entered will be shared with OpenAI to provide you with the best experience. By continuing to use this app, you agree to these terms."
+    "message": "This app is AI-native. All information entered will be shared with OpenAI to provide you with the best experience. By continuing to use this app, you agree to these terms.",
+    "finalConfirm": "I understand"
   },
   "chat": {
     "title": "AI Chat",
-    "connectingMessage": "Connecting to chat server...",
-    "inputPlaceholder": "Type a message...",
-    "connectingPlaceholder": "Connecting...",
-    "sendButton": "Send"
+    "inputPlaceholder": "Type a message..."
   },
   "learn": {
     "title": "Learn",
-    "explanationIntro": "With Divizend, your financial learning is fully personalized. To do this, you need to answer a few questions first, guided by the following. When you tap on a question, you can also generate new ones based on it. If you have several things you want to respond to a question, separate them into multiple answers.",
-    "inspirationTitle": "Inspiration for questions",
-    "defaultQuestions": [
-      {
-        "category": "Visions",
-        "question": "What are your financial goals, dreams and aspirations?"
+    "insights": {
+      "aiContext": {
+        "questions": "The user sees the following questions:\n{{questions}}"
       },
-      {
-        "category": "Reality",
-        "question": "What is your current financial situation?"
+      "explanation": "With Divizend, your financial learning is fully personalized. To do this, you need to answer a few questions first, guided by the following. When you tap on a question, you can also generate new ones based on it. If you have several things you want to respond to a question, separate them into multiple answers.",
+      "questionsTitle": "Inspiration for questions",
+      "defaultQuestions": [
+        {
+          "category": "Visions",
+          "question": "What are your financial goals, dreams and aspirations?"
+        },
+        {
+          "category": "Reality",
+          "question": "What is your current financial situation?"
+        },
+        {
+          "category": "Motivation",
+          "question": "Why do you want to learn more about finance?"
+        },
+        {
+          "category": "Emotions",
+          "question": "How do financial topics currently make you feel?"
+        },
+        {
+          "category": "Knowledge",
+          "question": "What do you already know about finance?"
+        },
+        {
+          "category": "Values",
+          "question": "Which values guide your financial decision-making?"
+        },
+        {
+          "category": "Interests",
+          "question": "Which financial topics are you interested in?"
+        },
+        {
+          "category": "Security",
+          "question": "What do you need to feel financially secure?"
+        },
+        {
+          "category": "Independence",
+          "question": "In which areas of your financial life do you want to be more independent?"
+        },
+        {
+          "category": "Habits",
+          "question": "Which financial habits do you want to cultivate?"
+        }
+      ],
+      "questionOptions": {
+        "answer": "Answer",
+        "getSimilar": "Get similar questions"
       },
-      {
-        "category": "Motivation",
-        "question": "Why do you want to learn more about finance?"
+      "insights": {
+        "title": "Insights about your financial life",
+        "bottomText": "Your answers have been reformulated into clear statements about your financial life, which will be used to customize your learning experience. Of course you can also always add and remove insights later."
       },
-      {
-        "category": "Emotions",
-        "question": "How do financial topics currently make you feel?"
-      },
-      {
-        "category": "Knowledge",
-        "question": "What do you already know about finance?"
-      },
-      {
-        "category": "Values",
-        "question": "Which values guide your financial decision-making?"
-      },
-      {
-        "category": "Interests",
-        "question": "Which financial topics are you interested in?"
-      },
-      {
-        "category": "Security",
-        "question": "What do you need to feel financially secure?"
-      },
-      {
-        "category": "Independence",
-        "question": "In which areas of your financial life do you want to be more independent?"
-      },
-      {
-        "category": "Habits",
-        "question": "Which financial habits do you want to cultivate?"
+      "confirmButton": "Happy with these insights? Then let's confirm and continue!",
+      "removeInsight": {
+        "title": "Are you sure you want to remove this insight?"
       }
-    ],
-    "questionOptions": {
-      "answer": "Answer",
-      "getSimilar": "Get similar questions"
     },
-    "financialInsightsTitle": "Insights about your financial life",
-    "insightsBottomText": "Your answers have been reformulated into clear statements about your financial life, which will be used to customize your learning experience. Of course you can also always add and remove insights later.",
-    "confirmButton": "Happy with these insights? Then let's confirm and continue!",
-    "noInsightsAlert": {
-      "title": "No Insights",
-      "message": "Please answer at least one question before confirming."
-    },
-    "inputDialog": {
-      "title": "Your Answer",
-      "placeholder": "Type your answer here...",
-      "confirm": "Submit",
-      "cancel": "Cancel"
-    },
-    "removeInsight": {
-      "title": "Are you sure you want to remove this insight?"
-    },
-    "aiContext": {
-      "view": "The user is currently in an app on a screen titled \"{{title}}\" with the explanation \"{{explanation}}\".",
-      "questions": "The user sees the following questions:\n{{questions}}"
-    }
+    "goals": {}
   }
 }

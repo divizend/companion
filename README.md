@@ -5,9 +5,9 @@
 - make sure that user registration is easy and works
 - add FaceID login
 - add userId MongoDB index to AIChat and CompanionProfile
-- do fully automated i18n
+- do fully automated i18n (incl. duzen/siezen for German)
 - add some sort of user interaction tracking
-- onboarding: duzen/siezen, language
+- onboarding: duzen/siezen, language, tax domicile
 
 ## Possible features
 

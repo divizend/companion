@@ -19,9 +19,9 @@ export default function ComingSoonScreen({ iconName }: ComingSoonScreenProps) {
         style={styles.icon}
       />
       <Text h3 style={styles.title}>
-        {t("common.comingSoon")}
+        {t("comingSoon.title")}
       </Text>
-      <Text style={styles.stayTuned}>{t("common.stayTuned")}</Text>
+      <Text style={styles.stayTuned}>{t("comingSoon.stayTuned")}</Text>
       <Text style={styles.emojis}>🚀💵🕉️🌅</Text>
     </View>
   );

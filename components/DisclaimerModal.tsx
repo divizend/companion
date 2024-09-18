@@ -116,7 +116,7 @@ export const DisclaimerModal: React.FC<DisclaimerModalProps> = ({
                 ? t("common.next")
                 : isLoading
                 ? t("common.loading")
-                : t("common.understand")
+                : t("disclaimer.finalConfirm")
             }
             onPress={() => {
               if (currentPage === 0) {
