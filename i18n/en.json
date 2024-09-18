@@ -55,12 +55,12 @@
     "inspirationTitle": "Inspiration for questions",
     "defaultQuestions": [
       {
-        "category": "Reality",
-        "question": "What is your current financial situation?"
-      },
-      {
         "category": "Visions",
         "question": "What are your financial goals, dreams and aspirations?"
+      },
+      {
+        "category": "Reality",
+        "question": "What is your current financial situation?"
       },
       {
         "category": "Motivation",

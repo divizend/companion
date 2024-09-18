@@ -5,6 +5,9 @@
 - make sure that user registration is easy and works
 - add FaceID login
 - add userId MongoDB index to AIChat and CompanionProfile
+- do fully automated i18n
+- add some sort of user interaction tracking
+- onboarding: duzen/siezen, language
 
 ## Possible features
 
@@ -18,7 +21,7 @@ Normal development:
 npx expo run:ios
 ```
 
-Preview build:
+Preview build (internal distribution):
 
 ```
 eas build --profile preview --platform ios

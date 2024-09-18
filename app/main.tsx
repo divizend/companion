@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { TouchableOpacity, Modal, View } from "react-native";
+import { TouchableOpacity, Modal, View, SafeAreaView } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Avatar, Icon } from "@rneui/themed";
 import { withUserProfile } from "@/common/withUserProfile";
@@ -81,7 +81,7 @@ function Main() {
       >
         <SettingsView onClose={() => setSettingsVisible(false)} />
       </Modal>
-      <View style={{ position: "absolute", top: 30, right: 0 }}>
+      <SafeAreaView style={{ position: "absolute", top: 30, right: 0 }}>
         <TouchableOpacity
           style={{ marginRight: 15 }}
           onPress={() => setSettingsVisible(true)}
@@ -92,7 +92,7 @@ function Main() {
             containerStyle={{ backgroundColor: colors.theme }}
           />
         </TouchableOpacity>
-      </View>
+      </SafeAreaView>
     </>
   );
 }

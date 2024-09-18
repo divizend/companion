@@ -10,7 +10,10 @@ import { t } from "@/i18n";
 
 interface DialogItem {
   text: string;
-  onPress: () => void | Promise<void>;
+  onPress?: () => void | Promise<void>;
+  onPressWithControlledLoading?: (
+    setLoading: (loading: boolean) => void
+  ) => void | Promise<void>;
   style?: "default" | "destructive";
 }
 
@@ -30,11 +33,21 @@ const CustomDialog: React.FC<CustomDialogProps> = ({
   const [loadingIndex, setLoadingIndex] = useState<number | null>(null);
 
   const handleItemPress = async (item: DialogItem, index: number) => {
-    setLoadingIndex(index);
-    try {
-      await item.onPress();
-    } finally {
-      setLoadingIndex(null);
+    if (item.onPressWithControlledLoading) {
+      try {
+        await item.onPressWithControlledLoading((loading) =>
+          setLoadingIndex(loading ? index : null)
+        );
+      } finally {
+        setLoadingIndex(null);
+      }
+    } else if (item.onPress) {
+      setLoadingIndex(index);
+      try {
+        await item.onPress();
+      } finally {
+        setLoadingIndex(null);
+      }
     }
   };
 
@@ -43,6 +56,7 @@ const CustomDialog: React.FC<CustomDialogProps> = ({
       isVisible={isVisible}
       onBackdropPress={loadingIndex === null ? onCancel : undefined}
       overlayStyle={styles.overlay}
+      animationType="fade"
     >
       <View style={styles.container}>
         <Text style={styles.title}>{title}</Text>

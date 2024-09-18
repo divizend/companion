@@ -12,40 +12,47 @@ import { t } from "@/i18n";
 import StyledButton from "@/components/StyledButton";
 import SectionList from "@/components/SectionList";
 import CustomDialog from "@/components/CustomDialog";
-import { showInputDialog } from "./inputDialog";
-import { apiPost, useFetch } from "@/common/api";
-import { useQueryClient } from "@tanstack/react-query";
-
-export interface Question {
-  category: string;
-  question: string;
-  isNew?: boolean;
-}
+import { showInputDialog } from "../../../common/inputDialog";
+import { apiPost } from "@/common/api";
+import {
+  useUserProfile,
+  CompanionProfileLearnQuestion,
+} from "@/common/profile";
 
 export default function LearnScreen() {
-  const queryClient = useQueryClient();
-  const [questions, setQuestions] = useState<Question[]>(
-    t("learn.defaultQuestions") as unknown as Question[]
-  );
-  const { data: userProfile } = useFetch("userProfile");
+  const { profile, updateCompanionProfile } = useUserProfile();
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const [dialogVisible, setDialogVisible] = useState(false);
-  const [selectedQuestion, setSelectedQuestion] = useState<Question | null>(
-    null
-  );
-  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+  const [selectedQuestionIndex, setSelectedQuestionIndex] = useState<
+    number | null
+  >(null);
   const [removeInsightDialogVisible, setRemoveInsightDialogVisible] =
     useState(false);
   const [insightToRemoveIndex, setInsightToRemoveIndex] = useState<
     number | null
   >(null);
 
+  const defaultQuestions: CompanionProfileLearnQuestion[] = t(
+    "learn.defaultQuestions"
+  ) as unknown as CompanionProfileLearnQuestion[];
+  const displayedQuestions: CompanionProfileLearnQuestion[] =
+    (profile.companionProfile?.learnQuestions ?? []).length > 0
+      ? profile.companionProfile!.learnQuestions!
+      : defaultQuestions;
+  const selectedQuestion: CompanionProfileLearnQuestion | null =
+    selectedQuestionIndex !== null
+      ? displayedQuestions[selectedQuestionIndex]
+      : null;
+
+  const displayedInsights: string[] =
+    profile.companionProfile?.learnInsights ?? [];
+
   const AI_CONTEXT_VIEW = t("learn.aiContext.view", {
     title: t("learn.title"),
     explanation: t("learn.explanationIntro"),
   });
   const AI_CONTEXT_QUESTIONS = t("learn.aiContext.questions", {
-    questions: questions.map((q) => q.question).join("\n"),
+    questions: displayedQuestions.map((q) => q.question).join("\n"),
   });
 
   useEffect(() => {
@@ -54,54 +61,40 @@ export default function LearnScreen() {
       duration: 1000,
       useNativeDriver: true,
     }).start();
-  }, [questions]);
+  }, [displayedQuestions]);
 
-  const handleQuestionPress = (question: Question, index: number) => {
-    setSelectedQuestion(question);
-    setSelectedIndex(index);
-    setDialogVisible(true);
-  };
-
-  const handleDialogOption = async (option: "answer" | "getSimilar") => {
-    if (!selectedQuestion || selectedIndex === null) return;
+  const handleDialogOption = async (
+    option: "answer" | "getSimilar",
+    setLoading?: (loading: boolean) => void
+  ) => {
+    if (!selectedQuestion || selectedQuestionIndex === null) return;
 
     if (option === "answer") {
       try {
         const answer = await showInputDialog(selectedQuestion.question);
+        setLoading!(true);
         const { insight } = await apiPost("/companion/learn/generate-insight", {
           context: [AI_CONTEXT_VIEW],
           question: selectedQuestion.question,
           answer,
         });
-        queryClient.setQueryData(["userProfile"], (oldData: any) => ({
-          ...oldData,
-          companionProfile: {
-            ...oldData.companionProfile,
-            learnInsights: [...oldData.companionProfile.learnInsights, insight],
-          },
-        }));
+        updateCompanionProfile((draft: any) => {
+          draft.learnInsights.push(insight);
+        });
         setDialogVisible(false);
       } catch {
         // Do nothing if the user cancels the input
       }
     } else if (option === "getSimilar") {
-      const { newQuestions } = await apiPost(
-        "/companion/learn/similar-questions",
-        {
-          context: [AI_CONTEXT_VIEW, AI_CONTEXT_QUESTIONS],
-          question: selectedQuestion.question,
-        }
-      );
+      const allQuestions = await apiPost("/companion/learn/similar-questions", {
+        context: [AI_CONTEXT_VIEW, AI_CONTEXT_QUESTIONS],
+        currentQuestions: displayedQuestions,
+        questionIndex: selectedQuestionIndex,
+      });
 
-      setQuestions((prevQuestions) => [
-        ...prevQuestions
-          .slice(0, selectedIndex + 1)
-          .map((q) => ({ ...q, isNew: false })),
-        ...newQuestions.map((q: Question) => ({ ...q, isNew: true })),
-        ...prevQuestions
-          .slice(selectedIndex + 1)
-          .map((q) => ({ ...q, isNew: false })),
-      ]);
+      updateCompanionProfile((draft: any) => {
+        draft.learnQuestions = allQuestions;
+      });
 
       fadeAnim.setValue(0);
       setDialogVisible(false);
@@ -112,10 +105,6 @@ export default function LearnScreen() {
     // TODO: Implement confirmation logic
   };
 
-  const handleDialogCancel = () => {
-    setDialogVisible(false);
-  };
-
   const handleRemoveInsight = (index: number) => {
     setInsightToRemoveIndex(index);
     setRemoveInsightDialogVisible(true);
@@ -124,21 +113,19 @@ export default function LearnScreen() {
   const handleConfirmRemoveInsight = async () => {
     if (insightToRemoveIndex === null) return;
 
-    const newInsights = userProfile.companionProfile.learnInsights.filter(
+    const filteredInsights = displayedInsights.filter(
       (_: any, i: number) => i !== insightToRemoveIndex
     );
 
     try {
       await apiPost("/companion/learn/insights", {
-        newLearnInsights: newInsights,
+        newLearnInsights: filteredInsights,
       });
-
-      // Update local state
-      // Note: You might want to refetch the userProfile here instead
-      userProfile.companionProfile.learnInsights = newInsights;
+      updateCompanionProfile((draft: any) => {
+        draft.learnInsights = filteredInsights;
+      });
     } catch (error) {
       console.error("Failed to remove insight:", error);
-      // Handle error (e.g., show an error message to the user)
     }
 
     setRemoveInsightDialogVisible(false);
@@ -165,9 +152,12 @@ export default function LearnScreen() {
 
         <SectionList
           title={t("learn.inspirationTitle")}
-          items={questions.map((question, index) => ({
+          items={displayedQuestions.map((question, index) => ({
             title: `${question.category}: ${question.question}`,
-            onPress: () => handleQuestionPress(question, index),
+            onPress: () => {
+              setSelectedQuestionIndex(index);
+              setDialogVisible(true);
+            },
             containerStyle: question.isNew ? { opacity: fadeAnim } : undefined,
             itemStyle: question.isNew ? styles.newQuestionContainer : undefined,
           }))}
@@ -175,11 +165,11 @@ export default function LearnScreen() {
           ItemComponent={Animated.View}
         />
 
-        {userProfile.companionProfile.learnInsights.length > 0 && (
+        {displayedInsights.length > 0 && (
           <>
             <SectionList
               title={t("learn.financialInsightsTitle")}
-              items={userProfile.companionProfile.learnInsights.map(
+              items={displayedInsights.map(
                 (insight: string, index: number) => ({
                   title: insight,
                   removable: true,
@@ -193,19 +183,20 @@ export default function LearnScreen() {
               title={t("learn.confirmButton")}
               onPress={handleConfirm}
               containerStyle={styles.confirmButton}
-              disabled={userProfile.companionProfile.learnInsights.length === 0}
+              disabled={displayedInsights.length === 0}
             />
           </>
         )}
 
         <CustomDialog
           isVisible={dialogVisible}
-          onCancel={handleDialogCancel}
+          onCancel={() => setDialogVisible(false)}
           title={selectedQuestion?.question || ""}
           items={[
             {
               text: t("learn.questionOptions.answer"),
-              onPress: () => handleDialogOption("answer"),
+              onPressWithControlledLoading: (setLoading) =>
+                handleDialogOption("answer", setLoading),
             },
             {
               text: t("learn.questionOptions.getSimilar"),
