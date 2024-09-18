@@ -8,6 +8,7 @@
 - do fully automated i18n (incl. duzen/siezen for German)
 - add some sort of user interaction tracking
 - onboarding: duzen/siezen, language, tax domicile
+- allow sharing generated learning material
 
 ## Possible features
 

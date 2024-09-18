@@ -113,6 +113,13 @@
         "title": "Are you sure you want to remove this insight?"
       }
     },
-    "goals": {}
+    "goals": {
+      "backLink": "Go back to insights setup",
+      "explainer": "Based on your insights, we will now generate and set up learning goals. These goals will help guide your learning journey and focus on the most important aspects of your financial education. You can generate goals for each insight, expand on them for more detail, or remove them if they're not relevant to you.",
+      "generateButton": "Generate Goals",
+      "generating": "Generating goals...",
+      "expandPrompt": "How would you like to expand this goal?",
+      "expandTitle": "Expand Goal"
+    }
   }
 }

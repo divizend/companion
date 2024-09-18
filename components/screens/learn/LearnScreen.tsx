@@ -5,6 +5,7 @@ import { t } from "@/i18n";
 import { useUserProfile } from "@/common/profile";
 import { CompanionProfileLearnStep } from "@/common/profile";
 import GenerateInsights from "./GenerateInsights";
+import GenerateGoals from "./GenerateGoals";
 import StyledButton from "@/components/StyledButton";
 import { apiPost } from "@/common/api";
 
@@ -28,20 +29,31 @@ export default function LearnScreen() {
               <StyledButton
                 title={t(`learn.insights.confirmButton`)}
                 onPress={async () => {
-                  setNextStepLoading(true);
-                  await apiPost("/companion/learn/step", {
-                    newLearnStep: CompanionProfileLearnStep.GOALS,
-                  });
                   updateCompanionProfile({
                     learnStep: CompanionProfileLearnStep.GOALS,
                   });
-                  setNextStepLoading(false);
+                  await apiPost("/companion/learn/step", {
+                    newLearnStep: CompanionProfileLearnStep.GOALS,
+                  });
                 }}
                 containerStyle={styles.confirmButton}
                 loading={nextStepLoading}
               />
             ) : null}
           </>
+        ) : profile.companionProfile.learnStep ===
+          CompanionProfileLearnStep.GOALS ? (
+          <GenerateGoals
+            insights={profile.companionProfile.learnInsights || []}
+            onGoBack={async () => {
+              updateCompanionProfile({
+                learnStep: CompanionProfileLearnStep.INSIGHTS,
+              });
+              await apiPost("/companion/learn/step", {
+                newLearnStep: CompanionProfileLearnStep.INSIGHTS,
+              });
+            }}
+          />
         ) : null}
       </ScrollView>
     </SafeAreaView>

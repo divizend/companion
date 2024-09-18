@@ -12,7 +12,7 @@ import {
   CompanionProfileLearnQuestion,
 } from "@/common/profile";
 
-export default function LearnScreen() {
+export default function GenerateInsights() {
   const { profile, updateCompanionProfile } = useUserProfile();
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const [dialogVisible, setDialogVisible] = useState(false);
