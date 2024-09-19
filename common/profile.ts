@@ -25,9 +25,20 @@ export type CompanionProfile = {
   learnInsights?: CompanionProfileLearnInsight[];
 };
 
+export type LegalEntity = {
+  id: string;
+  isPrincipal: boolean;
+  data: {
+    info: {
+      nationality: string;
+    };
+  };
+};
+
 export type UserProfile = {
   email: string;
-  flags?: {
+  legalEntities: LegalEntity[];
+  flags: {
     allowedCompanionAI?: boolean;
   };
   companionProfile: CompanionProfile;
@@ -73,4 +84,9 @@ export function useUserProfile() {
     updateProfile,
     updateCompanionProfile,
   };
+}
+
+export function usePrincipalLegalEntity() {
+  const { profile } = useUserProfile();
+  return profile.legalEntities.find((entity) => entity.isPrincipal);
 }

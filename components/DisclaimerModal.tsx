@@ -16,25 +16,38 @@ import { Button } from "@rneui/themed";
 import { t } from "@/i18n";
 import { colors } from "@/common/colors";
 import { LinearGradient } from "expo-linear-gradient";
-import { apiFetch } from "@/common/api";
+import { apiPost } from "@/common/api";
 import { Picker } from "@react-native-picker/picker";
 import { countries } from "@/common/countries";
+import { useUserProfile, usePrincipalLegalEntity } from "@/common/profile";
 
 interface DisclaimerModalProps {
   visible: boolean;
-  onClose: () => void;
 }
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 
 export const DisclaimerModal: React.FC<DisclaimerModalProps> = ({
   visible,
-  onClose,
 }) => {
+  const { updateProfile } = useUserProfile();
+  const principalLegalEntity = usePrincipalLegalEntity();
   const [currentPage, setCurrentPage] = useState(0);
-  const [selectedCountry, setSelectedCountry] = useState("");
+  const [selectedCountry, setSelectedCountry] = useState(
+    principalLegalEntity?.data.info.nationality ?? ""
+  );
   const scrollViewRef = useRef<ScrollView>(null);
   const [isLoading, setIsLoading] = useState(false);
+
+  const prioritizedCountryIds = ["de", "ch", "at", "li"];
+  const prioritizedCountries = [
+    ...prioritizedCountryIds.map(
+      (id) => countries.find((country) => country.id === id)!
+    ),
+    ...countries.filter(
+      (country) => !prioritizedCountryIds.includes(country.id)
+    ),
+  ];
 
   const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     const contentOffsetX = event.nativeEvent.contentOffset.x;
@@ -45,15 +58,13 @@ export const DisclaimerModal: React.FC<DisclaimerModalProps> = ({
   const handleUnderstand = async () => {
     setIsLoading(true);
     try {
-      await apiFetch("/users/flag", {
-        method: "POST",
-        body: JSON.stringify({
-          name: "allowedCompanionAI",
-          value: true,
-          taxResidency: selectedCountry,
-        }),
+      await apiPost("/users/flag", {
+        name: "allowedCompanionAI",
+        value: true,
       });
-      onClose();
+      updateProfile((p) => {
+        p.flags.allowedCompanionAI = true;
+      });
     } catch (error) {
       console.log(error);
     } finally {
@@ -112,12 +123,12 @@ export const DisclaimerModal: React.FC<DisclaimerModalProps> = ({
               onValueChange={(itemValue) => setSelectedCountry(itemValue)}
               style={styles.picker}
             >
-              <Picker.Item label={t("common.select")} value="" />
-              {countries.map((country) => (
+              <Picker.Item label="" value="" />
+              {prioritizedCountries.map((country) => (
                 <Picker.Item
-                  key={country.code}
+                  key={country.id}
                   label={country.name}
-                  value={country.code}
+                  value={country.id}
                 />
               ))}
             </Picker>
@@ -153,8 +164,25 @@ export const DisclaimerModal: React.FC<DisclaimerModalProps> = ({
                 ? t("common.loading")
                 : t("disclaimer.finalConfirm")
             }
-            onPress={() => {
-              if (currentPage < 2) {
+            onPress={async () => {
+              if (currentPage === 2) {
+                setIsLoading(true);
+                try {
+                  await apiPost(
+                    `/legalEntities/${principalLegalEntity?.id}/nationality`,
+                    { nationality: selectedCountry }
+                  );
+                } catch (error: any) {
+                  Alert.alert(t("common.error"), error.message);
+                } finally {
+                  setIsLoading(false);
+                }
+                updateProfile((p) => {
+                  p.legalEntities.find(
+                    (le) => le.isPrincipal
+                  )!.data.info.nationality = selectedCountry;
+                });
+              } else if (currentPage < 2) {
                 scrollViewRef.current?.scrollTo({
                   x: screenWidth * (currentPage + 1),
                   animated: true,

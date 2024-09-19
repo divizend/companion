@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { TouchableOpacity, Modal, View, SafeAreaView } from "react-native";
+import React, { useState } from "react";
+import { TouchableOpacity, Modal, SafeAreaView } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import { Avatar, Icon } from "@rneui/themed";
@@ -38,13 +38,6 @@ function LearnStackNavigator() {
 function Main() {
   const { profile } = useUserProfile();
   const [settingsVisible, setSettingsVisible] = useState(false);
-  const [disclaimerVisible, setDisclaimerVisible] = useState(false);
-
-  useEffect(() => {
-    if (!profile?.flags?.allowedCompanionAI) {
-      setDisclaimerVisible(true);
-    }
-  }, [profile]);
 
   if (!profile) {
     return null;
@@ -52,10 +45,7 @@ function Main() {
 
   return (
     <>
-      <DisclaimerModal
-        visible={disclaimerVisible}
-        onClose={() => setDisclaimerVisible(false)}
-      />
+      <DisclaimerModal visible={!profile?.flags?.allowedCompanionAI} />
       <Tab.Navigator
         screenOptions={({ route }) => ({
           tabBarIcon: ({ color, size }) => {
