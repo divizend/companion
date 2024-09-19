@@ -17,6 +17,8 @@ import { t } from "@/i18n";
 import { colors } from "@/common/colors";
 import { LinearGradient } from "expo-linear-gradient";
 import { apiFetch } from "@/common/api";
+import { Picker } from "@react-native-picker/picker";
+import { countries } from "@/common/countries";
 
 interface DisclaimerModalProps {
   visible: boolean;
@@ -30,6 +32,7 @@ export const DisclaimerModal: React.FC<DisclaimerModalProps> = ({
   onClose,
 }) => {
   const [currentPage, setCurrentPage] = useState(0);
+  const [selectedCountry, setSelectedCountry] = useState("");
   const scrollViewRef = useRef<ScrollView>(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -44,7 +47,11 @@ export const DisclaimerModal: React.FC<DisclaimerModalProps> = ({
     try {
       await apiFetch("/users/flag", {
         method: "POST",
-        body: JSON.stringify({ name: "allowedCompanionAI", value: true }),
+        body: JSON.stringify({
+          name: "allowedCompanionAI",
+          value: true,
+          taxResidency: selectedCountry,
+        }),
       });
       onClose();
     } catch (error) {
@@ -57,7 +64,7 @@ export const DisclaimerModal: React.FC<DisclaimerModalProps> = ({
   const renderPageIndicator = () => {
     return (
       <View style={styles.pageIndicator}>
-        {[0, 1].map((page) => (
+        {[0, 1, 2].map((page) => (
           <View
             key={page}
             style={[
@@ -85,8 +92,36 @@ export const DisclaimerModal: React.FC<DisclaimerModalProps> = ({
           <Text style={styles.modalText}>{t("disclaimer.intro.message")}</Text>
         </View>
         <View style={styles.page}>
-          <Text style={styles.modalTitle}>{t("disclaimer.title")}</Text>
-          <Text style={styles.modalText}>{t("disclaimer.message")}</Text>
+          <Text style={styles.modalTitle}>
+            {t("disclaimer.aiDisclaimer.title")}
+          </Text>
+          <Text style={styles.modalText}>
+            {t("disclaimer.aiDisclaimer.message")}
+          </Text>
+        </View>
+        <View style={styles.page}>
+          <Text style={styles.modalTitle}>
+            {t("disclaimer.taxResidency.title")}
+          </Text>
+          <Text style={styles.modalText}>
+            {t("disclaimer.taxResidency.message")}
+          </Text>
+          <View style={styles.pickerContainer}>
+            <Picker
+              selectedValue={selectedCountry}
+              onValueChange={(itemValue) => setSelectedCountry(itemValue)}
+              style={styles.picker}
+            >
+              <Picker.Item label={t("common.select")} value="" />
+              {countries.map((country) => (
+                <Picker.Item
+                  key={country.code}
+                  label={country.name}
+                  value={country.code}
+                />
+              ))}
+            </Picker>
+          </View>
         </View>
       </ScrollView>
     );
@@ -112,16 +147,16 @@ export const DisclaimerModal: React.FC<DisclaimerModalProps> = ({
           {renderPageIndicator()}
           <Button
             title={
-              currentPage === 0
+              currentPage === 0 || currentPage === 1
                 ? t("common.next")
                 : isLoading
                 ? t("common.loading")
                 : t("disclaimer.finalConfirm")
             }
             onPress={() => {
-              if (currentPage === 0) {
+              if (currentPage < 2) {
                 scrollViewRef.current?.scrollTo({
-                  x: screenWidth,
+                  x: screenWidth * (currentPage + 1),
                   animated: true,
                 });
               } else {
@@ -131,7 +166,7 @@ export const DisclaimerModal: React.FC<DisclaimerModalProps> = ({
             buttonStyle={styles.modalButton}
             titleStyle={styles.buttonText}
             loading={isLoading}
-            disabled={isLoading}
+            disabled={isLoading || (currentPage === 2 && !selectedCountry)}
           />
         </View>
       </SafeAreaView>
@@ -203,5 +238,22 @@ const styles = StyleSheet.create({
   },
   indicatorDotActive: {
     backgroundColor: colors.theme,
+  },
+  dropdown: {
+    width: "80%",
+    marginBottom: 20,
+    backgroundColor: "white",
+    borderRadius: 8,
+    padding: 12,
+  },
+  pickerContainer: {
+    width: "80%",
+    marginBottom: 20,
+    backgroundColor: "white",
+    borderRadius: 8,
+    overflow: "hidden",
+  },
+  picker: {
+    width: "100%",
   },
 });

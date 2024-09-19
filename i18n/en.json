@@ -39,11 +39,17 @@
   },
   "disclaimer": {
     "intro": {
-      "title": "Welcome to Divizend",
-      "message": "Before we get started, we'd like to inform you about how our AI-powered app works."
+      "title": "Welcome to the Divizend Companion!",
+      "message": "Let's get the setup done."
     },
-    "title": "AI-Native App Disclaimer",
-    "message": "This app is AI-native. All information entered will be shared with OpenAI to provide you with the best experience. By continuing to use this app, you agree to these terms.",
+    "aiDisclaimer": {
+      "title": "AI-Native App Disclaimer",
+      "message": "First and foremost: This app is AI-native, which means that all information you enter will be processed using OpenAI APIs. By continuing to use this app, you agree to these terms."
+    },
+    "taxResidency": {
+      "title": "Which country are you from?",
+      "message": "More specifically, your country of tax residency."
+    },
     "finalConfirm": "I understand"
   },
   "chat": {
