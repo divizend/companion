@@ -55,27 +55,15 @@ export const DisclaimerModal: React.FC<DisclaimerModalProps> = ({
     setCurrentPage(page);
   };
 
-  const handleUnderstand = async () => {
-    setIsLoading(true);
-    try {
-      await apiPost("/users/flag", {
-        name: "allowedCompanionAI",
-        value: true,
-      });
-      updateProfile((p) => {
-        p.flags.allowedCompanionAI = true;
-      });
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  let availablePages = 3;
+  if (principalLegalEntity?.data.info.nationality) {
+    availablePages = 4;
+  }
 
   const renderPageIndicator = () => {
     return (
       <View style={styles.pageIndicator}>
-        {[0, 1, 2].map((page) => (
+        {Array.from({ length: availablePages }).map((_, page) => (
           <View
             key={page}
             style={[
@@ -134,6 +122,16 @@ export const DisclaimerModal: React.FC<DisclaimerModalProps> = ({
             </Picker>
           </View>
         </View>
+        {availablePages >= 4 ? (
+          <View style={styles.page}>
+            <Text style={styles.modalTitle}>
+              {t("disclaimer.allSet.title")}
+            </Text>
+            <Text style={styles.modalText}>
+              {t("disclaimer.allSet.message")}
+            </Text>
+          </View>
+        ) : null}
       </ScrollView>
     );
   };
@@ -158,37 +156,58 @@ export const DisclaimerModal: React.FC<DisclaimerModalProps> = ({
           {renderPageIndicator()}
           <Button
             title={
-              currentPage === 0 || currentPage === 1
+              currentPage !== 3
                 ? t("common.next")
                 : isLoading
                 ? t("common.loading")
                 : t("disclaimer.finalConfirm")
             }
             onPress={async () => {
-              if (currentPage === 2) {
+              if (currentPage < 2) {
+                scrollViewRef.current?.scrollTo({
+                  x: screenWidth * (currentPage + 1),
+                  animated: true,
+                });
+              } else if (currentPage === 2) {
                 setIsLoading(true);
                 try {
                   await apiPost(
                     `/legalEntities/${principalLegalEntity?.id}/nationality`,
                     { nationality: selectedCountry }
                   );
+                  updateProfile((p) => {
+                    p.legalEntities.find(
+                      (le) => le.isPrincipal
+                    )!.data.info.nationality = selectedCountry;
+                  });
+                  setTimeout(
+                    () =>
+                      scrollViewRef.current?.scrollTo({
+                        x: screenWidth * 3,
+                        animated: true,
+                      }),
+                    200
+                  );
                 } catch (error: any) {
                   Alert.alert(t("common.error"), error.message);
                 } finally {
                   setIsLoading(false);
                 }
-                updateProfile((p) => {
-                  p.legalEntities.find(
-                    (le) => le.isPrincipal
-                  )!.data.info.nationality = selectedCountry;
-                });
-              } else if (currentPage < 2) {
-                scrollViewRef.current?.scrollTo({
-                  x: screenWidth * (currentPage + 1),
-                  animated: true,
-                });
-              } else {
-                handleUnderstand();
+              } else if (currentPage === 3) {
+                setIsLoading(true);
+                try {
+                  await apiPost("/users/flag", {
+                    name: "allowedCompanionAI",
+                    value: true,
+                  });
+                  updateProfile((p) => {
+                    p.flags.allowedCompanionAI = true;
+                  });
+                } catch (error) {
+                  console.log(error);
+                } finally {
+                  setIsLoading(false);
+                }
               }
             }}
             buttonStyle={styles.modalButton}

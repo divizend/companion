@@ -50,7 +50,11 @@
       "title": "Which country are you from?",
       "message": "More specifically, your country of tax residency."
     },
-    "finalConfirm": "I understand"
+    "finalConfirm": "Let's get started!",
+    "allSet": {
+      "title": "You're all set!",
+      "message": "Thank you for completing the setup. You're now ready to start using the Companion!"
+    }
   },
   "chat": {
     "title": "AI Chat",
