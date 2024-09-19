@@ -20,10 +20,7 @@ const LearnStack = createStackNavigator();
 
 function LearnStackNavigator() {
   return (
-    <LearnStack.Navigator
-      screenOptions={{ headerShown: false }}
-      initialRouteName="Goals"
-    >
+    <LearnStack.Navigator screenOptions={{ headerShown: false }}>
       <LearnStack.Screen
         name="Insights"
         component={InsightsScreen}

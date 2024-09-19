@@ -3,18 +3,21 @@ import { produce } from "immer";
 import { useFetch } from "./api";
 
 export type CompanionProfileLearnQuestion = {
+  id: string;
   category: string;
   question: string;
   isNew?: boolean;
 };
 
 export type CompanionProfileLearnGoal = {
+  id: string;
   goal: string;
 };
 
 export type CompanionProfileLearnInsight = {
+  id: string;
   insight: string;
-  goals?: CompanionProfileLearnGoal[];
+  goals: CompanionProfileLearnGoal[];
 };
 
 export type CompanionProfile = {

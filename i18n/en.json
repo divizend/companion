@@ -118,7 +118,7 @@
     "goals": {
       "title": "Learning goals",
       "backLink": "Go back to insights setup",
-      "explanation": "Based on the insights about your financial life, let's now determine concrete learning goals for you. You can generate goals for each insight, expand on them for more detail, or remove them if they don't feel relevant to you.",
+      "explanation": "Based on the insights about your financial life, let's now determine concrete learning goals for you. You can generate goals for each insight or remove goals if they don't feel relevant to you.",
       "generateButton": {
         "title": "Tap here to determine goals",
         "titleMore": "Tap here to determine more goals",

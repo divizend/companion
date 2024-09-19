@@ -7,6 +7,7 @@ import {
   ScrollView,
 } from "react-native";
 import { Text } from "@rneui/themed";
+import uuid from "react-native-uuid";
 import { t } from "@/i18n";
 import StyledButton from "@/components/StyledButton";
 import SectionList from "@/components/SectionList";
@@ -25,25 +26,28 @@ export default function GenerateInsights() {
   const { profile, updateCompanionProfile } = useUserProfile();
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const [dialogVisible, setDialogVisible] = useState(false);
-  const [selectedQuestionIndex, setSelectedQuestionIndex] = useState<
-    number | null
-  >(null);
+  const [selectedQuestionId, setSelectedQuestionId] = useState<string | null>(
+    null
+  );
   const [removeInsightDialogVisible, setRemoveInsightDialogVisible] =
     useState(false);
-  const [insightToRemoveIndex, setInsightToRemoveIndex] = useState<
-    number | null
-  >(null);
+  const [insightToRemoveId, setInsightToRemoveId] = useState<string | null>(
+    null
+  );
 
-  const defaultQuestions: CompanionProfileLearnQuestion[] = t(
-    "learn.insights.defaultQuestions"
-  ) as unknown as CompanionProfileLearnQuestion[];
+  const [defaultQuestions] = useState<CompanionProfileLearnQuestion[]>(
+    (t("learn.insights.defaultQuestions") as any).map((q: any) => ({
+      ...q,
+      id: uuid.v4(),
+    })) as CompanionProfileLearnQuestion[]
+  );
   const displayedQuestions: CompanionProfileLearnQuestion[] =
     (profile.companionProfile?.learnQuestions ?? []).length > 0
       ? profile.companionProfile!.learnQuestions!
       : defaultQuestions;
   const selectedQuestion: CompanionProfileLearnQuestion | null =
-    selectedQuestionIndex !== null
-      ? displayedQuestions[selectedQuestionIndex]
+    selectedQuestionId !== null
+      ? displayedQuestions.find((q) => q.id === selectedQuestionId)!
       : null;
 
   const displayedInsights: CompanionProfileLearnInsight[] =
@@ -69,7 +73,7 @@ export default function GenerateInsights() {
     option: "answer" | "getSimilar",
     setLoading?: (loading: boolean) => void
   ) => {
-    if (!selectedQuestion || selectedQuestionIndex === null) return;
+    if (!selectedQuestion || selectedQuestionId === null) return;
 
     if (option === "answer") {
       try {
@@ -91,7 +95,7 @@ export default function GenerateInsights() {
       const allQuestions = await apiPost("/companion/learn/similar-questions", {
         context: [AI_CONTEXT_VIEW, AI_CONTEXT_QUESTIONS],
         currentQuestions: displayedQuestions,
-        questionIndex: selectedQuestionIndex,
+        questionId: selectedQuestionId,
       });
 
       updateCompanionProfile({ learnQuestions: allQuestions });
@@ -101,16 +105,16 @@ export default function GenerateInsights() {
     }
   };
 
-  const handleRemoveInsight = (index: number) => {
-    setInsightToRemoveIndex(index);
+  const handleRemoveInsight = (insightId: string) => {
+    setInsightToRemoveId(insightId);
     setRemoveInsightDialogVisible(true);
   };
 
   const handleConfirmRemoveInsight = async () => {
-    if (insightToRemoveIndex === null) return;
+    if (insightToRemoveId === null) return;
 
     const filteredInsights = displayedInsights.filter(
-      (_: any, i: number) => i !== insightToRemoveIndex
+      (i: CompanionProfileLearnInsight) => i.id !== insightToRemoveId
     );
 
     try {
@@ -125,12 +129,12 @@ export default function GenerateInsights() {
     }
 
     setRemoveInsightDialogVisible(false);
-    setInsightToRemoveIndex(null);
+    setInsightToRemoveId(null);
   };
 
   const handleCancelRemoveInsight = () => {
     setRemoveInsightDialogVisible(false);
-    setInsightToRemoveIndex(null);
+    setInsightToRemoveId(null);
   };
 
   return (
@@ -147,10 +151,10 @@ export default function GenerateInsights() {
 
         <SectionList
           title={t("learn.insights.questionsTitle")}
-          items={displayedQuestions.map((question, index) => ({
+          items={displayedQuestions.map((question) => ({
             title: `${question.category}: ${question.question}`,
             onPress: () => {
-              setSelectedQuestionIndex(index);
+              setSelectedQuestionId(question.id);
               setDialogVisible(true);
             },
             containerStyle: question.isNew ? { opacity: fadeAnim } : undefined,
@@ -165,10 +169,10 @@ export default function GenerateInsights() {
             <SectionList
               title={t("learn.insights.insights.title")}
               items={displayedInsights.map(
-                (insight: CompanionProfileLearnInsight, index: number) => ({
+                (insight: CompanionProfileLearnInsight) => ({
                   title: insight.insight,
                   removable: true,
-                  onRemove: () => handleRemoveInsight(index),
+                  onRemove: () => handleRemoveInsight(insight.id),
                 })
               )}
               bottomText={t("learn.insights.insights.bottomText")}
@@ -202,8 +206,9 @@ export default function GenerateInsights() {
           isVisible={removeInsightDialogVisible}
           onCancel={handleCancelRemoveInsight}
           title={
-            insightToRemoveIndex !== null &&
-            displayedInsights[insightToRemoveIndex]?.goals?.length! > 0
+            insightToRemoveId !== null &&
+            displayedInsights.find((i) => i.id === insightToRemoveId)?.goals
+              ?.length! > 0
               ? t("learn.insights.removeInsight.titleWithGoals")
               : t("learn.insights.removeInsight.title")
           }
