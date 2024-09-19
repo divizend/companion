@@ -3,7 +3,7 @@ import { View, StyleSheet, TouchableOpacity, ViewStyle } from "react-native";
 import { Text, ListItem, Divider, Icon, Button } from "@rneui/themed";
 
 interface SectionListProps {
-  title: string;
+  title?: string;
   items: Array<{
     title: string;
     onPress?: () => void;

@@ -14,6 +14,7 @@ import DecideScreen from "./decide";
 import DiscoverScreen from "./discover";
 import { DisclaimerModal } from "@/components/DisclaimerModal";
 import { useUserProfile } from "@/common/profile";
+import { t } from "@/i18n";
 
 const Tab = createBottomTabNavigator();
 const LearnStack = createStackNavigator();
@@ -50,16 +51,17 @@ function Main() {
         screenOptions={({ route }) => ({
           tabBarIcon: ({ color, size }) => {
             let iconName;
+            const id = (route.params as any).id;
 
-            if (route.name === "Learn") {
+            if (id === "learn") {
               iconName = "school";
-            } else if (route.name === "Analyze") {
+            } else if (id === "analyze") {
               iconName = "analytics";
-            } else if (route.name === "Track") {
+            } else if (id === "track") {
               iconName = "trending-up";
-            } else if (route.name === "Decide") {
+            } else if (id === "decide") {
               iconName = "lightbulb";
-            } else if (route.name === "Discover") {
+            } else if (id === "discover") {
               iconName = "explore";
             }
 
@@ -77,11 +79,31 @@ function Main() {
           headerShown: false,
         })}
       >
-        <Tab.Screen name="Learn" component={LearnStackNavigator} />
-        <Tab.Screen name="Analyze" component={AnalyzeScreen} />
-        <Tab.Screen name="Track" component={TrackScreen} />
-        <Tab.Screen name="Decide" component={DecideScreen} />
-        <Tab.Screen name="Discover" component={DiscoverScreen} />
+        <Tab.Screen
+          initialParams={{ id: "learn" }}
+          name={t("tabs.learn")}
+          component={LearnStackNavigator}
+        />
+        <Tab.Screen
+          initialParams={{ id: "analyze" }}
+          name={t("tabs.analyze")}
+          component={AnalyzeScreen}
+        />
+        <Tab.Screen
+          initialParams={{ id: "track" }}
+          name={t("tabs.track")}
+          component={TrackScreen}
+        />
+        <Tab.Screen
+          initialParams={{ id: "decide" }}
+          name={t("tabs.decide")}
+          component={DecideScreen}
+        />
+        <Tab.Screen
+          initialParams={{ id: "discover" }}
+          name={t("tabs.discover")}
+          component={DiscoverScreen}
+        />
       </Tab.Navigator>
       <Modal
         visible={settingsVisible}

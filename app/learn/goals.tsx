@@ -8,67 +8,37 @@ import {
 import { Text } from "@rneui/themed";
 import { t } from "@/i18n";
 import SectionList from "@/components/SectionList";
-import { apiPost } from "@/common/api";
-import {
-  useUserProfile,
-  CompanionProfile,
-  CompanionProfileLearnGoal,
-} from "@/common/profile";
+import { useUserProfile, CompanionProfileGoal } from "@/common/profile";
 import { useNavigation } from "@react-navigation/native";
 
 export default function GenerateGoals() {
   const navigation = useNavigation();
-  const { profile, updateCompanionProfile } = useUserProfile();
-  const [generatingInsightId, setGeneratingInsightId] = useState<string | null>(
-    null
-  );
+  const { profile, updateCompanionProfile, apiPostAI } = useUserProfile({
+    moduleDescription: t("learn.vision"),
+    viewTitle: t("learn.goals.title"),
+    viewExplanation: t("learn.goals.explanation"),
+  });
+  const [generatingLoading, setGeneratingLoading] = useState<boolean>(false);
 
-  const generateGoals = async (insightId: string) => {
-    setGeneratingInsightId(insightId);
+  const generateInitialGoals = async () => {
+    setGeneratingLoading(true);
     try {
-      let context = [AI_CONTEXT_VIEW, AI_CONTEXT_INSIGHTS];
-      const goals =
-        profile.companionProfile?.learnInsights!.find(
-          (i) => i.id === insightId
-        )!.goals ?? [];
-      if (goals.length) {
-        context.push(
-          t("learn.goals.aiContext.goals", {
-            goals: goals.map((goal) => goal.goal).join("\n"),
-          })
-        );
-      }
-
-      const response: CompanionProfileLearnGoal[] = await apiPost(
-        "/companion/learn/generate-goals",
-        { context, insightId }
+      const goals: CompanionProfileGoal[] = await apiPostAI(
+        "/companion/learn/generate-initial-goals"
       );
-      updateCompanionProfile((draft: CompanionProfile) => {
-        draft.learnInsights!.find((i) => i.id === insightId)!.goals = response;
-      });
+      updateCompanionProfile({ goals });
     } finally {
-      setGeneratingInsightId(null);
+      setGeneratingLoading(false);
     }
   };
 
-  const AI_CONTEXT_VIEW = t("aiContext.view", {
-    title: t("learn.goals.title"),
-    explanation: t("learn.goals.explanation"),
-  });
-  const AI_CONTEXT_INSIGHTS = t("learn.goals.aiContext.insights", {
-    insights: (profile.companionProfile?.learnInsights ?? [])
-      .map((insight) => insight.insight)
-      .join("\n"),
-  });
-
-  const removeGoal = async (insightId: string, goalId: string) => {
-    const newCompanionProfile = updateCompanionProfile((p) => {
-      const insight = p.learnInsights!.find((i) => i.id === insightId)!;
-      insight.goals = insight.goals.filter((g) => g.id !== goalId);
+  const removeGoal = async (goalId: string) => {
+    updateCompanionProfile((p) => {
+      p.goals = p.goals.filter((g) => g.id !== goalId);
     });
-    await apiPost("/companion/learn/insights", {
-      newLearnInsights: newCompanionProfile.learnInsights,
-    });
+    /*await apiPostAI("/companion/insights", [], {
+      newUserInsights: newCompanionProfile.userInsights,
+    });*/
   };
 
   return (
@@ -85,31 +55,24 @@ export default function GenerateGoals() {
         <Text style={styles.explanationText}>
           {t("learn.goals.explanation")}
         </Text>
-        {(profile.companionProfile?.learnInsights ?? []).map((insight) => (
-          <SectionList
-            key={insight.insight}
-            title={insight.insight}
-            items={[
-              {
-                title:
-                  generatingInsightId === insight.id
-                    ? t("learn.goals.generateButton.loading")
-                    : insight.goals?.length
-                    ? t("learn.goals.generateButton.titleMore")
-                    : t("learn.goals.generateButton.title"),
-                onPress: () => generateGoals(insight.id),
-                containerStyle: styles.generateButtonContainer,
-                disabled: generatingInsightId === insight.id,
-              },
-              ...(insight.goals ?? []).map((goal) => ({
-                title: goal.goal,
-                removable: true,
-                onRemove: () => removeGoal(insight.id, goal.id),
-              })),
-            ]}
-            containerStyle={styles.sectionContainer}
-          />
-        ))}
+        <SectionList
+          items={[
+            {
+              title: generatingLoading
+                ? t("learn.goals.generateButton.loading")
+                : t("learn.goals.generateButton.title"),
+              onPress: () => generateInitialGoals(),
+              containerStyle: styles.generateButtonContainer,
+              disabled: generatingLoading,
+            },
+            ...profile.companionProfile.goals.map((goal) => ({
+              title: goal.description,
+              removable: true,
+              onRemove: () => removeGoal(goal.id),
+            })),
+          ]}
+          containerStyle={styles.sectionContainer}
+        />
       </ScrollView>
     </SafeAreaView>
   );

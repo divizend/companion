@@ -23,7 +23,11 @@ import { useNavigation } from "@react-navigation/native";
 
 export default function GenerateInsights() {
   const navigation = useNavigation();
-  const { profile, updateCompanionProfile } = useUserProfile();
+  const { profile, updateCompanionProfile, apiPostAI } = useUserProfile({
+    moduleDescription: t("learn.vision"),
+    viewTitle: t("learn.insights.title"),
+    viewExplanation: t("learn.insights.explanation"),
+  });
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const [dialogVisible, setDialogVisible] = useState(false);
   const [selectedQuestionId, setSelectedQuestionId] = useState<string | null>(
@@ -51,15 +55,7 @@ export default function GenerateInsights() {
       : null;
 
   const displayedInsights: CompanionProfileLearnInsight[] =
-    profile.companionProfile?.learnInsights ?? [];
-
-  const AI_CONTEXT_VIEW = t("aiContext.view", {
-    title: t("learn.insights.title"),
-    explanation: t("learn.insights.explanation"),
-  });
-  const AI_CONTEXT_QUESTIONS = t("learn.insights.aiContext.questions", {
-    questions: displayedQuestions.map((q) => q.question).join("\n"),
-  });
+    profile.companionProfile?.userInsights ?? [];
 
   useEffect(() => {
     Animated.timing(fadeAnim, {
@@ -68,6 +64,12 @@ export default function GenerateInsights() {
       useNativeDriver: true,
     }).start();
   }, [displayedQuestions]);
+
+  const AI_CONTEXT_LOCAL = {
+    questions: t("learn.insights.aiContext.displayedQuestions", {
+      questions: displayedQuestions.map((q) => q.question).join("\n"),
+    }),
+  };
 
   const handleDialogOption = async (
     option: "answer" | "getSimilar",
@@ -79,24 +81,30 @@ export default function GenerateInsights() {
       try {
         const answer = await showInputDialog(selectedQuestion.question);
         setLoading!(true);
-        const insight = await apiPost("/companion/learn/generate-insight", {
-          context: [AI_CONTEXT_VIEW],
-          question: selectedQuestion.question,
-          answer,
-        });
+        const insight = await apiPostAI(
+          "/companion/learn/generate-insight",
+          [AI_CONTEXT_LOCAL.questions],
+          {
+            question: selectedQuestion.question,
+            answer,
+          }
+        );
         updateCompanionProfile((p) => {
-          p.learnInsights?.push(insight);
+          p.userInsights?.push(insight);
         });
         setDialogVisible(false);
       } catch {
         // Do nothing if the user cancels the input
       }
     } else if (option === "getSimilar") {
-      const allQuestions = await apiPost("/companion/learn/similar-questions", {
-        context: [AI_CONTEXT_VIEW, AI_CONTEXT_QUESTIONS],
-        currentQuestions: displayedQuestions,
-        questionId: selectedQuestionId,
-      });
+      const allQuestions = await apiPostAI(
+        "/companion/learn/similar-questions",
+        [AI_CONTEXT_LOCAL.questions],
+        {
+          currentQuestions: displayedQuestions,
+          questionId: selectedQuestionId,
+        }
+      );
 
       updateCompanionProfile({ learnQuestions: allQuestions });
 
@@ -118,11 +126,11 @@ export default function GenerateInsights() {
     );
 
     try {
-      await apiPost("/companion/learn/insights", {
-        newLearnInsights: filteredInsights,
+      await apiPost("/companion/insights", {
+        newUserInsights: filteredInsights,
       });
       updateCompanionProfile({
-        learnInsights: filteredInsights,
+        userInsights: filteredInsights,
       });
     } catch (error) {
       console.error("Failed to remove insight:", error);
@@ -144,8 +152,12 @@ export default function GenerateInsights() {
           {t("learn.insights.title")}
         </Text>
         <View style={styles.explanationContainer}>
+          <Text style={styles.explanationText}>{t("learn.vision")}</Text>
           <Text style={styles.explanationText}>
             {t("learn.insights.explanation")}
+          </Text>
+          <Text style={styles.explanationText}>
+            {t("learn.insights.explanation2")}
           </Text>
         </View>
 
@@ -205,13 +217,7 @@ export default function GenerateInsights() {
         <CustomDialog
           isVisible={removeInsightDialogVisible}
           onCancel={handleCancelRemoveInsight}
-          title={
-            insightToRemoveId !== null &&
-            displayedInsights.find((i) => i.id === insightToRemoveId)?.goals
-              ?.length! > 0
-              ? t("learn.insights.removeInsight.titleWithGoals")
-              : t("learn.insights.removeInsight.title")
-          }
+          title={t("learn.insights.removeInsight.title")}
           items={[
             {
               text: t("common.remove"),
