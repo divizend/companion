@@ -5,6 +5,7 @@ import {
   Animated,
   SafeAreaView,
   ScrollView,
+  Alert,
 } from "react-native";
 import { Text } from "@rneui/themed";
 import uuid from "react-native-uuid";
@@ -31,11 +32,6 @@ export default function GenerateInsights() {
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const [dialogVisible, setDialogVisible] = useState(false);
   const [selectedQuestionId, setSelectedQuestionId] = useState<string | null>(
-    null
-  );
-  const [removeInsightDialogVisible, setRemoveInsightDialogVisible] =
-    useState(false);
-  const [insightToRemoveId, setInsightToRemoveId] = useState<string | null>(
     null
   );
 
@@ -114,35 +110,36 @@ export default function GenerateInsights() {
   };
 
   const handleRemoveInsight = (insightId: string) => {
-    setInsightToRemoveId(insightId);
-    setRemoveInsightDialogVisible(true);
-  };
-
-  const handleConfirmRemoveInsight = async () => {
-    if (insightToRemoveId === null) return;
-
-    const filteredInsights = displayedInsights.filter(
-      (i: CompanionProfileLearnInsight) => i.id !== insightToRemoveId
+    Alert.alert(
+      profile.companionProfile?.userInsights.find((i) => i.id === insightId)
+        ?.insight!,
+      t("learn.insights.removeInsight.message"),
+      [
+        {
+          text: t("common.cancel"),
+          style: "cancel",
+        },
+        {
+          text: t("common.remove"),
+          onPress: async () => {
+            const filteredInsights = displayedInsights.filter(
+              (i: CompanionProfileLearnInsight) => i.id !== insightId
+            );
+            try {
+              await apiPost("/companion/insights", {
+                newUserInsights: filteredInsights,
+              });
+              updateCompanionProfile({
+                userInsights: filteredInsights,
+              });
+            } catch (error) {
+              console.error("Failed to remove insight:", error);
+            }
+          },
+          style: "destructive",
+        },
+      ]
     );
-
-    try {
-      await apiPost("/companion/insights", {
-        newUserInsights: filteredInsights,
-      });
-      updateCompanionProfile({
-        userInsights: filteredInsights,
-      });
-    } catch (error) {
-      console.error("Failed to remove insight:", error);
-    }
-
-    setRemoveInsightDialogVisible(false);
-    setInsightToRemoveId(null);
-  };
-
-  const handleCancelRemoveInsight = () => {
-    setRemoveInsightDialogVisible(false);
-    setInsightToRemoveId(null);
   };
 
   return (
@@ -210,19 +207,6 @@ export default function GenerateInsights() {
             {
               text: t("learn.insights.questionOptions.getSimilar"),
               onPress: () => handleDialogOption("getSimilar"),
-            },
-          ]}
-        />
-
-        <CustomDialog
-          isVisible={removeInsightDialogVisible}
-          onCancel={handleCancelRemoveInsight}
-          title={t("learn.insights.removeInsight.title")}
-          items={[
-            {
-              text: t("common.remove"),
-              onPress: handleConfirmRemoveInsight,
-              style: "destructive",
             },
           ]}
         />

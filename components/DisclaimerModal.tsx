@@ -13,13 +13,14 @@ import {
   Alert,
 } from "react-native";
 import { Button } from "@rneui/themed";
-import { t } from "@/i18n";
+import { i18n, t } from "@/i18n";
 import { colors } from "@/common/colors";
 import { LinearGradient } from "expo-linear-gradient";
 import { apiPost } from "@/common/api";
 import { Picker } from "@react-native-picker/picker";
 import { countries } from "@/common/countries";
 import { useUserProfile, usePrincipalLegalEntity } from "@/common/profile";
+import DatePicker from "react-native-date-picker";
 
 interface DisclaimerModalProps {
   visible: boolean;
@@ -30,11 +31,16 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 export const DisclaimerModal: React.FC<DisclaimerModalProps> = ({
   visible,
 }) => {
-  const { updateProfile } = useUserProfile();
+  const { updateProfile, updatePrincipalLegalEntity } = useUserProfile();
   const principalLegalEntity = usePrincipalLegalEntity();
   const [currentPage, setCurrentPage] = useState(0);
   const [selectedCountry, setSelectedCountry] = useState(
     principalLegalEntity?.data.info.nationality ?? ""
+  );
+  const [birthday, setBirthday] = useState<Date | null>(
+    principalLegalEntity?.data.info.birthday
+      ? new Date(principalLegalEntity.data.info.birthday)
+      : null
   );
   const scrollViewRef = useRef<ScrollView>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -58,7 +64,12 @@ export const DisclaimerModal: React.FC<DisclaimerModalProps> = ({
   let availablePages = 3;
   if (principalLegalEntity?.data.info.nationality) {
     availablePages = 4;
+    if (principalLegalEntity?.data.info.birthday) {
+      availablePages = 5;
+    }
   }
+
+  const formatDate = (date: Date) => date.toISOString().slice(0, 10);
 
   const renderPageIndicator = () => {
     return (
@@ -122,7 +133,23 @@ export const DisclaimerModal: React.FC<DisclaimerModalProps> = ({
             </Picker>
           </View>
         </View>
-        {availablePages >= 4 ? (
+        <View style={styles.page}>
+          <Text style={styles.modalTitle}>
+            {t("disclaimer.birthday.title")}
+          </Text>
+          <Text style={styles.modalText}>
+            {t("disclaimer.birthday.message")}
+          </Text>
+          <View style={styles.pickerContainer}>
+            <DatePicker
+              date={birthday || new Date()}
+              onDateChange={setBirthday}
+              locale={i18n.locale}
+              mode="date"
+            />
+          </View>
+        </View>
+        {availablePages >= 5 && (
           <View style={styles.page}>
             <Text style={styles.modalTitle}>
               {t("disclaimer.allSet.title")}
@@ -131,9 +158,16 @@ export const DisclaimerModal: React.FC<DisclaimerModalProps> = ({
               {t("disclaimer.allSet.message")}
             </Text>
           </View>
-        ) : null}
+        )}
       </ScrollView>
     );
+  };
+
+  const isValidBirthday = (date: Date | null) => {
+    if (!date) return false;
+    const oneYearAgo = new Date();
+    oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
+    return +date < +oneYearAgo;
   };
 
   return (
@@ -156,14 +190,14 @@ export const DisclaimerModal: React.FC<DisclaimerModalProps> = ({
           {renderPageIndicator()}
           <Button
             title={
-              currentPage !== 3
+              currentPage !== 4
                 ? t("common.next")
                 : isLoading
                 ? t("common.loading")
                 : t("disclaimer.finalConfirm")
             }
             onPress={async () => {
-              if (currentPage < 2) {
+              if (currentPage === 0 || currentPage === 1) {
                 scrollViewRef.current?.scrollTo({
                   x: screenWidth * (currentPage + 1),
                   animated: true,
@@ -175,10 +209,8 @@ export const DisclaimerModal: React.FC<DisclaimerModalProps> = ({
                     `/legalEntities/${principalLegalEntity?.id}/nationality`,
                     { nationality: selectedCountry }
                   );
-                  updateProfile((p) => {
-                    p.legalEntities.find(
-                      (le) => le.isPrincipal
-                    )!.data.info.nationality = selectedCountry;
+                  updatePrincipalLegalEntity((p) => {
+                    p.data.info.nationality = selectedCountry;
                   });
                   setTimeout(
                     () =>
@@ -194,6 +226,30 @@ export const DisclaimerModal: React.FC<DisclaimerModalProps> = ({
                   setIsLoading(false);
                 }
               } else if (currentPage === 3) {
+                setIsLoading(true);
+                try {
+                  const formattedBirthday = formatDate(birthday!);
+                  await apiPost(
+                    `/legalEntities/${principalLegalEntity?.id}/birthday`,
+                    { birthday: formattedBirthday }
+                  );
+                  updatePrincipalLegalEntity((p) => {
+                    p.data.info.birthday = formattedBirthday;
+                  });
+                  setTimeout(
+                    () =>
+                      scrollViewRef.current?.scrollTo({
+                        x: screenWidth * 4,
+                        animated: true,
+                      }),
+                    200
+                  );
+                } catch (error: any) {
+                  Alert.alert(t("common.error"), error.message);
+                } finally {
+                  setIsLoading(false);
+                }
+              } else if (currentPage === 4) {
                 setIsLoading(true);
                 try {
                   await apiPost("/users/flag", {
@@ -213,7 +269,11 @@ export const DisclaimerModal: React.FC<DisclaimerModalProps> = ({
             buttonStyle={styles.modalButton}
             titleStyle={styles.buttonText}
             loading={isLoading}
-            disabled={isLoading || (currentPage === 2 && !selectedCountry)}
+            disabled={
+              isLoading ||
+              (currentPage === 2 && !selectedCountry) ||
+              (currentPage === 3 && (!birthday || !isValidBirthday(birthday)))
+            }
           />
         </View>
       </SafeAreaView>
@@ -294,7 +354,7 @@ const styles = StyleSheet.create({
     padding: 12,
   },
   pickerContainer: {
-    width: "80%",
+    width: "100%",
     marginBottom: 20,
     backgroundColor: "white",
     borderRadius: 8,
@@ -302,5 +362,13 @@ const styles = StyleSheet.create({
   },
   picker: {
     width: "100%",
+  },
+  dateInput: {
+    width: 200,
+    height: 40,
+    borderColor: "gray",
+    borderWidth: 1,
+    borderRadius: 5,
+    paddingHorizontal: 10,
   },
 });

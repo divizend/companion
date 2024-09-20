@@ -59,6 +59,12 @@ export const apiPost = (endpoint: string, body: any) => {
   });
 };
 
+export const apiDelete = (endpoint: string) => {
+  return apiFetch(endpoint, {
+    method: "DELETE",
+  });
+};
+
 export const useFetch = (key: string, endpoint?: string) => {
   return useQuery({
     queryKey: [key],

@@ -31,7 +31,10 @@ export type LegalEntity = {
   isPrincipal: boolean;
   data: {
     info: {
-      nationality: string;
+      givenName: string;
+      surname: string;
+      birthday?: string; // ISO format
+      nationality?: string;
     };
   };
 };
@@ -67,8 +70,21 @@ export interface AIContextView {
 export function getGlobalAIContext(profile: UserProfile): string[] {
   const principalLegalEntity = getPrincipalLegalEntity(profile);
 
+  // Calculate user's current age
+  let age = 0;
+  if (principalLegalEntity?.data.info.birthday) {
+    const birthDate = new Date(principalLegalEntity.data.info.birthday);
+    const today = new Date();
+    age = today.getFullYear() - birthDate.getFullYear();
+    const m = today.getMonth() - birthDate.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+  }
+
   const userContext = t("aiContext.user", {
     country: t("country." + principalLegalEntity?.data.info.nationality),
+    age,
   });
 
   return [userContext];
@@ -100,6 +116,17 @@ export function useUserProfile(aiContextView?: AIContextView) {
     }).companionProfile;
   };
 
+  const updatePrincipalLegalEntity = (fn: (draft: LegalEntity) => void) => {
+    updateProfile((draft) => {
+      const principalEntity = draft.legalEntities.find(
+        (entity) => entity.isPrincipal
+      );
+      if (principalEntity) {
+        fn(principalEntity);
+      }
+    });
+  };
+
   const aiContextGlobal = getGlobalAIContext(profile);
 
   const apiPostAI = (path: string, aiContextLocal?: string[], body?: any) => {
@@ -118,6 +145,7 @@ export function useUserProfile(aiContextView?: AIContextView) {
     isLoading: profileRaw.isLoading,
     updateProfile,
     updateCompanionProfile,
+    updatePrincipalLegalEntity,
     aiContextGlobal,
     apiPostAI,
   };
