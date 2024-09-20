@@ -29,7 +29,7 @@ export default ({ config }) => {
 
   return {
     ...config,
-    name: "Divizend",
+    name: "Companion",
     slug: "companion",
     version: "1.0.0",
     owner: "divizend",
