@@ -3,10 +3,12 @@ import { StyleSheet, ScrollView, SafeAreaView, Modal } from "react-native";
 import { Text } from "@rneui/themed";
 import { t } from "@/i18n";
 import { useUserProfile } from "@/common/profile";
+import { useNavigation } from "@react-navigation/native";
 import SectionList from "@/components/SectionList";
 import GoalsManagerModal from "./GoalsManagerModal";
 
 export default function RealizeGoals() {
+  const navigation = useNavigation();
   const { profile } = useUserProfile({
     moduleDescription: t("learn.vision"),
     viewTitle: t("learn.realizeGoals.title"),
@@ -31,7 +33,8 @@ export default function RealizeGoals() {
           title={t("learn.realizeGoals.yourGoals")}
           items={profile.companionProfile.goals.map((goal) => ({
             title: goal.description,
-            onPress: () => {}, // Add functionality if needed
+            onPress: () =>
+              navigation.navigate("GoalDetails", { goalId: goal.id }),
           }))}
           containerStyle={styles.sectionContainer}
         />

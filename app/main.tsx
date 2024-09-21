@@ -16,6 +16,7 @@ import DiscoverScreen from "./discover";
 import { DisclaimerModal } from "@/components/DisclaimerModal";
 import { useUserProfile } from "@/common/profile";
 import { t } from "@/i18n";
+import GoalDetailsScreen from "./learn/GoalDetails";
 
 const Tab = createBottomTabNavigator();
 const LearnStack = createStackNavigator();
@@ -32,6 +33,7 @@ function LearnStackNavigator() {
       <LearnStack.Screen name="Insights" component={InsightsScreen} />
       <LearnStack.Screen name="Goals" component={GoalsScreen} />
       <LearnStack.Screen name="RealizeGoals" component={RealizeGoalsScreen} />
+      <LearnStack.Screen name="GoalDetails" component={GoalDetailsScreen} />
     </LearnStack.Navigator>
   );
 }
