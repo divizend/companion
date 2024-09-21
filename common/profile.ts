@@ -24,6 +24,7 @@ export type CompanionProfile = {
   learnQuestions: CompanionProfileLearnQuestion[];
   userInsights: CompanionProfileLearnInsight[];
   goals: CompanionProfileGoal[];
+  goalSetupDone: boolean;
 };
 
 export type LegalEntity = {
@@ -54,6 +55,7 @@ function getEmptyCompanionProfile(): CompanionProfile {
     learnQuestions: [],
     userInsights: [],
     goals: [],
+    goalSetupDone: false,
   };
 }
 
@@ -142,6 +144,7 @@ export function useUserProfile(aiContextView?: AIContextView) {
 
   return {
     profile,
+    companionProfile: profile.companionProfile,
     isLoading: profileRaw.isLoading,
     updateProfile,
     updateCompanionProfile,

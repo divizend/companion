@@ -73,7 +73,7 @@
       "aiContext": {
         "displayedQuestions": "The user sees the following questions:\n{{questions}}"
       },
-      "explanation": "All this learning is fully personalized and happens at a pace that you choose yourself. To achieve this, you need to answer a few questions first, guided by the following. At first, your answers will be reformulated into insights about your financial life.",
+      "explanation": "All this learning is fully personalized and happens at a pace that you choose yourself. To achieve this, you need to answer a few questions first, guided by the following. As a first step, your answers will be reformulated into insights about your financial life.",
       "explanation2": "When you tap on a question, you can also generate new questions based on it.",
       "questionsTitle": "Inspiration for questions",
       "defaultQuestions": [
@@ -134,7 +134,7 @@
     "goals": {
       "title": "Step 2: Goals",
       "backLink": "Go back to insights setup",
-      "explanation": "Based on the insights about your financial life, let's now determine concrete goals for you. If you want to make a goal more precise or correct it, simply tap on it.",
+      "explanation": "Based on the insights about your financial life, let's now determine concrete goals and visions for you. If you want to make a goal more precise or correct it, simply tap on it.",
       "generateButton": {
         "title": "Tap here to determine goals",
         "titleRecreate": "Tap here to redetermine goals",
@@ -155,12 +155,25 @@
         "loading": "Adding goal..."
       },
       "removeGoalAlert": {
-        "message": "Are you sure you want to remove this goal?"
+        "message": "Are you sure you want to remove this goal and all associated data?"
       },
       "refineGoal": {
         "placeholder": "What do you want to change about this goal?",
         "refining": "Refining..."
+      },
+      "confirmGoals": {
+        "buttonTitle": "Goals clear? Tap here to start learning how to realize them!",
+        "successTitle": "Goals Confirmed",
+        "successMessage": "Your goals have been successfully confirmed.",
+        "errorMessage": "An error occurred while confirming your goals. Please try again."
       }
+    },
+    "realizeGoals": {
+      "title": "Welcome",
+      "explanation": "Which of your goals do you want to strive for today?",
+      "yourGoals": "Your goals",
+      "actions": "Actions",
+      "manageGoals": "Manage goals"
     }
   },
   "country": {

@@ -8,6 +8,7 @@ import { colors } from "@/common/colors";
 import SettingsView from "@/components/SettingsView";
 import InsightsScreen from "./learn/insights";
 import GoalsScreen from "./learn/goals";
+import RealizeGoalsScreen from "./learn/realize-goals";
 import AnalyzeScreen from "./analyze";
 import TrackScreen from "./track";
 import DecideScreen from "./decide";
@@ -20,18 +21,17 @@ const Tab = createBottomTabNavigator();
 const LearnStack = createStackNavigator();
 
 function LearnStackNavigator() {
+  const { companionProfile } = useUserProfile();
   return (
-    <LearnStack.Navigator screenOptions={{ headerShown: false }}>
-      <LearnStack.Screen
-        name="Insights"
-        component={InsightsScreen}
-        options={{ title: "Insights" }}
-      />
-      <LearnStack.Screen
-        name="Goals"
-        component={GoalsScreen}
-        options={{ title: "Goals" }}
-      />
+    <LearnStack.Navigator
+      screenOptions={{ headerShown: false }}
+      initialRouteName={
+        companionProfile.goalSetupDone ? "RealizeGoals" : "Insights"
+      }
+    >
+      <LearnStack.Screen name="Insights" component={InsightsScreen} />
+      <LearnStack.Screen name="Goals" component={GoalsScreen} />
+      <LearnStack.Screen name="RealizeGoals" component={RealizeGoalsScreen} />
     </LearnStack.Navigator>
   );
 }

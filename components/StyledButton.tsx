@@ -2,7 +2,7 @@ import React from "react";
 import { StyleSheet, ViewStyle, TextStyle } from "react-native";
 import { Button, ButtonProps } from "@rneui/themed";
 
-interface StyledButtonProps extends ButtonProps {
+export interface StyledButtonProps extends ButtonProps {
   containerStyle?: ViewStyle;
   titleStyle?: TextStyle;
 }
