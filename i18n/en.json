@@ -16,7 +16,8 @@
     "ok": "OK",
     "next": "Next",
     "remove": "Remove",
-    "submit": "Submit"
+    "submit": "Submit",
+    "add": "Add"
   },
   "comingSoon": {
     "title": "Coming soon",
@@ -176,7 +177,16 @@
       "manageGoals": "Manage goals"
     },
     "goalDetails": {
-      "explanation": "Here you can see the details of a goal and manage it."
+      "explanation": "Here you can see the details of a goal and manage it.",
+      "realities": {
+        "title": "Realities",
+        "addReality": "Add a new fact about the status quo",
+        "addingReality": "Adding new fact about the status quo...",
+        "addRealityTitle": "Add new reality",
+        "addRealityPrompt": "What is true about this goal right now? Feel free to also add reasons, explanations and every else you deem relevant.",
+        "explanation": "Here you can add facts associated with this goal, for example: What's your current progress? What have you done so far to achieve this goal? Which obstacles do you currently encounter? Which uncertainties do you have about it? Make sure to always keep these updated and as accurate as possible. Don't worry when this is empty in the beginning.",
+        "removeReality": "Do you want to remove this reality?"
+      }
     }
   },
   "country": {

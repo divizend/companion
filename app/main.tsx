@@ -9,6 +9,7 @@ import SettingsView from "@/components/SettingsView";
 import InsightsScreen from "./learn/insights";
 import GoalsScreen from "./learn/goals";
 import RealizeGoalsScreen from "./learn/realize-goals";
+import GoalDetailsScreen from "./learn/goal-details";
 import AnalyzeScreen from "./analyze";
 import TrackScreen from "./track";
 import DecideScreen from "./decide";
@@ -16,7 +17,6 @@ import DiscoverScreen from "./discover";
 import { DisclaimerModal } from "@/components/DisclaimerModal";
 import { useUserProfile } from "@/common/profile";
 import { t } from "@/i18n";
-import GoalDetailsScreen from "./learn/GoalDetails";
 
 const Tab = createBottomTabNavigator();
 const LearnStack = createStackNavigator();

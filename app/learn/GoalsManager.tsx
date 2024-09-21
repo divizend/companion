@@ -161,7 +161,7 @@ export default function GoalsManager({
                 ? styles.refiningGoalContainer
                 : undefined,
           })),
-        ].filter(Boolean)}
+        ].filter((x) => !!x)}
         containerStyle={styles.sectionContainer}
       />
       {profile.companionProfile.goals.length > 0 && (

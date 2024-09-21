@@ -15,9 +15,15 @@ export type CompanionProfileLearnInsight = {
   insight: string;
 };
 
+export type CompanionProfileGoalReality = {
+  id: string;
+  reality: string;
+};
+
 export type CompanionProfileGoal = {
   id: string;
   description: string;
+  realities: CompanionProfileGoalReality[];
 };
 
 export type CompanionProfile = {

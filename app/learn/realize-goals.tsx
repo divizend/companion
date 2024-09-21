@@ -1,6 +1,12 @@
 import React, { useState } from "react";
-import { StyleSheet, ScrollView, SafeAreaView, Modal } from "react-native";
-import { Text } from "@rneui/themed";
+import {
+  StyleSheet,
+  ScrollView,
+  SafeAreaView,
+  Modal,
+  Alert,
+} from "react-native";
+import { Text, Input, Button } from "@rneui/themed";
 import { t } from "@/i18n";
 import { useUserProfile } from "@/common/profile";
 import { useNavigation } from "@react-navigation/native";
@@ -34,7 +40,8 @@ export default function RealizeGoals() {
           items={profile.companionProfile.goals.map((goal) => ({
             title: goal.description,
             onPress: () =>
-              navigation.navigate("GoalDetails", { goalId: goal.id }),
+              // super ugly typecast to avoid TS errors relating to "never"
+              (navigation.navigate as any)("GoalDetails", { goalId: goal.id }),
           }))}
           containerStyle={styles.sectionContainer}
         />

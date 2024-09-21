@@ -51,13 +51,20 @@ const SectionList: React.FC<SectionListProps> = ({
                   <Icon
                     name={item.leftIcon.name}
                     type={item.leftIcon.type || "material"}
-                    color={item.leftIcon.color || "black"}
+                    color={
+                      item.leftIcon.color || (item.disabled ? "grey" : "black")
+                    }
                     size={20}
                     containerStyle={styles.iconContainer}
                   />
                 )}
                 <ListItem.Content style={styles.listItemContent}>
-                  <ListItem.Title style={styles.listItemTitle}>
+                  <ListItem.Title
+                    style={[
+                      styles.listItemTitle,
+                      item.disabled && styles.disabledTitle,
+                    ]}
+                  >
                     {item.title}
                   </ListItem.Title>
                   {item.rightElement && (
@@ -150,6 +157,9 @@ const styles = StyleSheet.create({
   },
   listItemTitle: {
     fontSize: 16,
+  },
+  disabledTitle: {
+    color: "grey",
   },
   rightElementText: {
     color: "grey",
