@@ -1,7 +1,9 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { produce } from "immer";
-import { useFetch, apiPost } from "./api";
+import RNRestart from "react-native-restart";
+import { useFetch, apiGet, apiPost } from "./api";
 import { t } from "@/i18n";
+import { setSessionToken } from "./sessionToken";
 
 export type CompanionProfileLearnQuestion = {
   id: string;
@@ -51,7 +53,16 @@ export type UserProfile = {
   email: string;
   legalEntities: LegalEntity[];
   flags: {
+    canImpersonateUsers?: boolean;
+    canModifyOwnInternalFlags?: boolean;
     allowedCompanionAI?: boolean;
+  };
+  impersonation?: {
+    fromEmail: string;
+    fromUserIdentityId: string;
+    flags: {
+      canModifyImpersonatedInternalFlags?: boolean;
+    };
   };
   companionProfile: CompanionProfile;
   // actually also many other properties, but those are not relevant for now
@@ -149,6 +160,11 @@ export function useUserProfile(aiContextView?: AIContextView) {
     });
   };
 
+  const isPrivileged =
+    profile.flags.canImpersonateUsers ||
+    profile.flags.canModifyOwnInternalFlags ||
+    profile.impersonation?.flags.canModifyImpersonatedInternalFlags;
+
   return {
     profile,
     companionProfile: profile.companionProfile,
@@ -158,7 +174,19 @@ export function useUserProfile(aiContextView?: AIContextView) {
     updatePrincipalLegalEntity,
     aiContextGlobal,
     apiPostAI,
+    isPrivileged,
   };
+}
+
+export async function impersonateUser(userIdentityId: string) {
+  const { publicTokenGetterCode } = await apiGet(`/auth/impersonate`, {
+    userIdentityId,
+  });
+  const { sessionToken } = await apiGet(
+    "/auth/sessionToken/" + publicTokenGetterCode
+  );
+  await setSessionToken(sessionToken);
+  RNRestart.restart();
 }
 
 export function getPrincipalLegalEntity(

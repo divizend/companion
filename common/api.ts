@@ -53,6 +53,17 @@ export const apiFetch = async (endpoint: string, options: any = {}) => {
   return json;
 };
 
+export const apiGet = (
+  endpoint: string,
+  queryParams?: Record<string, string>
+) => {
+  return apiFetch(
+    endpoint +
+      (queryParams ? "?" + new URLSearchParams(queryParams).toString() : ""),
+    { method: "GET" }
+  );
+};
+
 export const apiPost = (endpoint: string, body: any) => {
   return apiFetch(endpoint, {
     method: "POST",
