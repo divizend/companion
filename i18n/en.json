@@ -221,7 +221,7 @@
           "cta": "Add a new fact",
           "loading": "Loading questions...",
           "title": "Add a new fact",
-          "explanation": "Answer any of the following questions to continue assessing the status quo of your path towards achieving this goal.",
+          "explanation": "Answer any of the following questions to continue assessing the status quo of your path towards achieving this goal. Or use the button at the bottom to add a new fact manually.",
           "addManual": "Add a new fact manually",
           "furtherActions": "Further actions",
           "success": "Fact added successfully!",
