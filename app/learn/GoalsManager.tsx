@@ -149,9 +149,7 @@ export default function GoalsManager({
           ...profile.companionProfile.goals.map((goal) => ({
             title:
               refiningGoalId === goal.id
-                ? `${goal.description} (${t(
-                    "learn.goals.refineGoal.refining"
-                  )})`
+                ? `${goal.description} (${t("common:refining")})`
                 : goal.description,
             onPress: () => handleGoalClick(goal),
             removable: true,
@@ -175,6 +173,7 @@ export default function GoalsManager({
                   : t("learn.goals.addManualGoal.buttonTitle"),
                 onPress: addManualGoal,
                 disabled: addingManualGoal,
+                leftIcon: { name: "add", type: "material" },
               },
             ]}
             containerStyle={styles.addManualGoalContainer}

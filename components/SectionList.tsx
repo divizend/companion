@@ -1,6 +1,6 @@
 import React from "react";
 import { View, StyleSheet, TouchableOpacity, ViewStyle } from "react-native";
-import { Text, ListItem, Divider, Icon, Button } from "@rneui/themed";
+import { Text, ListItem, Divider, Icon } from "@rneui/themed";
 
 interface SectionListProps {
   title?: string;
@@ -24,13 +24,13 @@ interface SectionListProps {
   ItemComponent?: React.ComponentType<any>;
 }
 
-const SectionList: React.FC<SectionListProps> = ({
+export default function SectionList({
   title,
   items,
   bottomText,
   containerStyle,
   ItemComponent = View,
-}) => {
+}: SectionListProps) {
   return (
     <View style={[styles.container, containerStyle]}>
       {title && <Text style={styles.sectionHeader}>{title.toUpperCase()}</Text>}
@@ -100,7 +100,7 @@ const SectionList: React.FC<SectionListProps> = ({
       {bottomText && <Text style={styles.bottomText}>{bottomText}</Text>}
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -169,5 +169,3 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
 });
-
-export default SectionList;

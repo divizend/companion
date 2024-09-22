@@ -95,7 +95,7 @@ export function getGlobalAIContext(profile: UserProfile): string[] {
     age,
   });
 
-  return [userContext];
+  return [t("aiContext.app"), userContext];
 }
 
 export function useUserProfile(aiContextView?: AIContextView) {
@@ -166,7 +166,19 @@ export function getPrincipalLegalEntity(
   return profile.legalEntities.find((entity) => entity.isPrincipal);
 }
 
+export function getGoal(
+  profile: UserProfile,
+  goalId: string
+): CompanionProfileGoal | undefined {
+  return profile.companionProfile.goals.find((goal) => goal.id === goalId);
+}
+
 export function usePrincipalLegalEntity() {
   const { profile } = useUserProfile();
   return getPrincipalLegalEntity(profile);
+}
+
+export function useGoal(goalId: string) {
+  const { profile } = useUserProfile();
+  return getGoal(profile, goalId);
 }

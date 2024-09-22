@@ -4,7 +4,7 @@ import { t } from "@/i18n";
 export function showInputDialog(
   title: string,
   placeholder?: string
-): Promise<string> {
+): Promise<string | undefined> {
   return new Promise((resolve, reject) => {
     Alert.prompt(
       title,
@@ -12,7 +12,7 @@ export function showInputDialog(
       [
         {
           text: t("common.cancel"),
-          onPress: () => reject(),
+          onPress: () => resolve(undefined),
           style: "cancel",
         },
         {

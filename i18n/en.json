@@ -1,11 +1,11 @@
 {
   "aiContext": {
+    "app": "The user is using an app whose purpose is to empower users to achieve their goals, visions and dreams, which should always be considered in all responses.",
     "user": "The user has {{country}} as their country of tax residency and the user is currently {{age}} years old, which should be considered in all responses.",
-    "view": "The user is currently in a module of an app described by \"{{moduleDescription}}\" on a screen titled \"{{viewTitle}}\" with the explanation \"{{viewExplanation}}\"."
+    "view": "The user is currently in a module of the app described by \"{{moduleDescription}}\" on a screen titled \"{{viewTitle}}\" with the explanation \"{{viewExplanation}}\"."
   },
   "common": {
     "error": "Error",
-    "loading": "Loading...",
     "cancel": "Cancel",
     "login": "Login",
     "logout": "Logout",
@@ -17,7 +17,9 @@
     "next": "Next",
     "remove": "Remove",
     "submit": "Submit",
-    "add": "Add"
+    "add": "Add",
+    "loading": "Loading...",
+    "refining": "Refining..."
   },
   "comingSoon": {
     "title": "Coming soon",
@@ -149,8 +151,8 @@
         "message": "Are you sure you want to reinitialize your goals based on your insights? If you confirm, all current goals will be replaced."
       },
       "addManualGoal": {
-        "sectionTitle": "Anything missing?",
-        "buttonTitle": "Tap here to add another goal manually",
+        "sectionTitle": "Further actions",
+        "buttonTitle": "Add a new goal manually",
         "title": "Add a new goal",
         "placeholder": "Formulate it as freely as you like.",
         "loading": "Adding goal..."
@@ -162,12 +164,7 @@
         "placeholder": "What do you want to change about this goal?",
         "refining": "Refining..."
       },
-      "confirmGoals": {
-        "buttonTitle": "Goals clear? Tap here to start learning how to realize them!",
-        "successTitle": "Goals Confirmed",
-        "successMessage": "Your goals have been successfully confirmed.",
-        "errorMessage": "An error occurred while confirming your goals. Please try again."
-      }
+      "confirmGoals": "Goals clear? Tap here to start learning how to realize them!"
     },
     "realizeGoals": {
       "title": "Welcome",
@@ -177,15 +174,23 @@
       "manageGoals": "Manage goals"
     },
     "goalDetails": {
-      "explanation": "Here you can see the details of a goal and manage it.",
       "realities": {
-        "title": "Realities",
-        "addReality": "Add a new fact about the status quo",
-        "addingReality": "Adding new fact about the status quo...",
-        "addRealityTitle": "Add new reality",
+        "title": "Details and status quo",
+        "addRealityTitle": "Add new fact",
         "addRealityPrompt": "What is true about this goal right now? Feel free to also add reasons, explanations and every else you deem relevant.",
-        "explanation": "Here you can add facts associated with this goal, for example: What's your current progress? What have you done so far to achieve this goal? Which obstacles do you currently encounter? Which uncertainties do you have about it? Make sure to always keep these updated and as accurate as possible. Don't worry when this is empty in the beginning.",
-        "removeReality": "Do you want to remove this reality?"
+        "explanation": "Here you can add facts associated with the status quo of your path towards achieving this goal. Make sure to always keep these updated and as accurate as possible.",
+        "removeReality": "Do you want to remove this fact?",
+        "refineReality": "What do you want to change about this fact?",
+        "assess": {
+          "cta": "Add a new fact",
+          "loading": "Loading questions...",
+          "title": "Add a new fact",
+          "explanation": "Answer any of the following questions to continue assessing the status quo of your goal by tapping on it.",
+          "addManual": "Add a new fact manually",
+          "furtherActions": "Further actions",
+          "success": "Fact added successfully!",
+          "updateQuestions": "Update questions"
+        }
       }
     }
   },

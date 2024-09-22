@@ -21,11 +21,6 @@ export default function GenerateGoals() {
     try {
       await apiPost("/companion/goals-done", {});
       navigation.navigate("RealizeGoals" as never);
-    } catch (error) {
-      Alert.alert(
-        t("common.error"),
-        t("learn.goals.confirmGoals.errorMessage")
-      );
     } finally {
       setConfirmingGoals(false);
     }
@@ -47,7 +42,7 @@ export default function GenerateGoals() {
         </Text>
         <GoalsManager
           confirmButtonProps={{
-            title: t("learn.goals.confirmGoals.buttonTitle"),
+            title: t("learn.goals.confirmGoals"),
             onPress: handleConfirmGoals,
             disabled: confirmingGoals,
             loading: confirmingGoals,

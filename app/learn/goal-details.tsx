@@ -3,51 +3,22 @@ import { StyleSheet, SafeAreaView, ScrollView, Alert } from "react-native";
 import { Text } from "@rneui/themed";
 import { useRoute } from "@react-navigation/native";
 import { t } from "@/i18n";
-import { useUserProfile } from "@/common/profile";
+import { useUserProfile, useGoal } from "@/common/profile";
 import SectionList from "@/components/SectionList";
 import { apiPost } from "@/common/api";
+import { showInputDialog } from "@/common/inputDialog";
+import AssessRealitiesModal from "./AssessRealitiesModal";
 
 export default function GoalDetails() {
   const route = useRoute();
   const { goalId } = route.params as { goalId: string };
-  const { companionProfile, updateCompanionProfile, apiPostAI } =
-    useUserProfile();
-  const goal = companionProfile.goals.find((goal) => goal.id === goalId);
+  const { updateCompanionProfile, apiPostAI } = useUserProfile();
+  const goal = useGoal(goalId)!;
 
-  const [isAddingReality, setIsAddingReality] = useState(false);
-
-  const handleAddReality = () => {
-    Alert.prompt(
-      t("learn.goalDetails.realities.addRealityTitle"),
-      t("learn.goalDetails.realities.addRealityPrompt"),
-      [
-        { text: t("common.cancel"), style: "cancel" },
-        {
-          text: t("common.add"),
-          onPress: async (text) => {
-            if (text) {
-              try {
-                setIsAddingReality(true);
-                const newReality = await apiPostAI(
-                  `/companion/goal/${goalId}/realities`,
-                  [],
-                  { reality: text }
-                );
-                updateCompanionProfile((p) => {
-                  p.goals
-                    .find((g) => g.id === goalId)
-                    ?.realities.push(newReality);
-                });
-              } finally {
-                setIsAddingReality(false);
-              }
-            }
-          },
-        },
-      ],
-      "plain-text"
-    );
-  };
+  const [showAssessModal, setShowAssessModal] = useState(false);
+  const [isRefiningRealityId, setIsRefiningRealityId] = useState<string | null>(
+    null
+  );
 
   const handleRemoveReality = (realityId: string) => {
     const realityToRemove = goal?.realities.find((r) => r.id === realityId);
@@ -84,6 +55,37 @@ export default function GoalDetails() {
     );
   };
 
+  const handleRefineReality = async (realityId: string) => {
+    const realityToRefineIndex = goal.realities.findIndex(
+      (r) => r.id === realityId
+    );
+    if (realityToRefineIndex === -1) return;
+    const realityToRefine = goal.realities[realityToRefineIndex];
+
+    const feedback = await showInputDialog(
+      realityToRefine.reality,
+      t("learn.goalDetails.realities.refineReality")
+    );
+
+    if (feedback) {
+      try {
+        setIsRefiningRealityId(realityId);
+        const updatedReality = await apiPostAI(
+          `/companion/goal/${goalId}/reality/${realityId}/refine`,
+          [],
+          { feedback }
+        );
+        updateCompanionProfile((p) => {
+          p.goals.find((g) => g.id === goalId)!.realities[
+            realityToRefineIndex
+          ] = updatedReality;
+        });
+      } finally {
+        setIsRefiningRealityId(null);
+      }
+    }
+  };
+
   if (!goal) {
     return null;
   }
@@ -94,29 +96,34 @@ export default function GoalDetails() {
         <Text h3 style={styles.title}>
           {goal?.description}
         </Text>
-        <Text style={styles.explanationText}>
-          {t("learn.goalDetails.explanation")}
-        </Text>
 
         <SectionList
           title={t("learn.goalDetails.realities.title")}
           items={[
-            {
-              title: isAddingReality
-                ? t("learn.goalDetails.realities.addingReality")
-                : t("learn.goalDetails.realities.addReality"),
-              onPress: isAddingReality ? undefined : handleAddReality,
-              disabled: isAddingReality,
-              leftIcon: { name: "add", type: "material" },
-            },
             ...goal.realities.map((reality) => ({
-              title: reality.reality,
+              title:
+                isRefiningRealityId === reality.id
+                  ? `${reality.reality} (${t("common.refining")})`
+                  : reality.reality,
+              disabled: isRefiningRealityId === reality.id,
               removable: true,
+              onPress: () => handleRefineReality(reality.id),
               onRemove: () => handleRemoveReality(reality.id),
             })),
+            {
+              title: t("learn.goalDetails.realities.assess.cta"),
+              onPress: () => setShowAssessModal(true),
+              leftIcon: { name: "add", type: "material" },
+            },
           ]}
           bottomText={t("learn.goalDetails.realities.explanation")}
           containerStyle={styles.sectionContainer}
+        />
+
+        <AssessRealitiesModal
+          visible={showAssessModal}
+          onClose={() => setShowAssessModal(false)}
+          goalId={goalId}
         />
       </ScrollView>
     </SafeAreaView>
@@ -138,13 +145,8 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     marginHorizontal: 5,
   },
-  explanationText: {
-    fontSize: 16,
-    marginHorizontal: 5,
-    marginBottom: 30,
-  },
   sectionContainer: {
-    marginTop: 0,
+    marginTop: 10,
     marginBottom: 20,
   },
 });

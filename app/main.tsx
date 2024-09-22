@@ -5,7 +5,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { Avatar, Icon } from "@rneui/themed";
 import { withUserProfile } from "@/common/withUserProfile";
 import { colors } from "@/common/colors";
-import SettingsView from "@/components/SettingsView";
+import SettingsModal from "@/components/SettingsModal";
 import InsightsScreen from "./learn/insights";
 import GoalsScreen from "./learn/goals";
 import RealizeGoalsScreen from "./learn/realize-goals";
@@ -107,14 +107,10 @@ function Main() {
           component={DiscoverScreen}
         />
       </Tab.Navigator>
-      <Modal
+      <SettingsModal
         visible={settingsVisible}
-        animationType="slide"
-        presentationStyle="pageSheet"
-        onRequestClose={() => setSettingsVisible(false)}
-      >
-        <SettingsView onClose={() => setSettingsVisible(false)} />
-      </Modal>
+        onClose={() => setSettingsVisible(false)}
+      />
       <SafeAreaView style={{ position: "absolute", top: 30, right: 0 }}>
         <TouchableOpacity
           style={{ marginRight: 15 }}
