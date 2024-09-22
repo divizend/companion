@@ -164,10 +164,11 @@ export default function GoalsManager({
             containerStyle: styles.generateButtonContainer,
             disabled: generatingLoading,
             leftIcon: {
-              name:
-                parentGoalId && relevantGoals.length === 0
-                  ? "call-split"
-                  : "refresh",
+              name: generatingLoading
+                ? "hourglass-empty"
+                : parentGoalId && relevantGoals.length === 0
+                ? "call-split"
+                : "refresh",
               type: "material",
             },
           },

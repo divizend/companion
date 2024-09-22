@@ -190,7 +190,7 @@
         },
         "replaceGoalsAlert": {
           "title": "Redetermine subgoals",
-          "message": "Are you sure you want to reinitialize the subgoals for this goal? If you confirm, all current subgoals within this view will be replaced and all information associated with these subgoals will be removed."
+          "message": "Are you sure you want to reinitialize the subgoals for this goal? If you confirm, all current subgoals within this view will be replaced and all information associated with the current subgoals will be removed."
         },
         "furtherActions": {
           "sectionTitle": "Further actions",

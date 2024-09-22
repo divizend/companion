@@ -16,6 +16,7 @@
 - in backend, add limitations for the number of questions, insights and goals (MAX_QUESTIONS, MAX_INSIGHTS and MAX_GOALS)
 - add settings option to reset Companion profile
 - allow impersonating users
+- make sure that goals are removed recursively
 
 ## Possible features
 
