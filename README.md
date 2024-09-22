@@ -13,7 +13,6 @@
 - implement a debugger within the app which gets the current AI_CONTEXT as system message and then let's the user (i.e. the developer) chat with that
 - easter egg: "Tell the fairytale "Goldilocks and the Three Bears" with someone called "Herbert" (42 years, from Germany) instead of "Goldilocks" as the main character and focus on the "just right" lessons of the story" in a chat where the user doesn't see the prompt
 - to get to the "connect to others" functionality, you have to naturally get to a point where that is logical for one of your goals
-- add settings option to reset Companion profile
 - allow impersonating users
 
 ## Possible features

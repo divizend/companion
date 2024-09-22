@@ -57,7 +57,7 @@ export type UserProfile = {
   // actually also many other properties, but those are not relevant for now
 };
 
-function getEmptyCompanionProfile(): CompanionProfile {
+export function getEmptyCompanionProfile(): CompanionProfile {
   return {
     learnQuestions: [],
     userInsights: [],

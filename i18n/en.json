@@ -33,7 +33,11 @@
       "email": "Email",
       "bottomText": "To modify your email address and for other profile settings, please visit app.divizend.com."
     },
-    "logoutConfirmation": "Are you sure you want to log out?"
+    "logoutConfirmation": "Are you sure you want to log out?",
+    "resetProfile": {
+      "title": "Reset Companion profile",
+      "message": "Are you sure you want to reset your Companion profile? This action cannot be undone."
+    }
   },
   "tabs": {
     "learn": "Visionary",
@@ -132,7 +136,7 @@
       },
       "confirmButton": "Happy with these insights? Then let's confirm and continue!",
       "removeInsight": {
-        "message": "Are you sure you want to remove this insight?"
+        "message": "Are you sure you want to remove this insight? This action cannot be undone."
       }
     },
     "goals": {
@@ -173,7 +177,7 @@
           }
         },
         "removeGoalAlert": {
-          "message": "Are you sure you want to remove this goal and all associated data?"
+          "message": "Are you sure you want to remove this goal and all associated data? This action cannot be undone."
         },
         "refineGoal": {
           "placeholder": "What do you want to change about this goal?"
@@ -190,7 +194,7 @@
         },
         "replaceGoalsAlert": {
           "title": "Redetermine subgoals",
-          "message": "Are you sure you want to reinitialize the subgoals for this goal? If you confirm, all current subgoals within this view will be replaced and all information associated with the current subgoals will be removed."
+          "message": "Are you sure you want to reinitialize the subgoals for this goal? If you confirm, all current subgoals within this view will be replaced and all information associated with the current subgoals will be removed. This action cannot be undone."
         },
         "furtherActions": {
           "sectionTitle": "Further actions",
@@ -202,7 +206,7 @@
           }
         },
         "removeGoalAlert": {
-          "message": "Are you sure you want to remove this subgoal and all associated data?"
+          "message": "Are you sure you want to remove this subgoal and all associated data? This action cannot be undone."
         },
         "refineGoal": {
           "placeholder": "What do you want to change about this subgoal?"

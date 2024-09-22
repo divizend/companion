@@ -7,7 +7,7 @@ interface SectionListProps {
   items: Array<{
     title: string;
     onPress?: () => void;
-    rightElement?: React.ReactElement;
+    rightElement?: string;
     leftIcon?: {
       name: string;
       type?: string;
