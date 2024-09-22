@@ -24,6 +24,7 @@ export type CompanionProfileGoal = {
   id: string;
   description: string;
   realities: CompanionProfileGoalReality[];
+  parentGoalId: string | null;
 };
 
 export type CompanionProfile = {

@@ -10,11 +10,13 @@ import StyledButton, { StyledButtonProps } from "@/components/StyledButton";
 interface GoalsManagerProps {
   confirmButtonProps?: StyledButtonProps;
   allowRedetermine?: boolean;
+  parentGoalId: string | null;
 }
 
 export default function GoalsManager({
   confirmButtonProps,
-  allowRedetermine = false,
+  allowRedetermine,
+  parentGoalId,
 }: GoalsManagerProps) {
   const { profile, updateCompanionProfile, apiPostAI } = useUserProfile({
     moduleDescription: t("learn.vision"),
@@ -24,24 +26,37 @@ export default function GoalsManager({
   const [generatingLoading, setGeneratingLoading] = useState<boolean>(false);
   const [addingManualGoal, setAddingManualGoal] = useState<boolean>(false);
   const [refiningGoalId, setRefiningGoalId] = useState<string | null>(null);
+  const [removingGoalId, setRemovingGoalId] = useState<string | null>(null);
+
+  const variant = parentGoalId ? "secondary" : "primary";
+  const relevantGoals = profile.companionProfile.goals.filter(
+    (g) => g.parentGoalId === parentGoalId
+  );
 
   const generateInitialGoals = async () => {
     const generateGoals = async () => {
       setGeneratingLoading(true);
       try {
         const goals: CompanionProfileGoal[] = await apiPostAI(
-          "/companion/learn/generate-initial-goals"
+          parentGoalId
+            ? `/companion/goal/${parentGoalId}/initialize-subgoals`
+            : "/companion/learn/generate-initial-goals"
         );
-        updateCompanionProfile({ goals });
+        updateCompanionProfile((p) => {
+          p.goals = [
+            ...p.goals.filter((g) => g.parentGoalId !== parentGoalId),
+            ...goals,
+          ];
+        });
       } finally {
         setGeneratingLoading(false);
       }
     };
 
-    if (profile.companionProfile.goals.length > 0) {
+    if (relevantGoals.length > 0) {
       Alert.alert(
-        t("learn.goals.replaceGoalsAlert.title"),
-        t("learn.goals.replaceGoalsAlert.message"),
+        t(`learn.goalsManager.${variant}.replaceGoalsAlert.title`),
+        t(`learn.goalsManager.${variant}.replaceGoalsAlert.message`),
         [
           {
             text: t("common.cancel"),
@@ -61,7 +76,7 @@ export default function GoalsManager({
   const removeGoal = async (goalId: string) => {
     Alert.alert(
       profile.companionProfile.goals.find((g) => g.id === goalId)?.description!,
-      t("learn.goals.removeGoalAlert.message"),
+      t(`learn.goalsManager.${variant}.removeGoalAlert.message`),
       [
         {
           text: t("common.cancel"),
@@ -70,10 +85,15 @@ export default function GoalsManager({
         {
           text: t("common.remove"),
           onPress: async () => {
-            await apiDelete(`/companion/goal/${goalId}`);
-            updateCompanionProfile((p) => {
-              p.goals = p.goals.filter((g) => g.id !== goalId);
-            });
+            try {
+              setRemovingGoalId(goalId);
+              await apiDelete(`/companion/goal/${goalId}`);
+              updateCompanionProfile((p) => {
+                p.goals = p.goals.filter((g) => g.id !== goalId);
+              });
+            } finally {
+              setRemovingGoalId(null);
+            }
           },
           style: "destructive",
         },
@@ -84,22 +104,22 @@ export default function GoalsManager({
   const addManualGoal = async () => {
     try {
       const newGoal = await showInputDialog(
-        t("learn.goals.addManualGoal.title"),
-        t("learn.goals.addManualGoal.placeholder")
+        t(`learn.goalsManager.${variant}.furtherActions.addManualGoal.title`),
+        t(
+          `learn.goalsManager.${variant}.furtherActions.addManualGoal.placeholder`
+        )
       );
       if (newGoal) {
         setAddingManualGoal(true);
         const reformulatedGoal: CompanionProfileGoal = await apiPostAI(
           "/companion/goal/reformulate",
           [],
-          { goal: newGoal }
+          { goal: newGoal, parentGoalId }
         );
         updateCompanionProfile((p) => {
           p.goals.push(reformulatedGoal);
         });
       }
-    } catch (error) {
-      // ignore any errors
     } finally {
       setAddingManualGoal(false);
     }
@@ -109,7 +129,7 @@ export default function GoalsManager({
     try {
       const feedback = await showInputDialog(
         goal.description,
-        t("learn.goals.refineGoal.placeholder")
+        t(`learn.goalsManager.${variant}.refineGoal.placeholder`)
       );
       if (feedback) {
         setRefiningGoalId(goal.id);
@@ -125,8 +145,6 @@ export default function GoalsManager({
           }
         });
       }
-    } catch (error) {
-      // ignore any errors
     } finally {
       setRefiningGoalId(null);
     }
@@ -138,18 +156,27 @@ export default function GoalsManager({
         items={[
           allowRedetermine && {
             title: generatingLoading
-              ? t("learn.goals.generateButton.loading")
-              : profile.companionProfile.goals.length > 0
-              ? t("learn.goals.generateButton.titleRecreate")
-              : t("learn.goals.generateButton.title"),
+              ? t(`learn.goalsManager.${variant}.generateButton.loading`)
+              : relevantGoals.length > 0
+              ? t(`learn.goalsManager.${variant}.generateButton.titleRecreate`)
+              : t(`learn.goalsManager.${variant}.generateButton.title`),
             onPress: () => generateInitialGoals(),
             containerStyle: styles.generateButtonContainer,
             disabled: generatingLoading,
+            leftIcon: {
+              name:
+                parentGoalId && relevantGoals.length === 0
+                  ? "call-split"
+                  : "refresh",
+              type: "material",
+            },
           },
-          ...profile.companionProfile.goals.map((goal) => ({
+          ...(generatingLoading ? [] : relevantGoals).map((goal) => ({
             title:
               refiningGoalId === goal.id
-                ? `${goal.description} (${t("common:refining")})`
+                ? `${goal.description} (${t("common.refining")})`
+                : removingGoalId === goal.id
+                ? t("common.removing")
                 : goal.description,
             onPress: () => handleGoalClick(goal),
             removable: true,
@@ -158,33 +185,34 @@ export default function GoalsManager({
               refiningGoalId === goal.id
                 ? styles.refiningGoalContainer
                 : undefined,
+            disabled: removingGoalId === goal.id,
           })),
         ].filter((x) => !!x)}
         containerStyle={styles.sectionContainer}
       />
-      {profile.companionProfile.goals.length > 0 && (
-        <>
-          <SectionList
-            title={t("learn.goals.addManualGoal.sectionTitle")}
-            items={[
-              {
-                title: addingManualGoal
-                  ? t("learn.goals.addManualGoal.loading")
-                  : t("learn.goals.addManualGoal.buttonTitle"),
-                onPress: addManualGoal,
-                disabled: addingManualGoal,
-                leftIcon: { name: "add", type: "material" },
-              },
-            ]}
-            containerStyle={styles.addManualGoalContainer}
-          />
-          {confirmButtonProps && (
-            <StyledButton
-              containerStyle={styles.confirmGoalsButton}
-              {...confirmButtonProps}
-            />
-          )}
-        </>
+      <SectionList
+        title={t(`learn.goalsManager.${variant}.furtherActions.sectionTitle`)}
+        items={[
+          {
+            title: addingManualGoal
+              ? t(
+                  `learn.goalsManager.${variant}.furtherActions.addManualGoal.loading`
+                )
+              : t(
+                  `learn.goalsManager.${variant}.furtherActions.addManualGoal.buttonTitle`
+                ),
+            onPress: addManualGoal,
+            disabled: addingManualGoal,
+            leftIcon: { name: "add", type: "material" },
+          },
+        ]}
+        containerStyle={styles.addManualGoalContainer}
+      />
+      {relevantGoals.length > 0 && confirmButtonProps && (
+        <StyledButton
+          containerStyle={styles.confirmGoalsButton}
+          {...confirmButtonProps}
+        />
       )}
     </>
   );

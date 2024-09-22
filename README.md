@@ -15,6 +15,7 @@
 - to get to the "connect to others" functionality, you have to naturally get to a point where that is logical for one of your goals
 - in backend, add limitations for the number of questions, insights and goals (MAX_QUESTIONS, MAX_INSIGHTS and MAX_GOALS)
 - add settings option to reset Companion profile
+- allow impersonating users
 
 ## Possible features
 
@@ -23,13 +24,7 @@
 
 ## Next steps
 
-1. Also ask the user for their age in the onboarding
-2. Instead of immediately specifying learning goals, first turn all insights into goals
-   a. Create a "goal configurator"
-   b. "For now, don't think at all about how to realize this goal yet. Just make sure that the goal we formulate here is one you actually want to follow. It can be anything"
-   c. always ask "What's wrong with this goal?"
-3. "hide" specifiying custom goals behind an "advanced" section
-4. Prompt-engineer the creation of "sub-goals"/"steps" so that they form a **causal** chain
+1. Prompt-engineer the creation of "sub-goals"/"steps" so that they form a **causal** chain
 
 ## Instructions
 

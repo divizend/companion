@@ -111,48 +111,38 @@ export default function AssessRealitiesModal({
             goal: goal?.description,
           })}
         </Text>
-        {isLoadingQuestions ? (
-          <ActivityIndicator size="small" color="#000000" />
-        ) : (
-          <>
-            <SectionList
-              items={[
-                realitiesAddedSinceLastLoad
-                  ? {
-                      title: t(
-                        "learn.goalDetails.realities.assess.updateQuestions"
-                      ),
-                      onPress: () => loadQuestions(),
-                      disabled: isLoadingQuestions,
-                      leftIcon: { name: "refresh", type: "material" },
-                    }
-                  : undefined,
-                ...questions.map((question, index) => ({
-                  title:
-                    isAddingRealityIndex === index
-                      ? t("common.loading")
-                      : question,
-                  onPress: () => handleAddRealityFromQuestion(index),
-                  disabled: isAddingRealityIndex === index,
-                })),
-              ].filter((x) => !!x)}
-            />
-            <SectionList
-              title={t("learn.goalDetails.realities.assess.furtherActions")}
-              items={[
-                {
-                  title: isAddingReality
-                    ? t("common.loading")
-                    : t("learn.goalDetails.realities.assess.addManual"),
-                  onPress: handleAddManualReality,
-                  disabled: isAddingReality,
-                  leftIcon: { name: "add", type: "material" },
-                },
-              ]}
-              containerStyle={styles.manualAddContainer}
-            />
-          </>
-        )}
+        <SectionList
+          items={[
+            {
+              title: isLoadingQuestions
+                ? t("common.loading")
+                : t("learn.goalDetails.realities.assess.updateQuestions"),
+              onPress: () => loadQuestions(),
+              disabled: isLoadingQuestions,
+              leftIcon: { name: "refresh", type: "material" },
+            },
+            ...(isLoadingQuestions ? [] : questions).map((question, index) => ({
+              title:
+                isAddingRealityIndex === index ? t("common.loading") : question,
+              onPress: () => handleAddRealityFromQuestion(index),
+              disabled: isAddingRealityIndex === index,
+            })),
+          ].filter((x) => !!x)}
+        />
+        <SectionList
+          title={t("learn.goalDetails.realities.assess.furtherActions")}
+          items={[
+            {
+              title: isAddingReality
+                ? t("common.loading")
+                : t("learn.goalDetails.realities.assess.addManual"),
+              onPress: handleAddManualReality,
+              disabled: isAddingReality,
+              leftIcon: { name: "add", type: "material" },
+            },
+          ]}
+          containerStyle={styles.manualAddContainer}
+        />
       </View>
     </ModalView>
   );

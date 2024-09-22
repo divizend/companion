@@ -8,6 +8,7 @@ import SectionList from "@/components/SectionList";
 import { apiPost } from "@/common/api";
 import { showInputDialog } from "@/common/inputDialog";
 import AssessRealitiesModal from "./AssessRealitiesModal";
+import GoalsSectionList from "./GoalsSectionList";
 
 export default function GoalDetails() {
   const route = useRoute();
@@ -120,6 +121,8 @@ export default function GoalDetails() {
           containerStyle={styles.sectionContainer}
         />
 
+        <GoalsSectionList parentGoalId={goalId} allowRedetermine />
+
         <AssessRealitiesModal
           visible={showAssessModal}
           onClose={() => setShowAssessModal(false)}
@@ -147,6 +150,6 @@ const styles = StyleSheet.create({
   },
   sectionContainer: {
     marginTop: 10,
-    marginBottom: 20,
+    marginBottom: 40,
   },
 });

@@ -19,7 +19,8 @@
     "submit": "Submit",
     "add": "Add",
     "loading": "Loading...",
-    "refining": "Refining..."
+    "refining": "Refining...",
+    "removing": "Removing..."
   },
   "comingSoon": {
     "title": "Coming soon",
@@ -138,31 +139,8 @@
       "title": "Step 2: Goals",
       "backLink": "Go back to insights setup",
       "explanation": "Based on the insights about your financial life, let's now determine concrete goals and visions for you. If you want to make a goal more precise or correct it, simply tap on it.",
-      "generateButton": {
-        "title": "Tap here to determine goals",
-        "titleRecreate": "Tap here to redetermine goals",
-        "loading": "Determining goals..."
-      },
       "aiContext": {
         "insights": "The user has determined the following insights about their financial life:\n{{insights}}"
-      },
-      "replaceGoalsAlert": {
-        "title": "Redetermine goals",
-        "message": "Are you sure you want to reinitialize your goals based on your insights? If you confirm, all current goals will be replaced."
-      },
-      "addManualGoal": {
-        "sectionTitle": "Further actions",
-        "buttonTitle": "Add a new goal manually",
-        "title": "Add a new goal",
-        "placeholder": "Formulate it as freely as you like.",
-        "loading": "Adding goal..."
-      },
-      "removeGoalAlert": {
-        "message": "Are you sure you want to remove this goal and all associated data?"
-      },
-      "refineGoal": {
-        "placeholder": "What do you want to change about this goal?",
-        "refining": "Refining..."
       },
       "confirmGoals": "Goals clear? Tap here to start learning how to realize them!"
     },
@@ -170,12 +148,70 @@
       "title": "Welcome",
       "explanation": "Which of your goals do you want to strive for today?",
       "yourGoals": "Your goals",
-      "actions": "Actions",
-      "manageGoals": "Manage goals"
+      "actions": "Actions"
+    },
+    "goalsManager": {
+      "primary": {
+        "listTitle": "Your goals",
+        "title": "Manage goals",
+        "generateButton": {
+          "title": "Tap here to determine goals",
+          "titleRecreate": "Tap here to redetermine goals",
+          "loading": "Determining goals..."
+        },
+        "replaceGoalsAlert": {
+          "title": "Redetermine goals",
+          "message": "Are you sure you want to reinitialize your goals? If you confirm, all current goals within this view will be replaced."
+        },
+        "furtherActions": {
+          "sectionTitle": "Further actions",
+          "addManualGoal": {
+            "buttonTitle": "Add a new goal manually",
+            "title": "Add a new goal",
+            "placeholder": "Formulate it as freely as you like.",
+            "loading": "Adding goal..."
+          }
+        },
+        "removeGoalAlert": {
+          "message": "Are you sure you want to remove this goal and all associated data?"
+        },
+        "refineGoal": {
+          "placeholder": "What do you want to change about this goal?"
+        }
+      },
+      "secondary": {
+        "listTitle": "Subgoals",
+        "title": "Manage subgoals",
+        "explanation": "If this goal feels too large for you or you don't know how to start, you can divide it into smaller, manageable subgoals.",
+        "generateButton": {
+          "title": "Tap here to divide the selected goal into subgoals",
+          "titleRecreate": "Tap here to redetermine subgoals",
+          "loading": "Determining subgoals..."
+        },
+        "replaceGoalsAlert": {
+          "title": "Redetermine subgoals",
+          "message": "Are you sure you want to reinitialize the subgoals for this goal? If you confirm, all current subgoals within this view will be replaced and all information associated with these subgoals will be removed."
+        },
+        "furtherActions": {
+          "sectionTitle": "Further actions",
+          "addManualGoal": {
+            "buttonTitle": "Add a new subgoal manually",
+            "title": "Add a new subgoal",
+            "placeholder": "Formulate it as freely as you like.",
+            "loading": "Adding subgoal..."
+          }
+        },
+        "removeGoalAlert": {
+          "message": "Are you sure you want to remove this subgoal and all associated data?"
+        },
+        "refineGoal": {
+          "placeholder": "What do you want to change about this subgoal?"
+        }
+      }
     },
     "goalDetails": {
       "realities": {
-        "title": "Details and status quo",
+        "title": "Details, context and status quo",
         "addRealityTitle": "Add new fact",
         "addRealityPrompt": "What is true about this goal right now? Feel free to also add reasons, explanations and every else you deem relevant.",
         "explanation": "Here you can add facts associated with the status quo of your path towards achieving this goal. Make sure to always keep these updated and as accurate as possible.",
@@ -185,7 +221,7 @@
           "cta": "Add a new fact",
           "loading": "Loading questions...",
           "title": "Add a new fact",
-          "explanation": "Answer any of the following questions to continue assessing the status quo of your goal by tapping on it.",
+          "explanation": "Answer any of the following questions to continue assessing the status quo of your path towards achieving this goal.",
           "addManual": "Add a new fact manually",
           "furtherActions": "Further actions",
           "success": "Fact added successfully!",

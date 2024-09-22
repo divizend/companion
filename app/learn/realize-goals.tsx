@@ -1,30 +1,10 @@
-import React, { useState } from "react";
-import {
-  StyleSheet,
-  ScrollView,
-  SafeAreaView,
-  Modal,
-  Alert,
-} from "react-native";
-import { Text, Input, Button } from "@rneui/themed";
+import React from "react";
+import { StyleSheet, ScrollView, SafeAreaView } from "react-native";
+import { Text } from "@rneui/themed";
 import { t } from "@/i18n";
-import { useUserProfile } from "@/common/profile";
-import { useNavigation } from "@react-navigation/native";
-import SectionList from "@/components/SectionList";
-import GoalsManagerModal from "./GoalsManagerModal";
+import GoalsSectionList from "./GoalsSectionList";
 
 export default function RealizeGoals() {
-  const navigation = useNavigation();
-  const { profile } = useUserProfile({
-    moduleDescription: t("learn.vision"),
-    viewTitle: t("learn.realizeGoals.title"),
-    viewExplanation: t("learn.realizeGoals.explanation"),
-  });
-
-  const [isModalVisible, setIsModalVisible] = useState(false);
-
-  const toggleModal = () => setIsModalVisible(!isModalVisible);
-
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollViewContent}>
@@ -34,39 +14,8 @@ export default function RealizeGoals() {
         <Text style={styles.explanationText}>
           {t("learn.realizeGoals.explanation")}
         </Text>
-
-        <SectionList
-          title={t("learn.realizeGoals.yourGoals")}
-          items={profile.companionProfile.goals.map((goal) => ({
-            title: goal.description,
-            onPress: () =>
-              // super ugly typecast to avoid TS errors relating to "never"
-              (navigation.navigate as any)("GoalDetails", { goalId: goal.id }),
-          }))}
-          containerStyle={styles.sectionContainer}
-        />
-
-        <SectionList
-          title={t("learn.realizeGoals.actions")}
-          items={[
-            {
-              title: t("learn.realizeGoals.manageGoals"),
-              onPress: toggleModal,
-              leftIcon: { name: "edit", type: "material" },
-            },
-          ]}
-          containerStyle={styles.actionsContainer}
-        />
+        <GoalsSectionList parentGoalId={null} />
       </ScrollView>
-
-      <Modal
-        visible={isModalVisible}
-        animationType="slide"
-        presentationStyle="pageSheet"
-        onRequestClose={toggleModal}
-      >
-        <GoalsManagerModal onClose={toggleModal} />
-      </Modal>
     </SafeAreaView>
   );
 }
@@ -91,12 +40,5 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginHorizontal: 5,
     marginBottom: 30,
-  },
-  sectionContainer: {
-    marginTop: 0,
-    marginBottom: 20,
-  },
-  actionsContainer: {
-    marginTop: 10,
   },
 });

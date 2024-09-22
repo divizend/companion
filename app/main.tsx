@@ -33,7 +33,11 @@ function LearnStackNavigator() {
       <LearnStack.Screen name="Insights" component={InsightsScreen} />
       <LearnStack.Screen name="Goals" component={GoalsScreen} />
       <LearnStack.Screen name="RealizeGoals" component={RealizeGoalsScreen} />
-      <LearnStack.Screen name="GoalDetails" component={GoalDetailsScreen} />
+      <LearnStack.Screen
+        name="GoalDetails"
+        component={GoalDetailsScreen}
+        getId={({ params }: any) => params?.goalId}
+      />
     </LearnStack.Navigator>
   );
 }

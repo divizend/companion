@@ -1,70 +1,32 @@
 import React from "react";
-import { View, ScrollView, TouchableOpacity, StyleSheet } from "react-native";
-import { Text, Icon, Header } from "@rneui/themed";
 import { t } from "@/i18n";
 import GoalsManager from "./GoalsManager";
+import ModalView from "@/components/ModalView";
 
 interface GoalsManagerModalProps {
+  visible: boolean;
   onClose: () => void;
+  parentGoalId: string | null;
+  allowRedetermine?: boolean;
 }
 
 export default function GoalsManagerModal({
+  visible,
   onClose,
+  parentGoalId,
+  allowRedetermine,
 }: GoalsManagerModalProps): JSX.Element {
+  const variant = parentGoalId ? "secondary" : "primary";
   return (
-    <View style={styles.container}>
-      <Header
-        centerComponent={
-          <View style={styles.headerCenter}>
-            <Text style={styles.headerTitle}>
-              {t("learn.realizeGoals.manageGoals")}
-            </Text>
-          </View>
-        }
-        rightComponent={
-          <TouchableOpacity onPress={onClose}>
-            <View style={styles.closeButton}>
-              <Icon name="close" size={16} color="#666" />
-            </View>
-          </TouchableOpacity>
-        }
-        containerStyle={styles.header}
+    <ModalView
+      visible={visible}
+      onClose={onClose}
+      title={t(`learn.goalsManager.${variant}.title`)}
+    >
+      <GoalsManager
+        parentGoalId={parentGoalId}
+        allowRedetermine={allowRedetermine}
       />
-      <ScrollView>
-        <View style={styles.content}>
-          <GoalsManager />
-        </View>
-      </ScrollView>
-    </View>
+    </ModalView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#f2f2f2",
-  },
-  header: {
-    backgroundColor: "#f2f2f2",
-    borderBottomWidth: 0,
-  },
-  headerCenter: {
-    flex: 1,
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  headerTitle: {
-    fontWeight: "bold",
-    fontSize: 16,
-    textAlignVertical: "center",
-  },
-  closeButton: {
-    backgroundColor: "#e0e0e0",
-    borderRadius: 15,
-    padding: 4,
-    margin: 5,
-  },
-  content: {
-    padding: 20,
-  },
-});
