@@ -47,6 +47,7 @@ export default function GenerateGoals() {
             disabled: confirmingGoals,
             loading: confirmingGoals,
           }}
+          parentGoalId={null}
           allowRedetermine
         />
       </ScrollView>

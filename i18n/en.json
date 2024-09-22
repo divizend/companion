@@ -142,7 +142,7 @@
       "aiContext": {
         "insights": "The user has determined the following insights about their financial life:\n{{insights}}"
       },
-      "confirmGoals": "Goals clear? Tap here to start learning how to realize them!"
+      "confirmGoals": "Goals clear? Then tap here to start realizing them!"
     },
     "realizeGoals": {
       "title": "Welcome",

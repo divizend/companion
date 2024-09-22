@@ -177,7 +177,7 @@ export default function GoalsManager({
               refiningGoalId === goal.id
                 ? `${goal.description} (${t("common.refining")})`
                 : removingGoalId === goal.id
-                ? t("common.removing")
+                ? `${goal.description} (${t("common.removing")})`
                 : goal.description,
             onPress: () => handleGoalClick(goal),
             removable: true,

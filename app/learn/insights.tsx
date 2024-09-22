@@ -12,7 +12,6 @@ import uuid from "react-native-uuid";
 import { t } from "@/i18n";
 import StyledButton from "@/components/StyledButton";
 import SectionList from "@/components/SectionList";
-import CustomDialog from "@/components/CustomDialog";
 import { showInputDialog } from "@/common/inputDialog";
 import { apiPost } from "@/common/api";
 import {
@@ -30,8 +29,15 @@ export default function GenerateInsights() {
     viewExplanation: t("learn.insights.explanation"),
   });
   const fadeAnim = useRef(new Animated.Value(0)).current;
-  const [dialogVisible, setDialogVisible] = useState(false);
-  const [selectedQuestionId, setSelectedQuestionId] = useState<string | null>(
+  const [
+    similarQuestionsLoadingQuestionId,
+    setSimilarQuestionsLoadingQuestionId,
+  ] = useState<string | null>(null);
+  const [
+    generateInsightLoadingQuestionId,
+    setGenerateInsightLoadingQuestionId,
+  ] = useState<string | null>(null);
+  const [removingInsightId, setRemovingInsightId] = useState<string | null>(
     null
   );
 
@@ -45,13 +51,6 @@ export default function GenerateInsights() {
     (profile.companionProfile?.learnQuestions ?? []).length > 0
       ? profile.companionProfile!.learnQuestions!
       : defaultQuestions;
-  const selectedQuestion: CompanionProfileLearnQuestion | null =
-    selectedQuestionId !== null
-      ? displayedQuestions.find((q) => q.id === selectedQuestionId)!
-      : null;
-
-  const displayedInsights: CompanionProfileLearnInsight[] =
-    profile.companionProfile?.userInsights ?? [];
 
   useEffect(() => {
     Animated.timing(fadeAnim, {
@@ -67,45 +66,46 @@ export default function GenerateInsights() {
     }),
   };
 
-  const handleDialogOption = async (
-    option: "answer" | "getSimilar",
-    setLoading?: (loading: boolean) => void
-  ) => {
-    if (!selectedQuestion || selectedQuestionId === null) return;
-
-    if (option === "answer") {
-      try {
-        const answer = await showInputDialog(selectedQuestion.question);
-        setLoading!(true);
-        const insight = await apiPostAI(
-          "/companion/learn/generate-insight",
-          [AI_CONTEXT_LOCAL.questions],
-          {
-            question: selectedQuestion.question,
-            answer,
-          }
-        );
-        updateCompanionProfile((p) => {
-          p.userInsights?.push(insight);
-        });
-        setDialogVisible(false);
-      } catch {
-        // Do nothing if the user cancels the input
-      }
-    } else if (option === "getSimilar") {
+  const getSimilarQuestions = async (questionId: string) => {
+    setSimilarQuestionsLoadingQuestionId(questionId);
+    try {
       const allQuestions = await apiPostAI(
         "/companion/learn/similar-questions",
         [AI_CONTEXT_LOCAL.questions],
         {
           currentQuestions: displayedQuestions,
-          questionId: selectedQuestionId,
+          questionId,
         }
       );
-
       updateCompanionProfile({ learnQuestions: allQuestions });
-
+    } finally {
+      setSimilarQuestionsLoadingQuestionId(null);
       fadeAnim.setValue(0);
-      setDialogVisible(false);
+    }
+  };
+
+  const generateInsight = async (questionId: string) => {
+    const question = displayedQuestions.find((q) => q.id === questionId)!;
+
+    const answer = await showInputDialog(question.question);
+
+    if (answer) {
+      try {
+        setGenerateInsightLoadingQuestionId(questionId);
+        const insight = await apiPostAI(
+          "/companion/learn/generate-insight",
+          [AI_CONTEXT_LOCAL.questions],
+          {
+            question: question.question,
+            answer,
+          }
+        );
+        updateCompanionProfile((p) => {
+          p.userInsights.push(insight);
+        });
+      } finally {
+        setGenerateInsightLoadingQuestionId(null);
+      }
     }
   };
 
@@ -122,18 +122,20 @@ export default function GenerateInsights() {
         {
           text: t("common.remove"),
           onPress: async () => {
-            const filteredInsights = displayedInsights.filter(
-              (i: CompanionProfileLearnInsight) => i.id !== insightId
-            );
+            const filteredInsights =
+              profile.companionProfile.userInsights.filter(
+                (i: CompanionProfileLearnInsight) => i.id !== insightId
+              );
             try {
+              setRemovingInsightId(insightId);
               await apiPost("/companion/insights", {
                 newUserInsights: filteredInsights,
               });
               updateCompanionProfile({
                 userInsights: filteredInsights,
               });
-            } catch (error) {
-              console.error("Failed to remove insight:", error);
+            } finally {
+              setRemovingInsightId(null);
             }
           },
           style: "destructive",
@@ -161,11 +163,31 @@ export default function GenerateInsights() {
         <SectionList
           title={t("learn.insights.questionsTitle")}
           items={displayedQuestions.map((question) => ({
-            title: `${question.category}: ${question.question}`,
+            title: `${question.category}: ${question.question}${
+              question.id === similarQuestionsLoadingQuestionId ||
+              question.id === generateInsightLoadingQuestionId
+                ? ` (${t("common.loading")})`
+                : ""
+            }`,
             onPress: () => {
-              setSelectedQuestionId(question.id);
-              setDialogVisible(true);
+              Alert.alert(question.question, undefined, [
+                {
+                  text: t("learn.insights.questionOptions.getSimilar"),
+                  onPress: () => getSimilarQuestions(question.id),
+                },
+                {
+                  text: t("learn.insights.questionOptions.answer"),
+                  onPress: () => generateInsight(question.id),
+                },
+                {
+                  text: t("common.cancel"),
+                  style: "cancel",
+                },
+              ]);
             },
+            disabled:
+              question.id === similarQuestionsLoadingQuestionId ||
+              question.id === generateInsightLoadingQuestionId,
             containerStyle: question.isNew ? { opacity: fadeAnim } : undefined,
             itemStyle: question.isNew ? styles.newQuestionContainer : undefined,
           }))}
@@ -173,14 +195,19 @@ export default function GenerateInsights() {
           ItemComponent={Animated.View}
         />
 
-        {displayedInsights.length > 0 && (
+        {profile.companionProfile.userInsights.length > 0 && (
           <>
             <SectionList
               title={t("learn.insights.insights.title")}
-              items={displayedInsights.map(
+              items={profile.companionProfile.userInsights.map(
                 (insight: CompanionProfileLearnInsight) => ({
-                  title: insight.insight,
+                  title:
+                    insight.insight +
+                    (removingInsightId === insight.id
+                      ? ` (${t("common.removing")})`
+                      : ""),
                   removable: true,
+                  disabled: removingInsightId === insight.id,
                   onRemove: () => handleRemoveInsight(insight.id),
                 })
               )}
@@ -193,23 +220,6 @@ export default function GenerateInsights() {
             />
           </>
         )}
-
-        <CustomDialog
-          isVisible={dialogVisible}
-          onCancel={() => setDialogVisible(false)}
-          title={selectedQuestion?.question || ""}
-          items={[
-            {
-              text: t("learn.insights.questionOptions.answer"),
-              onPressWithControlledLoading: (setLoading) =>
-                handleDialogOption("answer", setLoading),
-            },
-            {
-              text: t("learn.insights.questionOptions.getSimilar"),
-              onPress: () => handleDialogOption("getSimilar"),
-            },
-          ]}
-        />
       </ScrollView>
     </SafeAreaView>
   );
