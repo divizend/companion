@@ -115,7 +115,7 @@ export default function AssessRealitiesModal({
           items={[
             {
               title: isLoadingQuestions
-                ? t("common.loading")
+                ? t("learn.goalDetails.realities.assess.loading")
                 : t("learn.goalDetails.realities.assess.updateQuestions"),
               onPress: () => loadQuestions(),
               disabled: isLoadingQuestions,
@@ -126,7 +126,10 @@ export default function AssessRealitiesModal({
             },
             ...(isLoadingQuestions ? [] : questions).map((question, index) => ({
               title:
-                isAddingRealityIndex === index ? t("common.loading") : question,
+                question +
+                (isAddingRealityIndex === index
+                  ? ` (${t("common.loading")})`
+                  : ""),
               onPress: () => handleAddRealityFromQuestion(index),
               disabled: isAddingRealityIndex === index,
             })),
