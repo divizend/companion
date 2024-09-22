@@ -25,8 +25,6 @@
 
 ## Next steps
 
-1. Prompt-engineer the creation of "sub-goals"/"steps" so that they form a **causal** chain
-
 ## Instructions
 
 Normal development:
