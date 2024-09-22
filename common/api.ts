@@ -4,6 +4,7 @@ import { usedConfig } from "./config";
 import * as WebBrowser from "expo-web-browser";
 import { router } from "expo-router";
 import { deleteSessionToken } from "./sessionToken";
+import { queryClient } from "../app/_layout";
 
 export const apiFetch = async (endpoint: string, options: any = {}) => {
   const token = await getSessionToken();
@@ -94,6 +95,7 @@ export async function logout(throwOnError?: boolean) {
 
   if (resp.type === "success") {
     await deleteSessionToken();
+    queryClient.clear();
     router.replace("/");
   } else if (throwOnError) {
     throw new Error("Logout failed");
