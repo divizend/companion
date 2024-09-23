@@ -6,9 +6,11 @@ import { t } from "@/i18n";
 import { useUserProfile, useGoal } from "@/common/profile";
 import SectionList from "@/components/SectionList";
 import { apiPost } from "@/common/api";
+import { showConfirmationDialog } from "@/common/inputDialog";
 import { showInputDialog } from "@/common/inputDialog";
 import AssessRealitiesModal from "./AssessRealitiesModal";
 import GoalsSectionList from "./GoalsSectionList";
+import LearningIntentionsModal from "./LearningIntentionsModal";
 
 export default function GoalDetails() {
   const route = useRoute();
@@ -20,40 +22,35 @@ export default function GoalDetails() {
   const [isRefiningRealityId, setIsRefiningRealityId] = useState<string | null>(
     null
   );
+  const [isRemovingRealityId, setIsRemovingRealityId] = useState<string | null>(
+    null
+  );
+  const [showLearningIntentionsModal, setShowLearningIntentionsModal] =
+    useState(false);
 
-  const handleRemoveReality = (realityId: string) => {
+  const handleRemoveReality = async (realityId: string) => {
     const realityToRemove = goal?.realities.find((r) => r.id === realityId);
     if (!realityToRemove) return;
 
-    Alert.alert(
+    const confirmation = await showConfirmationDialog(
       realityToRemove.reality,
-      t("learn.goalDetails.realities.removeReality"),
-      [
-        {
-          text: t("common.cancel"),
-          style: "cancel",
-        },
-        {
-          text: t("common.remove"),
-          onPress: async () => {
-            try {
-              const newRealities = goal!.realities.filter(
-                (r) => r.id !== realityId
-              );
-              await apiPost(`/companion/goal/${goalId}/realities`, {
-                newRealities,
-              });
-              updateCompanionProfile((p) => {
-                p.goals.find((g) => g.id === goalId)!.realities = newRealities;
-              });
-            } catch (error) {
-              console.error("Failed to remove reality:", error);
-            }
-          },
-          style: "destructive",
-        },
-      ]
+      t("learn.goalDetails.realities.removeReality")
     );
+
+    if (confirmation) {
+      try {
+        setIsRemovingRealityId(realityId);
+        const newRealities = goal!.realities.filter((r) => r.id !== realityId);
+        await apiPost(`/companion/goal/${goalId}/realities`, {
+          newRealities,
+        });
+        updateCompanionProfile((p) => {
+          p.goals.find((g) => g.id === goalId)!.realities = newRealities;
+        });
+      } finally {
+        setIsRemovingRealityId(null);
+      }
+    }
   };
 
   const handleRefineReality = async (realityId: string) => {
@@ -99,14 +96,34 @@ export default function GoalDetails() {
         </Text>
 
         <SectionList
+          title={t("learn.goalDetails.learningIntentions.title")}
+          items={[
+            /*...goal.learningIntentions.map((intention) => ({
+              title: intention,
+            })),*/
+            {
+              title: t("learn.goalDetails.learningIntentions.add"),
+              onPress: () => setShowLearningIntentionsModal(true),
+              leftIcon: { name: "add", type: "material" },
+            },
+          ]}
+          bottomText={t("learn.goalDetails.learningIntentions.explanation")}
+          containerStyle={styles.sectionContainer}
+        />
+
+        <SectionList
           title={t("learn.goalDetails.realities.title")}
           items={[
             ...goal.realities.map((reality) => ({
               title:
                 isRefiningRealityId === reality.id
                   ? `${reality.reality} (${t("common.refining")})`
+                  : isRemovingRealityId === reality.id
+                  ? `${reality.reality} (${t("common.removing")})`
                   : reality.reality,
-              disabled: isRefiningRealityId === reality.id,
+              disabled:
+                isRefiningRealityId === reality.id ||
+                isRemovingRealityId === reality.id,
               removable: true,
               onPress: () => handleRefineReality(reality.id),
               onRemove: () => handleRemoveReality(reality.id),
@@ -126,6 +143,12 @@ export default function GoalDetails() {
         <AssessRealitiesModal
           visible={showAssessModal}
           onClose={() => setShowAssessModal(false)}
+          goalId={goalId}
+        />
+
+        <LearningIntentionsModal
+          visible={showLearningIntentionsModal}
+          onClose={() => setShowLearningIntentionsModal(false)}
           goalId={goalId}
         />
       </ScrollView>
@@ -149,7 +172,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
   },
   sectionContainer: {
-    marginTop: 10,
     marginBottom: 40,
   },
 });
