@@ -8,7 +8,8 @@
 
 - make sure that user registration is easy and works (improve FusionAuth styling when on mobile)
 - support dark mode
-- add FaceID login
+- during onboarding (i.e. in the `DisclaimerModal`, which we might want to rename to `OnboardingModal`) allow setting up FaceID, so that every time the user wants to open the Companion, they need to use FaceID (and some equivalent of that on Android)
+  - just like many other apps, when setting up FaceID, the user should additionally also set up a four-digit code which they need to enter when they want to access the app, but FaceID is not available
 - add Apple and Google one-click login
   - TODO: decide whether this should be from FusionAuth or from the app natively (i.e. directly in `app/main.tsx`), but probably from FusionAuth would be better
 - add some sort of user interaction (or at least error) tracking (something like Mixpanel; maybe also Sentry. See which are the most modern offerings on the market for this)
