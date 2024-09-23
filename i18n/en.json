@@ -225,7 +225,7 @@
     },
     "goalDetails": {
       "realities": {
-        "title": "Details, context and status quo",
+        "title": "Details, context, decisions",
         "addRealityTitle": "Add new fact",
         "addRealityPrompt": "What is true about this goal right now? Feel free to also add reasons, explanations and every else you deem relevant.",
         "explanation": "Here you can add facts associated with the status quo of your path towards achieving this goal. Make sure to always keep these updated and as accurate as possible.",
