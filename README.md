@@ -11,7 +11,7 @@
 - add FaceID login
 - add Apple and Google one-click login
   - TODO: decide whether this should be from FusionAuth or from the app natively (i.e. directly in `app/main.tsx`), but probably from FusionAuth would be better
-- add some sort of user interaction (or at least error) tracking (something like Mixpanel)
+- add some sort of user interaction (or at least error) tracking (something like Mixpanel; maybe also Sentry. See which are the most modern offerings on the market for this)
 - do load testing (i.e. whether the AI functionality in the backend still works fine, even with hundreds or thousands of users)
 - allow SecAPI import
 - make sure that everything also works and looks good on Android
