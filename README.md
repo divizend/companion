@@ -26,9 +26,7 @@
 - fully automate i18n, i.e. use the ChatGPT API with prompts that include all necessary context (!) to automatically translate the app and the respective prompts in the backend into all the different languages we support
   - there should actually be two supported variants of German: either "du" or "Sie" (i.e. informal or formal addressing) and during onboarding, at least when the user uses the app in German, the user shall be able to select whether they want to be addressed with "du" or "Sie"
 
-## Next steps
-
-## Instructions
+## Useful commands
 
 Normal development:
 
