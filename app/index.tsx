@@ -3,7 +3,7 @@ import * as WebBrowser from "expo-web-browser";
 import { useAuthRequest, useAutoDiscovery } from "expo-auth-session";
 import { router } from "expo-router";
 import { View, Alert, StyleSheet, Image } from "react-native";
-import { Button } from "@rneui/themed";
+import StyledButton from "../components/StyledButton";
 import { usedConfig } from "../common/config";
 import { useSessionToken, setSessionToken } from "../common/sessionToken";
 import { t } from "../i18n";
@@ -92,13 +92,11 @@ export default function Index() {
         style={styles.logo}
         resizeMode="contain"
       />
-      <Button
+      <StyledButton
         title={t("common.login")}
         disabled={!request}
         loading={handleLoginInProgress}
         onPress={handleLogin}
-        buttonStyle={styles.button}
-        titleStyle={styles.buttonText}
       />
     </View>
   );
@@ -115,15 +113,5 @@ const styles = StyleSheet.create({
     width: "60%",
     height: 100,
     marginBottom: 0,
-  },
-  button: {
-    backgroundColor: "#007AFF",
-    paddingHorizontal: 30,
-    paddingVertical: 15,
-    borderRadius: 10,
-  },
-  buttonText: {
-    fontSize: 18,
-    fontWeight: "bold",
   },
 });
