@@ -22,15 +22,13 @@ import { countries } from "@/common/countries";
 import { useUserProfile, usePrincipalLegalEntity } from "@/common/profile";
 import DatePicker from "react-native-date-picker";
 
-interface DisclaimerModalProps {
+interface OnboardingModalProps {
   visible: boolean;
 }
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 
-export const DisclaimerModal: React.FC<DisclaimerModalProps> = ({
-  visible,
-}) => {
+export default function OnboardingModal({ visible }: OnboardingModalProps) {
   const { updateProfile, updatePrincipalLegalEntity } = useUserProfile();
   const principalLegalEntity = usePrincipalLegalEntity();
   const [currentPage, setCurrentPage] = useState(0);
@@ -98,23 +96,23 @@ export const DisclaimerModal: React.FC<DisclaimerModalProps> = ({
         scrollEventThrottle={16}
       >
         <View style={styles.page}>
-          <Text style={styles.modalTitle}>{t("disclaimer.intro.title")}</Text>
-          <Text style={styles.modalText}>{t("disclaimer.intro.message")}</Text>
+          <Text style={styles.modalTitle}>{t("onboarding.intro.title")}</Text>
+          <Text style={styles.modalText}>{t("onboarding.intro.message")}</Text>
         </View>
         <View style={styles.page}>
           <Text style={styles.modalTitle}>
-            {t("disclaimer.aiDisclaimer.title")}
+            {t("onboarding.aiDisclaimer.title")}
           </Text>
           <Text style={styles.modalText}>
-            {t("disclaimer.aiDisclaimer.message")}
+            {t("onboarding.aiDisclaimer.message")}
           </Text>
         </View>
         <View style={styles.page}>
           <Text style={styles.modalTitle}>
-            {t("disclaimer.taxResidency.title")}
+            {t("onboarding.taxResidency.title")}
           </Text>
           <Text style={styles.modalText}>
-            {t("disclaimer.taxResidency.message")}
+            {t("onboarding.taxResidency.message")}
           </Text>
           <View style={styles.pickerContainer}>
             <Picker
@@ -135,10 +133,10 @@ export const DisclaimerModal: React.FC<DisclaimerModalProps> = ({
         </View>
         <View style={styles.page}>
           <Text style={styles.modalTitle}>
-            {t("disclaimer.birthday.title")}
+            {t("onboarding.birthday.title")}
           </Text>
           <Text style={styles.modalText}>
-            {t("disclaimer.birthday.message")}
+            {t("onboarding.birthday.message")}
           </Text>
           <View style={styles.pickerContainer}>
             <DatePicker
@@ -152,10 +150,10 @@ export const DisclaimerModal: React.FC<DisclaimerModalProps> = ({
         {availablePages >= 5 && (
           <View style={styles.page}>
             <Text style={styles.modalTitle}>
-              {t("disclaimer.allSet.title")}
+              {t("onboarding.allSet.title")}
             </Text>
             <Text style={styles.modalText}>
-              {t("disclaimer.allSet.message")}
+              {t("onboarding.allSet.message")}
             </Text>
           </View>
         )}
@@ -194,7 +192,7 @@ export const DisclaimerModal: React.FC<DisclaimerModalProps> = ({
                 ? t("common.next")
                 : isLoading
                 ? t("common.loading")
-                : t("disclaimer.finalConfirm")
+                : t("onboarding.finalConfirm")
             }
             onPress={async () => {
               if (currentPage === 0 || currentPage === 1) {
@@ -279,7 +277,7 @@ export const DisclaimerModal: React.FC<DisclaimerModalProps> = ({
       </SafeAreaView>
     </Modal>
   );
-};
+}
 
 const styles = StyleSheet.create({
   safeArea: {

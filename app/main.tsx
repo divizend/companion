@@ -14,7 +14,7 @@ import AnalyzeScreen from "./analyze";
 import TrackScreen from "./track";
 import DecideScreen from "./decide";
 import DiscoverScreen from "./discover";
-import { DisclaimerModal } from "@/components/DisclaimerModal";
+import OnboardingModal from "@/components/OnboardingModal";
 import { useUserProfile } from "@/common/profile";
 import { t } from "@/i18n";
 
@@ -52,7 +52,7 @@ function Main() {
 
   return (
     <>
-      <DisclaimerModal visible={!profile?.flags?.allowedCompanionAI} />
+      <OnboardingModal visible={!profile?.flags?.allowedCompanionAI} />
       <Tab.Navigator
         screenOptions={({ route }) => ({
           tabBarIcon: ({ color, size }) => {

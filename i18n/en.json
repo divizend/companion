@@ -56,7 +56,7 @@
     "decide": "Decide",
     "discover": "Discover"
   },
-  "disclaimer": {
+  "onboarding": {
     "intro": {
       "title": "Welcome to the Divizend Companion!",
       "message": "Let's get the setup done."
