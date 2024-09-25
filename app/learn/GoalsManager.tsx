@@ -180,7 +180,6 @@ export default function GoalsManager({
                 ? `${goal.description} (${t("common.removing")})`
                 : goal.description,
             onPress: () => handleGoalClick(goal),
-            removable: true,
             onRemove: () => removeGoal(goal.id),
             containerStyle:
               refiningGoalId === goal.id

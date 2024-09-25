@@ -8,14 +8,15 @@ interface SectionListProps {
     title: string;
     onPress?: () => void;
     rightElement?: string;
-    leftIcon?: {
-      name: string;
-      type?: string;
-      color?: string;
-    };
+    leftIcon?:
+      | string
+      | {
+          name: string;
+          type?: string;
+          color?: string;
+        };
     containerStyle?: ViewStyle | ViewStyle[];
     itemStyle?: ViewStyle | ViewStyle[];
-    removable?: boolean;
     onRemove?: () => void;
     disabled?: boolean;
   }>;
@@ -43,21 +44,26 @@ export default function SectionList({
             >
               <ListItem
                 containerStyle={[
-                  item.removable ? styles.listItemWithRemove : styles.listItem,
+                  item.onRemove ? styles.listItemWithRemove : styles.listItem,
                   item.itemStyle,
                 ]}
               >
-                {item.leftIcon && (
-                  <Icon
-                    name={item.leftIcon.name}
-                    type={item.leftIcon.type || "material"}
-                    color={
-                      item.leftIcon.color || (item.disabled ? "grey" : "black")
-                    }
-                    size={20}
-                    containerStyle={styles.iconContainer}
-                  />
-                )}
+                {item.leftIcon ? (
+                  typeof item.leftIcon === "string" ? (
+                    <Text>{item.leftIcon}</Text>
+                  ) : (
+                    <Icon
+                      name={item.leftIcon.name}
+                      type={item.leftIcon.type || "material"}
+                      color={
+                        item.leftIcon.color ||
+                        (item.disabled ? "grey" : "black")
+                      }
+                      size={20}
+                      containerStyle={styles.iconContainer}
+                    />
+                  )
+                ) : null}
                 <ListItem.Content style={styles.listItemContent}>
                   <ListItem.Title
                     style={[
@@ -77,7 +83,7 @@ export default function SectionList({
                     </Text>
                   )}
                 </ListItem.Content>
-                {item.removable && (
+                {item.onRemove && (
                   <TouchableOpacity
                     onPress={item.onRemove}
                     style={styles.removeButton}
@@ -90,7 +96,7 @@ export default function SectionList({
                     />
                   </TouchableOpacity>
                 )}
-                {item.onPress && !item.removable && <ListItem.Chevron />}
+                {item.onPress && !item.onRemove && <ListItem.Chevron />}
               </ListItem>
             </TouchableOpacity>
             {index !== items.length - 1 && <Divider style={styles.divider} />}

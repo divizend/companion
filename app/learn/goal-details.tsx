@@ -1,16 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { StyleSheet, SafeAreaView, ScrollView, Alert } from "react-native";
 import { Text } from "@rneui/themed";
 import { useRoute } from "@react-navigation/native";
 import { t } from "@/i18n";
 import { useUserProfile, useGoal } from "@/common/profile";
 import SectionList from "@/components/SectionList";
-import { apiPost } from "@/common/api";
+import { apiPost, apiDelete } from "@/common/api";
 import { showConfirmationDialog } from "@/common/inputDialog";
 import { showInputDialog } from "@/common/inputDialog";
 import AssessRealitiesModal from "./AssessRealitiesModal";
 import GoalsSectionList from "./GoalsSectionList";
-import LearningIntentionsModal from "./LearningIntentionsModal";
 
 export default function GoalDetails() {
   const route = useRoute();
@@ -25,8 +24,14 @@ export default function GoalDetails() {
   const [isRemovingRealityId, setIsRemovingRealityId] = useState<string | null>(
     null
   );
-  const [showLearningIntentionsModal, setShowLearningIntentionsModal] =
+  const [isAddingLearningIntentions, setIsAddingLearningIntentions] =
     useState(false);
+  const [isRemovingLearningIntentionId, setIsRemovingLearningIntentionId] =
+    useState<string | null>(null);
+  const [isClearingLearningIntentions, setIsClearingLearningIntentions] =
+    useState(false);
+
+  const scrollViewRef = useRef<ScrollView>(null);
 
   const handleRemoveReality = async (realityId: string) => {
     const realityToRemove = goal?.realities.find((r) => r.id === realityId);
@@ -84,13 +89,77 @@ export default function GoalDetails() {
     }
   };
 
+  const handleAddLearningIntentions = async () => {
+    setIsAddingLearningIntentions(true);
+    try {
+      const newLearningIntentions = await apiPostAI(
+        `/companion/goal/${goalId}/suggest-learning-intentions`
+      );
+      updateCompanionProfile((p) => {
+        p.goals
+          .find((g) => g.id === goalId)!
+          .learningIntentions.push(...newLearningIntentions);
+      });
+    } finally {
+      setIsAddingLearningIntentions(false);
+    }
+  };
+
+  const handleRemoveLearningIntention = async (learningIntentionId: string) => {
+    const confirmation = await showConfirmationDialog(
+      goal.learningIntentions.find((i) => i.id === learningIntentionId)
+        ?.summary!,
+      t("learn.goalDetails.learningIntentions.removeIntention")
+    );
+
+    if (confirmation) {
+      try {
+        setIsRemovingLearningIntentionId(learningIntentionId);
+        await apiDelete(
+          `/companion/goal/${goalId}/learning-intention/${learningIntentionId}`
+        );
+        updateCompanionProfile((p) => {
+          const goal = p.goals.find((g) => g.id === goalId)!;
+          goal.learningIntentions = goal.learningIntentions.filter(
+            (i) => i.id !== learningIntentionId
+          );
+        });
+      } finally {
+        setIsRemovingLearningIntentionId(null);
+      }
+    }
+  };
+
+  const handleClearLearningIntentions = async () => {
+    const confirmation = await showConfirmationDialog(
+      t("learn.goalDetails.learningIntentions.clear.title"),
+      t("learn.goalDetails.learningIntentions.clear.message")
+    );
+
+    if (confirmation) {
+      try {
+        setIsClearingLearningIntentions(true);
+        await apiDelete(`/companion/goal/${goalId}/learning-intentions`);
+        updateCompanionProfile((p) => {
+          p.goals.find((g) => g.id === goalId)!.learningIntentions = [];
+        });
+        scrollViewRef.current?.scrollTo({ y: 0, animated: true });
+      } finally {
+        setIsClearingLearningIntentions(false);
+      }
+    }
+  };
+
   if (!goal) {
     return null;
   }
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollViewContent}>
+      <ScrollView
+        ref={scrollViewRef}
+        contentContainerStyle={styles.scrollViewContent}
+      >
         <Text h3 style={styles.title}>
           {goal?.description}
         </Text>
@@ -98,15 +167,35 @@ export default function GoalDetails() {
         <SectionList
           title={t("learn.goalDetails.learningIntentions.title")}
           items={[
-            /*...goal.learningIntentions.map((intention) => ({
-              title: intention,
-            })),*/
+            ...goal.learningIntentions.map((intention) => ({
+              title:
+                intention.summary +
+                (isRemovingLearningIntentionId === intention.id
+                  ? ` (${t("common.removing")})`
+                  : ""),
+              leftIcon: intention.emoji,
+              onRemove: () => handleRemoveLearningIntention(intention.id),
+              disabled: isRemovingLearningIntentionId === intention.id,
+            })),
             {
-              title: t("learn.goalDetails.learningIntentions.add"),
-              onPress: () => setShowLearningIntentionsModal(true),
+              title: isAddingLearningIntentions
+                ? t("common.loading")
+                : goal.learningIntentions.length > 0
+                ? t("learn.goalDetails.learningIntentions.addMore")
+                : t("learn.goalDetails.learningIntentions.add"),
+              onPress: handleAddLearningIntentions,
               leftIcon: { name: "add", type: "material" },
+              disabled: isAddingLearningIntentions,
             },
-          ]}
+            goal.learningIntentions.length > 0 && {
+              title: isClearingLearningIntentions
+                ? t("common.loading")
+                : t("learn.goalDetails.learningIntentions.clear.title"),
+              onPress: handleClearLearningIntentions,
+              leftIcon: { name: "delete", type: "material" },
+              disabled: isClearingLearningIntentions,
+            },
+          ].filter((x) => !!x)}
           bottomText={t("learn.goalDetails.learningIntentions.explanation")}
           containerStyle={styles.sectionContainer}
         />
@@ -124,7 +213,6 @@ export default function GoalDetails() {
               disabled:
                 isRefiningRealityId === reality.id ||
                 isRemovingRealityId === reality.id,
-              removable: true,
               onPress: () => handleRefineReality(reality.id),
               onRemove: () => handleRemoveReality(reality.id),
             })),
@@ -143,12 +231,6 @@ export default function GoalDetails() {
         <AssessRealitiesModal
           visible={showAssessModal}
           onClose={() => setShowAssessModal(false)}
-          goalId={goalId}
-        />
-
-        <LearningIntentionsModal
-          visible={showLearningIntentionsModal}
-          onClose={() => setShowLearningIntentionsModal(false)}
           goalId={goalId}
         />
       </ScrollView>

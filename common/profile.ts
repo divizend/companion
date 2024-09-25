@@ -22,11 +22,19 @@ export type CompanionProfileGoalReality = {
   reality: string;
 };
 
+export type CompanionProfileGoalLearningIntention = {
+  id: string;
+  question: string;
+  summary: string;
+  emoji: string;
+};
+
 export type CompanionProfileGoal = {
   id: string;
   description: string;
   realities: CompanionProfileGoalReality[];
   parentGoalId: string | null;
+  learningIntentions: CompanionProfileGoalLearningIntention[];
 };
 
 export type CompanionProfile = {

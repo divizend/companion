@@ -244,9 +244,15 @@
       },
       "learningIntentions": {
         "title": "Learning",
-        "add": "Add learning goal",
+        "add": "Add learning goals",
+        "addMore": "Add more learning goals",
         "addPrompt": "Enter your new learning goal",
-        "explanation": "These are topics you can learn about to achieve this goal more effectively."
+        "explanation": "These are topics you can learn about to achieve this goal more effectively. Tap on any of them to open it in a chat.",
+        "removeIntention": "Do you want to remove this learning goal?",
+        "clear": {
+          "title": "Clear all learning goals",
+          "message": "Are you sure you want to remove all these learning goals? This action cannot be undone."
+        }
       }
     }
   },

@@ -206,7 +206,6 @@ export default function GenerateInsights() {
                     (removingInsightId === insight.id
                       ? ` (${t("common.removing")})`
                       : ""),
-                  removable: true,
                   disabled: removingInsightId === insight.id,
                   onRemove: () => handleRemoveInsight(insight.id),
                 })
