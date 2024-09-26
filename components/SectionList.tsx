@@ -1,6 +1,6 @@
-import React from "react";
-import { View, StyleSheet, TouchableOpacity, ViewStyle } from "react-native";
-import { Text, ListItem, Divider, Icon } from "@rneui/themed";
+import React from 'react';
+import { View, StyleSheet, TouchableOpacity, ViewStyle } from 'react-native';
+import { Text, ListItem, Divider, Icon } from '@rneui/themed';
 
 interface SectionListProps {
   title?: string;
@@ -40,64 +40,34 @@ export default function SectionList({
       <View style={styles.listWrapper}>
         {items.map((item, index) => (
           <ItemComponent key={item.key ?? index} style={item.containerStyle}>
-            <TouchableOpacity
-              onPress={item.onPress}
-              disabled={item.disabled || !item.onPress}
-            >
-              <ListItem
-                containerStyle={[
-                  item.onRemove ? styles.listItemWithRemove : styles.listItem,
-                  item.itemStyle,
-                ]}
-              >
+            <TouchableOpacity onPress={item.onPress} disabled={item.disabled || !item.onPress}>
+              <ListItem containerStyle={[item.onRemove ? styles.listItemWithRemove : styles.listItem, item.itemStyle]}>
                 {item.leftIcon ? (
-                  typeof item.leftIcon === "string" ? (
-                    <Text style={[item.disabled && styles.disabledTitle]}>
-                      {item.leftIcon}
-                    </Text>
+                  typeof item.leftIcon === 'string' ? (
+                    <Text style={[item.disabled && styles.disabledTitle]}>{item.leftIcon}</Text>
                   ) : (
                     <Icon
                       name={item.leftIcon.name}
-                      type={item.leftIcon.type || "material"}
-                      color={
-                        item.leftIcon.color ||
-                        (item.disabled ? "grey" : "black")
-                      }
+                      type={item.leftIcon.type || 'material'}
+                      color={item.leftIcon.color || (item.disabled ? 'grey' : 'black')}
                       size={20}
                       containerStyle={styles.iconContainer}
                     />
                   )
                 ) : null}
                 <ListItem.Content style={styles.listItemContent}>
-                  <ListItem.Title
-                    style={[
-                      styles.listItemTitle,
-                      item.disabled && styles.disabledTitle,
-                    ]}
-                  >
+                  <ListItem.Title style={[styles.listItemTitle, item.disabled && styles.disabledTitle]}>
                     {item.title}
                   </ListItem.Title>
                   {item.rightElement && (
-                    <Text
-                      style={styles.rightElementText}
-                      numberOfLines={1}
-                      ellipsizeMode="tail"
-                    >
+                    <Text style={styles.rightElementText} numberOfLines={1} ellipsizeMode="tail">
                       {item.rightElement}
                     </Text>
                   )}
                 </ListItem.Content>
                 {item.onRemove && (
-                  <TouchableOpacity
-                    onPress={item.onRemove}
-                    style={styles.removeButton}
-                  >
-                    <Icon
-                      name="minus"
-                      type="material-community"
-                      size={14}
-                      color="white"
-                    />
+                  <TouchableOpacity onPress={item.onRemove} style={styles.removeButton}>
+                    <Icon name="minus" type="material-community" size={14} color="white" />
                   </TouchableOpacity>
                 )}
                 {item.onPress && !item.onRemove && <ListItem.Chevron />}
@@ -119,15 +89,15 @@ const styles = StyleSheet.create({
   },
   sectionHeader: {
     fontSize: 12,
-    color: "#666",
+    color: '#666',
     marginBottom: 6,
     marginHorizontal: 20,
-    textTransform: "uppercase",
+    textTransform: 'uppercase',
   },
   listWrapper: {
-    backgroundColor: "white",
+    backgroundColor: 'white',
     borderRadius: 10,
-    overflow: "hidden",
+    overflow: 'hidden',
   },
   listItem: {
     paddingVertical: 12,
@@ -138,12 +108,12 @@ const styles = StyleSheet.create({
     paddingLeft: 20,
   },
   divider: {
-    backgroundColor: "#e0e0e0",
+    backgroundColor: '#e0e0e0',
     height: StyleSheet.hairlineWidth,
   },
   bottomText: {
     fontSize: 12,
-    color: "#666",
+    color: '#666',
     marginTop: 6,
     marginHorizontal: 20,
   },
@@ -151,31 +121,31 @@ const styles = StyleSheet.create({
     marginRight: 0,
   },
   removeButton: {
-    backgroundColor: "red",
+    backgroundColor: 'red',
     borderRadius: 12,
     width: 22,
     height: 22,
     padding: 0,
     margin: 0,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   listItemContent: {
     flex: 1,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   listItemTitle: {
     fontSize: 16,
   },
   disabledTitle: {
-    color: "grey",
+    color: 'grey',
   },
   rightElementText: {
-    color: "grey",
+    color: 'grey',
     fontSize: 16,
-    textAlign: "right",
+    textAlign: 'right',
     flexShrink: 1,
     marginLeft: 10,
   },
