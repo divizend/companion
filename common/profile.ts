@@ -1,9 +1,9 @@
-import { useQueryClient } from "@tanstack/react-query";
-import { produce } from "immer";
-import RNRestart from "react-native-restart";
-import { useFetch, apiGet, apiPost } from "./api";
-import { t } from "@/i18n";
-import { setSessionToken } from "./sessionToken";
+import { useQueryClient } from '@tanstack/react-query';
+import { produce } from 'immer';
+import RNRestart from 'react-native-restart';
+import { useFetch, apiGet, apiPost } from './api';
+import { t } from '@/i18n';
+import { setSessionToken } from './sessionToken';
 
 export type CompanionProfileLearnQuestion = {
   id: string;
@@ -88,23 +88,23 @@ export function getEmptyCompanionProfile(): CompanionProfile {
 
 export function useUserProfile() {
   const queryClient = useQueryClient();
-  const profileRaw = useFetch("userProfile");
+  const profileRaw = useFetch('userProfile');
   const profile = profileRaw.data as UserProfile;
 
   const updateProfile = (fn: (draft: UserProfile) => void) => {
     const newProfile = produce(profile, fn);
-    queryClient.setQueryData(["userProfile"], newProfile);
+    queryClient.setQueryData(['userProfile'], newProfile);
     return newProfile;
   };
 
   const updateCompanionProfile = (
-    fnOrObject: ((draft: CompanionProfile) => void) | Partial<CompanionProfile>
+    fnOrObject: ((draft: CompanionProfile) => void) | Partial<CompanionProfile>,
   ): CompanionProfile => {
-    return updateProfile((draft) => {
+    return updateProfile(draft => {
       if (!draft.companionProfile) {
         draft.companionProfile = getEmptyCompanionProfile();
       }
-      if (typeof fnOrObject === "function") {
+      if (typeof fnOrObject === 'function') {
         fnOrObject(draft.companionProfile);
       } else {
         Object.assign(draft.companionProfile, fnOrObject);
@@ -113,10 +113,8 @@ export function useUserProfile() {
   };
 
   const updatePrincipalLegalEntity = (fn: (draft: LegalEntity) => void) => {
-    updateProfile((draft) => {
-      const principalEntity = draft.legalEntities.find(
-        (entity) => entity.isPrincipal
-      );
+    updateProfile(draft => {
+      const principalEntity = draft.legalEntities.find(entity => entity.isPrincipal);
       if (principalEntity) {
         fn(principalEntity);
       }
@@ -143,34 +141,25 @@ export async function impersonateUser(userIdentityId: string) {
   const { publicTokenGetterCode } = await apiGet(`/auth/impersonate`, {
     userIdentityId,
   });
-  const { sessionToken } = await apiGet(
-    "/auth/sessionToken/" + publicTokenGetterCode
-  );
+  const { sessionToken } = await apiGet('/auth/sessionToken/' + publicTokenGetterCode);
   await setSessionToken(sessionToken);
   RNRestart.restart();
 }
 
-export function getPrincipalLegalEntity(
-  profile: UserProfile
-): LegalEntity | undefined {
-  return profile.legalEntities.find((entity) => entity.isPrincipal);
+export function getPrincipalLegalEntity(profile: UserProfile): LegalEntity | undefined {
+  return profile.legalEntities.find(entity => entity.isPrincipal);
 }
 
-export function getGoal(
-  profile: UserProfile,
-  goalId: string
-): CompanionProfileGoal | undefined {
-  return profile.companionProfile.goals.find((goal) => goal.id === goalId);
+export function getGoal(profile: UserProfile, goalId: string): CompanionProfileGoal | undefined {
+  return profile.companionProfile.goals.find(goal => goal.id === goalId);
 }
 
 export function getLearningIntention(
   profile: UserProfile,
   goalId: string,
-  learningIntentionId: string
+  learningIntentionId: string,
 ): CompanionProfileGoalLearningIntention | undefined {
-  return getGoal(profile, goalId)?.learningIntentions.find(
-    (intention) => intention.id === learningIntentionId
-  );
+  return getGoal(profile, goalId)?.learningIntentions.find(intention => intention.id === learningIntentionId);
 }
 
 export function usePrincipalLegalEntity() {
@@ -183,10 +172,7 @@ export function useGoal(goalId: string) {
   return getGoal(profile, goalId);
 }
 
-export function useLearningIntention(
-  goalId: string,
-  learningIntentionId: string
-) {
+export function useLearningIntention(goalId: string, learningIntentionId: string) {
   const { profile } = useUserProfile();
   return getLearningIntention(profile, goalId, learningIntentionId);
 }
