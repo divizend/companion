@@ -17,17 +17,13 @@ import { apiPost } from "@/common/api";
 import {
   useUserProfile,
   CompanionProfileLearnQuestion,
-  CompanionProfileLearnInsight,
 } from "@/common/profile";
 import { useNavigation } from "@react-navigation/native";
+import UserInsightsSectionList from "./UserInsightsSectionList";
 
 export default function GenerateInsights() {
   const navigation = useNavigation();
-  const { profile, updateCompanionProfile, apiPostAI } = useUserProfile({
-    moduleDescription: t("learn.vision"),
-    viewTitle: t("learn.insights.title"),
-    viewExplanation: t("learn.insights.explanation"),
-  });
+  const { profile, updateCompanionProfile } = useUserProfile();
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const [
     similarQuestionsLoadingQuestionId,
@@ -37,9 +33,6 @@ export default function GenerateInsights() {
     generateInsightLoadingQuestionId,
     setGenerateInsightLoadingQuestionId,
   ] = useState<string | null>(null);
-  const [removingInsightId, setRemovingInsightId] = useState<string | null>(
-    null
-  );
 
   const [defaultQuestions] = useState<CompanionProfileLearnQuestion[]>(
     (t("learn.insights.defaultQuestions") as any).map((q: any) => ({
@@ -60,23 +53,13 @@ export default function GenerateInsights() {
     }).start();
   }, [displayedQuestions]);
 
-  const AI_CONTEXT_LOCAL = {
-    questions: t("learn.insights.aiContext.displayedQuestions", {
-      questions: displayedQuestions.map((q) => q.question).join("\n"),
-    }),
-  };
-
   const getSimilarQuestions = async (questionId: string) => {
     setSimilarQuestionsLoadingQuestionId(questionId);
     try {
-      const allQuestions = await apiPostAI(
-        "/companion/learn/similar-questions",
-        [AI_CONTEXT_LOCAL.questions],
-        {
-          currentQuestions: displayedQuestions,
-          questionId,
-        }
-      );
+      const allQuestions = await apiPost("/companion/learn/similar-questions", {
+        currentQuestions: displayedQuestions,
+        questionId,
+      });
       updateCompanionProfile({ learnQuestions: allQuestions });
     } finally {
       setSimilarQuestionsLoadingQuestionId(null);
@@ -92,14 +75,11 @@ export default function GenerateInsights() {
     if (answer) {
       try {
         setGenerateInsightLoadingQuestionId(questionId);
-        const insight = await apiPostAI(
-          "/companion/learn/generate-insight",
-          [AI_CONTEXT_LOCAL.questions],
-          {
-            question: question.question,
-            answer,
-          }
-        );
+        const insight = await apiPost("/companion/learn/generate-insight", {
+          currentQuestions: displayedQuestions,
+          question: question.question,
+          answer,
+        });
         updateCompanionProfile((p) => {
           p.userInsights.push(insight);
         });
@@ -107,41 +87,6 @@ export default function GenerateInsights() {
         setGenerateInsightLoadingQuestionId(null);
       }
     }
-  };
-
-  const handleRemoveInsight = (insightId: string) => {
-    Alert.alert(
-      profile.companionProfile?.userInsights.find((i) => i.id === insightId)
-        ?.insight!,
-      t("learn.insights.removeInsight.message"),
-      [
-        {
-          text: t("common.cancel"),
-          style: "cancel",
-        },
-        {
-          text: t("common.remove"),
-          onPress: async () => {
-            const filteredInsights =
-              profile.companionProfile.userInsights.filter(
-                (i: CompanionProfileLearnInsight) => i.id !== insightId
-              );
-            try {
-              setRemovingInsightId(insightId);
-              await apiPost("/companion/insights", {
-                newUserInsights: filteredInsights,
-              });
-              updateCompanionProfile({
-                userInsights: filteredInsights,
-              });
-            } finally {
-              setRemovingInsightId(null);
-            }
-          },
-          style: "destructive",
-        },
-      ]
-    );
   };
 
   return (
@@ -197,21 +142,7 @@ export default function GenerateInsights() {
 
         {profile.companionProfile.userInsights.length > 0 && (
           <>
-            <SectionList
-              title={t("learn.insights.insights.title")}
-              items={profile.companionProfile.userInsights.map(
-                (insight: CompanionProfileLearnInsight) => ({
-                  title:
-                    insight.insight +
-                    (removingInsightId === insight.id
-                      ? ` (${t("common.removing")})`
-                      : ""),
-                  disabled: removingInsightId === insight.id,
-                  onRemove: () => handleRemoveInsight(insight.id),
-                })
-              )}
-              bottomText={t("learn.insights.insights.bottomText")}
-            />
+            <UserInsightsSectionList isOnboarding />
             <StyledButton
               title={t(`learn.insights.confirmButton`)}
               onPress={() => navigation.navigate("Goals" as never)}

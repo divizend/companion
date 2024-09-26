@@ -5,7 +5,8 @@ import { Text, ListItem, Divider, Icon } from "@rneui/themed";
 interface SectionListProps {
   title?: string;
   items: Array<{
-    title: string;
+    key?: string;
+    title: string | React.ReactNode;
     onPress?: () => void;
     rightElement?: string;
     leftIcon?:
@@ -19,6 +20,7 @@ interface SectionListProps {
     itemStyle?: ViewStyle | ViewStyle[];
     onRemove?: () => void;
     disabled?: boolean;
+    additional?: React.ReactNode;
   }>;
   bottomText?: string;
   containerStyle?: ViewStyle;
@@ -37,7 +39,7 @@ export default function SectionList({
       {title && <Text style={styles.sectionHeader}>{title.toUpperCase()}</Text>}
       <View style={styles.listWrapper}>
         {items.map((item, index) => (
-          <ItemComponent key={index} style={item.containerStyle}>
+          <ItemComponent key={item.key ?? index} style={item.containerStyle}>
             <TouchableOpacity
               onPress={item.onPress}
               disabled={item.disabled || !item.onPress}
@@ -50,7 +52,9 @@ export default function SectionList({
               >
                 {item.leftIcon ? (
                   typeof item.leftIcon === "string" ? (
-                    <Text>{item.leftIcon}</Text>
+                    <Text style={[item.disabled && styles.disabledTitle]}>
+                      {item.leftIcon}
+                    </Text>
                   ) : (
                     <Icon
                       name={item.leftIcon.name}
@@ -99,6 +103,7 @@ export default function SectionList({
                 {item.onPress && !item.onRemove && <ListItem.Chevron />}
               </ListItem>
             </TouchableOpacity>
+            {item.additional}
             {index !== items.length - 1 && <Divider style={styles.divider} />}
           </ItemComponent>
         ))}

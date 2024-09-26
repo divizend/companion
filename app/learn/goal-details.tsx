@@ -1,20 +1,26 @@
 import React, { useState, useRef } from "react";
-import { StyleSheet, SafeAreaView, ScrollView, Alert } from "react-native";
+import {
+  StyleSheet,
+  SafeAreaView,
+  ScrollView,
+  TouchableOpacity,
+} from "react-native";
 import { Text } from "@rneui/themed";
 import { useRoute } from "@react-navigation/native";
 import { t } from "@/i18n";
 import { useUserProfile, useGoal } from "@/common/profile";
 import SectionList from "@/components/SectionList";
-import { apiPost, apiDelete } from "@/common/api";
+import { apiGet, apiPost, apiDelete } from "@/common/api";
 import { showConfirmationDialog } from "@/common/inputDialog";
 import { showInputDialog } from "@/common/inputDialog";
 import AssessRealitiesModal from "./AssessRealitiesModal";
 import GoalsSectionList from "./GoalsSectionList";
+import ChatModal from "@/components/ChatModal";
 
 export default function GoalDetails() {
   const route = useRoute();
   const { goalId } = route.params as { goalId: string };
-  const { updateCompanionProfile, apiPostAI } = useUserProfile();
+  const { updateCompanionProfile } = useUserProfile();
   const goal = useGoal(goalId)!;
 
   const [showAssessModal, setShowAssessModal] = useState(false);
@@ -30,11 +36,16 @@ export default function GoalDetails() {
     useState<string | null>(null);
   const [isClearingLearningIntentions, setIsClearingLearningIntentions] =
     useState(false);
+  const [
+    chatModalOpenLearningIntentionId,
+    setChatModalOpenLearningIntentionId,
+  ] = useState<string | null>(null);
+  const [isModifyingEmoji, setIsModifyingEmoji] = useState(false);
 
   const scrollViewRef = useRef<ScrollView>(null);
 
   const handleRemoveReality = async (realityId: string) => {
-    const realityToRemove = goal?.realities.find((r) => r.id === realityId);
+    const realityToRemove = goal.realities.find((r) => r.id === realityId);
     if (!realityToRemove) return;
 
     const confirmation = await showConfirmationDialog(
@@ -73,9 +84,8 @@ export default function GoalDetails() {
     if (feedback) {
       try {
         setIsRefiningRealityId(realityId);
-        const updatedReality = await apiPostAI(
+        const updatedReality = await apiPost(
           `/companion/goal/${goalId}/reality/${realityId}/refine`,
-          [],
           { feedback }
         );
         updateCompanionProfile((p) => {
@@ -92,7 +102,7 @@ export default function GoalDetails() {
   const handleAddLearningIntentions = async () => {
     setIsAddingLearningIntentions(true);
     try {
-      const newLearningIntentions = await apiPostAI(
+      const newLearningIntentions = await apiGet(
         `/companion/goal/${goalId}/suggest-learning-intentions`
       );
       updateCompanionProfile((p) => {
@@ -150,6 +160,24 @@ export default function GoalDetails() {
     }
   };
 
+  const handleModifyEmoji = async () => {
+    const emojiDesire = await showInputDialog(t("askEmoji"));
+    if (emojiDesire) {
+      try {
+        setIsModifyingEmoji(true);
+        const newGoal = await apiPost(`/companion/goal/${goalId}/emoji`, {
+          input: emojiDesire,
+        });
+        updateCompanionProfile((p) => {
+          const goalIndex = p.goals.findIndex((g) => g.id === goalId);
+          p.goals[goalIndex] = newGoal;
+        });
+      } finally {
+        setIsModifyingEmoji(false);
+      }
+    }
+  };
+
   if (!goal) {
     return null;
   }
@@ -160,9 +188,16 @@ export default function GoalDetails() {
         ref={scrollViewRef}
         contentContainerStyle={styles.scrollViewContent}
       >
-        <Text h3 style={styles.title}>
-          {goal?.description}
-        </Text>
+        <TouchableOpacity onPress={handleModifyEmoji} activeOpacity={1}>
+          {goal.emoji || isModifyingEmoji ? (
+            <Text style={styles.emojiIcon}>
+              {isModifyingEmoji ? "⏳" : goal.emoji}
+            </Text>
+          ) : null}
+          <Text h3 style={styles.title}>
+            {goal.description}
+          </Text>
+        </TouchableOpacity>
 
         <SectionList
           title={t("learn.goalDetails.learningIntentions.title")}
@@ -176,6 +211,20 @@ export default function GoalDetails() {
               leftIcon: intention.emoji,
               onRemove: () => handleRemoveLearningIntention(intention.id),
               disabled: isRemovingLearningIntentionId === intention.id,
+              onPress: () => setChatModalOpenLearningIntentionId(intention.id),
+              additional:
+                chatModalOpenLearningIntentionId === intention.id ? (
+                  <ChatModal
+                    visible={chatModalOpenLearningIntentionId === intention.id}
+                    onClose={() => setChatModalOpenLearningIntentionId(null)}
+                    systemPrompt={`You are an AI assistant that helps the user with the goal of \"${
+                      goal.description
+                    }\". Never use Markdown. Make sure to give exceptionally intelligent and helpful responses. All responses should always be practical, pragmatic, as specific as possible and clearly actionable. The user already stated the following facts and context for this goal, which should be considered in all responses:\n${goal.realities
+                      .map((r) => `- ${r.reality}`)
+                      .join("\n")}`}
+                    initialUserMessage={intention.question}
+                  />
+                ) : null,
             })),
             {
               title: isAddingLearningIntentions
@@ -184,7 +233,10 @@ export default function GoalDetails() {
                 ? t("learn.goalDetails.learningIntentions.addMore")
                 : t("learn.goalDetails.learningIntentions.add"),
               onPress: handleAddLearningIntentions,
-              leftIcon: { name: "add", type: "material" },
+              leftIcon: {
+                name: isAddingLearningIntentions ? "hourglass-empty" : "add",
+                type: "material",
+              },
               disabled: isAddingLearningIntentions,
             },
             goal.learningIntentions.length > 0 && {
@@ -192,7 +244,12 @@ export default function GoalDetails() {
                 ? t("common.loading")
                 : t("learn.goalDetails.learningIntentions.clear.title"),
               onPress: handleClearLearningIntentions,
-              leftIcon: { name: "delete", type: "material" },
+              leftIcon: {
+                name: isClearingLearningIntentions
+                  ? "hourglass-empty"
+                  : "delete",
+                type: "material",
+              },
               disabled: isClearingLearningIntentions,
             },
           ].filter((x) => !!x)}
@@ -250,10 +307,14 @@ const styles = StyleSheet.create({
   },
   title: {
     fontWeight: "bold",
-    marginBottom: 20,
+    marginBottom: 30,
     marginHorizontal: 5,
   },
   sectionContainer: {
     marginBottom: 40,
+  },
+  emojiIcon: {
+    fontSize: 40,
+    marginBottom: 10,
   },
 });

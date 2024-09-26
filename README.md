@@ -16,6 +16,8 @@
 - do load testing (i.e. whether the AI functionality in the backend still works fine, even with hundreds or thousands of users)
 - allow SecAPI import
 - make sure that everything also works and looks good on Android
+- use Markdown in chat
+- implement AI-based feedback mechanism
 
 ## Possible features
 

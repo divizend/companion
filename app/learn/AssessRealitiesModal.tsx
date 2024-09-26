@@ -6,6 +6,7 @@ import SectionList from "@/components/SectionList";
 import ModalView from "@/components/ModalView";
 import { useGoal, useUserProfile } from "@/common/profile";
 import { showInputDialog } from "@/common/inputDialog";
+import { apiGet, apiPost } from "@/common/api";
 
 interface AssessRealitiesModalProps {
   visible: boolean;
@@ -18,7 +19,7 @@ export default function AssessRealitiesModal({
   onClose,
   goalId,
 }: AssessRealitiesModalProps) {
-  const { apiPostAI, updateCompanionProfile } = useUserProfile();
+  const { updateCompanionProfile } = useUserProfile();
   const goal = useGoal(goalId);
   const [isAddingReality, setIsAddingReality] = useState(false);
   const [isAddingRealityIndex, setIsAddingRealityIndex] = useState<
@@ -32,7 +33,7 @@ export default function AssessRealitiesModal({
   const loadQuestions = async () => {
     try {
       setIsLoadingQuestions(true);
-      const loadedQuestions = await apiPostAI(
+      const loadedQuestions = await apiGet(
         `/companion/goal/${goalId}/realities-questions`
       );
       setQuestions(loadedQuestions);
@@ -53,9 +54,8 @@ export default function AssessRealitiesModal({
     if (text) {
       try {
         setIsAddingRealityIndex(questionIndex);
-        const newReality = await apiPostAI(
+        const newReality = await apiPost(
           `/companion/goal/${goalId}/generate-reality`,
-          [],
           { question: questions[questionIndex], answer: text }
         );
         updateCompanionProfile((p) => {
@@ -80,11 +80,9 @@ export default function AssessRealitiesModal({
     if (text) {
       try {
         setIsAddingReality(true);
-        const newReality = await apiPostAI(
-          `/companion/goal/${goalId}/reality`,
-          [],
-          { reality: text }
-        );
+        const newReality = await apiPost(`/companion/goal/${goalId}/reality`, {
+          reality: text,
+        });
         updateCompanionProfile((p) => {
           p.goals.find((g) => g.id === goalId)?.realities.push(newReality);
         });

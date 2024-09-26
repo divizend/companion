@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useCallback } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {
   View,
   Text,
@@ -13,17 +13,21 @@ import {
   Animated,
   ActivityIndicator,
 } from "react-native";
-import { Icon, Header } from "@rneui/themed";
+import { Icon } from "@rneui/themed";
 import { SSE } from "sse.js";
 import "event-target-polyfill"; // needed for sse.js
 import { usedConfig } from "@/common/config";
 import { useSessionToken } from "@/common/sessionToken";
 import { t } from "@/i18n";
-import { apiFetch } from "@/common/api";
+import { apiPost } from "@/common/api";
+import ModalView from "./ModalView";
 
 interface ChatModalProps {
+  visible: boolean;
   onClose: () => void;
   chatId?: string;
+  systemPrompt?: string; // only relevant for new chats
+  initialUserMessage?: string;
 }
 
 enum MessageRole {
@@ -85,23 +89,12 @@ const DownArrowIndicator = ({
   );
 };
 
-/**
- * Usage:
- * const [chatModalVisible, setChatModalVisible] = useState(false);
- * ...
- * <Modal
- *   visible={chatModalVisible}
- *   animationType="slide"
- *   presentationStyle="pageSheet"
- *   onRequestClose={() => setChatModalVisible(false)}
- * >
- *   <ChatModal onClose={() => setChatModalVisible(false)} />
- * </Modal>
- */
-
 export default function ChatModal({
+  visible,
   onClose,
   chatId: givenChatId,
+  systemPrompt,
+  initialUserMessage,
 }: ChatModalProps) {
   const [sessionToken] = useSessionToken();
   const [messages, setMessages] = useState<Message[]>([]);
@@ -123,12 +116,12 @@ export default function ChatModal({
   const [lastTimeAtBottom, setLastTimeAtBottom] = useState<Date | null>(null);
 
   useEffect(() => {
-    const initializeChat = async () => {
+    (async () => {
       try {
         setIsLoading(true);
-        const response = await apiFetch("/ai-chat", {
-          method: "POST",
-          body: JSON.stringify({ id: givenChatId }),
+        const response = await apiPost("/ai-chat", {
+          id: givenChatId,
+          systemPrompt,
         });
         setChatId(response.id);
         if (response.messages) {
@@ -141,9 +134,7 @@ export default function ChatModal({
       } finally {
         setIsLoading(false);
       }
-    };
-
-    initializeChat();
+    })();
   }, []);
 
   useEffect(() => {
@@ -191,62 +182,65 @@ export default function ChatModal({
     setIsAIResponding(false);
   };
 
-  const sendMessage = () => {
+  const sendMessage = (messageToSend: string) => {
+    setMessages((prevMessages) => [
+      ...prevMessages,
+      { content: messageToSend, role: MessageRole.USER },
+      { content: "", role: MessageRole.ASSISTANT },
+    ]);
+    setInputText("");
+    setIsAIResponding(true);
+    setUserAttemptedScroll(false);
+    Keyboard.dismiss();
+
+    const sse = new SSE(
+      `${usedConfig.api.url}/${usedConfig.api.versionCode}/ai-chat/${chatId}/completion`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "X-SessionToken": sessionToken!,
+        },
+        payload: JSON.stringify({ message: messageToSend }),
+      }
+    );
+    sseRef.current = sse;
+
+    sse.addEventListener("message", (event: any) => {
+      const data = JSON.parse(event.data);
+      if (data.content) {
+        setMessages((prevMessages) => {
+          const newMessages = [...prevMessages];
+          const lastMessage = newMessages[newMessages.length - 1];
+          if (lastMessage && lastMessage.role === MessageRole.ASSISTANT) {
+            lastMessage.content += data.content;
+          } else {
+            newMessages.push({
+              content: data.content,
+              role: MessageRole.ASSISTANT,
+            });
+          }
+          return newMessages;
+        });
+      }
+    });
+
+    sse.addEventListener("end", (event: any) => {
+      sse.close();
+      sseRef.current = null;
+      setIsAIResponding(false);
+    });
+
+    sse.addEventListener("error", (event: any) => {
+      console.error("SSE error:", event);
+      sse.close();
+      sseRef.current = null;
+      setIsAIResponding(false);
+    });
+  };
+
+  const handleSendMessage = () => {
     if (chatId && inputText.trim()) {
-      const messageToSend = inputText.trim();
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        { content: messageToSend, role: MessageRole.USER },
-        { content: "", role: MessageRole.ASSISTANT },
-      ]);
-      setInputText("");
-      setIsAIResponding(true);
-      setUserAttemptedScroll(false);
-      Keyboard.dismiss();
-
-      const sse = new SSE(
-        `${usedConfig.api.url}/${usedConfig.api.versionCode}/ai-chat/${chatId}/completion`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "X-SessionToken": sessionToken!,
-          },
-          payload: JSON.stringify({ message: messageToSend }),
-        }
-      );
-      sseRef.current = sse;
-
-      sse.addEventListener("message", (event: any) => {
-        const data = JSON.parse(event.data);
-        if (data.content) {
-          setMessages((prevMessages) => {
-            const newMessages = [...prevMessages];
-            const lastMessage = newMessages[newMessages.length - 1];
-            if (lastMessage && lastMessage.role === MessageRole.ASSISTANT) {
-              lastMessage.content += data.content;
-            } else {
-              newMessages.push({
-                content: data.content,
-                role: MessageRole.ASSISTANT,
-              });
-            }
-            return newMessages;
-          });
-        }
-      });
-
-      sse.addEventListener("end", (event: any) => {
-        sse.close();
-        sseRef.current = null;
-        setIsAIResponding(false);
-      });
-
-      sse.addEventListener("error", (event: any) => {
-        console.error("SSE error:", event);
-        sse.close();
-        sseRef.current = null;
-        setIsAIResponding(false);
-      });
+      sendMessage(inputText.trim());
     }
   };
 
@@ -258,16 +252,14 @@ export default function ChatModal({
       ]}
     >
       <Text
-        style={[
-          styles.messageText,
-          item.role === MessageRole.USER ? styles.userMessageText : null,
-        ]}
+        style={item.role === MessageRole.USER ? styles.userMessageText : {}}
       >
-        {item.content}
-        {item.role === MessageRole.ASSISTANT &&
+        {item.content +
+          (item.role === MessageRole.ASSISTANT &&
           index === messages.length - 1 &&
-          isAIResponding &&
-          "⬤"}
+          isAIResponding
+            ? "⬤"
+            : "")}
       </Text>
     </View>
   );
@@ -281,23 +273,19 @@ export default function ChatModal({
     });
   };
 
+  useEffect(() => {
+    if (initialUserMessage && !isLoading) {
+      sendMessage(initialUserMessage);
+    }
+  }, [isLoading, initialUserMessage]);
+
   return (
-    <View style={styles.container}>
-      <Header
-        centerComponent={
-          <View style={styles.headerCenter}>
-            <Text style={styles.headerText}>{t("chat.title")}</Text>
-          </View>
-        }
-        rightComponent={
-          <TouchableOpacity onPress={onClose}>
-            <View style={styles.headerRight}>
-              <Icon name="close" size={16} color="#666" />
-            </View>
-          </TouchableOpacity>
-        }
-        containerStyle={styles.headerContainer}
-      />
+    <ModalView
+      visible={visible}
+      onClose={onClose}
+      title={t("chat.title")}
+      noScrollView
+    >
       <View
         style={styles.chatContainer}
         onLayout={(event: LayoutChangeEvent) => {
@@ -307,11 +295,13 @@ export default function ChatModal({
         <FlatList
           ref={flatListRef}
           data={messages}
-          renderItem={({ item, index }) => (
-            <View onLayout={(event) => handleMessageLayout(event, index)}>
-              {renderMessage({ item, index })}
-            </View>
-          )}
+          renderItem={({ item, index }) =>
+            item.role === MessageRole.SYSTEM ? null : (
+              <View onLayout={(event) => handleMessageLayout(event, index)}>
+                {renderMessage({ item, index })}
+              </View>
+            )
+          }
           keyExtractor={(_, index) => index.toString()}
           contentContainerStyle={styles.chatListContent}
           ListEmptyComponent={<View style={{ flex: 1 }} />}
@@ -337,7 +327,7 @@ export default function ChatModal({
           value={inputText}
           onChangeText={setInputText}
           placeholder={t("chat.inputPlaceholder")}
-          onSubmitEditing={sendMessage}
+          onSubmitEditing={handleSendMessage}
           multiline
           numberOfLines={1}
           blurOnSubmit={false}
@@ -351,7 +341,7 @@ export default function ChatModal({
               !isAIResponding &&
               styles.sendButtonDisabled,
           ]}
-          onPress={isAIResponding ? abortRequest : sendMessage}
+          onPress={isAIResponding ? abortRequest : handleSendMessage}
           disabled={
             (!chatId || inputText.trim() === "" || isLoading) && !isAIResponding
           }
@@ -365,35 +355,11 @@ export default function ChatModal({
           )}
         </TouchableOpacity>
       </View>
-    </View>
+    </ModalView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#f2f2f2",
-  },
-  headerContainer: {
-    backgroundColor: "#f2f2f2",
-    borderBottomWidth: 0,
-  },
-  headerCenter: {
-    flex: 1,
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  headerText: {
-    fontWeight: "bold",
-    fontSize: 16,
-    textAlignVertical: "center",
-  },
-  headerRight: {
-    backgroundColor: "#e0e0e0",
-    borderRadius: 15,
-    padding: 4,
-    margin: 5,
-  },
   chatContainer: {
     flex: 1,
     backgroundColor: "#f2f2f2",
@@ -416,12 +382,6 @@ const styles = StyleSheet.create({
   aiMessage: {
     alignSelf: "flex-start",
     backgroundColor: "#FFFFFF",
-  },
-  messageText: {
-    color: "#000",
-    flexDirection: "row",
-    flexWrap: "wrap",
-    alignItems: "center",
   },
   userMessageText: {
     color: "#fff",

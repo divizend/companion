@@ -3,7 +3,7 @@ import { StyleSheet, ScrollView, SafeAreaView } from "react-native";
 import { Text } from "@rneui/themed";
 import { t } from "@/i18n";
 import GoalsSectionList from "./GoalsSectionList";
-
+import UserInsightsSectionList from "./UserInsightsSectionList";
 export default function RealizeGoals() {
   return (
     <SafeAreaView style={styles.container}>
@@ -15,6 +15,7 @@ export default function RealizeGoals() {
           {t("learn.realizeGoals.explanation")}
         </Text>
         <GoalsSectionList parentGoalId={null} />
+        <UserInsightsSectionList />
       </ScrollView>
     </SafeAreaView>
   );
@@ -40,5 +41,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginHorizontal: 5,
     marginBottom: 30,
+  },
+  UserInsightsSectionList: {
+    marginTop: 30,
   },
 });

@@ -4,7 +4,7 @@ import { t } from "@/i18n";
 import SectionList from "@/components/SectionList";
 import { useUserProfile, CompanionProfileGoal } from "@/common/profile";
 import { showInputDialog } from "@/common/inputDialog";
-import { apiDelete } from "@/common/api";
+import { apiGet, apiPost, apiDelete } from "@/common/api";
 import StyledButton, { StyledButtonProps } from "@/components/StyledButton";
 
 interface GoalsManagerProps {
@@ -18,11 +18,7 @@ export default function GoalsManager({
   allowRedetermine,
   parentGoalId,
 }: GoalsManagerProps) {
-  const { profile, updateCompanionProfile, apiPostAI } = useUserProfile({
-    moduleDescription: t("learn.vision"),
-    viewTitle: t("learn.goals.title"),
-    viewExplanation: t("learn.goals.explanation"),
-  });
+  const { profile, updateCompanionProfile } = useUserProfile();
   const [generatingLoading, setGeneratingLoading] = useState<boolean>(false);
   const [addingManualGoal, setAddingManualGoal] = useState<boolean>(false);
   const [refiningGoalId, setRefiningGoalId] = useState<string | null>(null);
@@ -37,7 +33,7 @@ export default function GoalsManager({
     const generateGoals = async () => {
       setGeneratingLoading(true);
       try {
-        const goals: CompanionProfileGoal[] = await apiPostAI(
+        const goals: CompanionProfileGoal[] = await apiGet(
           parentGoalId
             ? `/companion/goal/${parentGoalId}/initialize-subgoals`
             : "/companion/learn/generate-initial-goals"
@@ -111,9 +107,9 @@ export default function GoalsManager({
       );
       if (newGoal) {
         setAddingManualGoal(true);
-        const reformulatedGoal: CompanionProfileGoal = await apiPostAI(
+        console.log(JSON.stringify({ goal: newGoal, parentGoalId }));
+        const reformulatedGoal: CompanionProfileGoal = await apiPost(
           "/companion/goal/reformulate",
-          [],
           { goal: newGoal, parentGoalId }
         );
         updateCompanionProfile((p) => {
@@ -133,11 +129,9 @@ export default function GoalsManager({
       );
       if (feedback) {
         setRefiningGoalId(goal.id);
-        const refinedGoal = await apiPostAI(
-          `/companion/goal/${goal.id}/refine`,
-          [],
-          { feedback }
-        );
+        const refinedGoal = await apiPost(`/companion/goal/${goal.id}/refine`, {
+          feedback,
+        });
         updateCompanionProfile((p) => {
           const index = p.goals.findIndex((g) => g.id === goal.id);
           if (index !== -1) {
@@ -186,6 +180,7 @@ export default function GoalsManager({
                 ? styles.refiningGoalContainer
                 : undefined,
             disabled: removingGoalId === goal.id,
+            leftIcon: goal.emoji,
           })),
         ].filter((x) => !!x)}
         containerStyle={styles.sectionContainer}
@@ -203,7 +198,10 @@ export default function GoalsManager({
                 ),
             onPress: addManualGoal,
             disabled: addingManualGoal,
-            leftIcon: { name: "add", type: "material" },
+            leftIcon: {
+              name: addingManualGoal ? "hourglass-empty" : "add",
+              type: "material",
+            },
           },
         ]}
         containerStyle={styles.addManualGoalContainer}

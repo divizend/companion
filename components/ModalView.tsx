@@ -12,6 +12,7 @@ interface ModalViewProps {
   visible: boolean;
   onClose: () => void;
   title: string;
+  noScrollView?: boolean;
   children: React.ReactNode;
 }
 
@@ -19,6 +20,7 @@ export default function ModalView({
   visible,
   onClose,
   title,
+  noScrollView,
   children,
 }: ModalViewProps) {
   return (
@@ -44,9 +46,13 @@ export default function ModalView({
           }
           containerStyle={styles.header}
         />
-        <ScrollView>
-          <View style={styles.content}>{children}</View>
-        </ScrollView>
+        {noScrollView ? (
+          children
+        ) : (
+          <ScrollView>
+            <View style={styles.content}>{children}</View>
+          </ScrollView>
+        )}
       </View>
     </Modal>
   );

@@ -1,9 +1,4 @@
 {
-  "aiContext": {
-    "app": "The user is using an app whose purpose is to empower users to achieve their goals, visions and dreams, which should always be considered in all responses.",
-    "user": "The user has {{country}} as their country of tax residency and the user is currently {{age}} years old, which should be considered in all responses.",
-    "view": "The user is currently in a module of the app described by \"{{moduleDescription}}\" on a screen titled \"{{viewTitle}}\" with the explanation \"{{viewExplanation}}\"."
-  },
   "common": {
     "error": "Error",
     "cancel": "Cancel",
@@ -26,6 +21,7 @@
     "title": "Coming soon",
     "stayTuned": "Stay tuned for the revolution of financial intelligence with Divizend!"
   },
+  "askEmoji": "Which emoji do you want?",
   "settings": {
     "title": "Settings",
     "accountSection": {
@@ -88,9 +84,6 @@
     "vision": "The Visionary is the module of the Companion which wants to make you learn how to turn your desires, goals, visions and dreams into reality.",
     "insights": {
       "title": "Step 1: Insights",
-      "aiContext": {
-        "displayedQuestions": "The user sees the following questions:\n{{questions}}"
-      },
       "explanation": "All this learning is fully personalized and happens at a pace that you choose yourself. To achieve this, you need to answer a few questions first, guided by the following. As a first step, your answers will be reformulated into insights about your financial life.",
       "explanation2": "When you tap on a question, you can also generate new questions based on it.",
       "questionsTitle": "Inspiration for questions",
@@ -140,22 +133,27 @@
         "answer": "Answer",
         "getSimilar": "Get similar questions"
       },
-      "insights": {
+      "insightsOnboarding": {
         "title": "Insights about your financial life",
         "bottomText": "Your answers have been reformulated into clear statements about your financial life, which will be used to customize your learning experience. Of course you can also always add and remove insights later."
+      },
+      "insights": {
+        "title": "Insights about you",
+        "bottomText": "These are the insights about you that will be used as context for all goals. Make sure to always keep them up to date."
       },
       "confirmButton": "Happy with these insights? Then let's confirm and continue!",
       "removeInsight": {
         "message": "Are you sure you want to remove this insight? This action cannot be undone."
+      },
+      "addInsight": {
+        "title": "Add a new insight",
+        "message": "Enter your new insight"
       }
     },
     "goals": {
       "title": "Step 2: Goals",
       "backLink": "Go back to insights setup",
       "explanation": "Based on the insights about your financial life, let's now determine concrete goals and visions for you. If you want to make a goal more precise or correct it, simply tap on it.",
-      "aiContext": {
-        "insights": "The user has determined the following insights about their financial life:\n{{insights}}"
-      },
       "confirmGoals": "Goals clear? Then tap here to start realizing them!"
     },
     "realizeGoals": {
@@ -247,7 +245,7 @@
         "add": "Add learning goals",
         "addMore": "Add more learning goals",
         "addPrompt": "Enter your new learning goal",
-        "explanation": "These are topics you can learn about to achieve this goal more effectively. Tap on any of them to open it in a chat.",
+        "explanation": "These are topics you can learn about to achieve this goal more effectively. Tap on any of them to open the corresponding question in a chat.",
         "removeIntention": "Do you want to remove this learning goal?",
         "clear": {
           "title": "Clear all learning goals",

@@ -12,7 +12,7 @@ export type CompanionProfileLearnQuestion = {
   isNew?: boolean;
 };
 
-export type CompanionProfileLearnInsight = {
+export type CompanionProfileUserInsight = {
   id: string;
   insight: string;
 };
@@ -32,6 +32,7 @@ export type CompanionProfileGoalLearningIntention = {
 export type CompanionProfileGoal = {
   id: string;
   description: string;
+  emoji: string;
   realities: CompanionProfileGoalReality[];
   parentGoalId: string | null;
   learningIntentions: CompanionProfileGoalLearningIntention[];
@@ -39,7 +40,7 @@ export type CompanionProfileGoal = {
 
 export type CompanionProfile = {
   learnQuestions: CompanionProfileLearnQuestion[];
-  userInsights: CompanionProfileLearnInsight[];
+  userInsights: CompanionProfileUserInsight[];
   goals: CompanionProfileGoal[];
   goalSetupDone: boolean;
 };
@@ -85,40 +86,7 @@ export function getEmptyCompanionProfile(): CompanionProfile {
   };
 }
 
-export interface AIContextView {
-  moduleDescription: string;
-  viewTitle: string;
-  viewExplanation: string;
-}
-
-// can later also be used for product announcements etc., i.e. the announcement will not only happen
-// in a centralized way (e.g. with email newsletters or so), but also as a context for the AI which
-// is used in all chats, goal definitions etc., so that users for whom it's actually relevant will
-// simply "stumble" over it in a fully personalized way
-export function getGlobalAIContext(profile: UserProfile): string[] {
-  const principalLegalEntity = getPrincipalLegalEntity(profile);
-
-  // Calculate user's current age
-  let age = 0;
-  if (principalLegalEntity?.data.info.birthday) {
-    const birthDate = new Date(principalLegalEntity.data.info.birthday);
-    const today = new Date();
-    age = today.getFullYear() - birthDate.getFullYear();
-    const m = today.getMonth() - birthDate.getMonth();
-    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-      age--;
-    }
-  }
-
-  const userContext = t("aiContext.user", {
-    country: t("country." + principalLegalEntity?.data.info.nationality),
-    age,
-  });
-
-  return [t("aiContext.app"), userContext];
-}
-
-export function useUserProfile(aiContextView?: AIContextView) {
+export function useUserProfile() {
   const queryClient = useQueryClient();
   const profileRaw = useFetch("userProfile");
   const profile = profileRaw.data as UserProfile;
@@ -155,19 +123,6 @@ export function useUserProfile(aiContextView?: AIContextView) {
     });
   };
 
-  const aiContextGlobal = getGlobalAIContext(profile);
-
-  const apiPostAI = (path: string, aiContextLocal?: string[], body?: any) => {
-    return apiPost(path, {
-      ...body,
-      context: [
-        ...aiContextGlobal,
-        aiContextView ? t("aiContext.view", aiContextView) : undefined,
-        ...(aiContextLocal ?? []),
-      ].filter((x) => x),
-    });
-  };
-
   const isPrivileged =
     profile.flags.canImpersonateUsers ||
     profile.flags.canModifyOwnInternalFlags ||
@@ -180,8 +135,6 @@ export function useUserProfile(aiContextView?: AIContextView) {
     updateProfile,
     updateCompanionProfile,
     updatePrincipalLegalEntity,
-    aiContextGlobal,
-    apiPostAI,
     isPrivileged,
   };
 }
@@ -210,6 +163,16 @@ export function getGoal(
   return profile.companionProfile.goals.find((goal) => goal.id === goalId);
 }
 
+export function getLearningIntention(
+  profile: UserProfile,
+  goalId: string,
+  learningIntentionId: string
+): CompanionProfileGoalLearningIntention | undefined {
+  return getGoal(profile, goalId)?.learningIntentions.find(
+    (intention) => intention.id === learningIntentionId
+  );
+}
+
 export function usePrincipalLegalEntity() {
   const { profile } = useUserProfile();
   return getPrincipalLegalEntity(profile);
@@ -218,4 +181,12 @@ export function usePrincipalLegalEntity() {
 export function useGoal(goalId: string) {
   const { profile } = useUserProfile();
   return getGoal(profile, goalId);
+}
+
+export function useLearningIntention(
+  goalId: string,
+  learningIntentionId: string
+) {
+  const { profile } = useUserProfile();
+  return getLearningIntention(profile, goalId, learningIntentionId);
 }

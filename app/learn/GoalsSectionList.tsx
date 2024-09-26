@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet, StyleProp, ViewStyle } from "react-native";
 import { t } from "@/i18n";
 import { useUserProfile } from "@/common/profile";
 import { useNavigation } from "@react-navigation/native";
@@ -9,18 +9,16 @@ import GoalsManagerModal from "./GoalsManagerModal";
 interface GoalsSectionListProps {
   parentGoalId: string | null;
   allowRedetermine?: boolean;
+  style?: any;
 }
 
 export default function GoalsSectionList({
   parentGoalId,
   allowRedetermine,
+  style,
 }: GoalsSectionListProps) {
   const navigation = useNavigation();
-  const { profile } = useUserProfile({
-    moduleDescription: t("learn.vision"),
-    viewTitle: t("learn.realizeGoals.title"),
-    viewExplanation: t("learn.realizeGoals.explanation"),
-  });
+  const { profile } = useUserProfile();
 
   const [showGoalsManagerModal, setShowGoalsManagerModal] = useState(false);
   const variant = parentGoalId ? "secondary" : "primary";
@@ -39,6 +37,7 @@ export default function GoalsSectionList({
                 (navigation.navigate as any)("GoalDetails", {
                   goalId: goal.id,
                 }),
+              leftIcon: goal.emoji,
             })),
           {
             title: t(`learn.goalsManager.${variant}.title`),
@@ -46,7 +45,7 @@ export default function GoalsSectionList({
             leftIcon: { name: "edit", type: "material" },
           },
         ]}
-        containerStyle={styles.sectionContainer}
+        containerStyle={style ?? styles.sectionContainer}
         bottomText={
           variant === "secondary"
             ? t(`learn.goalsManager.${variant}.explanation`)
@@ -67,6 +66,6 @@ export default function GoalsSectionList({
 const styles = StyleSheet.create({
   sectionContainer: {
     marginTop: 0,
-    marginBottom: 20,
+    marginBottom: 40,
   },
 });
