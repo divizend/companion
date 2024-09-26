@@ -79,7 +79,7 @@ export default function GenerateInsights() {
         <Text h1 style={styles.title}>
           {t('learn.insights.title')}
         </Text>
-        <View className="text-red-500" style={styles.explanationContainer}>
+        <View style={styles.explanationContainer}>
           <Text style={styles.explanationText}>{t('learn.vision')}</Text>
           <Text style={styles.explanationText}>{t('learn.insights.explanation')}</Text>
           <Text style={styles.explanationText}>{t('learn.insights.explanation2')}</Text>
