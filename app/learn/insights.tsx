@@ -76,6 +76,9 @@ export default function GenerateInsights() {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollViewContent}>
+        <View className="pt-20 border rounded-lg bg-green-400 flex italic font-medium">
+          <Text className="font-light text-orange-300">Ki ZEBI</Text>
+        </View>
         <Text h1 style={styles.title}>
           {t('learn.insights.title')}
         </Text>
