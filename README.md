@@ -1,12 +1,13 @@
 # @divizend/companion
 
 ## Setup
-
+- Copy `.env.example` to `.env`, fill in your ip and fusion auth config and run `scripts/load_env.sh` 
 - In FusionAuth, edit the application and under "Authorized redirect URLs", add `divizend://authcallback`
 
 ## Tasks
 
 - make sure that user registration is easy and works (improve FusionAuth styling when on mobile)
+- make logout work
 - support dark mode (probably through the color-related hooks in the `hooks` directory)
 - during onboarding allow setting up FaceID, so that every time the user wants to open the Companion, they need to use FaceID (and some equivalent of that on Android)
   - just like many other apps, when setting up FaceID, the user should additionally also set up a four-digit code which they need to enter when they want to access the app, but FaceID is not available
