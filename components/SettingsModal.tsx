@@ -62,7 +62,12 @@ export default function SettingsView({ visible, onClose }: SettingsViewProps) {
           },
           {
             title: t("settings.resetProfile.title"),
-            leftIcon: { name: "delete-outline", type: "material" },
+            leftIcon: {
+              name: resettingProfileLoading
+                ? "hourglass-empty"
+                : "delete-outline",
+              type: "material",
+            },
             onPress: handleResetProfile,
             disabled: resettingProfileLoading,
           },
