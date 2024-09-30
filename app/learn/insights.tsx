@@ -118,7 +118,7 @@ export default function GenerateInsights() {
           ItemComponent={Animated.View}
         />
 
-        {profile.companionProfile.userInsights.length > 0 && (
+        {profile.companionProfile.userInsights?.length > 0 && (
           <>
             <UserInsightsSectionList isOnboarding />
             <StyledButton
