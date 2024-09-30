@@ -16,8 +16,12 @@
 - do load testing (i.e. whether the AI functionality in the backend still works fine, even with hundreds or thousands of users)
 - allow SecAPI import
 - make sure that everything also works and looks good on Android
-- use Markdown in chat
 - implement AI-based feedback mechanism
+- move AI context creation (especially user facts) when opening chat to backend as well
+- in ChatModal, resize content area appropriately when keyboard is shown
+  - allow tapping down arrow while scrolling
+  - make streaming a lot smoother
+  - use Markdown, i.e. styling identical to ChatGPT
 
 ## Possible features
 
