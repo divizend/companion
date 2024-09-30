@@ -1,19 +1,17 @@
-import React from "react";
-import { StyleSheet, ScrollView, SafeAreaView } from "react-native";
-import { Text } from "@rneui/themed";
-import { t } from "@/i18n";
-import GoalsSectionList from "./GoalsSectionList";
-import UserInsightsSectionList from "./UserInsightsSectionList";
+import React from 'react';
+import { StyleSheet, ScrollView, SafeAreaView } from 'react-native';
+import { Text } from '@rneui/themed';
+import { t } from '@/i18n';
+import GoalsSectionList from './GoalsSectionList';
+import UserInsightsSectionList from './UserInsightsSectionList';
 export default function RealizeGoals() {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollViewContent}>
         <Text h1 style={styles.title}>
-          {t("learn.realizeGoals.title")}
+          {t('learn.realizeGoals.title')}
         </Text>
-        <Text style={styles.explanationText}>
-          {t("learn.realizeGoals.explanation")}
-        </Text>
+        <Text style={styles.explanationText}>{t('learn.realizeGoals.explanation')}</Text>
         <GoalsSectionList parentGoalId={null} />
         <UserInsightsSectionList />
       </ScrollView>
@@ -24,7 +22,7 @@ export default function RealizeGoals() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f2f2f2",
+    backgroundColor: '#f2f2f2',
   },
   scrollViewContent: {
     padding: 20,
@@ -33,7 +31,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 28,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     marginBottom: 20,
     marginHorizontal: 5,
   },

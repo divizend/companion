@@ -1,22 +1,22 @@
-import React, { useState } from "react";
-import { TouchableOpacity, Modal, SafeAreaView } from "react-native";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { createStackNavigator } from "@react-navigation/stack";
-import { Avatar, Icon } from "@rneui/themed";
-import { withUserProfile } from "@/common/withUserProfile";
-import { colors } from "@/common/colors";
-import SettingsModal from "@/components/SettingsModal";
-import InsightsScreen from "./learn/insights";
-import GoalsScreen from "./learn/goals";
-import RealizeGoalsScreen from "./learn/realize-goals";
-import GoalDetailsScreen from "./learn/goal-details";
-import AnalyzeScreen from "./analyze";
-import TrackScreen from "./track";
-import DecideScreen from "./decide";
-import DiscoverScreen from "./discover";
-import OnboardingModal from "@/components/OnboardingModal";
-import { useUserProfile } from "@/common/profile";
-import { t } from "@/i18n";
+import React, { useState } from 'react';
+import { TouchableOpacity, Modal, SafeAreaView } from 'react-native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createStackNavigator } from '@react-navigation/stack';
+import { Avatar, Icon } from '@rneui/themed';
+import { withUserProfile } from '@/common/withUserProfile';
+import { colors } from '@/common/colors';
+import SettingsModal from '@/components/SettingsModal';
+import InsightsScreen from './learn/insights';
+import GoalsScreen from './learn/goals';
+import RealizeGoalsScreen from './learn/realize-goals';
+import GoalDetailsScreen from './learn/goal-details';
+import AnalyzeScreen from './analyze';
+import TrackScreen from './track';
+import DecideScreen from './decide';
+import DiscoverScreen from './discover';
+import OnboardingModal from '@/components/OnboardingModal';
+import { useUserProfile } from '@/common/profile';
+import { t } from '@/i18n';
 
 const Tab = createBottomTabNavigator();
 const LearnStack = createStackNavigator();
@@ -26,18 +26,12 @@ function LearnStackNavigator() {
   return (
     <LearnStack.Navigator
       screenOptions={{ headerShown: false }}
-      initialRouteName={
-        companionProfile.goalSetupDone ? "RealizeGoals" : "Insights"
-      }
+      initialRouteName={companionProfile.goalSetupDone ? 'RealizeGoals' : 'Insights'}
     >
       <LearnStack.Screen name="Insights" component={InsightsScreen} />
       <LearnStack.Screen name="Goals" component={GoalsScreen} />
       <LearnStack.Screen name="RealizeGoals" component={RealizeGoalsScreen} />
-      <LearnStack.Screen
-        name="GoalDetails"
-        component={GoalDetailsScreen}
-        getId={({ params }: any) => params?.goalId}
-      />
+      <LearnStack.Screen name="GoalDetails" component={GoalDetailsScreen} getId={({ params }: any) => params?.goalId} />
     </LearnStack.Navigator>
   );
 }
@@ -59,72 +53,35 @@ function Main() {
             let iconName;
             const id = (route.params as any).id;
 
-            if (id === "learn") {
-              iconName = "school";
-            } else if (id === "analyze") {
-              iconName = "analytics";
-            } else if (id === "track") {
-              iconName = "trending-up";
-            } else if (id === "decide") {
-              iconName = "lightbulb";
-            } else if (id === "discover") {
-              iconName = "explore";
+            if (id === 'learn') {
+              iconName = 'school';
+            } else if (id === 'analyze') {
+              iconName = 'analytics';
+            } else if (id === 'track') {
+              iconName = 'trending-up';
+            } else if (id === 'decide') {
+              iconName = 'lightbulb';
+            } else if (id === 'discover') {
+              iconName = 'explore';
             }
 
-            return (
-              <Icon
-                name={iconName!}
-                type="material"
-                size={size}
-                color={color}
-              />
-            );
+            return <Icon name={iconName!} type="material" size={size} color={color} />;
           },
           tabBarActiveTintColor: colors.theme,
-          tabBarInactiveTintColor: "gray",
+          tabBarInactiveTintColor: 'gray',
           headerShown: false,
         })}
       >
-        <Tab.Screen
-          initialParams={{ id: "learn" }}
-          name={t("tabs.learn")}
-          component={LearnStackNavigator}
-        />
-        <Tab.Screen
-          initialParams={{ id: "analyze" }}
-          name={t("tabs.analyze")}
-          component={AnalyzeScreen}
-        />
-        <Tab.Screen
-          initialParams={{ id: "track" }}
-          name={t("tabs.track")}
-          component={TrackScreen}
-        />
-        <Tab.Screen
-          initialParams={{ id: "decide" }}
-          name={t("tabs.decide")}
-          component={DecideScreen}
-        />
-        <Tab.Screen
-          initialParams={{ id: "discover" }}
-          name={t("tabs.discover")}
-          component={DiscoverScreen}
-        />
+        <Tab.Screen initialParams={{ id: 'learn' }} name={t('tabs.learn')} component={LearnStackNavigator} />
+        <Tab.Screen initialParams={{ id: 'analyze' }} name={t('tabs.analyze')} component={AnalyzeScreen} />
+        <Tab.Screen initialParams={{ id: 'track' }} name={t('tabs.track')} component={TrackScreen} />
+        <Tab.Screen initialParams={{ id: 'decide' }} name={t('tabs.decide')} component={DecideScreen} />
+        <Tab.Screen initialParams={{ id: 'discover' }} name={t('tabs.discover')} component={DiscoverScreen} />
       </Tab.Navigator>
-      <SettingsModal
-        visible={settingsVisible}
-        onClose={() => setSettingsVisible(false)}
-      />
-      <SafeAreaView style={{ position: "absolute", top: 30, right: 0 }}>
-        <TouchableOpacity
-          style={{ marginRight: 15 }}
-          onPress={() => setSettingsVisible(true)}
-        >
-          <Avatar
-            rounded
-            title={profile.email[0].toUpperCase()}
-            containerStyle={{ backgroundColor: colors.theme }}
-          />
+      <SettingsModal visible={settingsVisible} onClose={() => setSettingsVisible(false)} />
+      <SafeAreaView style={{ position: 'absolute', top: 30, right: 0 }}>
+        <TouchableOpacity style={{ marginRight: 15 }} onPress={() => setSettingsVisible(true)}>
+          <Avatar rounded title={profile.email[0].toUpperCase()} containerStyle={{ backgroundColor: colors.theme }} />
         </TouchableOpacity>
       </SafeAreaView>
     </>

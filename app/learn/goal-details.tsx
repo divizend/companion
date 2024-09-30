@@ -1,21 +1,16 @@
-import React, { useState, useRef } from "react";
-import {
-  StyleSheet,
-  SafeAreaView,
-  ScrollView,
-  TouchableOpacity,
-} from "react-native";
-import { Text } from "@rneui/themed";
-import { useRoute } from "@react-navigation/native";
-import { t } from "@/i18n";
-import { useUserProfile, useGoal } from "@/common/profile";
-import SectionList from "@/components/SectionList";
-import { apiGet, apiPost, apiDelete } from "@/common/api";
-import { showConfirmationDialog } from "@/common/inputDialog";
-import { showInputDialog } from "@/common/inputDialog";
-import AssessRealitiesModal from "./AssessRealitiesModal";
-import GoalsSectionList from "./GoalsSectionList";
-import ChatModal from "@/components/ChatModal";
+import React, { useState, useRef } from 'react';
+import { StyleSheet, SafeAreaView, ScrollView, TouchableOpacity } from 'react-native';
+import { Text } from '@rneui/themed';
+import { useRoute } from '@react-navigation/native';
+import { t } from '@/i18n';
+import { useUserProfile, useGoal } from '@/common/profile';
+import SectionList from '@/components/SectionList';
+import { apiGet, apiPost, apiDelete } from '@/common/api';
+import { showConfirmationDialog } from '@/common/inputDialog';
+import { showInputDialog } from '@/common/inputDialog';
+import AssessRealitiesModal from './AssessRealitiesModal';
+import GoalsSectionList from './GoalsSectionList';
+import ChatModal from '@/components/ChatModal';
 
 export default function GoalDetails() {
   const route = useRoute();
@@ -24,44 +19,34 @@ export default function GoalDetails() {
   const goal = useGoal(goalId)!;
 
   const [showAssessModal, setShowAssessModal] = useState(false);
-  const [isRefiningRealityId, setIsRefiningRealityId] = useState<string | null>(
-    null
-  );
-  const [isRemovingRealityId, setIsRemovingRealityId] = useState<string | null>(
-    null
-  );
-  const [isAddingLearningIntentions, setIsAddingLearningIntentions] =
-    useState(false);
-  const [isRemovingLearningIntentionId, setIsRemovingLearningIntentionId] =
-    useState<string | null>(null);
-  const [isClearingLearningIntentions, setIsClearingLearningIntentions] =
-    useState(false);
-  const [
-    chatModalOpenLearningIntentionId,
-    setChatModalOpenLearningIntentionId,
-  ] = useState<string | null>(null);
+  const [isRefiningRealityId, setIsRefiningRealityId] = useState<string | null>(null);
+  const [isRemovingRealityId, setIsRemovingRealityId] = useState<string | null>(null);
+  const [isAddingLearningIntentions, setIsAddingLearningIntentions] = useState(false);
+  const [isRemovingLearningIntentionId, setIsRemovingLearningIntentionId] = useState<string | null>(null);
+  const [isClearingLearningIntentions, setIsClearingLearningIntentions] = useState(false);
+  const [chatModalOpenLearningIntentionId, setChatModalOpenLearningIntentionId] = useState<string | null>(null);
   const [isModifyingEmoji, setIsModifyingEmoji] = useState(false);
 
   const scrollViewRef = useRef<ScrollView>(null);
 
   const handleRemoveReality = async (realityId: string) => {
-    const realityToRemove = goal.realities.find((r) => r.id === realityId);
+    const realityToRemove = goal.realities.find(r => r.id === realityId);
     if (!realityToRemove) return;
 
     const confirmation = await showConfirmationDialog(
       realityToRemove.reality,
-      t("learn.goalDetails.realities.removeReality")
+      t('learn.goalDetails.realities.removeReality'),
     );
 
     if (confirmation) {
       try {
         setIsRemovingRealityId(realityId);
-        const newRealities = goal!.realities.filter((r) => r.id !== realityId);
+        const newRealities = goal!.realities.filter(r => r.id !== realityId);
         await apiPost(`/companion/goal/${goalId}/realities`, {
           newRealities,
         });
-        updateCompanionProfile((p) => {
-          p.goals.find((g) => g.id === goalId)!.realities = newRealities;
+        updateCompanionProfile(p => {
+          p.goals.find(g => g.id === goalId)!.realities = newRealities;
         });
       } finally {
         setIsRemovingRealityId(null);
@@ -70,28 +55,18 @@ export default function GoalDetails() {
   };
 
   const handleRefineReality = async (realityId: string) => {
-    const realityToRefineIndex = goal.realities.findIndex(
-      (r) => r.id === realityId
-    );
+    const realityToRefineIndex = goal.realities.findIndex(r => r.id === realityId);
     if (realityToRefineIndex === -1) return;
     const realityToRefine = goal.realities[realityToRefineIndex];
 
-    const feedback = await showInputDialog(
-      realityToRefine.reality,
-      t("learn.goalDetails.realities.refineReality")
-    );
+    const feedback = await showInputDialog(realityToRefine.reality, t('learn.goalDetails.realities.refineReality'));
 
     if (feedback) {
       try {
         setIsRefiningRealityId(realityId);
-        const updatedReality = await apiPost(
-          `/companion/goal/${goalId}/reality/${realityId}/refine`,
-          { feedback }
-        );
-        updateCompanionProfile((p) => {
-          p.goals.find((g) => g.id === goalId)!.realities[
-            realityToRefineIndex
-          ] = updatedReality;
+        const updatedReality = await apiPost(`/companion/goal/${goalId}/reality/${realityId}/refine`, { feedback });
+        updateCompanionProfile(p => {
+          p.goals.find(g => g.id === goalId)!.realities[realityToRefineIndex] = updatedReality;
         });
       } finally {
         setIsRefiningRealityId(null);
@@ -102,13 +77,9 @@ export default function GoalDetails() {
   const handleAddLearningIntentions = async () => {
     setIsAddingLearningIntentions(true);
     try {
-      const newLearningIntentions = await apiGet(
-        `/companion/goal/${goalId}/suggest-learning-intentions`
-      );
-      updateCompanionProfile((p) => {
-        p.goals
-          .find((g) => g.id === goalId)!
-          .learningIntentions.push(...newLearningIntentions);
+      const newLearningIntentions = await apiGet(`/companion/goal/${goalId}/suggest-learning-intentions`);
+      updateCompanionProfile(p => {
+        p.goals.find(g => g.id === goalId)!.learningIntentions.push(...newLearningIntentions);
       });
     } finally {
       setIsAddingLearningIntentions(false);
@@ -117,22 +88,17 @@ export default function GoalDetails() {
 
   const handleRemoveLearningIntention = async (learningIntentionId: string) => {
     const confirmation = await showConfirmationDialog(
-      goal.learningIntentions.find((i) => i.id === learningIntentionId)
-        ?.summary!,
-      t("learn.goalDetails.learningIntentions.removeIntention")
+      goal.learningIntentions.find(i => i.id === learningIntentionId)?.summary!,
+      t('learn.goalDetails.learningIntentions.removeIntention'),
     );
 
     if (confirmation) {
       try {
         setIsRemovingLearningIntentionId(learningIntentionId);
-        await apiDelete(
-          `/companion/goal/${goalId}/learning-intention/${learningIntentionId}`
-        );
-        updateCompanionProfile((p) => {
-          const goal = p.goals.find((g) => g.id === goalId)!;
-          goal.learningIntentions = goal.learningIntentions.filter(
-            (i) => i.id !== learningIntentionId
-          );
+        await apiDelete(`/companion/goal/${goalId}/learning-intention/${learningIntentionId}`);
+        updateCompanionProfile(p => {
+          const goal = p.goals.find(g => g.id === goalId)!;
+          goal.learningIntentions = goal.learningIntentions.filter(i => i.id !== learningIntentionId);
         });
       } finally {
         setIsRemovingLearningIntentionId(null);
@@ -142,16 +108,16 @@ export default function GoalDetails() {
 
   const handleClearLearningIntentions = async () => {
     const confirmation = await showConfirmationDialog(
-      t("learn.goalDetails.learningIntentions.clear.title"),
-      t("learn.goalDetails.learningIntentions.clear.message")
+      t('learn.goalDetails.learningIntentions.clear.title'),
+      t('learn.goalDetails.learningIntentions.clear.message'),
     );
 
     if (confirmation) {
       try {
         setIsClearingLearningIntentions(true);
         await apiDelete(`/companion/goal/${goalId}/learning-intentions`);
-        updateCompanionProfile((p) => {
-          p.goals.find((g) => g.id === goalId)!.learningIntentions = [];
+        updateCompanionProfile(p => {
+          p.goals.find(g => g.id === goalId)!.learningIntentions = [];
         });
         scrollViewRef.current?.scrollTo({ y: 0, animated: true });
       } finally {
@@ -161,15 +127,15 @@ export default function GoalDetails() {
   };
 
   const handleModifyEmoji = async () => {
-    const emojiDesire = await showInputDialog(t("askEmoji"));
+    const emojiDesire = await showInputDialog(t('askEmoji'));
     if (emojiDesire) {
       try {
         setIsModifyingEmoji(true);
         const newGoal = await apiPost(`/companion/goal/${goalId}/emoji`, {
           input: emojiDesire,
         });
-        updateCompanionProfile((p) => {
-          const goalIndex = p.goals.findIndex((g) => g.id === goalId);
+        updateCompanionProfile(p => {
+          const goalIndex = p.goals.findIndex(g => g.id === goalId);
           p.goals[goalIndex] = newGoal;
         });
       } finally {
@@ -184,15 +150,10 @@ export default function GoalDetails() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView
-        ref={scrollViewRef}
-        contentContainerStyle={styles.scrollViewContent}
-      >
+      <ScrollView ref={scrollViewRef} contentContainerStyle={styles.scrollViewContent}>
         <TouchableOpacity onPress={handleModifyEmoji} activeOpacity={1}>
           {goal.emoji || isModifyingEmoji ? (
-            <Text style={styles.emojiIcon}>
-              {isModifyingEmoji ? "⏳" : goal.emoji}
-            </Text>
+            <Text style={styles.emojiIcon}>{isModifyingEmoji ? '⏳' : goal.emoji}</Text>
           ) : null}
           <Text h3 style={styles.title}>
             {goal.description}
@@ -200,14 +161,12 @@ export default function GoalDetails() {
         </TouchableOpacity>
 
         <SectionList
-          title={t("learn.goalDetails.learningIntentions.title")}
+          title={t('learn.goalDetails.learningIntentions.title')}
           items={[
-            ...goal.learningIntentions.map((intention) => ({
+            ...goal.learningIntentions.map(intention => ({
               title:
                 intention.summary +
-                (isRemovingLearningIntentionId === intention.id
-                  ? ` (${t("common.removing")})`
-                  : ""),
+                (isRemovingLearningIntentionId === intention.id ? ` (${t('common.removing')})` : ''),
               leftIcon: intention.emoji,
               onRemove: () => handleRemoveLearningIntention(intention.id),
               disabled: isRemovingLearningIntentionId === intention.id,
@@ -220,76 +179,68 @@ export default function GoalDetails() {
                     systemPrompt={`You are an AI assistant that helps the user with the goal of \"${
                       goal.description
                     }\". Never use Markdown. Make sure to give exceptionally intelligent and helpful responses. All responses should always be practical, pragmatic, as specific as possible and clearly actionable. The user already stated the following facts and context for this goal, which should be considered in all responses:\n${goal.realities
-                      .map((r) => `- ${r.reality}`)
-                      .join("\n")}`}
+                      .map(r => `- ${r.reality}`)
+                      .join('\n')}`}
                     initialUserMessage={intention.question}
                   />
                 ) : null,
             })),
             {
               title: isAddingLearningIntentions
-                ? t("common.loading")
+                ? t('common.loading')
                 : goal.learningIntentions.length > 0
-                ? t("learn.goalDetails.learningIntentions.addMore")
-                : t("learn.goalDetails.learningIntentions.add"),
+                  ? t('learn.goalDetails.learningIntentions.addMore')
+                  : t('learn.goalDetails.learningIntentions.add'),
               onPress: handleAddLearningIntentions,
               leftIcon: {
-                name: isAddingLearningIntentions ? "hourglass-empty" : "add",
-                type: "material",
+                name: isAddingLearningIntentions ? 'hourglass-empty' : 'add',
+                type: 'material',
               },
               disabled: isAddingLearningIntentions,
             },
             goal.learningIntentions.length > 0 && {
               title: isClearingLearningIntentions
-                ? t("common.loading")
-                : t("learn.goalDetails.learningIntentions.clear.title"),
+                ? t('common.loading')
+                : t('learn.goalDetails.learningIntentions.clear.title'),
               onPress: handleClearLearningIntentions,
               leftIcon: {
-                name: isClearingLearningIntentions
-                  ? "hourglass-empty"
-                  : "delete",
-                type: "material",
+                name: isClearingLearningIntentions ? 'hourglass-empty' : 'delete',
+                type: 'material',
               },
               disabled: isClearingLearningIntentions,
             },
-          ].filter((x) => !!x)}
-          bottomText={t("learn.goalDetails.learningIntentions.explanation")}
+          ].filter(x => !!x)}
+          bottomText={t('learn.goalDetails.learningIntentions.explanation')}
           containerStyle={styles.sectionContainer}
         />
 
         <SectionList
-          title={t("learn.goalDetails.realities.title")}
+          title={t('learn.goalDetails.realities.title')}
           items={[
-            ...goal.realities.map((reality) => ({
+            ...goal.realities.map(reality => ({
               title:
                 isRefiningRealityId === reality.id
-                  ? `${reality.reality} (${t("common.refining")})`
+                  ? `${reality.reality} (${t('common.refining')})`
                   : isRemovingRealityId === reality.id
-                  ? `${reality.reality} (${t("common.removing")})`
-                  : reality.reality,
-              disabled:
-                isRefiningRealityId === reality.id ||
-                isRemovingRealityId === reality.id,
+                    ? `${reality.reality} (${t('common.removing')})`
+                    : reality.reality,
+              disabled: isRefiningRealityId === reality.id || isRemovingRealityId === reality.id,
               onPress: () => handleRefineReality(reality.id),
               onRemove: () => handleRemoveReality(reality.id),
             })),
             {
-              title: t("learn.goalDetails.realities.assess.cta"),
+              title: t('learn.goalDetails.realities.assess.cta'),
               onPress: () => setShowAssessModal(true),
-              leftIcon: { name: "add", type: "material" },
+              leftIcon: { name: 'add', type: 'material' },
             },
           ]}
-          bottomText={t("learn.goalDetails.realities.explanation")}
+          bottomText={t('learn.goalDetails.realities.explanation')}
           containerStyle={styles.sectionContainer}
         />
 
         <GoalsSectionList parentGoalId={goalId} allowRedetermine />
 
-        <AssessRealitiesModal
-          visible={showAssessModal}
-          onClose={() => setShowAssessModal(false)}
-          goalId={goalId}
-        />
+        <AssessRealitiesModal visible={showAssessModal} onClose={() => setShowAssessModal(false)} goalId={goalId} />
       </ScrollView>
     </SafeAreaView>
   );
@@ -298,7 +249,7 @@ export default function GoalDetails() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f2f2f2",
+    backgroundColor: '#f2f2f2',
   },
   scrollViewContent: {
     padding: 20,
@@ -306,7 +257,7 @@ const styles = StyleSheet.create({
     paddingBottom: 40,
   },
   title: {
-    fontWeight: "bold",
+    fontWeight: 'bold',
     marginBottom: 30,
     marginHorizontal: 5,
   },

@@ -1,12 +1,6 @@
-import React from "react";
-import {
-  Modal,
-  StyleSheet,
-  View,
-  TouchableOpacity,
-  ScrollView,
-} from "react-native";
-import { Text, Icon, Header } from "@rneui/themed";
+import React from 'react';
+import { Modal, StyleSheet, View, TouchableOpacity, ScrollView } from 'react-native';
+import { Text, Icon, Header } from '@rneui/themed';
 
 interface ModalViewProps {
   visible: boolean;
@@ -16,20 +10,9 @@ interface ModalViewProps {
   children: React.ReactNode;
 }
 
-export default function ModalView({
-  visible,
-  onClose,
-  title,
-  noScrollView,
-  children,
-}: ModalViewProps) {
+export default function ModalView({ visible, onClose, title, noScrollView, children }: ModalViewProps) {
   return (
-    <Modal
-      visible={visible}
-      animationType="slide"
-      presentationStyle="pageSheet"
-      onRequestClose={onClose}
-    >
+    <Modal visible={visible} animationType="slide" presentationStyle="pageSheet" onRequestClose={onClose}>
       <View style={styles.container}>
         <Header
           centerComponent={
@@ -61,24 +44,24 @@ export default function ModalView({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f2f2f2",
+    backgroundColor: '#f2f2f2',
   },
   header: {
-    backgroundColor: "#f2f2f2",
+    backgroundColor: '#f2f2f2',
     borderBottomWidth: 0,
   },
   headerCenter: {
     flex: 1,
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   headerTitle: {
-    fontWeight: "bold",
+    fontWeight: 'bold',
     fontSize: 16,
-    textAlignVertical: "center",
+    textAlignVertical: 'center',
   },
   closeButton: {
-    backgroundColor: "#e0e0e0",
+    backgroundColor: '#e0e0e0',
     borderRadius: 15,
     padding: 4,
     margin: 5,

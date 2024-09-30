@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef } from 'react';
 import {
   View,
   Text,
@@ -12,15 +12,15 @@ import {
   NativeScrollEvent,
   Animated,
   ActivityIndicator,
-} from "react-native";
-import { Icon } from "@rneui/themed";
-import { SSE } from "sse.js";
-import "event-target-polyfill"; // needed for sse.js
-import { usedConfig } from "@/common/config";
-import { useSessionToken } from "@/common/sessionToken";
-import { t } from "@/i18n";
-import { apiPost } from "@/common/api";
-import ModalView from "./ModalView";
+} from 'react-native';
+import { Icon } from '@rneui/themed';
+import { SSE } from 'sse.js';
+import 'event-target-polyfill'; // needed for sse.js
+import { usedConfig } from '@/common/config';
+import { useSessionToken } from '@/common/sessionToken';
+import { t } from '@/i18n';
+import { apiPost } from '@/common/api';
+import ModalView from './ModalView';
 
 interface ChatModalProps {
   visible: boolean;
@@ -31,9 +31,9 @@ interface ChatModalProps {
 }
 
 enum MessageRole {
-  SYSTEM = "system",
-  USER = "user",
-  ASSISTANT = "assistant",
+  SYSTEM = 'system',
+  USER = 'user',
+  ASSISTANT = 'assistant',
 }
 
 interface Message {
@@ -45,13 +45,7 @@ const MESSAGE_MARGIN_VERTICAL = 5;
 
 (globalThis as any).CustomEvent = Event;
 
-const DownArrowIndicator = ({
-  visible,
-  onPress,
-}: {
-  visible: boolean;
-  onPress: () => void;
-}) => {
+const DownArrowIndicator = ({ visible, onPress }: { visible: boolean; onPress: () => void }) => {
   const scaleAndTranslateAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -98,7 +92,7 @@ export default function ChatModal({
 }: ChatModalProps) {
   const [sessionToken] = useSessionToken();
   const [messages, setMessages] = useState<Message[]>([]);
-  const [inputText, setInputText] = useState("");
+  const [inputText, setInputText] = useState('');
   const [isAIResponding, setIsAIResponding] = useState(false);
   const [showDownArrow, setShowDownArrow] = useState(false);
   const [userAttemptedScroll, setUserAttemptedScroll] = useState(false);
@@ -119,7 +113,7 @@ export default function ChatModal({
     (async () => {
       try {
         setIsLoading(true);
-        const response = await apiPost("/ai-chat", {
+        const response = await apiPost('/ai-chat', {
           id: givenChatId,
           systemPrompt,
         });
@@ -129,7 +123,7 @@ export default function ChatModal({
         }
         setLastTimeAtBottom(null);
       } catch (error) {
-        console.error("Failed to initialize chat:", error);
+        console.error('Failed to initialize chat:', error);
         onClose();
       } finally {
         setIsLoading(false);
@@ -146,19 +140,14 @@ export default function ChatModal({
     if (isScrolledToBottom) {
       setShowDownArrow(false);
       setLastTimeAtBottom(new Date());
-    } else if (
-      !lastTimeAtBottom ||
-      new Date().getTime() - lastTimeAtBottom.getTime() > 500
-    ) {
+    } else if (!lastTimeAtBottom || new Date().getTime() - lastTimeAtBottom.getTime() > 500) {
       setShowDownArrow(true);
     }
   }, [chatId, scrollY, contentHeight, containerHeight]);
 
   useEffect(() => {
     if (isAIResponding && !userAttemptedScroll) {
-      const totalHeight = messageHeights
-        .slice(0, -1)
-        .reduce((sum, h) => sum + h, 0);
+      const totalHeight = messageHeights.slice(0, -1).reduce((sum, h) => sum + h, 0);
       flatListRef.current?.scrollToOffset({
         offset: totalHeight,
         animated: true,
@@ -183,32 +172,29 @@ export default function ChatModal({
   };
 
   const sendMessage = (messageToSend: string) => {
-    setMessages((prevMessages) => [
+    setMessages(prevMessages => [
       ...prevMessages,
       { content: messageToSend, role: MessageRole.USER },
-      { content: "", role: MessageRole.ASSISTANT },
+      { content: '', role: MessageRole.ASSISTANT },
     ]);
-    setInputText("");
+    setInputText('');
     setIsAIResponding(true);
     setUserAttemptedScroll(false);
     Keyboard.dismiss();
 
-    const sse = new SSE(
-      `${usedConfig.api.url}/${usedConfig.api.versionCode}/ai-chat/${chatId}/completion`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          "X-SessionToken": sessionToken!,
-        },
-        payload: JSON.stringify({ message: messageToSend }),
-      }
-    );
+    const sse = new SSE(`${usedConfig.api.url}/${usedConfig.api.versionCode}/ai-chat/${chatId}/completion`, {
+      headers: {
+        'Content-Type': 'application/json',
+        'X-SessionToken': sessionToken!,
+      },
+      payload: JSON.stringify({ message: messageToSend }),
+    });
     sseRef.current = sse;
 
-    sse.addEventListener("message", (event: any) => {
+    sse.addEventListener('message', (event: any) => {
       const data = JSON.parse(event.data);
       if (data.content) {
-        setMessages((prevMessages) => {
+        setMessages(prevMessages => {
           const newMessages = [...prevMessages];
           const lastMessage = newMessages[newMessages.length - 1];
           if (lastMessage && lastMessage.role === MessageRole.ASSISTANT) {
@@ -224,14 +210,14 @@ export default function ChatModal({
       }
     });
 
-    sse.addEventListener("end", (event: any) => {
+    sse.addEventListener('end', (event: any) => {
       sse.close();
       sseRef.current = null;
       setIsAIResponding(false);
     });
 
-    sse.addEventListener("error", (event: any) => {
-      console.error("SSE error:", event);
+    sse.addEventListener('error', (event: any) => {
+      console.error('SSE error:', event);
       sse.close();
       sseRef.current = null;
       setIsAIResponding(false);
@@ -245,28 +231,17 @@ export default function ChatModal({
   };
 
   const renderMessage = ({ item, index }: { item: Message; index: number }) => (
-    <View
-      style={[
-        styles.messageBubble,
-        item.role === MessageRole.USER ? styles.userMessage : styles.aiMessage,
-      ]}
-    >
-      <Text
-        style={item.role === MessageRole.USER ? styles.userMessageText : {}}
-      >
+    <View style={[styles.messageBubble, item.role === MessageRole.USER ? styles.userMessage : styles.aiMessage]}>
+      <Text style={item.role === MessageRole.USER ? styles.userMessageText : {}}>
         {item.content +
-          (item.role === MessageRole.ASSISTANT &&
-          index === messages.length - 1 &&
-          isAIResponding
-            ? "⬤"
-            : "")}
+          (item.role === MessageRole.ASSISTANT && index === messages.length - 1 && isAIResponding ? '⬤' : '')}
       </Text>
     </View>
   );
 
   const handleMessageLayout = (event: LayoutChangeEvent, index: number) => {
     const { height } = event.nativeEvent.layout;
-    setMessageHeights((prevHeights) => {
+    setMessageHeights(prevHeights => {
       const newHeights = [...prevHeights];
       newHeights[index] = height;
       return newHeights;
@@ -280,12 +255,7 @@ export default function ChatModal({
   }, [isLoading, initialUserMessage]);
 
   return (
-    <ModalView
-      visible={visible}
-      onClose={onClose}
-      title={t("chat.title")}
-      noScrollView
-    >
+    <ModalView visible={visible} onClose={onClose} title={t('chat.title')} noScrollView>
       <View
         style={styles.chatContainer}
         onLayout={(event: LayoutChangeEvent) => {
@@ -297,9 +267,7 @@ export default function ChatModal({
           data={messages}
           renderItem={({ item, index }) =>
             item.role === MessageRole.SYSTEM ? null : (
-              <View onLayout={(event) => handleMessageLayout(event, index)}>
-                {renderMessage({ item, index })}
-              </View>
+              <View onLayout={event => handleMessageLayout(event, index)}>{renderMessage({ item, index })}</View>
             )
           }
           keyExtractor={(_, index) => index.toString()}
@@ -326,25 +294,21 @@ export default function ChatModal({
           style={styles.input}
           value={inputText}
           onChangeText={setInputText}
-          placeholder={t("chat.inputPlaceholder")}
+          placeholder={t('chat.inputPlaceholder')}
           onSubmitEditing={handleSendMessage}
           multiline
           numberOfLines={1}
           blurOnSubmit={false}
           editable={!!chatId && !isAIResponding}
-          key={isAIResponding ? "sending" : "idle"}
+          key={isAIResponding ? 'sending' : 'idle'}
         />
         <TouchableOpacity
           style={[
             styles.sendButton,
-            (!chatId || inputText.trim() === "" || isLoading) &&
-              !isAIResponding &&
-              styles.sendButtonDisabled,
+            (!chatId || inputText.trim() === '' || isLoading) && !isAIResponding && styles.sendButtonDisabled,
           ]}
           onPress={isAIResponding ? abortRequest : handleSendMessage}
-          disabled={
-            (!chatId || inputText.trim() === "" || isLoading) && !isAIResponding
-          }
+          disabled={(!chatId || inputText.trim() === '' || isLoading) && !isAIResponding}
         >
           {isLoading ? (
             <ActivityIndicator size="small" color="white" />
@@ -362,86 +326,86 @@ export default function ChatModal({
 const styles = StyleSheet.create({
   chatContainer: {
     flex: 1,
-    backgroundColor: "#f2f2f2",
+    backgroundColor: '#f2f2f2',
   },
   chatListContent: {
     paddingVertical: 10,
     flexGrow: 1,
   },
   messageBubble: {
-    maxWidth: "80%",
+    maxWidth: '80%',
     padding: 10,
     borderRadius: 20,
     marginVertical: MESSAGE_MARGIN_VERTICAL,
     marginHorizontal: 10,
   },
   userMessage: {
-    alignSelf: "flex-end",
-    backgroundColor: "#007AFF",
+    alignSelf: 'flex-end',
+    backgroundColor: '#007AFF',
   },
   aiMessage: {
-    alignSelf: "flex-start",
-    backgroundColor: "#FFFFFF",
+    alignSelf: 'flex-start',
+    backgroundColor: '#FFFFFF',
   },
   userMessageText: {
-    color: "#fff",
+    color: '#fff',
   },
   inputContainer: {
-    flexDirection: "row",
+    flexDirection: 'row',
     padding: 10,
-    alignItems: "center",
-    backgroundColor: "#f2f2f2",
+    alignItems: 'center',
+    backgroundColor: '#f2f2f2',
   },
   input: {
     flex: 1,
     borderWidth: 1,
-    borderColor: "#e0e0e0",
+    borderColor: '#e0e0e0',
     borderRadius: 20,
     paddingHorizontal: 15,
     paddingVertical: 10,
     marginRight: 10,
     minHeight: 44,
-    backgroundColor: "#fff",
+    backgroundColor: '#fff',
   },
   sendButton: {
-    backgroundColor: "black",
+    backgroundColor: 'black',
     borderRadius: 20,
     width: 36,
     height: 36,
-    justifyContent: "center",
-    alignItems: "center",
-    alignSelf: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'center',
   },
   sendButtonDisabled: {
-    backgroundColor: "#888",
+    backgroundColor: '#888',
   },
   loadingContainer: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#f2f2f2",
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#f2f2f2',
   },
   loadingText: {
     marginTop: 10,
     fontSize: 16,
-    color: "#007AFF",
+    color: '#007AFF',
   },
   connectionMessage: {
     padding: 10,
-    backgroundColor: "#f0f0f0",
-    alignItems: "center",
+    backgroundColor: '#f0f0f0',
+    alignItems: 'center',
   },
   downArrowIndicator: {
-    position: "absolute",
+    position: 'absolute',
     bottom: 20,
-    alignSelf: "center",
-    backgroundColor: "white",
+    alignSelf: 'center',
+    backgroundColor: 'white',
     borderRadius: 20,
     width: 40,
     height: 40,
-    justifyContent: "center",
-    alignItems: "center",
-    shadowColor: "#000",
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 2,

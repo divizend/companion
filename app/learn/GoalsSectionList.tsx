@@ -1,10 +1,10 @@
-import React, { useState } from "react";
-import { StyleSheet, StyleProp, ViewStyle } from "react-native";
-import { t } from "@/i18n";
-import { useUserProfile } from "@/common/profile";
-import { useNavigation } from "@react-navigation/native";
-import SectionList from "@/components/SectionList";
-import GoalsManagerModal from "./GoalsManagerModal";
+import React, { useState } from 'react';
+import { StyleSheet, StyleProp, ViewStyle } from 'react-native';
+import { t } from '@/i18n';
+import { useUserProfile } from '@/common/profile';
+import { useNavigation } from '@react-navigation/native';
+import SectionList from '@/components/SectionList';
+import GoalsManagerModal from './GoalsManagerModal';
 
 interface GoalsSectionListProps {
   parentGoalId: string | null;
@@ -12,16 +12,12 @@ interface GoalsSectionListProps {
   style?: any;
 }
 
-export default function GoalsSectionList({
-  parentGoalId,
-  allowRedetermine,
-  style,
-}: GoalsSectionListProps) {
+export default function GoalsSectionList({ parentGoalId, allowRedetermine, style }: GoalsSectionListProps) {
   const navigation = useNavigation();
   const { profile } = useUserProfile();
 
   const [showGoalsManagerModal, setShowGoalsManagerModal] = useState(false);
-  const variant = parentGoalId ? "secondary" : "primary";
+  const variant = parentGoalId ? 'secondary' : 'primary';
 
   return (
     <>
@@ -29,12 +25,12 @@ export default function GoalsSectionList({
         title={t(`learn.goalsManager.${variant}.listTitle`)}
         items={[
           ...profile.companionProfile.goals
-            .filter((g) => g.parentGoalId === parentGoalId)
-            .map((goal) => ({
+            .filter(g => g.parentGoalId === parentGoalId)
+            .map(goal => ({
               title: goal.description,
               onPress: () =>
                 // super ugly typecast to avoid TS errors relating to "never"
-                (navigation.navigate as any)("GoalDetails", {
+                (navigation.navigate as any)('GoalDetails', {
                   goalId: goal.id,
                 }),
               leftIcon: goal.emoji,
@@ -42,15 +38,11 @@ export default function GoalsSectionList({
           {
             title: t(`learn.goalsManager.${variant}.title`),
             onPress: () => setShowGoalsManagerModal(true),
-            leftIcon: { name: "edit", type: "material" },
+            leftIcon: { name: 'edit', type: 'material' },
           },
         ]}
         containerStyle={style ?? styles.sectionContainer}
-        bottomText={
-          variant === "secondary"
-            ? t(`learn.goalsManager.${variant}.explanation`)
-            : undefined
-        }
+        bottomText={variant === 'secondary' ? t(`learn.goalsManager.${variant}.explanation`) : undefined}
       />
 
       <GoalsManagerModal

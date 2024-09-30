@@ -1,44 +1,28 @@
-import React, { useState, useRef, useEffect } from "react";
-import {
-  StyleSheet,
-  View,
-  Animated,
-  SafeAreaView,
-  ScrollView,
-  Alert,
-} from "react-native";
-import { Text } from "@rneui/themed";
-import uuid from "react-native-uuid";
-import { t } from "@/i18n";
-import StyledButton from "@/components/StyledButton";
-import SectionList from "@/components/SectionList";
-import { showInputDialog } from "@/common/inputDialog";
-import { apiPost } from "@/common/api";
-import {
-  useUserProfile,
-  CompanionProfileLearnQuestion,
-} from "@/common/profile";
-import { useNavigation } from "@react-navigation/native";
-import UserInsightsSectionList from "./UserInsightsSectionList";
+import React, { useState, useRef, useEffect } from 'react';
+import { StyleSheet, View, Animated, SafeAreaView, ScrollView, Alert } from 'react-native';
+import { Text } from '@rneui/themed';
+import uuid from 'react-native-uuid';
+import { t } from '@/i18n';
+import StyledButton from '@/components/StyledButton';
+import SectionList from '@/components/SectionList';
+import { showInputDialog } from '@/common/inputDialog';
+import { apiPost } from '@/common/api';
+import { useUserProfile, CompanionProfileLearnQuestion } from '@/common/profile';
+import { useNavigation } from '@react-navigation/native';
+import UserInsightsSectionList from './UserInsightsSectionList';
 
 export default function GenerateInsights() {
   const navigation = useNavigation();
   const { profile, updateCompanionProfile } = useUserProfile();
   const fadeAnim = useRef(new Animated.Value(0)).current;
-  const [
-    similarQuestionsLoadingQuestionId,
-    setSimilarQuestionsLoadingQuestionId,
-  ] = useState<string | null>(null);
-  const [
-    generateInsightLoadingQuestionId,
-    setGenerateInsightLoadingQuestionId,
-  ] = useState<string | null>(null);
+  const [similarQuestionsLoadingQuestionId, setSimilarQuestionsLoadingQuestionId] = useState<string | null>(null);
+  const [generateInsightLoadingQuestionId, setGenerateInsightLoadingQuestionId] = useState<string | null>(null);
 
   const [defaultQuestions] = useState<CompanionProfileLearnQuestion[]>(
-    (t("learn.insights.defaultQuestions") as any).map((q: any) => ({
+    (t('learn.insights.defaultQuestions') as any).map((q: any) => ({
       ...q,
       id: uuid.v4(),
-    })) as CompanionProfileLearnQuestion[]
+    })) as CompanionProfileLearnQuestion[],
   );
   const displayedQuestions: CompanionProfileLearnQuestion[] =
     (profile.companionProfile?.learnQuestions ?? []).length > 0
@@ -56,7 +40,7 @@ export default function GenerateInsights() {
   const getSimilarQuestions = async (questionId: string) => {
     setSimilarQuestionsLoadingQuestionId(questionId);
     try {
-      const allQuestions = await apiPost("/companion/learn/similar-questions", {
+      const allQuestions = await apiPost('/companion/learn/similar-questions', {
         currentQuestions: displayedQuestions,
         questionId,
       });
@@ -68,19 +52,19 @@ export default function GenerateInsights() {
   };
 
   const generateInsight = async (questionId: string) => {
-    const question = displayedQuestions.find((q) => q.id === questionId)!;
+    const question = displayedQuestions.find(q => q.id === questionId)!;
 
     const answer = await showInputDialog(question.question);
 
     if (answer) {
       try {
         setGenerateInsightLoadingQuestionId(questionId);
-        const insight = await apiPost("/companion/learn/generate-insight", {
+        const insight = await apiPost('/companion/learn/generate-insight', {
           currentQuestions: displayedQuestions,
           question: question.question,
           answer,
         });
-        updateCompanionProfile((p) => {
+        updateCompanionProfile(p => {
           p.userInsights.push(insight);
         });
       } finally {
@@ -93,46 +77,40 @@ export default function GenerateInsights() {
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollViewContent}>
         <Text h1 style={styles.title}>
-          {t("learn.insights.title")}
+          {t('learn.insights.title')}
         </Text>
         <View style={styles.explanationContainer}>
-          <Text style={styles.explanationText}>{t("learn.vision")}</Text>
-          <Text style={styles.explanationText}>
-            {t("learn.insights.explanation")}
-          </Text>
-          <Text style={styles.explanationText}>
-            {t("learn.insights.explanation2")}
-          </Text>
+          <Text style={styles.explanationText}>{t('learn.vision')}</Text>
+          <Text style={styles.explanationText}>{t('learn.insights.explanation')}</Text>
+          <Text style={styles.explanationText}>{t('learn.insights.explanation2')}</Text>
         </View>
 
         <SectionList
-          title={t("learn.insights.questionsTitle")}
-          items={displayedQuestions.map((question) => ({
+          title={t('learn.insights.questionsTitle')}
+          items={displayedQuestions.map(question => ({
             title: `${question.category}: ${question.question}${
-              question.id === similarQuestionsLoadingQuestionId ||
-              question.id === generateInsightLoadingQuestionId
-                ? ` (${t("common.loading")})`
-                : ""
+              question.id === similarQuestionsLoadingQuestionId || question.id === generateInsightLoadingQuestionId
+                ? ` (${t('common.loading')})`
+                : ''
             }`,
             onPress: () => {
               Alert.alert(question.question, undefined, [
                 {
-                  text: t("learn.insights.questionOptions.getSimilar"),
+                  text: t('learn.insights.questionOptions.getSimilar'),
                   onPress: () => getSimilarQuestions(question.id),
                 },
                 {
-                  text: t("learn.insights.questionOptions.answer"),
+                  text: t('learn.insights.questionOptions.answer'),
                   onPress: () => generateInsight(question.id),
                 },
                 {
-                  text: t("common.cancel"),
-                  style: "cancel",
+                  text: t('common.cancel'),
+                  style: 'cancel',
                 },
               ]);
             },
             disabled:
-              question.id === similarQuestionsLoadingQuestionId ||
-              question.id === generateInsightLoadingQuestionId,
+              question.id === similarQuestionsLoadingQuestionId || question.id === generateInsightLoadingQuestionId,
             containerStyle: question.isNew ? { opacity: fadeAnim } : undefined,
             itemStyle: question.isNew ? styles.newQuestionContainer : undefined,
           }))}
@@ -145,7 +123,7 @@ export default function GenerateInsights() {
             <UserInsightsSectionList isOnboarding />
             <StyledButton
               title={t(`learn.insights.confirmButton`)}
-              onPress={() => navigation.navigate("Goals" as never)}
+              onPress={() => navigation.navigate('Goals' as never)}
               containerStyle={styles.confirmButton}
             />
           </>
@@ -158,7 +136,7 @@ export default function GenerateInsights() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f2f2f2",
+    backgroundColor: '#f2f2f2',
   },
   scrollViewContent: {
     padding: 20,
@@ -167,7 +145,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 28,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     marginBottom: 20,
     marginHorizontal: 5,
   },
@@ -192,6 +170,6 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   newQuestionContainer: {
-    backgroundColor: "#E6F3FF",
+    backgroundColor: '#E6F3FF',
   },
 });
