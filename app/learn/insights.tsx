@@ -1,14 +1,14 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { StyleSheet, View, Animated, SafeAreaView, ScrollView, Alert } from 'react-native';
-import { Text } from '@rneui/themed';
-import uuid from 'react-native-uuid';
-import { t } from '@/i18n';
-import StyledButton from '@/components/StyledButton';
-import SectionList from '@/components/SectionList';
-import { showInputDialog } from '@/common/inputDialog';
 import { apiPost } from '@/common/api';
-import { useUserProfile, CompanionProfileLearnQuestion } from '@/common/profile';
+import { showInputDialog } from '@/common/inputDialog';
+import { CompanionProfileLearnQuestion, useUserProfile } from '@/common/profile';
+import SectionList from '@/components/SectionList';
+import StyledButton from '@/components/StyledButton';
+import { t } from '@/i18n';
 import { useNavigation } from '@react-navigation/native';
+import { Text } from '@rneui/themed';
+import React, { useEffect, useRef, useState } from 'react';
+import { Alert, Animated, SafeAreaView, ScrollView, StyleSheet, View } from 'react-native';
+import uuid from 'react-native-uuid';
 import UserInsightsSectionList from './UserInsightsSectionList';
 
 export default function GenerateInsights() {
@@ -76,9 +76,6 @@ export default function GenerateInsights() {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollViewContent}>
-        <View className="pt-20 border rounded-lg bg-green-400 flex italic font-medium">
-          <Text className="font-light text-orange-300">Ki ZEBI</Text>
-        </View>
         <Text h1 style={styles.title}>
           {t('learn.insights.title')}
         </Text>
