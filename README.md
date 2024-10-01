@@ -17,11 +17,12 @@
 - allow SecAPI import
 - make sure that everything also works and looks good on Android
 - implement AI-based feedback mechanism
-- move AI context creation (especially user facts) when opening chat to backend as well
 - in ChatModal, resize content area appropriately when keyboard is shown
   - allow tapping down arrow while scrolling
   - make streaming a lot smoother
   - use Markdown, i.e. styling identical to ChatGPT
+- research best practices for in-app purchases in Expo
+  - also research https://developer.apple.com/help/app-store-connect/manage-subscriptions/manage-streamlined-purchasing to preferably use our existing subscription solution
 
 ## Possible features
 
