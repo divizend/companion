@@ -11,5 +11,17 @@ module.exports = {
   theme: {
     extend: {},
   },
-  plugins: [],
+  plugins: [
+    function ({ addUtilities }) {
+      const newUtilities = {
+        '.text-muted': {
+          color: '#6c757d', // Default light mode color
+        },
+        '.dark .text-muted': {
+          color: '#adb5bd !important', // Dark mode color
+        },
+      };
+      addUtilities(newUtilities, ['responsive', 'hover']);
+    },
+  ],
 };
