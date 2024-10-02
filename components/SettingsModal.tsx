@@ -1,15 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import { StyleSheet } from 'react-native';
-import { t } from '@/i18n';
 import { apiDelete, logout } from '@/common/api';
-import RNRestart from 'react-native-restart';
-import SectionList from '@/components/SectionList';
-import ModalView from '@/components/ModalView';
-import { useUserProfile, impersonateUser } from '@/common/profile';
 import { showConfirmationDialog } from '@/common/inputDialog';
+import { impersonateUser, useUserProfile } from '@/common/profile';
 import ImpersonateUserModal from '@/components/ImpersonateUserModal';
+import ModalView from '@/components/ModalView';
+import SectionList from '@/components/SectionList';
+import { t } from '@/i18n';
 import { useColorScheme } from 'nativewind';
-import { Text } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet } from 'react-native';
+import RNRestart from 'react-native-restart';
 
 interface SettingsViewProps {
   visible: boolean;

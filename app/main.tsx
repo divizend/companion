@@ -1,22 +1,23 @@
-import React, { useState } from 'react';
-import { TouchableOpacity, Modal, SafeAreaView } from 'react-native';
+import { useUserProfile } from '@/common/profile';
+import { withUserProfile } from '@/common/withUserProfile';
+import OnboardingModal from '@/components/OnboardingModal';
+import SettingsModal from '@/components/SettingsModal';
+import { useThemeColor } from '@/hooks/useThemeColor';
+import { t } from '@/i18n';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Avatar, Icon } from '@rneui/themed';
-import { withUserProfile } from '@/common/withUserProfile';
-import { colors } from '@/common/colors';
-import SettingsModal from '@/components/SettingsModal';
-import InsightsScreen from './learn/insights';
-import GoalsScreen from './learn/goals';
-import RealizeGoalsScreen from './learn/realize-goals';
-import GoalDetailsScreen from './learn/goal-details';
+import { StatusBar } from 'expo-status-bar';
+import React, { useState } from 'react';
+import { SafeAreaView, TouchableOpacity } from 'react-native';
 import AnalyzeScreen from './analyze';
-import TrackScreen from './track';
 import DecideScreen from './decide';
 import DiscoverScreen from './discover';
-import OnboardingModal from '@/components/OnboardingModal';
-import { useUserProfile } from '@/common/profile';
-import { t } from '@/i18n';
+import GoalDetailsScreen from './learn/goal-details';
+import GoalsScreen from './learn/goals';
+import InsightsScreen from './learn/insights';
+import RealizeGoalsScreen from './learn/realize-goals';
+import TrackScreen from './track';
 
 const Tab = createBottomTabNavigator();
 const LearnStack = createStackNavigator();
@@ -37,6 +38,7 @@ function LearnStackNavigator() {
 }
 
 function Main() {
+  const theme = useThemeColor();
   const { profile } = useUserProfile();
   const [settingsVisible, setSettingsVisible] = useState(false);
 
@@ -67,8 +69,10 @@ function Main() {
 
             return <Icon name={iconName!} type="material" size={size} color={color} />;
           },
-          tabBarActiveTintColor: colors.theme,
+          tabBarActiveTintColor: theme.theme,
           tabBarInactiveTintColor: 'gray',
+          tabBarActiveBackgroundColor: theme.darkBackground,
+          tabBarInactiveBackgroundColor: theme.darkBackground,
           headerShown: false,
         })}
       >
@@ -79,9 +83,10 @@ function Main() {
         <Tab.Screen initialParams={{ id: 'discover' }} name={t('tabs.discover')} component={DiscoverScreen} />
       </Tab.Navigator>
       <SettingsModal visible={settingsVisible} onClose={() => setSettingsVisible(false)} />
+      <StatusBar style="light" />
       <SafeAreaView style={{ position: 'absolute', top: 30, right: 0 }}>
         <TouchableOpacity style={{ marginRight: 15 }} onPress={() => setSettingsVisible(true)}>
-          <Avatar rounded title={profile.email[0].toUpperCase()} containerStyle={{ backgroundColor: colors.theme }} />
+          <Avatar rounded title={profile.email[0].toUpperCase()} containerStyle={{ backgroundColor: theme.theme }} />
         </TouchableOpacity>
       </SafeAreaView>
     </>
