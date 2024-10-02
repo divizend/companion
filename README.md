@@ -1,7 +1,8 @@
 # @divizend/companion
 
 ## Setup
-- Copy `.env.example` to `.env`, fill in your ip and fusion auth config and run `scripts/load_env.sh` 
+
+- Copy `.env.example` to `.env`, fill in your ip and fusion auth config and run `scripts/load_env.sh`
 - In FusionAuth, edit the application and under "Authorized redirect URLs", add `divizend://authcallback`
 
 ## Tasks
@@ -17,8 +18,13 @@
 - do load testing (i.e. whether the AI functionality in the backend still works fine, even with hundreds or thousands of users)
 - allow SecAPI import
 - make sure that everything also works and looks good on Android
-- use Markdown in chat
 - implement AI-based feedback mechanism
+- in ChatModal, resize content area appropriately when keyboard is shown
+  - allow tapping down arrow while scrolling
+  - make streaming a lot smoother
+  - use Markdown, i.e. styling identical to ChatGPT
+- research best practices for in-app purchases in Expo
+  - also research https://developer.apple.com/help/app-store-connect/manage-subscriptions/manage-streamlined-purchasing to preferably use our existing subscription solution
 
 ## Possible features
 
