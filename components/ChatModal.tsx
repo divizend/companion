@@ -12,6 +12,8 @@ import {
   NativeScrollEvent,
   Animated,
   ActivityIndicator,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 import { Icon } from '@rneui/themed';
 import { SSE } from 'sse.js';
@@ -97,17 +99,40 @@ export default function ChatModal({
   const [showDownArrow, setShowDownArrow] = useState(false);
   const [userAttemptedScroll, setUserAttemptedScroll] = useState(false);
 
-  const [messageHeights, setMessageHeights] = useState<number[]>([]);
   const [contentHeight, setContentHeight] = useState(0);
   const [containerHeight, setContainerHeight] = useState(0);
   const [scrollY, setScrollY] = useState(0);
   const flatListRef = useRef<FlatList>(null);
+
+  const scrollYAnim = useRef(new Animated.Value(0)).current;
+
+  const smoothScrollToBottom = () => {
+    const offset = contentHeight - containerHeight > 0 ? contentHeight - containerHeight : 0;
+    Animated.timing(scrollYAnim, {
+      toValue: offset,
+      duration: 300,
+      useNativeDriver: true,
+    }).start(() => {
+      flatListRef.current?.scrollToOffset({
+        offset,
+        animated: true,
+      });
+    });
+  };
+
+  useEffect(() => {
+    if (isAIResponding && !userAttemptedScroll) {
+      smoothScrollToBottom();
+    }
+  }, [isAIResponding, messages]);
 
   const [chatId, setChatId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const sseRef = useRef<SSE | null>(null);
 
   const [lastTimeAtBottom, setLastTimeAtBottom] = useState<Date | null>(null);
+
+  const isScrolledToBottom = scrollY >= contentHeight - containerHeight - 100;
 
   useEffect(() => {
     (async () => {
@@ -147,13 +172,10 @@ export default function ChatModal({
 
   useEffect(() => {
     if (isAIResponding && !userAttemptedScroll) {
-      const totalHeight = messageHeights.slice(0, -1).reduce((sum, h) => sum + h, 0);
-      flatListRef.current?.scrollToOffset({
-        offset: totalHeight,
-        animated: true,
-      });
+      flatListRef.current?.scrollToEnd({ animated: true });
+      setUserAttemptedScroll(false);
     }
-  }, [isAIResponding, userAttemptedScroll, messageHeights, contentHeight]);
+  }, [isAIResponding, userAttemptedScroll, messages]);
 
   useEffect(() => {
     return () => {
@@ -239,15 +261,6 @@ export default function ChatModal({
     </View>
   );
 
-  const handleMessageLayout = (event: LayoutChangeEvent, index: number) => {
-    const { height } = event.nativeEvent.layout;
-    setMessageHeights(prevHeights => {
-      const newHeights = [...prevHeights];
-      newHeights[index] = height;
-      return newHeights;
-    });
-  };
-
   useEffect(() => {
     if (initialUserMessage && !isLoading) {
       sendMessage(initialUserMessage);
@@ -256,78 +269,81 @@ export default function ChatModal({
 
   return (
     <ModalView visible={visible} onClose={onClose} title={t('chat.title')} noScrollView>
-      <View
-        style={styles.chatContainer}
-        onLayout={(event: LayoutChangeEvent) => {
-          setContainerHeight(event.nativeEvent.layout.height);
-        }}
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        className="flex-1"
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 80 : 0}
       >
-        <FlatList
-          ref={flatListRef}
-          data={messages}
-          renderItem={({ item, index }) =>
-            item.role === MessageRole.SYSTEM ? null : (
-              <View onLayout={event => handleMessageLayout(event, index)}>{renderMessage({ item, index })}</View>
-            )
-          }
-          keyExtractor={(_, index) => index.toString()}
-          contentContainerStyle={styles.chatListContent}
-          ListEmptyComponent={<View style={{ flex: 1 }} />}
-          onTouchStart={() => {
-            setUserAttemptedScroll(true);
+        <View
+          className="flex-1 bg-[#f2f2f2]"
+          onLayout={(event: LayoutChangeEvent) => {
+            setContainerHeight(event.nativeEvent.layout.height);
           }}
-          onScroll={(event: NativeSyntheticEvent<NativeScrollEvent>) => {
-            setScrollY(event.nativeEvent.contentOffset.y);
-          }}
-          onContentSizeChange={(width: number, height: number) => {
-            setContentHeight(height);
-          }}
-          scrollEventThrottle={16}
-        />
-        <DownArrowIndicator
-          visible={showDownArrow}
-          onPress={() => flatListRef.current?.scrollToEnd({ animated: true })}
-        />
-      </View>
-      <View style={styles.inputContainer}>
-        <TextInput
-          style={styles.input}
-          value={inputText}
-          onChangeText={setInputText}
-          placeholder={t('chat.inputPlaceholder')}
-          onSubmitEditing={handleSendMessage}
-          multiline
-          numberOfLines={1}
-          blurOnSubmit={false}
-          editable={!!chatId && !isAIResponding}
-          key={isAIResponding ? 'sending' : 'idle'}
-        />
-        <TouchableOpacity
-          style={[
-            styles.sendButton,
-            (!chatId || inputText.trim() === '' || isLoading) && !isAIResponding && styles.sendButtonDisabled,
-          ]}
-          onPress={isAIResponding ? abortRequest : handleSendMessage}
-          disabled={(!chatId || inputText.trim() === '' || isLoading) && !isAIResponding}
         >
-          {isLoading ? (
-            <ActivityIndicator size="small" color="white" />
-          ) : isAIResponding ? (
-            <Icon name="stop" type="material" color="white" size={18} />
-          ) : (
-            <Icon name="arrow-upward" type="material" color="white" size={18} />
-          )}
-        </TouchableOpacity>
-      </View>
+          <FlatList
+            ref={flatListRef}
+            data={messages}
+            renderItem={({ item, index }) =>
+              item.role === MessageRole.SYSTEM ? null : <View>{renderMessage({ item, index })}</View>
+            }
+            keyExtractor={(_, index) => index.toString()}
+            contentContainerStyle={styles.chatListContent}
+            ListEmptyComponent={<View style={{ flex: 1 }} />}
+            onTouchStart={() => {
+              setUserAttemptedScroll(true);
+            }}
+            onScroll={(event: NativeSyntheticEvent<NativeScrollEvent>) => {
+              setScrollY(event.nativeEvent.contentOffset.y);
+            }}
+            onContentSizeChange={(width: number, height: number) => {
+              setContentHeight(height);
+            }}
+            scrollEventThrottle={16}
+          />
+          <DownArrowIndicator
+            visible={showDownArrow}
+            onPress={() => {
+              flatListRef.current?.scrollToEnd({ animated: true });
+              setUserAttemptedScroll(false); // Reset manual scroll state when arrow is pressed
+            }}
+          />
+        </View>
+        <View className="flex flex-row p-4 items-center bg-[#f2f2f2]">
+          <TextInput
+            className="flex-1 border border-gray-300 rounded-2xl px-4 py-2 mr-2 min-h-[44px] bg-white"
+            value={inputText}
+            onChangeText={setInputText}
+            placeholder={t('chat.inputPlaceholder')}
+            onSubmitEditing={handleSendMessage}
+            multiline
+            numberOfLines={1}
+            blurOnSubmit={false}
+            editable={!!chatId && !isAIResponding}
+            key={isAIResponding ? 'sending' : 'idle'}
+          />
+          <TouchableOpacity
+            style={[
+              styles.sendButton,
+              (!chatId || inputText.trim() === '' || isLoading) && !isAIResponding && styles.sendButtonDisabled,
+            ]}
+            onPress={isAIResponding ? abortRequest : handleSendMessage}
+            disabled={(!chatId || inputText.trim() === '' || isLoading) && !isAIResponding}
+          >
+            {isLoading ? (
+              <ActivityIndicator size="small" color="white" />
+            ) : isAIResponding ? (
+              <Icon name="stop" type="material" color="white" size={18} />
+            ) : (
+              <Icon name="arrow-upward" type="material" color="white" size={18} />
+            )}
+          </TouchableOpacity>
+        </View>
+      </KeyboardAvoidingView>
     </ModalView>
   );
 }
 
 const styles = StyleSheet.create({
-  chatContainer: {
-    flex: 1,
-    backgroundColor: '#f2f2f2',
-  },
   chatListContent: {
     paddingVertical: 10,
     flexGrow: 1,
@@ -350,23 +366,6 @@ const styles = StyleSheet.create({
   userMessageText: {
     color: '#fff',
   },
-  inputContainer: {
-    flexDirection: 'row',
-    padding: 10,
-    alignItems: 'center',
-    backgroundColor: '#f2f2f2',
-  },
-  input: {
-    flex: 1,
-    borderWidth: 1,
-    borderColor: '#e0e0e0',
-    borderRadius: 20,
-    paddingHorizontal: 15,
-    paddingVertical: 10,
-    marginRight: 10,
-    minHeight: 44,
-    backgroundColor: '#fff',
-  },
   sendButton: {
     backgroundColor: 'black',
     borderRadius: 20,
@@ -378,22 +377,6 @@ const styles = StyleSheet.create({
   },
   sendButtonDisabled: {
     backgroundColor: '#888',
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#f2f2f2',
-  },
-  loadingText: {
-    marginTop: 10,
-    fontSize: 16,
-    color: '#007AFF',
-  },
-  connectionMessage: {
-    padding: 10,
-    backgroundColor: '#f0f0f0',
-    alignItems: 'center',
   },
   downArrowIndicator: {
     position: 'absolute',
