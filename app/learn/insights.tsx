@@ -1,14 +1,14 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { StyleSheet, View, Animated, SafeAreaView, ScrollView, Alert } from 'react-native';
-import { Text } from '@rneui/themed';
-import uuid from 'react-native-uuid';
-import { t } from '@/i18n';
-import StyledButton from '@/components/StyledButton';
-import SectionList from '@/components/SectionList';
-import { showInputDialog } from '@/common/inputDialog';
 import { apiPost } from '@/common/api';
-import { useUserProfile, CompanionProfileLearnQuestion } from '@/common/profile';
+import { showInputDialog } from '@/common/inputDialog';
+import { CompanionProfileLearnQuestion, useUserProfile } from '@/common/profile';
+import { Text } from '@/components/base/Text';
+import SectionList from '@/components/SectionList';
+import StyledButton from '@/components/StyledButton';
+import { t } from '@/i18n';
 import { useNavigation } from '@react-navigation/native';
+import React, { useEffect, useRef, useState } from 'react';
+import { Alert, Animated, SafeAreaView, ScrollView, StyleSheet, View } from 'react-native';
+import uuid from 'react-native-uuid';
 import UserInsightsSectionList from './UserInsightsSectionList';
 
 export default function GenerateInsights() {
@@ -74,15 +74,13 @@ export default function GenerateInsights() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollViewContent}>
-        <Text h1 style={styles.title}>
-          {t('learn.insights.title')}
-        </Text>
-        <View style={styles.explanationContainer}>
-          <Text style={styles.explanationText}>{t('learn.vision')}</Text>
-          <Text style={styles.explanationText}>{t('learn.insights.explanation')}</Text>
-          <Text style={styles.explanationText}>{t('learn.insights.explanation2')}</Text>
+    <SafeAreaView>
+      <ScrollView className="dark:bg-black bg-[#f2f2f2] py-10 px-5">
+        <Text className="text-3xl font-bold mb-5 mx-1.5">{t('learn.insights.title')}</Text>
+        <View className="mb-9 mx-1">
+          <Text className="text-[16px] mb-2.5">{t('learn.vision')}</Text>
+          <Text className="text-[16px] mb-2.5">{t('learn.insights.explanation')}</Text>
+          <Text className="text-[16px] mb-2.5">{t('learn.insights.explanation2')}</Text>
         </View>
 
         <SectionList
@@ -134,40 +132,13 @@ export default function GenerateInsights() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f2f2f2',
-  },
-  scrollViewContent: {
-    padding: 20,
-    paddingTop: 40,
-    paddingBottom: 40,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    marginHorizontal: 5,
-  },
   confirmButton: {
     marginTop: 20,
     marginBottom: 20,
     marginHorizontal: 20,
   },
-  explanationContainer: {
-    marginHorizontal: 5,
-    marginBottom: 35,
-  },
-  explanationText: {
-    fontSize: 16,
-    marginBottom: 10,
-  },
   questionList: {
     marginBottom: 40,
-  },
-  confirmText: {
-    fontSize: 16,
-    marginBottom: 20,
   },
   newQuestionContainer: {
     backgroundColor: '#E6F3FF',
