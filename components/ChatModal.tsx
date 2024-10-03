@@ -23,6 +23,7 @@ import { useSessionToken } from '@/common/sessionToken';
 import { t } from '@/i18n';
 import { apiPost } from '@/common/api';
 import ModalView from './ModalView';
+import Markdown from 'react-native-markdown-display';
 
 interface ChatModalProps {
   visible: boolean;
@@ -254,10 +255,11 @@ export default function ChatModal({
 
   const renderMessage = ({ item, index }: { item: Message; index: number }) => (
     <View style={[styles.messageBubble, item.role === MessageRole.USER ? styles.userMessage : styles.aiMessage]}>
-      <Text style={item.role === MessageRole.USER ? styles.userMessageText : {}}>
-        {item.content +
-          (item.role === MessageRole.ASSISTANT && index === messages.length - 1 && isAIResponding ? '⬤' : '')}
-      </Text>
+      {item.role === MessageRole.USER ? (
+        <Text style={styles.userMessageText}>{item.content}</Text>
+      ) : (
+        <Markdown>{item.content}</Markdown>
+      )}
     </View>
   );
 

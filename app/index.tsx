@@ -15,7 +15,6 @@ export default function Index() {
   const [sessionToken, sessionTokenLoading] = useSessionToken();
   const [handleLoginInProgress, setHandleLoginInProgress] = useState(false);
 
-  console.log('Index');
   useEffect(() => {
     if (sessionToken && !sessionTokenLoading) {
       router.replace('/main');
