@@ -111,11 +111,10 @@ export default function ChatModal({
     const offset = contentHeight - containerHeight > 0 ? contentHeight - containerHeight : 0;
     Animated.timing(scrollYAnim, {
       toValue: offset,
-      duration: 300,
+      duration: 600, // Increase the duration for smoother scrolling
       useNativeDriver: true,
     }).start(() => {
-      flatListRef.current?.scrollToOffset({
-        offset,
+      flatListRef.current?.scrollToEnd({
         animated: true,
       });
     });
@@ -127,13 +126,23 @@ export default function ChatModal({
     }
   }, [isAIResponding, messages]);
 
+  useEffect(() => {
+    if (messages.length > 0 && !userAttemptedScroll) {
+      smoothScrollToBottom(); // Smooth scroll on new message
+    }
+  }, [messages]);
+
+  useEffect(() => {
+    if (!userAttemptedScroll && contentHeight > containerHeight) {
+      smoothScrollToBottom();
+    }
+  }, [contentHeight]);
+
   const [chatId, setChatId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const sseRef = useRef<SSE | null>(null);
 
   const [lastTimeAtBottom, setLastTimeAtBottom] = useState<Date | null>(null);
-
-  const isScrolledToBottom = scrollY >= contentHeight - containerHeight - 100;
 
   useEffect(() => {
     (async () => {
@@ -172,11 +181,18 @@ export default function ChatModal({
   }, [chatId, scrollY, contentHeight, containerHeight]);
 
   useEffect(() => {
-    if (isAIResponding && !userAttemptedScroll) {
-      flatListRef.current?.scrollToEnd({ animated: true });
-      setUserAttemptedScroll(false);
+    if (!isAIResponding && !userAttemptedScroll) {
+      smoothScrollToBottom();
     }
-  }, [isAIResponding, userAttemptedScroll, messages]);
+  }, [isAIResponding, messages]);
+
+  useEffect(() => {
+    const isAtBottom = scrollY >= contentHeight - containerHeight - 20;
+    if (!userAttemptedScroll && isAtBottom) {
+      // Ensure smooth scrolling to bottom when content height increases (new messages)
+      smoothScrollToBottom();
+    }
+  }, [contentHeight, messages]);
 
   useEffect(() => {
     return () => {
@@ -300,8 +316,9 @@ export default function ChatModal({
             onContentSizeChange={(width: number, height: number) => {
               setContentHeight(height);
             }}
-            scrollEventThrottle={16}
+            scrollEventThrottle={32} // Increase this value slightly for smoother rendering
           />
+
           <DownArrowIndicator
             visible={showDownArrow}
             onPress={() => {
