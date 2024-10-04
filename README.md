@@ -2,7 +2,7 @@
 
 ## Setup
 
-- Copy `.env.example` to `.env`, fill in your ip and fusion auth config and run `scripts/load_env.sh`
+- Copy `.env.example` to `.env`, fill in your ip and fusion auth configuration
 - In FusionAuth, edit the application and under "Authorized redirect URLs", add `divizend://authcallback`
 
 ## Tasks
