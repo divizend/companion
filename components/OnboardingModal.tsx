@@ -20,7 +20,7 @@ import { apiPost } from '@/common/api';
 import { Picker } from '@react-native-picker/picker';
 import { countries } from '@/common/countries';
 import { useUserProfile, usePrincipalLegalEntity } from '@/common/profile';
-import DatePicker from 'react-native-date-picker';
+import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
 
 interface OnboardingModalProps {
   visible: boolean;
@@ -36,6 +36,14 @@ export default function OnboardingModal({ visible }: OnboardingModalProps) {
   const [birthday, setBirthday] = useState<Date | null>(
     principalLegalEntity?.data.info.birthday ? new Date(principalLegalEntity.data.info.birthday) : null,
   );
+  const onDateChange = (event: DateTimePickerEvent, selectedDate?: Date | undefined) => {
+    if (event.type === 'set') {
+      // Only update if a date is selected
+      const currentDate = selectedDate || birthday;
+      setBirthday(currentDate);
+    }
+  };
+
   const scrollViewRef = useRef<ScrollView>(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -108,8 +116,14 @@ export default function OnboardingModal({ visible }: OnboardingModalProps) {
         <View style={styles.page}>
           <Text style={styles.modalTitle}>{t('onboarding.birthday.title')}</Text>
           <Text style={styles.modalText}>{t('onboarding.birthday.message')}</Text>
-          <View style={styles.pickerContainer}>
-            <DatePicker date={birthday || new Date()} onDateChange={setBirthday} locale={i18n.locale} mode="date" />
+          <View>
+            <DateTimePicker
+              value={birthday || new Date()}
+              onChange={onDateChange}
+              locale={i18n.locale} // Use i18n locale
+              mode="date"
+              display="default"
+            />
           </View>
         </View>
         {availablePages >= 5 && (
