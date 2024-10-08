@@ -22,6 +22,7 @@
   },
   "dependencies": {
     "@expo/vector-icons": "^14.0.2",
+    "@preact/signals-react": "^2.2.0",
     "@react-native-community/datetimepicker": "8.0.1",
     "@react-native-picker/picker": "^2.8.0",
     "@react-navigation/bottom-tabs": "^6.6.1",
@@ -70,6 +71,7 @@
   "devDependencies": {
     "@babel/core": "^7.20.0",
     "@eslint/js": "^9.11.1",
+    "@preact/signals-react-transform": "^0.4.0",
     "@trivago/prettier-plugin-sort-imports": "^4.3.0",
     "@types/jest": "^29.5.12",
     "@types/lodash": "^4.17.7",
