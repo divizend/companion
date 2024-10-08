@@ -1,4 +1,7 @@
 /** @type {import('tailwindcss').Config} */
+
+const { Colors } = require('./constants/Colors');
+
 module.exports = {
   content: [
     './app/**/*.{js,jsx,ts,tsx}',
@@ -11,10 +14,10 @@ module.exports = {
   theme: {
     extend: {
       backgroundColor: {
-        'primary-dark': '#2b2b2c',
-        'primary-light': '#f2f2f2',
-        'secondary-dark': '#232223',
-        'secondary-light': '#FFF',
+        'primary-dark': Colors.dark.backgroundPrimary,
+        'primary-light': Colors.light.backgroundPrimary,
+        'secondary-dark': Colors.dark.backgroundSecondary,
+        'secondary-light': Colors.light.backgroundSecondary,
       },
     },
   },
