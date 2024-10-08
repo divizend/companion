@@ -1,17 +1,21 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
-import { Avatar, Icon } from '@rneui/themed';
+import { Icon } from '@rneui/themed';
+import { BlurView } from 'expo-blur';
 import { StatusBar } from 'expo-status-bar';
-import { SafeAreaView, TouchableOpacity } from 'react-native';
+import { useColorScheme } from 'nativewind';
+import { StyleSheet } from 'react-native';
 
 import { useUserProfile } from '@/common/profile';
 import { withUserProfile } from '@/common/withUserProfile';
 import OnboardingModal from '@/components/OnboardingModal';
 import SettingsModal from '@/components/SettingsModal';
+import BlurredHeader from '@/components/global/BlurredHeader';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { t } from '@/i18n';
+import { isSettingsModalVisible } from '@/signals/app.signal';
 
 import AnalyzeScreen from './analyze';
 import DecideScreen from './decide';
@@ -42,8 +46,8 @@ function LearnStackNavigator() {
 
 function Main() {
   const theme = useThemeColor();
+  const { colorScheme } = useColorScheme();
   const { profile } = useUserProfile();
-  const [settingsVisible, setSettingsVisible] = useState(false);
 
   if (!profile) {
     return null;
@@ -52,32 +56,49 @@ function Main() {
   return (
     <>
       <OnboardingModal visible={!profile?.flags?.allowedCompanionAI} />
+      <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
       <Tab.Navigator
         screenOptions={({ route }) => ({
           tabBarIcon: ({ color, size }) => {
             let iconName;
             const id = (route.params as any).id;
 
-            if (id === 'learn') {
-              iconName = 'school';
-            } else if (id === 'analyze') {
-              iconName = 'analytics';
-            } else if (id === 'track') {
-              iconName = 'trending-up';
-            } else if (id === 'decide') {
-              iconName = 'lightbulb';
-            } else if (id === 'discover') {
-              iconName = 'explore';
-            }
+            const iconMap: { [key: string]: string } = {
+              learn: 'school',
+              analyze: 'analytics',
+              track: 'trending-up',
+              decide: 'lightbulb',
+              discover: 'explore',
+            };
+
+            iconName = iconMap[id];
 
             return <Icon name={iconName!} type="material" size={size} color={color} />;
           },
           tabBarActiveTintColor: theme.theme,
           tabBarInactiveTintColor: 'gray',
-          tabBarActiveBackgroundColor: theme.darkBackground,
-          tabBarInactiveBackgroundColor: theme.darkBackground,
-          tabBarStyle: { backgroundColor: theme.backgroundSecondary, borderTopColor: theme.backgroundPrimary },
-          headerShown: false,
+          // tabBarActiveBackgroundColor: theme.backgroundSecondary,
+          // tabBarInactiveBackgroundColor: theme.backgroundSecondary,
+          // tabBarStyle: { backgroundColor: theme.backgroundSecondary, borderTopColor: theme.backgroundPrimary, borderTopWidth: 0 },
+          header: BlurredHeader,
+          tabBarBackground: () => (
+            <BlurView
+              tint={colorScheme === 'dark' ? 'dark' : 'light'}
+              intensity={80}
+              style={{
+                ...StyleSheet.absoluteFillObject,
+                overflow: 'hidden',
+                backgroundColor: 'transparent',
+              }}
+            />
+          ),
+          tabBarStyle: {
+            position: 'absolute',
+            backgroundColor: 'transparent',
+            // backgroundColor: theme.backgroundSecondary,
+            borderTopColor: theme.backgroundPrimary,
+            borderTopWidth: 0,
+          },
         })}
       >
         <Tab.Screen initialParams={{ id: 'learn' }} name={t('tabs.learn')} component={LearnStackNavigator} />
@@ -86,13 +107,7 @@ function Main() {
         <Tab.Screen initialParams={{ id: 'decide' }} name={t('tabs.decide')} component={DecideScreen} />
         <Tab.Screen initialParams={{ id: 'discover' }} name={t('tabs.discover')} component={DiscoverScreen} />
       </Tab.Navigator>
-      <SettingsModal visible={settingsVisible} onClose={() => setSettingsVisible(false)} />
-      <StatusBar style="light" />
-      <SafeAreaView style={{ position: 'absolute', top: 30, right: 0 }}>
-        <TouchableOpacity style={{ marginRight: 15 }} onPress={() => setSettingsVisible(true)}>
-          <Avatar rounded title={profile.email[0].toUpperCase()} containerStyle={{ backgroundColor: theme.theme }} />
-        </TouchableOpacity>
-      </SafeAreaView>
+      <SettingsModal visible={isSettingsModalVisible.value} onClose={() => (isSettingsModalVisible.value = false)} />
     </>
   );
 }

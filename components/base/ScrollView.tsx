@@ -3,6 +3,7 @@ import React, { forwardRef } from 'react';
 import { ScrollView as NativeScrollView, ScrollViewProps } from 'react-native';
 
 import { useThemeColor } from '@/hooks/useThemeColor';
+import { isHeaderVisible } from '@/signals/app.signal';
 
 type Props = ScrollViewProps;
 
@@ -18,19 +19,28 @@ export const ScrollView = forwardRef<NativeScrollView, Props>(
         ref={ref}
         style={[
           {
-            backgroundColor: theme.backgroundPrimary,
-            flex: 1,
+            marginTop: 40,
+            overflow: 'visible',
           },
           style,
         ]}
         contentContainerStyle={[
           {
             paddingTop: 50,
-            paddingBottom: 20,
             paddingHorizontal: 20,
+            marginTop: -40,
+            overflow: 'visible',
           },
           contentContainerStyle,
         ]}
+        onScroll={props => {
+          const y = props.nativeEvent.contentOffset.y;
+          if (y > 15) {
+            isHeaderVisible.value = true;
+          } else {
+            isHeaderVisible.value = false;
+          }
+        }}
       >
         {children}
       </NativeScrollView>
