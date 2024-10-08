@@ -1,6 +1,8 @@
+import { Text } from '@/components/base';
+import { useThemeColor } from '@/hooks/useThemeColor';
+import { Header, Icon } from '@rneui/themed';
 import React from 'react';
-import { Modal, StyleSheet, View, TouchableOpacity, ScrollView } from 'react-native';
-import { Text, Icon, Header } from '@rneui/themed';
+import { Modal, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 interface ModalViewProps {
   visible: boolean;
@@ -11,18 +13,20 @@ interface ModalViewProps {
 }
 
 export default function ModalView({ visible, onClose, title, noScrollView, children }: ModalViewProps) {
+  const theme = useThemeColor();
   return (
     <Modal visible={visible} animationType="slide" presentationStyle="pageSheet" onRequestClose={onClose}>
-      <View style={styles.container}>
+      <View className="flex-1 dark:bg-primary-dark bg-primary-light py-10">
         <Header
+          backgroundColor={theme.backgroundPrimary}
           centerComponent={
-            <View style={styles.headerCenter}>
-              <Text style={styles.headerTitle}>{title}</Text>
+            <View className="flex-1 flex-row items-center">
+              <Text className="font-bold text-[16px] text-center">{title}</Text>
             </View>
           }
           rightComponent={
             <TouchableOpacity onPress={onClose}>
-              <View style={styles.closeButton}>
+              <View className="dark:bg-[#232223] bg-[#e0e0e0] rounded-2xl p-1 m-[5px]">
                 <Icon name="close" size={16} color="#666" />
               </View>
             </TouchableOpacity>
@@ -33,7 +37,7 @@ export default function ModalView({ visible, onClose, title, noScrollView, child
           children
         ) : (
           <ScrollView>
-            <View style={styles.content}>{children}</View>
+            <View className="p-5">{children}</View>
           </ScrollView>
         )}
       </View>
@@ -42,31 +46,7 @@ export default function ModalView({ visible, onClose, title, noScrollView, child
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f2f2f2',
-  },
   header: {
-    backgroundColor: '#f2f2f2',
     borderBottomWidth: 0,
-  },
-  headerCenter: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  headerTitle: {
-    fontWeight: 'bold',
-    fontSize: 16,
-    textAlignVertical: 'center',
-  },
-  closeButton: {
-    backgroundColor: '#e0e0e0',
-    borderRadius: 15,
-    padding: 4,
-    margin: 5,
-  },
-  content: {
-    padding: 20,
   },
 });

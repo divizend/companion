@@ -1,6 +1,11 @@
 import React from 'react';
-import { View, StyleSheet, TouchableOpacity, ViewStyle } from 'react-native';
-import { Text, ListItem, Divider, Icon } from '@rneui/themed';
+
+import { Divider, Icon, ListItem } from '@rneui/themed';
+import { useColorScheme } from 'nativewind';
+import { StyleSheet, TouchableOpacity, View, ViewStyle } from 'react-native';
+import { twMerge } from 'tailwind-merge';
+
+import { Text } from '@/components/base';
 
 interface SectionListProps {
   title?: string;
@@ -34,22 +39,33 @@ export default function SectionList({
   containerStyle,
   ItemComponent = View,
 }: SectionListProps) {
+  const { colorScheme } = useColorScheme();
   return (
-    <View style={[styles.container, containerStyle]}>
-      {title && <Text style={styles.sectionHeader}>{title.toUpperCase()}</Text>}
-      <View style={styles.listWrapper}>
+    <View className="mb-5" style={containerStyle}>
+      {title && (
+        <Text className="text-xs mb-1.5 mx-5 uppercase text-gray-600 dark:text-gray-300">{title.toUpperCase()}</Text>
+      )}
+      <View className="rounded-xl overflow-hidden ">
         {items.map((item, index) => (
           <ItemComponent key={item.key ?? index} style={item.containerStyle}>
             <TouchableOpacity onPress={item.onPress} disabled={item.disabled || !item.onPress}>
-              <ListItem containerStyle={[item.onRemove ? styles.listItemWithRemove : styles.listItem, item.itemStyle]}>
+              <ListItem
+                containerStyle={[
+                  item.onRemove ? styles.listItemWithRemove : styles.listItem,
+                  item.itemStyle,
+                  { backgroundColor: colorScheme === 'dark' ? '#232223' : 'white' },
+                ]}
+              >
                 {item.leftIcon ? (
                   typeof item.leftIcon === 'string' ? (
-                    <Text style={[item.disabled && styles.disabledTitle]}>{item.leftIcon}</Text>
+                    <Text className={twMerge(item.disabled && 'text-gray-500 dark:text-gray-200')}>
+                      {item.leftIcon}
+                    </Text>
                   ) : (
                     <Icon
                       name={item.leftIcon.name}
                       type={item.leftIcon.type || 'material'}
-                      color={item.leftIcon.color || (item.disabled ? 'grey' : 'black')}
+                      color={item.leftIcon.color || item.disabled ? 'grey' : colorScheme === 'dark' ? 'white' : 'black'}
                       size={20}
                       containerStyle={styles.iconContainer}
                     />
@@ -57,10 +73,10 @@ export default function SectionList({
                 ) : null}
                 <ListItem.Content style={styles.listItemContent}>
                   <ListItem.Title style={[styles.listItemTitle, item.disabled && styles.disabledTitle]}>
-                    {item.title}
+                    <Text>{item.title}</Text>
                   </ListItem.Title>
                   {item.rightElement && (
-                    <Text style={styles.rightElementText} numberOfLines={1} ellipsizeMode="tail">
+                    <Text className="text-muted text-sm text-right shrink ml-3" numberOfLines={1} ellipsizeMode="tail">
                       {item.rightElement}
                     </Text>
                   )}
@@ -78,7 +94,7 @@ export default function SectionList({
           </ItemComponent>
         ))}
       </View>
-      {bottomText && <Text style={styles.bottomText}>{bottomText}</Text>}
+      {bottomText && <Text className="text-sm mt-1.5 mx-5 text-gray-600]">{bottomText}</Text>}
     </View>
   );
 }
@@ -86,18 +102,6 @@ export default function SectionList({
 const styles = StyleSheet.create({
   container: {
     marginBottom: 20,
-  },
-  sectionHeader: {
-    fontSize: 12,
-    color: '#666',
-    marginBottom: 6,
-    marginHorizontal: 20,
-    textTransform: 'uppercase',
-  },
-  listWrapper: {
-    backgroundColor: 'white',
-    borderRadius: 10,
-    overflow: 'hidden',
   },
   listItem: {
     paddingVertical: 12,

@@ -43,7 +43,8 @@
     "impersonateUser": {
       "title": "Impersonate user",
       "emailPlaceholder": "Enter user email"
-    }
+    },
+    "theme": "Toggle theme"
   },
   "tabs": {
     "learn": "Visionary",
