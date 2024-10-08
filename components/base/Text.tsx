@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { Text as NativeText, TextProps } from 'react-native';
+import Animated from 'react-native-reanimated';
 import { twMerge } from 'tailwind-merge';
 
 const typeStyles = {
@@ -19,21 +20,26 @@ type Props = TextProps & {
   h1?: boolean;
   h2?: boolean;
   h3?: boolean;
+  h4?: boolean;
+  animated?: boolean;
 };
 
-export function Text({ children, className, type = 'default', h1, h2, h3, ...props }: Props) {
+export function Text({ children, className, type = 'default', h1, h2, h3, h4, animated, ...props }: Props) {
+  const TextComponent = animated ? Animated.Text : NativeText;
+
   return (
-    <NativeText
+    <TextComponent
       {...props}
       className={twMerge(
         typeStyles[type],
         h1 && 'text-[28px] font-bold',
-        h2 && 'text-[24px] font-bold',
-        h3 && 'text-[20px] font-bold',
+        h2 && 'text-[24px] font-semibold',
+        h3 && 'text-[20px] font-medium',
+        h4 && 'text-[16px] font-medium',
         className,
       )}
     >
       {children}
-    </NativeText>
+    </TextComponent>
   );
 }
