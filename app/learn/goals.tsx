@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 
 import { useNavigation } from '@react-navigation/native';
-import { ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
+import { StyleSheet, TouchableOpacity } from 'react-native';
 
 import { apiPost } from '@/common/api';
-import { Text } from '@/components/base';
+import { ScrollView, Text } from '@/components/base';
 import { SafeAreaView } from '@/components/base/SafeAreaView';
 import { t } from '@/i18n';
 
@@ -26,7 +26,7 @@ export default function GenerateGoals() {
 
   return (
     <SafeAreaView>
-      <ScrollView contentContainerStyle={styles.scrollViewContent}>
+      <ScrollView>
         <Text style={styles.title}>{t('learn.goals.title')}</Text>
         <TouchableOpacity onPress={() => navigation.navigate('Insights' as never)}>
           <Text style={styles.backLink}>{t('learn.goals.backLink')}</Text>
@@ -48,11 +48,6 @@ export default function GenerateGoals() {
 }
 
 const styles = StyleSheet.create({
-  scrollViewContent: {
-    padding: 20,
-    paddingTop: 40,
-    paddingBottom: 40,
-  },
   title: {
     fontSize: 28,
     fontWeight: 'bold',

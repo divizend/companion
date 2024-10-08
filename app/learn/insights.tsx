@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 
 import { useNavigation } from '@react-navigation/native';
 import { useColorScheme } from 'nativewind';
-import { Alert, Animated, ScrollView, StyleSheet, View } from 'react-native';
+import { Alert, Animated, StyleSheet, View } from 'react-native';
 import uuid from 'react-native-uuid';
 
 import { apiPost } from '@/common/api';
@@ -10,7 +10,7 @@ import { showInputDialog } from '@/common/inputDialog';
 import { CompanionProfileLearnQuestion, useUserProfile } from '@/common/profile';
 import SectionList from '@/components/SectionList';
 import StyledButton from '@/components/StyledButton';
-import { Text } from '@/components/base';
+import { ScrollView, Text } from '@/components/base';
 import { SafeAreaView } from '@/components/base/SafeAreaView';
 import { t } from '@/i18n';
 
@@ -106,7 +106,7 @@ export default function GenerateInsights() {
 
   return (
     <SafeAreaView>
-      <ScrollView className="py-10 px-5">
+      <ScrollView>
         {/* <Prompt
           isVisible={!!selectedQuestionToPrompt}
           actions={[
@@ -196,7 +196,7 @@ export default function GenerateInsights() {
 const styles = StyleSheet.create({
   confirmButton: {
     marginTop: 20,
-    marginBottom: 20,
+    marginBottom: 40,
     marginHorizontal: 20,
   },
   questionList: {
