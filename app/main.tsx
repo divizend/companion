@@ -1,15 +1,18 @@
+import React, { useState } from 'react';
+
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createStackNavigator } from '@react-navigation/stack';
+import { Avatar, Icon } from '@rneui/themed';
+import { StatusBar } from 'expo-status-bar';
+import { SafeAreaView, TouchableOpacity } from 'react-native';
+
 import { useUserProfile } from '@/common/profile';
 import { withUserProfile } from '@/common/withUserProfile';
 import OnboardingModal from '@/components/OnboardingModal';
 import SettingsModal from '@/components/SettingsModal';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { t } from '@/i18n';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { createStackNavigator } from '@react-navigation/stack';
-import { Avatar, Icon } from '@rneui/themed';
-import { StatusBar } from 'expo-status-bar';
-import React, { useState } from 'react';
-import { SafeAreaView, TouchableOpacity } from 'react-native';
+
 import AnalyzeScreen from './analyze';
 import DecideScreen from './decide';
 import DiscoverScreen from './discover';
@@ -73,6 +76,7 @@ function Main() {
           tabBarInactiveTintColor: 'gray',
           tabBarActiveBackgroundColor: theme.darkBackground,
           tabBarInactiveBackgroundColor: theme.darkBackground,
+          tabBarStyle: { backgroundColor: theme.backgroundSecondary, borderTopColor: theme.backgroundPrimary },
           headerShown: false,
         })}
       >

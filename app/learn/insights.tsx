@@ -1,22 +1,30 @@
+import React, { useEffect, useRef, useState } from 'react';
+
+import { useNavigation } from '@react-navigation/native';
+import { useColorScheme } from 'nativewind';
+import { Alert, Animated, ScrollView, StyleSheet, View } from 'react-native';
+import uuid from 'react-native-uuid';
+
 import { apiPost } from '@/common/api';
 import { showInputDialog } from '@/common/inputDialog';
 import { CompanionProfileLearnQuestion, useUserProfile } from '@/common/profile';
-import { Text } from '@/components/base/Text';
 import SectionList from '@/components/SectionList';
 import StyledButton from '@/components/StyledButton';
+import { Text } from '@/components/base';
+import { SafeAreaView } from '@/components/base/SafeAreaView';
 import { t } from '@/i18n';
-import { useNavigation } from '@react-navigation/native';
-import React, { useEffect, useRef, useState } from 'react';
-import { Alert, Animated, SafeAreaView, ScrollView, StyleSheet, View } from 'react-native';
-import uuid from 'react-native-uuid';
+
 import UserInsightsSectionList from './UserInsightsSectionList';
 
 export default function GenerateInsights() {
+  const { colorScheme } = useColorScheme();
   const navigation = useNavigation();
   const { profile, updateCompanionProfile } = useUserProfile();
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const [similarQuestionsLoadingQuestionId, setSimilarQuestionsLoadingQuestionId] = useState<string | null>(null);
   const [generateInsightLoadingQuestionId, setGenerateInsightLoadingQuestionId] = useState<string | null>(null);
+  // const [selectedQuestionToPrompt, setSelectedQuestionToPrompt] = useState<string | undefined>(undefined);
+  // const [insightAnswer, setInsightAnswer] = useState('');
 
   const [defaultQuestions] = useState<CompanionProfileLearnQuestion[]>(
     (t('learn.insights.defaultQuestions') as any).map((q: any) => ({
@@ -73,9 +81,56 @@ export default function GenerateInsights() {
     }
   };
 
+  // useEffect(() => {
+  //   if (!selectedQuestionToPrompt) setInsightAnswer('');
+  // }, [selectedQuestionToPrompt]);
+
+  // const generateInsight = async (questionId: string) => {
+  //   const question = displayedQuestions.find(q => q.id === questionId)!;
+
+  //   try {
+  //     setSelectedQuestionToPrompt(undefined);
+  //     setGenerateInsightLoadingQuestionId(questionId);
+  //     const insight = await apiPost('/companion/learn/generate-insight', {
+  //       currentQuestions: displayedQuestions,
+  //       question: question.question,
+  //       answer: insightAnswer,
+  //     });
+  //     updateCompanionProfile(p => {
+  //       p.userInsights.push(insight);
+  //     });
+  //   } finally {
+  //     setGenerateInsightLoadingQuestionId(null);
+  //   }
+  // };
+
   return (
     <SafeAreaView>
-      <ScrollView className="dark:bg-black bg-[#f2f2f2] py-10 px-5">
+      <ScrollView className="py-10 px-5">
+        {/* <Prompt
+          isVisible={!!selectedQuestionToPrompt}
+          actions={[
+            {
+              title: t('common.cancel'),
+              onPress: () => setSelectedQuestionToPrompt(undefined),
+              id: 'cancel',
+            },
+            {
+              title: t('common.submit'),
+              onPress: () => selectedQuestionToPrompt && generateInsight(selectedQuestionToPrompt),
+              loading: generateInsightLoadingQuestionId === selectedQuestionToPrompt,
+              id: 'submit',
+            },
+          ]}
+          title={t('learn.insights.questionOptions.answer')}
+          text={displayedQuestions.find(q => q.id === selectedQuestionToPrompt)?.question || ''}
+          textInputProps={{
+            value: insightAnswer,
+            onChangeText: e => setInsightAnswer(e),
+            autoFocus: true,
+            placeholder: t('learn.insights.questionOptions.answer'),
+          }}
+        /> */}
         <Text className="text-3xl font-bold mb-5 mx-1.5">{t('learn.insights.title')}</Text>
         <View className="mb-9 mx-1">
           <Text className="text-[16px] mb-2.5">{t('learn.vision')}</Text>
@@ -92,20 +147,27 @@ export default function GenerateInsights() {
                 : ''
             }`,
             onPress: () => {
-              Alert.alert(question.question, undefined, [
-                {
-                  text: t('learn.insights.questionOptions.getSimilar'),
-                  onPress: () => getSimilarQuestions(question.id),
-                },
-                {
-                  text: t('learn.insights.questionOptions.answer'),
-                  onPress: () => generateInsight(question.id),
-                },
-                {
-                  text: t('common.cancel'),
-                  style: 'cancel',
-                },
-              ]);
+              Alert.alert(
+                question.question,
+                undefined,
+                [
+                  {
+                    text: t('learn.insights.questionOptions.getSimilar'),
+                    onPress: () => getSimilarQuestions(question.id),
+                  },
+                  {
+                    text: t('learn.insights.questionOptions.answer'),
+                    onPress: () => {
+                      generateInsight(question.id);
+                    },
+                  },
+                  {
+                    text: t('common.cancel'),
+                    style: 'cancel',
+                  },
+                ],
+                { userInterfaceStyle: (colorScheme === 'system' ? 'dark' : colorScheme) as 'light' | 'dark' },
+              );
             },
             disabled:
               question.id === similarQuestionsLoadingQuestionId || question.id === generateInsightLoadingQuestionId,

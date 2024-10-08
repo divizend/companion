@@ -1,8 +1,10 @@
 import React from 'react';
-import { Modal, StyleSheet, View, TouchableOpacity, ScrollView } from 'react-native';
-import { Icon, Header } from '@rneui/themed';
+
+import { Header, Icon } from '@rneui/themed';
+import { Modal, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
+
 import { Text } from '@/components/base';
-import { useColorScheme } from 'nativewind';
+import { useThemeColor } from '@/hooks/useThemeColor';
 
 interface ModalViewProps {
   visible: boolean;
@@ -13,12 +15,12 @@ interface ModalViewProps {
 }
 
 export default function ModalView({ visible, onClose, title, noScrollView, children }: ModalViewProps) {
-  const { colorScheme } = useColorScheme();
+  const theme = useThemeColor();
   return (
     <Modal visible={visible} animationType="slide" presentationStyle="pageSheet" onRequestClose={onClose}>
-      <View className="flex-1 dark:bg-black bg-[#f2f2f2] py-10">
+      <View className="flex-1 dark:bg-primary-dark bg-primary-light py-10">
         <Header
-          backgroundColor={colorScheme === 'dark' ? 'black' : '#f2f2f2'}
+          backgroundColor={theme.backgroundPrimary}
           centerComponent={
             <View className="flex-1 flex-row items-center">
               <Text className="font-bold text-[16px] text-center">{title}</Text>

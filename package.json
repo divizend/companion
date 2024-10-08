@@ -4,13 +4,15 @@
   "version": "1.0.0",
   "scripts": {
     "start": "expo start",
+    "dev": "expo start --go",
     "reset-project": "node ./scripts/reset-project.js",
     "android": "expo run:android",
     "ios": "expo run:ios",
     "web": "expo start --web",
     "test": "jest --watchAll",
     "lint": "expo lint",
-    "prepare": "husky"
+    "prepare": "husky",
+    "prettier": "prettier --write ."
   },
   "lint-staged": {
     "**/*": "prettier --write --ignore-unknown"
@@ -67,6 +69,7 @@
   "devDependencies": {
     "@babel/core": "^7.20.0",
     "@eslint/js": "^9.11.1",
+    "@trivago/prettier-plugin-sort-imports": "^4.3.0",
     "@types/jest": "^29.5.12",
     "@types/lodash": "^4.17.7",
     "@types/react": "~18.2.45",

@@ -1,9 +1,11 @@
-import { Text } from '@/components/base';
+import React from 'react';
+
 import { Divider, Icon, ListItem } from '@rneui/themed';
 import { useColorScheme } from 'nativewind';
-import React from 'react';
 import { StyleSheet, TouchableOpacity, View, ViewStyle } from 'react-native';
 import { twMerge } from 'tailwind-merge';
+
+import { Text } from '@/components/base';
 
 interface SectionListProps {
   title?: string;
@@ -40,7 +42,9 @@ export default function SectionList({
   const { colorScheme } = useColorScheme();
   return (
     <View className="mb-5" style={containerStyle}>
-      {title && <Text className="text-xs mb-1.5 mx-5 uppercase text-[#666]">{title.toUpperCase()}</Text>}
+      {title && (
+        <Text className="text-xs mb-1.5 mx-5 uppercase text-gray-600 dark:text-gray-300">{title.toUpperCase()}</Text>
+      )}
       <View className="rounded-xl overflow-hidden ">
         {items.map((item, index) => (
           <ItemComponent key={item.key ?? index} style={item.containerStyle}>
@@ -54,7 +58,9 @@ export default function SectionList({
               >
                 {item.leftIcon ? (
                   typeof item.leftIcon === 'string' ? (
-                    <Text className={twMerge(item.disabled && 'text-gray-500')}>{item.leftIcon}</Text>
+                    <Text className={twMerge(item.disabled && 'text-gray-500 dark:text-gray-200')}>
+                      {item.leftIcon}
+                    </Text>
                   ) : (
                     <Icon
                       name={item.leftIcon.name}
@@ -88,7 +94,7 @@ export default function SectionList({
           </ItemComponent>
         ))}
       </View>
-      {bottomText && <Text className="text-sm mt-1.5 mx-5 text-[#666]">{bottomText}</Text>}
+      {bottomText && <Text className="text-sm mt-1.5 mx-5 text-gray-600]">{bottomText}</Text>}
     </View>
   );
 }
