@@ -1,26 +1,29 @@
-import React, { useState, useRef } from 'react';
-import {
-  Modal,
-  View,
-  Text,
-  StyleSheet,
-  SafeAreaView,
-  StatusBar,
-  ScrollView,
-  Dimensions,
-  NativeSyntheticEvent,
-  NativeScrollEvent,
-  Alert,
-} from 'react-native';
-import { Button } from '@rneui/themed';
-import { i18n, t } from '@/i18n';
-import { colors } from '@/common/colors';
-import { LinearGradient } from 'expo-linear-gradient';
-import { apiPost } from '@/common/api';
-import { Picker } from '@react-native-picker/picker';
-import { countries } from '@/common/countries';
-import { useUserProfile, usePrincipalLegalEntity } from '@/common/profile';
+import React, { useRef, useState } from 'react';
+
 import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
+import { Picker } from '@react-native-picker/picker';
+import { Button } from '@rneui/themed';
+import { LinearGradient } from 'expo-linear-gradient';
+import {
+  Alert,
+  Dimensions,
+  Modal,
+  NativeScrollEvent,
+  NativeSyntheticEvent,
+  ScrollView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
+
+import { apiPost } from '@/common/api';
+import { colors } from '@/common/colors';
+import { countries } from '@/common/countries';
+import { usePrincipalLegalEntity, useUserProfile } from '@/common/profile';
+import { i18n, t } from '@/i18n';
+
+import { SafeAreaView } from './base/SafeAreaView';
 
 interface OnboardingModalProps {
   visible: boolean;

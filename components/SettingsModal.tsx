@@ -1,13 +1,14 @@
+import { apiDelete, logout } from '@/common/api';
+import { showConfirmationDialog } from '@/common/inputDialog';
+import { impersonateUser, useUserProfile } from '@/common/profile';
+import ImpersonateUserModal from '@/components/ImpersonateUserModal';
+import ModalView from '@/components/ModalView';
+import SectionList from '@/components/SectionList';
+import { t } from '@/i18n';
+import { useColorScheme } from 'nativewind';
 import React, { useState } from 'react';
 import { StyleSheet } from 'react-native';
-import { t } from '@/i18n';
-import { apiDelete, logout } from '@/common/api';
 import RNRestart from 'react-native-restart';
-import SectionList from '@/components/SectionList';
-import ModalView from '@/components/ModalView';
-import { useUserProfile, impersonateUser } from '@/common/profile';
-import { showConfirmationDialog } from '@/common/inputDialog';
-import ImpersonateUserModal from '@/components/ImpersonateUserModal';
 
 interface SettingsViewProps {
   visible: boolean;
@@ -15,6 +16,7 @@ interface SettingsViewProps {
 }
 
 export default function SettingsView({ visible, onClose }: SettingsViewProps) {
+  const { toggleColorScheme } = useColorScheme();
   const { profile, isPrivileged } = useUserProfile();
   const [resettingProfileLoading, setResettingProfileLoading] = useState(false);
   const [impersonateModalVisible, setImpersonateModalVisible] = useState(false);
@@ -103,6 +105,11 @@ export default function SettingsView({ visible, onClose }: SettingsViewProps) {
             title: t('common.logout'),
             leftIcon: { name: 'logout', type: 'material' },
             onPress: handleLogout,
+          },
+          {
+            title: t('settings.theme'),
+            leftIcon: { name: 'dark-mode', type: 'material' },
+            onPress: () => toggleColorScheme(),
           },
         ]}
       />

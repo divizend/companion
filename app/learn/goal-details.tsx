@@ -1,16 +1,20 @@
-import React, { useState, useRef } from 'react';
-import { StyleSheet, SafeAreaView, ScrollView, TouchableOpacity } from 'react-native';
-import { Text } from '@rneui/themed';
+import React, { useRef, useState } from 'react';
+
 import { useRoute } from '@react-navigation/native';
-import { t } from '@/i18n';
-import { useUserProfile, useGoal } from '@/common/profile';
-import SectionList from '@/components/SectionList';
-import { apiGet, apiPost, apiDelete } from '@/common/api';
+import { ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
+
+import { apiDelete, apiGet, apiPost } from '@/common/api';
 import { showConfirmationDialog } from '@/common/inputDialog';
 import { showInputDialog } from '@/common/inputDialog';
+import { useGoal, useUserProfile } from '@/common/profile';
+import ChatModal from '@/components/ChatModal';
+import SectionList from '@/components/SectionList';
+import { Text } from '@/components/base';
+import { SafeAreaView } from '@/components/base/SafeAreaView';
+import { t } from '@/i18n';
+
 import AssessRealitiesModal from './AssessRealitiesModal';
 import GoalsSectionList from './GoalsSectionList';
-import ChatModal from '@/components/ChatModal';
 
 export default function GoalDetails() {
   const route = useRoute();
@@ -149,13 +153,13 @@ export default function GoalDetails() {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView>
       <ScrollView ref={scrollViewRef} contentContainerStyle={styles.scrollViewContent}>
         <TouchableOpacity onPress={handleModifyEmoji} activeOpacity={1}>
           {goal.emoji || isModifyingEmoji ? (
             <Text style={styles.emojiIcon}>{isModifyingEmoji ? '⏳' : goal.emoji}</Text>
           ) : null}
-          <Text h3 style={styles.title}>
+          <Text h1 style={styles.title}>
             {goal.description}
           </Text>
         </TouchableOpacity>
@@ -247,10 +251,6 @@ export default function GoalDetails() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f2f2f2',
-  },
   scrollViewContent: {
     padding: 20,
     paddingTop: 40,

@@ -1,12 +1,17 @@
 import React from 'react';
-import { StyleSheet, ScrollView, SafeAreaView } from 'react-native';
-import { Text } from '@rneui/themed';
+
+import { ScrollView, StyleSheet } from 'react-native';
+
+import { Text } from '@/components/base';
+import { SafeAreaView } from '@/components/base/SafeAreaView';
 import { t } from '@/i18n';
+
 import GoalsSectionList from './GoalsSectionList';
 import UserInsightsSectionList from './UserInsightsSectionList';
+
 export default function RealizeGoals() {
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView>
       <ScrollView contentContainerStyle={styles.scrollViewContent}>
         <Text h1 style={styles.title}>
           {t('learn.realizeGoals.title')}
@@ -20,10 +25,6 @@ export default function RealizeGoals() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f2f2f2',
-  },
   scrollViewContent: {
     padding: 20,
     paddingTop: 40,
