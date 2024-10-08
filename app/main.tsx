@@ -80,7 +80,7 @@ function Main() {
           // tabBarActiveBackgroundColor: theme.backgroundSecondary,
           // tabBarInactiveBackgroundColor: theme.backgroundSecondary,
           // tabBarStyle: { backgroundColor: theme.backgroundSecondary, borderTopColor: theme.backgroundPrimary, borderTopWidth: 0 },
-          header: BlurredHeader,
+          header: props => <BlurredHeader {...props} />,
           tabBarBackground: () => (
             <BlurView
               tint={colorScheme === 'dark' ? 'dark' : 'light'}
