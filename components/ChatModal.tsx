@@ -1,29 +1,33 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+
+import { Icon } from '@rneui/themed';
+import 'event-target-polyfill';
 import {
-  View,
+  ActivityIndicator,
+  Animated,
+  FlatList,
+  Keyboard,
+  KeyboardAvoidingView,
+  LayoutChangeEvent,
+  NativeScrollEvent,
+  NativeSyntheticEvent,
+  Platform,
+  StyleSheet,
   Text,
   TextInput,
-  FlatList,
-  StyleSheet,
-  Keyboard,
   TouchableOpacity,
-  LayoutChangeEvent,
-  NativeSyntheticEvent,
-  NativeScrollEvent,
-  Animated,
-  ActivityIndicator,
-  KeyboardAvoidingView,
-  Platform,
+  View,
 } from 'react-native';
-import { Icon } from '@rneui/themed';
+import Markdown from 'react-native-markdown-display';
 import { SSE } from 'sse.js';
-import 'event-target-polyfill'; // needed for sse.js
+
+import { apiPost } from '@/common/api';
+// needed for sse.js
 import { usedConfig } from '@/common/config';
 import { useSessionToken } from '@/common/sessionToken';
 import { t } from '@/i18n';
-import { apiPost } from '@/common/api';
+
 import ModalView from './ModalView';
-import Markdown from 'react-native-markdown-display';
 
 interface ChatModalProps {
   visible: boolean;
@@ -99,7 +103,10 @@ export default function ChatModal({
   const [isAIResponding, setIsAIResponding] = useState(false);
   const [showDownArrow, setShowDownArrow] = useState(false);
   const [userAttemptedScroll, setUserAttemptedScroll] = useState(false);
-
+  const [chatId, setChatId] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const sseRef = useRef<SSE | null>(null);
+  const [lastTimeAtBottom, setLastTimeAtBottom] = useState<Date | null>(null);
   const [contentHeight, setContentHeight] = useState(0);
   const [containerHeight, setContainerHeight] = useState(0);
   const [scrollY, setScrollY] = useState(0);
@@ -137,12 +144,6 @@ export default function ChatModal({
       smoothScrollToBottom();
     }
   }, [contentHeight]);
-
-  const [chatId, setChatId] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const sseRef = useRef<SSE | null>(null);
-
-  const [lastTimeAtBottom, setLastTimeAtBottom] = useState<Date | null>(null);
 
   useEffect(() => {
     (async () => {
