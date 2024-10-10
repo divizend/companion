@@ -1,37 +1,34 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+
+import { Icon } from '@rneui/themed';
+import 'event-target-polyfill';
+import { useColorScheme } from 'nativewind';
 import {
-  View,
+  ActivityIndicator,
+  FlatList,
+  Keyboard,
+  KeyboardAvoidingView,
+  NativeScrollEvent,
+  NativeSyntheticEvent,
+  Platform,
+  StyleSheet,
   Text,
   TextInput,
-  FlatList,
-  StyleSheet,
-  Keyboard,
   TouchableOpacity,
-  LayoutChangeEvent,
-  NativeSyntheticEvent,
-  NativeScrollEvent,
-  Animated,
-  ActivityIndicator,
-  KeyboardAvoidingView,
-  Platform,
+  View,
 } from 'react-native';
-import { Icon } from '@rneui/themed';
+import Markdown from 'react-native-markdown-display';
+import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import { SSE } from 'sse.js';
-import 'event-target-polyfill'; // needed for sse.js
+import { twMerge } from 'tailwind-merge';
+
+import { apiPost } from '@/common/api';
+// needed for sse.js
 import { usedConfig } from '@/common/config';
 import { useSessionToken } from '@/common/sessionToken';
 import { t } from '@/i18n';
-import { apiPost } from '@/common/api';
-import ModalView from './ModalView';
-import Markdown from 'react-native-markdown-display';
 
-interface ChatModalProps {
-  visible: boolean;
-  onClose: () => void;
-  chatId?: string;
-  systemPrompt?: string; // only relevant for new chats
-  initialUserMessage?: string;
-}
+import ModalView from './ModalView';
 
 enum MessageRole {
   SYSTEM = 'system',
@@ -49,33 +46,18 @@ const MESSAGE_MARGIN_VERTICAL = 5;
 (globalThis as any).CustomEvent = Event;
 
 const DownArrowIndicator = ({ visible, onPress }: { visible: boolean; onPress: () => void }) => {
-  const scaleAndTranslateAnim = useRef(new Animated.Value(0)).current;
+  const scaleAndTranslateAnim = useSharedValue(0);
 
   useEffect(() => {
-    Animated.timing(scaleAndTranslateAnim, {
-      toValue: visible ? 1 : 0,
-      duration: 200,
-      useNativeDriver: true,
-    }).start();
+    scaleAndTranslateAnim.value = withTiming(visible ? 1 : 0, { duration: 200 });
   }, [visible]);
 
-  const animatedStyle = {
-    transform: [
-      {
-        scale: scaleAndTranslateAnim.interpolate({
-          inputRange: [0, 1],
-          outputRange: [0.5, 1],
-        }),
-      },
-      {
-        translateY: scaleAndTranslateAnim.interpolate({
-          inputRange: [0, 1],
-          outputRange: [20, 0],
-        }),
-      },
-    ],
-    opacity: scaleAndTranslateAnim,
-  };
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ scale: scaleAndTranslateAnim.value }, { translateY: scaleAndTranslateAnim.value * 20 - 20 }],
+      opacity: scaleAndTranslateAnim.value,
+    };
+  });
 
   return (
     <TouchableOpacity onPress={onPress} activeOpacity={0.7}>
@@ -85,6 +67,39 @@ const DownArrowIndicator = ({ visible, onPress }: { visible: boolean; onPress: (
     </TouchableOpacity>
   );
 };
+
+const ChatMessage = ({ item }: { item: Message }) => {
+  const { colorScheme } = useColorScheme();
+
+  return (
+    <View
+      className={twMerge(item.role !== MessageRole.USER && 'dark:!bg-secondary-dark')}
+      style={[styles.messageBubble, item.role === MessageRole.USER ? styles.userMessage : styles.aiMessage]}
+    >
+      {item.role === MessageRole.USER ? (
+        <Text style={styles.userMessageText}>{item.content}</Text>
+      ) : (
+        <Markdown
+          style={{
+            body: {
+              color: colorScheme === 'dark' ? 'white' : 'black',
+            },
+          }}
+        >
+          {item.content}
+        </Markdown>
+      )}
+    </View>
+  );
+};
+
+interface ChatModalProps {
+  visible: boolean;
+  onClose: () => void;
+  chatId?: string;
+  systemPrompt?: string; // only relevant for new chats
+  initialUserMessage?: string;
+}
 
 export default function ChatModal({
   visible,
@@ -97,52 +112,13 @@ export default function ChatModal({
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputText, setInputText] = useState('');
   const [isAIResponding, setIsAIResponding] = useState(false);
-  const [showDownArrow, setShowDownArrow] = useState(false);
-  const [userAttemptedScroll, setUserAttemptedScroll] = useState(false);
-
-  const [contentHeight, setContentHeight] = useState(0);
-  const [containerHeight, setContainerHeight] = useState(0);
-  const [scrollY, setScrollY] = useState(0);
-  const flatListRef = useRef<FlatList>(null);
-
-  const scrollYAnim = useRef(new Animated.Value(0)).current;
-
-  const smoothScrollToBottom = () => {
-    const offset = contentHeight - containerHeight > 0 ? contentHeight - containerHeight : 0;
-    Animated.timing(scrollYAnim, {
-      toValue: offset,
-      duration: 600, // Increase the duration for smoother scrolling
-      useNativeDriver: true,
-    }).start(() => {
-      flatListRef.current?.scrollToEnd({
-        animated: true,
-      });
-    });
-  };
-
-  useEffect(() => {
-    if (isAIResponding && !userAttemptedScroll) {
-      smoothScrollToBottom();
-    }
-  }, [isAIResponding, messages]);
-
-  useEffect(() => {
-    if (messages.length > 0 && !userAttemptedScroll) {
-      smoothScrollToBottom(); // Smooth scroll on new message
-    }
-  }, [messages]);
-
-  useEffect(() => {
-    if (!userAttemptedScroll && contentHeight > containerHeight) {
-      smoothScrollToBottom();
-    }
-  }, [contentHeight]);
-
   const [chatId, setChatId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [scrollY, setScrollY] = useState(0);
+  const flatListRef = useRef<FlatList>(null);
   const sseRef = useRef<SSE | null>(null);
 
-  const [lastTimeAtBottom, setLastTimeAtBottom] = useState<Date | null>(null);
+  const showDownArrow = scrollY > 0;
 
   useEffect(() => {
     (async () => {
@@ -156,7 +132,6 @@ export default function ChatModal({
         if (response.messages) {
           setMessages(response.messages);
         }
-        setLastTimeAtBottom(null);
       } catch (error) {
         console.error('Failed to initialize chat:', error);
         onClose();
@@ -164,37 +139,7 @@ export default function ChatModal({
         setIsLoading(false);
       }
     })();
-  }, []);
 
-  useEffect(() => {
-    if (!chatId) {
-      return;
-    }
-
-    const isScrolledToBottom = scrollY >= contentHeight - containerHeight - 20;
-    if (isScrolledToBottom) {
-      setShowDownArrow(false);
-      setLastTimeAtBottom(new Date());
-    } else if (!lastTimeAtBottom || new Date().getTime() - lastTimeAtBottom.getTime() > 500) {
-      setShowDownArrow(true);
-    }
-  }, [chatId, scrollY, contentHeight, containerHeight]);
-
-  useEffect(() => {
-    if (!isAIResponding && !userAttemptedScroll) {
-      smoothScrollToBottom();
-    }
-  }, [isAIResponding, messages]);
-
-  useEffect(() => {
-    const isAtBottom = scrollY >= contentHeight - containerHeight - 20;
-    if (!userAttemptedScroll && isAtBottom) {
-      // Ensure smooth scrolling to bottom when content height increases (new messages)
-      smoothScrollToBottom();
-    }
-  }, [contentHeight, messages]);
-
-  useEffect(() => {
     return () => {
       if (sseRef.current) {
         sseRef.current.close();
@@ -218,7 +163,6 @@ export default function ChatModal({
     ]);
     setInputText('');
     setIsAIResponding(true);
-    setUserAttemptedScroll(false);
     Keyboard.dismiss();
 
     const sse = new SSE(`${usedConfig.api.url}/${usedConfig.api.versionCode}/ai-chat/${chatId}/completion`, {
@@ -228,30 +172,51 @@ export default function ChatModal({
       },
       payload: JSON.stringify({ message: messageToSend }),
     });
+    sseRef.current?.close();
     sseRef.current = sse;
 
-    sse.addEventListener('message', (event: any) => {
+    const minTimeBetweenMessages = 250;
+    let lastMessageTime = new Date().getTime();
+    const buffer: string[] = [];
+
+    const getNewMessages = (oldMessages: Message[]) => {
+      const newMessages = [...oldMessages];
+      const lastMessage = newMessages[newMessages.length - 1];
+      if (lastMessage && lastMessage.role === MessageRole.ASSISTANT) {
+        lastMessage.content += buffer.join('');
+      } else {
+        newMessages.push({
+          content: buffer.join(''),
+          role: MessageRole.ASSISTANT,
+        });
+      }
+      buffer.length = 0;
+      return newMessages;
+    };
+
+    sse.addEventListener('message', async (event: any) => {
       const data = JSON.parse(event.data);
       if (data.content) {
+        const currentTime = new Date().getTime();
+        buffer.push(data.content);
+        if (currentTime - lastMessageTime < minTimeBetweenMessages) {
+          return;
+        }
+        lastMessageTime = currentTime;
         setMessages(prevMessages => {
-          const newMessages = [...prevMessages];
-          const lastMessage = newMessages[newMessages.length - 1];
-          if (lastMessage && lastMessage.role === MessageRole.ASSISTANT) {
-            lastMessage.content += data.content;
-          } else {
-            newMessages.push({
-              content: data.content,
-              role: MessageRole.ASSISTANT,
-            });
-          }
-          return newMessages;
+          return getNewMessages(prevMessages);
         });
       }
     });
 
-    sse.addEventListener('end', (event: any) => {
+    sse.addEventListener('end', () => {
       sse.close();
       sseRef.current = null;
+      if (buffer.length > 0) {
+        setMessages(prevMessages => {
+          return getNewMessages(prevMessages);
+        });
+      }
       setIsAIResponding(false);
     });
 
@@ -269,16 +234,6 @@ export default function ChatModal({
     }
   };
 
-  const renderMessage = ({ item, index }: { item: Message; index: number }) => (
-    <View style={[styles.messageBubble, item.role === MessageRole.USER ? styles.userMessage : styles.aiMessage]}>
-      {item.role === MessageRole.USER ? (
-        <Text style={styles.userMessageText}>{item.content}</Text>
-      ) : (
-        <Markdown>{item.content}</Markdown>
-      )}
-    </View>
-  );
-
   useEffect(() => {
     if (initialUserMessage && !isLoading) {
       sendMessage(initialUserMessage);
@@ -292,44 +247,33 @@ export default function ChatModal({
         className="flex-1"
         keyboardVerticalOffset={Platform.OS === 'ios' ? 80 : 0}
       >
-        <View
-          className="flex-1 bg-[#f2f2f2]"
-          onLayout={(event: LayoutChangeEvent) => {
-            setContainerHeight(event.nativeEvent.layout.height);
-          }}
-        >
+        <View className="flex-1 bg-primary-light dark:bg-primary-dark">
           <FlatList
+            inverted
             ref={flatListRef}
-            data={messages}
-            renderItem={({ item, index }) =>
-              item.role === MessageRole.SYSTEM ? null : <View>{renderMessage({ item, index })}</View>
-            }
+            data={messages.toReversed()}
             keyExtractor={(_, index) => index.toString()}
             contentContainerStyle={styles.chatListContent}
             ListEmptyComponent={<View style={{ flex: 1 }} />}
-            onTouchStart={() => {
-              setUserAttemptedScroll(true);
-            }}
+            scrollEventThrottle={32} // Increase this value slightly for smoother rendering
+            renderItem={({ item }) =>
+              item.role === MessageRole.SYSTEM ? null : <View>{<ChatMessage item={item} />}</View>
+            }
             onScroll={(event: NativeSyntheticEvent<NativeScrollEvent>) => {
               setScrollY(event.nativeEvent.contentOffset.y);
             }}
-            onContentSizeChange={(width: number, height: number) => {
-              setContentHeight(height);
-            }}
-            scrollEventThrottle={32} // Increase this value slightly for smoother rendering
           />
 
           <DownArrowIndicator
             visible={showDownArrow}
             onPress={() => {
-              flatListRef.current?.scrollToEnd({ animated: true });
-              setUserAttemptedScroll(false); // Reset manual scroll state when arrow is pressed
+              flatListRef.current?.scrollToOffset({ offset: 0, animated: true });
             }}
           />
         </View>
-        <View className="flex flex-row p-4 items-center bg-[#f2f2f2]">
+        <View className="flex flex-row p-4 items-center bg-primary-light dark:bg-primary-dark">
           <TextInput
-            className="flex-1 border border-gray-300 rounded-2xl px-4 py-2 mr-2 min-h-[44px] bg-white"
+            className="flex-1 border border-gray-300 rounded-2xl px-4 py-2 mr-2 min-h-[44px] bg-secondary-light dark:bg-secondary-dark dark:text-white"
             value={inputText}
             onChangeText={setInputText}
             placeholder={t('chat.inputPlaceholder')}
@@ -373,6 +317,8 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     marginVertical: MESSAGE_MARGIN_VERTICAL,
     marginHorizontal: 10,
+    display: 'flex',
+    flexDirection: 'row',
   },
   userMessage: {
     alignSelf: 'flex-end',
