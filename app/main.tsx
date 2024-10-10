@@ -4,9 +4,10 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Icon } from '@rneui/themed';
 import { BlurView } from 'expo-blur';
+import Constants from 'expo-constants';
 import { StatusBar } from 'expo-status-bar';
 import { useColorScheme } from 'nativewind';
-import { StyleSheet } from 'react-native';
+import { Platform, StyleSheet } from 'react-native';
 
 import { useUserProfile } from '@/common/profile';
 import { withUserProfile } from '@/common/withUserProfile';
@@ -48,6 +49,7 @@ function Main() {
   const theme = useThemeColor();
   const { colorScheme } = useColorScheme();
   const { profile } = useUserProfile();
+  const shouldBlur = Platform.OS === 'ios' || Constants.appOwnership === 'expo';
 
   if (!profile) {
     return null;
@@ -81,20 +83,23 @@ function Main() {
           // tabBarInactiveBackgroundColor: theme.backgroundSecondary,
           // tabBarStyle: { backgroundColor: theme.backgroundSecondary, borderTopColor: theme.backgroundPrimary, borderTopWidth: 0 },
           header: props => <BlurredHeader {...props} />,
-          tabBarBackground: () => (
-            <BlurView
-              tint={colorScheme === 'dark' ? 'dark' : 'light'}
-              intensity={80}
-              style={{
-                ...StyleSheet.absoluteFillObject,
-                overflow: 'hidden',
-                backgroundColor: 'transparent',
-              }}
-            />
-          ),
+          tabBarBackground: shouldBlur
+            ? () => (
+                <BlurView
+                  experimentalBlurMethod="dimezisBlurView"
+                  tint={colorScheme === 'dark' ? 'dark' : 'light'}
+                  intensity={80}
+                  style={{
+                    ...StyleSheet.absoluteFillObject,
+                    overflow: 'hidden',
+                    backgroundColor: 'transparent',
+                  }}
+                />
+              )
+            : undefined,
           tabBarStyle: {
             position: 'absolute',
-            backgroundColor: 'transparent',
+            backgroundColor: shouldBlur ? 'transparent' : theme.backgroundSecondary,
             // backgroundColor: theme.backgroundSecondary,
             borderTopColor: theme.backgroundPrimary,
             borderTopWidth: 0,

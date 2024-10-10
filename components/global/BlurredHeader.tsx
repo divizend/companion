@@ -2,8 +2,9 @@ import { useSignalEffect } from '@preact/signals-react';
 import { BottomTabHeaderProps } from '@react-navigation/bottom-tabs';
 import { Avatar } from '@rneui/themed';
 import { BlurView } from 'expo-blur';
+import Constants from 'expo-constants';
 import { useColorScheme } from 'nativewind';
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import { Platform, StyleSheet, TouchableOpacity } from 'react-native';
 import Animated, {
   Easing,
   useAnimatedProps,
@@ -20,7 +21,7 @@ import { Text } from '../base';
 
 type BlurredHeaderProps = BottomTabHeaderProps;
 
-const AnimatedVlurView = Animated.createAnimatedComponent(BlurView);
+const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
 
 export default function BlurredHeader(props: BlurredHeaderProps) {
   const theme = useThemeColor();
@@ -28,6 +29,7 @@ export default function BlurredHeader(props: BlurredHeaderProps) {
   const { colorScheme } = useColorScheme();
   const opacity = useSharedValue(0);
   const intensity = useSharedValue(0);
+  const shouldBlur = Platform.OS === 'ios' || Constants.appOwnership === 'expo';
 
   const config = {
     duration: 300,
@@ -47,8 +49,23 @@ export default function BlurredHeader(props: BlurredHeaderProps) {
     intensity.value = isHeaderVisible.value ? 80 : 0;
   });
 
-  return (
-    <AnimatedVlurView
+  const RenderContent = () => (
+    <>
+      <Text h3 animated style={style}>
+        {props.route.name}
+      </Text>
+      <TouchableOpacity
+        style={{ position: 'absolute', right: 15, bottom: 10 }}
+        onPress={() => (isSettingsModalVisible.value = true)}
+      >
+        <Avatar rounded title={profile.email[0].toUpperCase()} containerStyle={{ backgroundColor: theme.theme }} />
+      </TouchableOpacity>
+    </>
+  );
+
+  return shouldBlur ? (
+    <AnimatedBlurView
+      experimentalBlurMethod="dimezisBlurView"
       tint={colorScheme === 'dark' ? 'dark' : 'extraLight'}
       animatedProps={animatedProps}
       style={{
@@ -61,15 +78,22 @@ export default function BlurredHeader(props: BlurredHeaderProps) {
         paddingBottom: 10,
       }}
     >
-      <Text h3 animated style={style}>
-        {props.route.name}
-      </Text>
-      <TouchableOpacity
-        style={{ position: 'absolute', right: 15, bottom: 10 }}
-        onPress={() => (isSettingsModalVisible.value = true)}
-      >
-        <Avatar rounded title={profile.email[0].toUpperCase()} containerStyle={{ backgroundColor: theme.theme }} />
-      </TouchableOpacity>
-    </AnimatedVlurView>
+      <RenderContent />
+    </AnimatedBlurView>
+  ) : (
+    <Animated.View
+      style={{
+        ...StyleSheet.absoluteFillObject,
+        overflow: 'hidden',
+        opacity,
+        height: 100,
+        backgroundColor: theme.backgroundSecondary,
+        alignItems: 'center',
+        justifyContent: 'flex-end',
+        paddingBottom: 10,
+      }}
+    >
+      <RenderContent />
+    </Animated.View>
   );
 }
