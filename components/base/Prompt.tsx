@@ -1,6 +1,7 @@
+import React from 'react';
+
 import { DialogButtonProps, DialogProps } from '@rneui/base';
 import { Dialog } from '@rneui/themed';
-import React from 'react';
 import { Text, TextInput, TextInputProps } from 'react-native';
 
 type Props = DialogProps & {

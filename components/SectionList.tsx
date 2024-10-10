@@ -6,6 +6,7 @@ import { StyleSheet, TouchableOpacity, View, ViewStyle } from 'react-native';
 import { twMerge } from 'tailwind-merge';
 
 import { Text } from '@/components/base';
+import { useThemeColor } from '@/hooks/useThemeColor';
 
 interface SectionListProps {
   title?: string;
@@ -39,7 +40,9 @@ export default function SectionList({
   containerStyle,
   ItemComponent = View,
 }: SectionListProps) {
+  const theme = useThemeColor();
   const { colorScheme } = useColorScheme();
+
   return (
     <View className="mb-5" style={containerStyle}>
       {title && (
@@ -53,7 +56,7 @@ export default function SectionList({
                 containerStyle={[
                   item.onRemove ? styles.listItemWithRemove : styles.listItem,
                   item.itemStyle,
-                  { backgroundColor: colorScheme === 'dark' ? '#232223' : 'white' },
+                  { backgroundColor: theme.backgroundSecondary },
                 ]}
               >
                 {item.leftIcon ? (

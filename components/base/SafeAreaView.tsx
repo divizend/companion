@@ -4,9 +4,7 @@ import { SafeAreaView as NativeSafeAreaView, ViewProps } from 'react-native';
 
 import { useThemeColor } from '@/hooks/useThemeColor';
 
-type Props = ViewProps & {
-  children: React.ReactNode;
-};
+type Props = ViewProps;
 
 export function SafeAreaView({ children, style, ...props }: Props) {
   const theme = useThemeColor();

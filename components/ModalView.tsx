@@ -1,8 +1,10 @@
+import React from 'react';
+
+import { Header, Icon } from '@rneui/themed';
+import { Modal, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
+
 import { Text } from '@/components/base';
 import { useThemeColor } from '@/hooks/useThemeColor';
-import { Header, Icon } from '@rneui/themed';
-import React from 'react';
-import { Modal, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 interface ModalViewProps {
   visible: boolean;

@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 
 import { useRoute } from '@react-navigation/native';
-import { ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
+import { StyleSheet, TouchableOpacity } from 'react-native';
 
 import { apiDelete, apiGet, apiPost } from '@/common/api';
 import { showConfirmationDialog } from '@/common/inputDialog';
@@ -9,7 +9,7 @@ import { showInputDialog } from '@/common/inputDialog';
 import { useGoal, useUserProfile } from '@/common/profile';
 import ChatModal from '@/components/ChatModal';
 import SectionList from '@/components/SectionList';
-import { Text } from '@/components/base';
+import { ScrollView, ScrollViewRef, Text } from '@/components/base';
 import { SafeAreaView } from '@/components/base/SafeAreaView';
 import { t } from '@/i18n';
 
@@ -31,7 +31,7 @@ export default function GoalDetails() {
   const [chatModalOpenLearningIntentionId, setChatModalOpenLearningIntentionId] = useState<string | null>(null);
   const [isModifyingEmoji, setIsModifyingEmoji] = useState(false);
 
-  const scrollViewRef = useRef<ScrollView>(null);
+  const scrollViewRef = useRef<ScrollViewRef>(null);
 
   const handleRemoveReality = async (realityId: string) => {
     const realityToRemove = goal.realities.find(r => r.id === realityId);

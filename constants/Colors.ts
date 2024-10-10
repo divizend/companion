@@ -15,16 +15,16 @@ export const Colors = {
     icon: '#687076',
     tabIconDefault: '#687076',
     tabIconSelected: tintColorLight,
-    theme: '#00008f',
+    theme: '#00008f', // Divizend Color rgb(60, 157, 155)
   },
   dark: {
     text: '#ECEDEE',
-    backgroundPrimary: '#2b2b2c',
-    backgroundSecondary: '#232223',
+    backgroundPrimary: '#262627',
+    backgroundSecondary: '#1c1c1c',
     tint: tintColorDark,
     icon: '#9BA1A6',
     tabIconDefault: '#9BA1A6',
     tabIconSelected: tintColorDark,
-    theme: '#3333ff',
+    theme: '#3939ff',
   },
 };
