@@ -29,6 +29,8 @@ export default function BlurredHeader(props: BlurredHeaderProps) {
   const { colorScheme } = useColorScheme();
   const opacity = useSharedValue(0);
   const intensity = useSharedValue(0);
+  const color = useSharedValue('rgba(255, 255, 255, 1)');
+
   const shouldBlur = Platform.OS === 'ios' || Constants.appOwnership === 'expo';
 
   const config = {
@@ -44,9 +46,16 @@ export default function BlurredHeader(props: BlurredHeaderProps) {
     intensity: withTiming(intensity.value, config),
   }));
 
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      backgroundColor: withTiming(color.value, config),
+    };
+  });
+
   useSignalEffect(() => {
     opacity.value = isHeaderVisible.value ? 1 : 0;
     intensity.value = isHeaderVisible.value ? 80 : 0;
+    color.value = isHeaderVisible.value ? 'rgba(255, 255, 255, 1)' : 'rgba(255, 255, 255, 0)';
   });
 
   const RenderContent = () => (
@@ -82,16 +91,17 @@ export default function BlurredHeader(props: BlurredHeaderProps) {
     </AnimatedBlurView>
   ) : (
     <Animated.View
-      style={{
-        ...StyleSheet.absoluteFillObject,
-        overflow: 'hidden',
-        opacity,
-        height: 100,
-        backgroundColor: theme.backgroundSecondary,
-        alignItems: 'center',
-        justifyContent: 'flex-end',
-        paddingBottom: 10,
-      }}
+      style={[
+        animatedStyle,
+        {
+          ...StyleSheet.absoluteFillObject,
+          overflow: 'hidden',
+          height: 100,
+          alignItems: 'center',
+          justifyContent: 'flex-end',
+          paddingBottom: 10,
+        },
+      ]}
     >
       <RenderContent />
     </Animated.View>
