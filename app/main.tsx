@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { useSignal } from '@preact/signals-react';
+import { useSignals } from '@preact/signals-react/runtime';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Icon } from '@rneui/themed';
@@ -51,7 +51,7 @@ function Main() {
   const { colorScheme } = useColorScheme();
   const { profile } = useUserProfile();
   const shouldBlur = Platform.OS === 'ios' || Constants.appOwnership === 'expo';
-  useSignal();
+  useSignals();
 
   if (!profile) {
     return null;
