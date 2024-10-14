@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import { StyleSheet, Alert } from 'react-native';
-import { t } from '@/i18n';
+
+import { StyleSheet } from 'react-native';
+
+import { apiDelete, apiGet, apiPost } from '@/common/api';
+import { CompanionProfileGoal, useUserProfile } from '@/common/profile';
 import SectionList from '@/components/SectionList';
-import { useUserProfile, CompanionProfileGoal } from '@/common/profile';
-import { showInputDialog } from '@/common/inputDialog';
-import { apiGet, apiPost, apiDelete } from '@/common/api';
 import StyledButton, { StyledButtonProps } from '@/components/StyledButton';
+import { usePrompt } from '@/hooks/usePrompt';
+import { t } from '@/i18n';
 
 interface GoalsManagerProps {
   confirmButtonProps?: StyledButtonProps;
@@ -19,6 +21,7 @@ export default function GoalsManager({ confirmButtonProps, allowRedetermine, par
   const [addingManualGoal, setAddingManualGoal] = useState<boolean>(false);
   const [refiningGoalId, setRefiningGoalId] = useState<string | null>(null);
   const [removingGoalId, setRemovingGoalId] = useState<string | null>(null);
+  const { showAlert, showPrompt } = usePrompt();
 
   const variant = parentGoalId ? 'secondary' : 'primary';
   const relevantGoals = profile.companionProfile.goals.filter(g => g.parentGoalId === parentGoalId);
@@ -41,36 +44,37 @@ export default function GoalsManager({ confirmButtonProps, allowRedetermine, par
     };
 
     if (relevantGoals.length > 0) {
-      Alert.alert(
-        t(`learn.goalsManager.${variant}.replaceGoalsAlert.title`),
-        t(`learn.goalsManager.${variant}.replaceGoalsAlert.message`),
-        [
+      showAlert({
+        title: t(`learn.goalsManager.${variant}.replaceGoalsAlert.title`),
+        message: t(`learn.goalsManager.${variant}.replaceGoalsAlert.message`),
+        actions: [
           {
-            text: t('common.cancel'),
-            style: 'cancel',
+            title: t('common.cancel'),
           },
           {
-            text: t('common.ok'),
+            title: t('common.ok'),
             onPress: generateGoals,
           },
         ],
-      );
+      });
     } else {
       await generateGoals();
     }
   };
 
   const removeGoal = async (goalId: string) => {
-    Alert.alert(
-      profile.companionProfile.goals.find(g => g.id === goalId)?.description!,
-      t(`learn.goalsManager.${variant}.removeGoalAlert.message`),
-      [
+    const goal = profile.companionProfile.goals.find(g => g.id === goalId);
+    if (!goal) return;
+
+    showAlert({
+      title: goal.description,
+      message: t(`learn.goalsManager.${variant}.removeGoalAlert.message`),
+      actions: [
         {
-          text: t('common.cancel'),
-          style: 'cancel',
+          title: t('common.cancel'),
         },
         {
-          text: t('common.remove'),
+          title: t('common.remove'),
           onPress: async () => {
             try {
               setRemovingGoalId(goalId);
@@ -82,29 +86,28 @@ export default function GoalsManager({ confirmButtonProps, allowRedetermine, par
               setRemovingGoalId(null);
             }
           },
-          style: 'destructive',
         },
       ],
-    );
+    });
   };
 
   const addManualGoal = async () => {
+    const newGoal = await showPrompt({
+      title: t(`learn.goalsManager.${variant}.furtherActions.addManualGoal.title`),
+      textInputProps: {
+        placeholder: t(`learn.goalsManager.${variant}.furtherActions.addManualGoal.placeholder`),
+      },
+    });
+    if (!newGoal) return;
     try {
-      const newGoal = await showInputDialog(
-        t(`learn.goalsManager.${variant}.furtherActions.addManualGoal.title`),
-        t(`learn.goalsManager.${variant}.furtherActions.addManualGoal.placeholder`),
-      );
-      if (newGoal) {
-        setAddingManualGoal(true);
-        console.log(JSON.stringify({ goal: newGoal, parentGoalId }));
-        const reformulatedGoal: CompanionProfileGoal = await apiPost('/companion/goal/reformulate', {
-          goal: newGoal,
-          parentGoalId,
-        });
-        updateCompanionProfile(p => {
-          p.goals.push(reformulatedGoal);
-        });
-      }
+      setAddingManualGoal(true);
+      const reformulatedGoal: CompanionProfileGoal = await apiPost('/companion/goal/reformulate', {
+        goal: newGoal,
+        parentGoalId,
+      });
+      updateCompanionProfile(p => {
+        p.goals.push(reformulatedGoal);
+      });
     } finally {
       setAddingManualGoal(false);
     }
@@ -112,22 +115,22 @@ export default function GoalsManager({ confirmButtonProps, allowRedetermine, par
 
   const handleGoalClick = async (goal: CompanionProfileGoal) => {
     try {
-      const feedback = await showInputDialog(
-        goal.description,
-        t(`learn.goalsManager.${variant}.refineGoal.placeholder`),
-      );
-      if (feedback) {
-        setRefiningGoalId(goal.id);
-        const refinedGoal = await apiPost(`/companion/goal/${goal.id}/refine`, {
-          feedback,
-        });
-        updateCompanionProfile(p => {
-          const index = p.goals.findIndex(g => g.id === goal.id);
-          if (index !== -1) {
-            p.goals[index] = refinedGoal;
-          }
-        });
-      }
+      const feedback = await showPrompt({
+        title: goal.description,
+        textInputProps: { placeholder: t(`learn.goalsManager.${variant}.refineGoal.placeholder`) },
+      });
+
+      if (!feedback) return;
+      setRefiningGoalId(goal.id);
+      const refinedGoal = await apiPost(`/companion/goal/${goal.id}/refine`, {
+        feedback,
+      });
+      updateCompanionProfile(p => {
+        const index = p.goals.findIndex(g => g.id === goal.id);
+        if (index !== -1) {
+          p.goals[index] = refinedGoal;
+        }
+      });
     } finally {
       setRefiningGoalId(null);
     }
@@ -199,11 +202,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f2f2f2',
-  },
-  scrollViewContent: {
-    padding: 20,
-    paddingTop: 40,
-    paddingBottom: 40,
   },
   title: {
     fontSize: 28,

@@ -5,12 +5,12 @@ import { StyleSheet, TouchableOpacity } from 'react-native';
 
 import { apiDelete, apiGet, apiPost } from '@/common/api';
 import { showConfirmationDialog } from '@/common/inputDialog';
-import { showInputDialog } from '@/common/inputDialog';
 import { useGoal, useUserProfile } from '@/common/profile';
 import ChatModal from '@/components/ChatModal';
 import SectionList from '@/components/SectionList';
 import { ScrollView, ScrollViewRef, Text } from '@/components/base';
 import { SafeAreaView } from '@/components/base/SafeAreaView';
+import { usePrompt } from '@/hooks/usePrompt';
 import { t } from '@/i18n';
 
 import AssessRealitiesModal from './AssessRealitiesModal';
@@ -21,6 +21,7 @@ export default function GoalDetails() {
   const { goalId } = route.params as { goalId: string };
   const { updateCompanionProfile } = useUserProfile();
   const goal = useGoal(goalId)!;
+  const { showPrompt } = usePrompt();
 
   const [showAssessModal, setShowAssessModal] = useState(false);
   const [isRefiningRealityId, setIsRefiningRealityId] = useState<string | null>(null);
@@ -63,18 +64,20 @@ export default function GoalDetails() {
     if (realityToRefineIndex === -1) return;
     const realityToRefine = goal.realities[realityToRefineIndex];
 
-    const feedback = await showInputDialog(realityToRefine.reality, t('learn.goalDetails.realities.refineReality'));
+    const feedback = await showPrompt({
+      title: realityToRefine.reality,
+      message: t('learn.goalDetails.realities.refineReality'),
+    });
 
-    if (feedback) {
-      try {
-        setIsRefiningRealityId(realityId);
-        const updatedReality = await apiPost(`/companion/goal/${goalId}/reality/${realityId}/refine`, { feedback });
-        updateCompanionProfile(p => {
-          p.goals.find(g => g.id === goalId)!.realities[realityToRefineIndex] = updatedReality;
-        });
-      } finally {
-        setIsRefiningRealityId(null);
-      }
+    if (!feedback) return;
+    try {
+      setIsRefiningRealityId(realityId);
+      const updatedReality = await apiPost(`/companion/goal/${goalId}/reality/${realityId}/refine`, { feedback });
+      updateCompanionProfile(p => {
+        p.goals.find(g => g.id === goalId)!.realities[realityToRefineIndex] = updatedReality;
+      });
+    } finally {
+      setIsRefiningRealityId(null);
     }
   };
 
@@ -131,20 +134,21 @@ export default function GoalDetails() {
   };
 
   const handleModifyEmoji = async () => {
-    const emojiDesire = await showInputDialog(t('askEmoji'));
-    if (emojiDesire) {
-      try {
-        setIsModifyingEmoji(true);
-        const newGoal = await apiPost(`/companion/goal/${goalId}/emoji`, {
-          input: emojiDesire,
-        });
-        updateCompanionProfile(p => {
-          const goalIndex = p.goals.findIndex(g => g.id === goalId);
-          p.goals[goalIndex] = newGoal;
-        });
-      } finally {
-        setIsModifyingEmoji(false);
-      }
+    const emojiDesire = await showPrompt({
+      title: t('askEmoji'),
+    });
+    if (!emojiDesire) return;
+    try {
+      setIsModifyingEmoji(true);
+      const newGoal = await apiPost(`/companion/goal/${goalId}/emoji`, {
+        input: emojiDesire,
+      });
+      updateCompanionProfile(p => {
+        const goalIndex = p.goals.findIndex(g => g.id === goalId);
+        p.goals[goalIndex] = newGoal;
+      });
+    } finally {
+      setIsModifyingEmoji(false);
     }
   };
 
@@ -154,7 +158,7 @@ export default function GoalDetails() {
 
   return (
     <SafeAreaView>
-      <ScrollView ref={scrollViewRef} contentContainerStyle={styles.scrollViewContent}>
+      <ScrollView ref={scrollViewRef}>
         <TouchableOpacity onPress={handleModifyEmoji} activeOpacity={1}>
           {goal.emoji || isModifyingEmoji ? (
             <Text style={styles.emojiIcon}>{isModifyingEmoji ? '⏳' : goal.emoji}</Text>
@@ -251,11 +255,6 @@ export default function GoalDetails() {
 }
 
 const styles = StyleSheet.create({
-  scrollViewContent: {
-    padding: 20,
-    paddingTop: 40,
-    paddingBottom: 40,
-  },
   title: {
     fontWeight: 'bold',
     marginBottom: 30,

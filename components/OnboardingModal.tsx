@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 
-import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
+import DateTimePicker, { DateTimePickerAndroid, DateTimePickerEvent } from '@react-native-community/datetimepicker';
 import { Picker } from '@react-native-picker/picker';
 import { Button } from '@rneui/themed';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -10,6 +10,7 @@ import {
   Modal,
   NativeScrollEvent,
   NativeSyntheticEvent,
+  Platform,
   ScrollView,
   StatusBar,
   StyleSheet,
@@ -37,7 +38,7 @@ export default function OnboardingModal({ visible }: OnboardingModalProps) {
   const [currentPage, setCurrentPage] = useState(0);
   const [selectedCountry, setSelectedCountry] = useState(principalLegalEntity?.data.info.nationality ?? '');
   const [birthday, setBirthday] = useState<Date | null>(
-    principalLegalEntity?.data.info.birthday ? new Date(principalLegalEntity.data.info.birthday) : null,
+    principalLegalEntity?.data.info.birthday ? new Date(principalLegalEntity.data.info.birthday) : new Date('1-1-2000'),
   );
   const onDateChange = (event: DateTimePickerEvent, selectedDate?: Date | undefined) => {
     if (event.type === 'set') {
@@ -120,13 +121,21 @@ export default function OnboardingModal({ visible }: OnboardingModalProps) {
           <Text style={styles.modalTitle}>{t('onboarding.birthday.title')}</Text>
           <Text style={styles.modalText}>{t('onboarding.birthday.message')}</Text>
           <View>
-            <DateTimePicker
-              value={birthday || new Date()}
-              onChange={onDateChange}
-              locale={i18n.locale} // Use i18n locale
-              mode="date"
-              display="default"
-            />
+            {/* {Platform.OS === 'android' ? (
+              <Button
+                buttonStyle={styles.modalButton}
+                title={t('onboarding.birthday.openDatepicker')}
+                onPress={() => DateTimePickerAndroid.open({ value: birthday || new Date() })}
+              />
+            ) : (
+              <DateTimePicker
+                value={birthday || new Date()}
+                onChange={onDateChange}
+                locale={i18n.locale} // Use i18n locale
+                mode="date"
+                display="default"
+              />
+            )} */}
           </View>
         </View>
         {availablePages >= 5 && (

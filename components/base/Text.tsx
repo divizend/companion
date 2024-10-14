@@ -2,7 +2,8 @@ import React from 'react';
 
 import { Text as NativeText, TextProps } from 'react-native';
 import Animated from 'react-native-reanimated';
-import { twMerge } from 'tailwind-merge';
+
+import { clsx } from '@/common/clsx';
 
 const typeStyles = {
   default: 'dark:text-white text-slate-800',
@@ -30,7 +31,7 @@ export function Text({ children, className, type = 'default', h1, h2, h3, h4, an
   return (
     <TextComponent
       {...props}
-      className={twMerge(
+      className={clsx(
         typeStyles[type],
         h1 && 'text-[28px] font-bold',
         h2 && 'text-[24px] font-semibold',

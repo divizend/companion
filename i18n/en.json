@@ -68,7 +68,8 @@
     },
     "birthday": {
       "title": "When were you born?",
-      "message": "Please enter your date of birth."
+      "message": "Please enter your date of birth.",
+      "openDatepicker": "Select date of birth"
     },
     "finalConfirm": "Let's get started!",
     "allSet": {
