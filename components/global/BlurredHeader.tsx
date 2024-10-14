@@ -29,7 +29,7 @@ export default function BlurredHeader(props: BlurredHeaderProps) {
   const { colorScheme } = useColorScheme();
   const opacity = useSharedValue(0);
   const intensity = useSharedValue(0);
-  const color = useSharedValue('rgba(255, 255, 255, 1)');
+  const color = useSharedValue(theme.style === 'light' ? 'rgba(255, 255, 255, 1)' : 'rgba(0, 0, 0, 1)');
 
   const shouldBlur = Platform.OS === 'ios' || Constants.appOwnership === 'expo';
 
@@ -55,7 +55,14 @@ export default function BlurredHeader(props: BlurredHeaderProps) {
   useSignalEffect(() => {
     opacity.value = isHeaderVisible.value ? 1 : 0;
     intensity.value = isHeaderVisible.value ? 80 : 0;
-    color.value = isHeaderVisible.value ? 'rgba(255, 255, 255, 1)' : 'rgba(255, 255, 255, 0)';
+    color.value =
+      theme.style === 'light'
+        ? isHeaderVisible.value
+          ? 'rgba(255, 255, 255, 1)'
+          : 'rgba(255, 255, 255, 0)'
+        : isHeaderVisible.value
+          ? 'rgba(0, 0, 0, 1)'
+          : 'rgba(0, 0, 0, 0)';
   });
 
   const RenderContent = () => (
