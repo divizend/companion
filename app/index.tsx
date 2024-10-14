@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import * as WebBrowser from 'expo-web-browser';
+
 import { useAuthRequest, useAutoDiscovery } from 'expo-auth-session';
 import { router } from 'expo-router';
-import { View, Alert, StyleSheet, Image } from 'react-native';
-import StyledButton from '../components/StyledButton';
+import * as WebBrowser from 'expo-web-browser';
+import { Alert, Image, StyleSheet, View } from 'react-native';
+
 import { usedConfig } from '../common/config';
-import { useSessionToken, setSessionToken } from '../common/sessionToken';
+import { setSessionToken, useSessionToken } from '../common/sessionToken';
+import StyledButton from '../components/StyledButton';
 import { t } from '../i18n';
 
 WebBrowser.maybeCompleteAuthSession();

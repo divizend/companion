@@ -1,3 +1,9 @@
+import React, { useState } from 'react';
+
+import { useColorScheme } from 'nativewind';
+import { StyleSheet } from 'react-native';
+import RNRestart from 'react-native-restart';
+
 import { apiDelete, logout } from '@/common/api';
 import { showConfirmationDialog } from '@/common/inputDialog';
 import { impersonateUser, useUserProfile } from '@/common/profile';
@@ -5,10 +11,6 @@ import ImpersonateUserModal from '@/components/ImpersonateUserModal';
 import ModalView from '@/components/ModalView';
 import SectionList from '@/components/SectionList';
 import { t } from '@/i18n';
-import { useColorScheme } from 'nativewind';
-import React, { useState } from 'react';
-import { StyleSheet } from 'react-native';
-import RNRestart from 'react-native-restart';
 
 interface SettingsViewProps {
   visible: boolean;
@@ -109,7 +111,7 @@ export default function SettingsView({ visible, onClose }: SettingsViewProps) {
           {
             title: t('settings.theme'),
             leftIcon: { name: 'dark-mode', type: 'material' },
-            onPress: () => toggleColorScheme(),
+            onPress: toggleColorScheme,
           },
         ]}
       />

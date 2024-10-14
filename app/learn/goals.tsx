@@ -27,11 +27,11 @@ export default function GenerateGoals() {
   return (
     <SafeAreaView>
       <ScrollView>
-        <Text style={styles.title}>{t('learn.goals.title')}</Text>
+        <Text className="text-3xl font-bold mb-5 mx-1.5">{t('learn.goals.title')}</Text>
         <TouchableOpacity onPress={() => navigation.navigate('Insights' as never)}>
-          <Text style={styles.backLink}>{t('learn.goals.backLink')}</Text>
+          <Text className="text-gray-500 mx-1.5 mb-2.5">{t('learn.goals.backLink')}</Text>
         </TouchableOpacity>
-        <Text style={styles.explanationText}>{t('learn.goals.explanation')}</Text>
+        <Text className="text-[16px] mx-1.5 mb-8">{t('learn.goals.explanation')}</Text>
         <GoalsManager
           confirmButtonProps={{
             title: t('learn.goals.confirmGoals'),
@@ -46,22 +46,3 @@ export default function GenerateGoals() {
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    marginHorizontal: 5,
-  },
-  backLink: {
-    color: 'grey',
-    marginHorizontal: 5,
-    marginBottom: 10,
-  },
-  explanationText: {
-    fontSize: 16,
-    marginHorizontal: 5,
-    marginBottom: 30,
-  },
-});

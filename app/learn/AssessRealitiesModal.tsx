@@ -1,12 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, ActivityIndicator, Alert } from 'react-native';
-import { Text, Button } from '@rneui/themed';
-import { t } from '@/i18n';
-import SectionList from '@/components/SectionList';
-import ModalView from '@/components/ModalView';
-import { useGoal, useUserProfile } from '@/common/profile';
-import { showInputDialog } from '@/common/inputDialog';
+import React, { useEffect, useState } from 'react';
+
+import { Text } from '@rneui/themed';
+import { Alert, StyleSheet, View } from 'react-native';
+
 import { apiGet, apiPost } from '@/common/api';
+import { useGoal, useUserProfile } from '@/common/profile';
+import ModalView from '@/components/ModalView';
+import SectionList from '@/components/SectionList';
+import { usePrompt } from '@/hooks/usePrompt';
+import { t } from '@/i18n';
 
 interface AssessRealitiesModalProps {
   visible: boolean;
@@ -22,6 +24,7 @@ export default function AssessRealitiesModal({ visible, onClose, goalId }: Asses
   const [questions, setQuestions] = useState<string[]>([]);
   const [isLoadingQuestions, setIsLoadingQuestions] = useState<boolean>(true);
   const [realitiesAddedSinceLastLoad, setRealitiesAddedSinceLastLoad] = useState(false);
+  const { showPrompt } = usePrompt();
 
   const loadQuestions = async () => {
     try {
@@ -41,41 +44,42 @@ export default function AssessRealitiesModal({ visible, onClose, goalId }: Asses
   }, [visible]);
 
   const handleAddRealityFromQuestion = async (questionIndex: number) => {
-    const text = await showInputDialog(questions[questionIndex]);
-    if (text) {
-      try {
-        setIsAddingRealityIndex(questionIndex);
-        const newReality = await apiPost(`/companion/goal/${goalId}/generate-reality`, {
-          question: questions[questionIndex],
-          answer: text,
-        });
-        updateCompanionProfile(p => {
-          p.goals.find(g => g.id === goalId)?.realities.push(newReality);
-        });
-        setRealitiesAddedSinceLastLoad(true);
-        Alert.alert(t('learn.goalDetails.realities.assess.success'), newReality.reality);
-      } finally {
-        setIsAddingRealityIndex(null);
-      }
+    const text = await showPrompt({ title: questions[questionIndex] });
+    if (!text) return;
+    try {
+      setIsAddingRealityIndex(questionIndex);
+      const newReality = await apiPost(`/companion/goal/${goalId}/generate-reality`, {
+        question: questions[questionIndex],
+        answer: text,
+      });
+      updateCompanionProfile(p => {
+        p.goals.find(g => g.id === goalId)?.realities.push(newReality);
+      });
+      setRealitiesAddedSinceLastLoad(true);
+      Alert.alert(t('learn.goalDetails.realities.assess.success'), newReality.reality);
+    } finally {
+      setIsAddingRealityIndex(null);
     }
   };
 
   const handleAddManualReality = async () => {
-    const text = await showInputDialog(goal!.description, t('learn.goalDetails.realities.addRealityPrompt'));
-    if (text) {
-      try {
-        setIsAddingReality(true);
-        const newReality = await apiPost(`/companion/goal/${goalId}/reality`, {
-          reality: text,
-        });
-        updateCompanionProfile(p => {
-          p.goals.find(g => g.id === goalId)?.realities.push(newReality);
-        });
-        setRealitiesAddedSinceLastLoad(true);
-        Alert.alert(t('learn.goalDetails.realities.assess.success'), newReality.reality);
-      } finally {
-        setIsAddingReality(false);
-      }
+    const text = await showPrompt({
+      title: goal!.description,
+      message: t('learn.goalDetails.realities.addRealityPrompt'),
+    });
+    if (!text) return;
+    try {
+      setIsAddingReality(true);
+      const newReality = await apiPost(`/companion/goal/${goalId}/reality`, {
+        reality: text,
+      });
+      updateCompanionProfile(p => {
+        p.goals.find(g => g.id === goalId)?.realities.push(newReality);
+      });
+      setRealitiesAddedSinceLastLoad(true);
+      Alert.alert(t('learn.goalDetails.realities.assess.success'), newReality.reality);
+    } finally {
+      setIsAddingReality(false);
     }
   };
 

@@ -13,19 +13,19 @@ import {
   Platform,
   StyleSheet,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
 import Markdown from 'react-native-markdown-display';
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import { SSE } from 'sse.js';
-import { twMerge } from 'tailwind-merge';
 
 import { apiPost } from '@/common/api';
+import { clsx } from '@/common/clsx';
 // needed for sse.js
 import { usedConfig } from '@/common/config';
 import { useSessionToken } from '@/common/sessionToken';
+import { TextInput } from '@/components/base';
 import { t } from '@/i18n';
 
 import ModalView from './ModalView';
@@ -73,7 +73,7 @@ const ChatMessage = ({ item }: { item: Message }) => {
 
   return (
     <View
-      className={twMerge(item.role !== MessageRole.USER && 'dark:!bg-secondary-dark')}
+      className={clsx(item.role !== MessageRole.USER && 'dark:!bg-secondary-dark')}
       style={[styles.messageBubble, item.role === MessageRole.USER ? styles.userMessage : styles.aiMessage]}
     >
       {item.role === MessageRole.USER ? (
@@ -252,6 +252,7 @@ export default function ChatModal({
             inverted
             ref={flatListRef}
             data={messages.toReversed()}
+            // TODO: This bad, never use index as key.
             keyExtractor={(_, index) => index.toString()}
             contentContainerStyle={styles.chatListContent}
             ListEmptyComponent={<View style={{ flex: 1 }} />}
@@ -273,7 +274,7 @@ export default function ChatModal({
         </View>
         <View className="flex flex-row p-4 items-center bg-primary-light dark:bg-primary-dark">
           <TextInput
-            className="flex-1 border border-gray-300 rounded-2xl px-4 py-2 mr-2 min-h-[44px] bg-secondary-light dark:bg-secondary-dark dark:text-white"
+            className="flex-1 mr-2"
             value={inputText}
             onChangeText={setInputText}
             placeholder={t('chat.inputPlaceholder')}

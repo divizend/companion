@@ -1,14 +1,13 @@
 import React from 'react';
 
 import { Divider, Icon, ListItem } from '@rneui/themed';
-import { useColorScheme } from 'nativewind';
 import { StyleSheet, TouchableOpacity, View, ViewStyle } from 'react-native';
-import { twMerge } from 'tailwind-merge';
 
+import { clsx } from '@/common/clsx';
 import { Text } from '@/components/base';
 import { useThemeColor } from '@/hooks/useThemeColor';
 
-interface SectionListProps {
+export type SectionListProps = {
   title?: string;
   items: Array<{
     key?: string;
@@ -31,7 +30,7 @@ interface SectionListProps {
   bottomText?: string;
   containerStyle?: ViewStyle;
   ItemComponent?: React.ComponentType<any>;
-}
+};
 
 export default function SectionList({
   title,
@@ -41,7 +40,6 @@ export default function SectionList({
   ItemComponent = View,
 }: SectionListProps) {
   const theme = useThemeColor();
-  const { colorScheme } = useColorScheme();
 
   return (
     <View className="mb-5" style={containerStyle}>
@@ -61,14 +59,12 @@ export default function SectionList({
               >
                 {item.leftIcon ? (
                   typeof item.leftIcon === 'string' ? (
-                    <Text className={twMerge(item.disabled && 'text-gray-500 dark:text-gray-200')}>
-                      {item.leftIcon}
-                    </Text>
+                    <Text className={clsx(item.disabled && 'text-gray-500 dark:text-gray-200')}>{item.leftIcon}</Text>
                   ) : (
                     <Icon
                       name={item.leftIcon.name}
                       type={item.leftIcon.type || 'material'}
-                      color={item.leftIcon.color || item.disabled ? 'grey' : colorScheme === 'dark' ? 'white' : 'black'}
+                      color={item.leftIcon.color || item.disabled ? 'grey' : theme.style === 'dark' ? 'white' : 'black'}
                       size={20}
                       containerStyle={styles.iconContainer}
                     />

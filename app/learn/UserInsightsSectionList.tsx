@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
-import { StyleSheet, Alert } from 'react-native';
-import { t } from '@/i18n';
-import SectionList from '@/components/SectionList';
-import { CompanionProfileUserInsight, useUserProfile } from '@/common/profile';
+
+import { Alert, StyleSheet } from 'react-native';
+
 import { apiPost } from '@/common/api';
-import { showInputDialog } from '@/common/inputDialog';
+import { CompanionProfileUserInsight, useUserProfile } from '@/common/profile';
+import SectionList from '@/components/SectionList';
+import { usePrompt } from '@/hooks/usePrompt';
+import { t } from '@/i18n';
+
 interface UserInsightsSectionListProps {
   isOnboarding?: boolean;
 }
@@ -13,6 +16,7 @@ export default function UserInsightsSectionList({ isOnboarding }: UserInsightsSe
   const { profile, updateCompanionProfile } = useUserProfile();
   const [removingInsightId, setRemovingInsightId] = useState<string | null>(null);
   const [addingInsight, setAddingInsight] = useState<boolean>(false);
+  const { showPrompt } = usePrompt();
 
   const handleRemoveInsight = (insightId: string) => {
     Alert.alert(
@@ -48,19 +52,19 @@ export default function UserInsightsSectionList({ isOnboarding }: UserInsightsSe
   };
 
   const handleAddInsight = async () => {
-    const insight = await showInputDialog(t('learn.insights.addInsight.message'));
-    if (insight) {
-      try {
-        setAddingInsight(true);
-        const newInsight = await apiPost('/companion/insights/reformulate', {
-          insight,
-        });
-        updateCompanionProfile(p => {
-          p.userInsights.push(newInsight);
-        });
-      } finally {
-        setAddingInsight(false);
-      }
+    const insight = await showPrompt({ title: t('learn.insights.addInsight.message') });
+    if (!insight) return;
+
+    try {
+      setAddingInsight(true);
+      const newInsight = await apiPost('/companion/insights/reformulate', {
+        insight,
+      });
+      updateCompanionProfile(p => {
+        p.userInsights.push(newInsight);
+      });
+    } finally {
+      setAddingInsight(false);
     }
   };
 
