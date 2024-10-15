@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 
+import { router } from 'expo-router';
 import { useColorScheme } from 'nativewind';
 import { StyleSheet } from 'react-native';
 import RNRestart from 'react-native-restart';
@@ -30,6 +31,8 @@ export default function SettingsView({ visible, onClose }: SettingsViewProps) {
   const handleLogout = async () => {
     if (await showConfirmationDialog(t('common.logout'), t('common.logoutConfirmation'))) {
       await logout();
+      onClose();
+      router.replace('/');
     }
   };
 
