@@ -12,6 +12,8 @@ import ModalView from '@/components/ModalView';
 import SectionList from '@/components/SectionList';
 import { t } from '@/i18n';
 
+import SubscriptionCarousel from './features/subscription/SubscriptionCarousel';
+
 interface SettingsViewProps {
   visible: boolean;
   onClose: () => void;
@@ -115,6 +117,8 @@ export default function SettingsView({ visible, onClose }: SettingsViewProps) {
           },
         ]}
       />
+
+      <SubscriptionCarousel />
 
       <ImpersonateUserModal visible={impersonateModalVisible} onClose={() => setImpersonateModalVisible(false)} />
     </ModalView>

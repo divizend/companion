@@ -7,6 +7,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import PromptProvider from '@/hooks/usePrompt';
+import { RevenueCatProvider } from '@/hooks/usePurchases';
 
 import '../global.css';
 
@@ -18,7 +19,9 @@ export default function Layout() {
       <SafeAreaProvider>
         <GestureHandlerRootView>
           <PromptProvider>
-            <Slot />
+            <RevenueCatProvider>
+              <Slot />
+            </RevenueCatProvider>
           </PromptProvider>
         </GestureHandlerRootView>
       </SafeAreaProvider>

@@ -10,12 +10,18 @@ import SectionList from '@/components/SectionList';
 import StyledButton from '@/components/StyledButton';
 import { SafeAreaView, ScrollView, Text } from '@/components/base';
 import { usePrompt } from '@/hooks/usePrompt';
+import { usePurchases } from '@/hooks/usePurchases';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { t } from '@/i18n';
 
 import UserInsightsSectionList from './UserInsightsSectionList';
 
 export default function GenerateInsights() {
+  const { loading } = usePurchases();
+  useEffect(() => {
+    console.log(loading);
+  }, [loading]);
+
   const navigation = useNavigation();
   const { profile, updateCompanionProfile } = useUserProfile();
   const fadeAnim = useRef(new Animated.Value(0)).current;

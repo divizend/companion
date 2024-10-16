@@ -19,6 +19,9 @@ module.exports = {
         'secondary-dark': Colors.dark.backgroundSecondary,
         'secondary-light': Colors.light.backgroundSecondary,
       },
+      colors: {
+        theme: '#3939ff',
+      },
     },
   },
   plugins: [
