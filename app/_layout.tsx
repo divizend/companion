@@ -18,11 +18,11 @@ export default function Layout() {
     <QueryClientProvider client={queryClient}>
       <SafeAreaProvider>
         <GestureHandlerRootView>
-          <PromptProvider>
-            <RevenueCatProvider>
+          <RevenueCatProvider>
+            <PromptProvider>
               <Slot />
-            </RevenueCatProvider>
-          </PromptProvider>
+            </PromptProvider>
+          </RevenueCatProvider>
         </GestureHandlerRootView>
       </SafeAreaProvider>
     </QueryClientProvider>

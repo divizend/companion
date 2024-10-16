@@ -15,7 +15,8 @@
     "add": "Add",
     "loading": "Loading...",
     "refining": "Refining...",
-    "removing": "Removing..."
+    "removing": "Removing...",
+    "placeholder": "Type here..."
   },
   "comingSoon": {
     "title": "Coming soon",
@@ -255,6 +256,10 @@
         }
       }
     }
+  },
+  "subscription": {
+    "subscribe": "Subscribe",
+    "choosePlan": "Choose a plan"
   },
   "country": {
     "xx": "Demo Country",

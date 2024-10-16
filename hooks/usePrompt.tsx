@@ -173,7 +173,7 @@ const PromptProvider: React.FC<PromptProviderProps> = ({ children }) => {
                   className={clsx('py-10 px-5', Platform.OS === 'ios' && 'mb-12')}
                 >
                   {currentPrompt.type === 'custom' ? (
-                    <Component />
+                    <Component close={closeCurrentPrompt} />
                   ) : (
                     <>
                       {/* Title */}
@@ -190,7 +190,7 @@ const PromptProvider: React.FC<PromptProviderProps> = ({ children }) => {
                       {currentPrompt.type === 'input' && (
                         <TextInput
                           component={BottomSheetTextInput}
-                          placeholder="Type here..."
+                          placeholder={t('common.placeholder')}
                           defaultValue={inputValueRef.current}
                           onChange={e => {
                             inputValueRef.current = e.nativeEvent.text;

@@ -71,8 +71,8 @@ export default function SectionList({
                   )
                 ) : null}
                 <ListItem.Content style={styles.listItemContent}>
-                  <ListItem.Title style={[styles.listItemTitle, item.disabled && styles.disabledTitle]}>
-                    <Text>{item.title}</Text>
+                  <ListItem.Title>
+                    <Text style={[styles.listItemTitle, item.disabled && styles.disabledTitle]}>{item.title}</Text>
                   </ListItem.Title>
                   {item.rightElement && (
                     <Text className="text-muted text-sm text-right shrink ml-3" numberOfLines={1} ellipsizeMode="tail">

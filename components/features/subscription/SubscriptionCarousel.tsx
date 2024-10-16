@@ -6,24 +6,26 @@ import { useSharedValue } from 'react-native-reanimated';
 import Carousel, { ICarouselInstance } from 'react-native-reanimated-carousel';
 
 import { clsx } from '@/common/clsx';
+import SectionList from '@/components/SectionList';
 import { Text } from '@/components/base';
 import { usePurchases } from '@/hooks/usePurchases';
+import { t } from '@/i18n';
 
-type Props = {};
+type Props = { close: () => void };
 
-export default function SubscriptionCarousel({}: Props) {
+export default function SubscriptionCarousel({ close }: Props) {
   const { loading, products } = usePurchases();
   const ref = React.useRef<ICarouselInstance>(null);
   const progress = useSharedValue<number>(0);
   const [selectedItem, setSelectedItem] = useState<PurchasesStoreProduct>();
-  useEffect(() => {
-    // if (products) setSelectedItem(products[0]);
-  }, [products]);
 
   if (loading || !products) return null;
 
   return (
     <View>
+      <Text h1 className="text-center">
+        {t('subscription.choosePlan')}
+      </Text>
       <Carousel
         ref={ref}
         width={Dimensions.get('window').width}
@@ -64,6 +66,19 @@ export default function SubscriptionCarousel({}: Props) {
             </View>
           </Pressable>
         )}
+      />
+      <SectionList
+        items={[
+          {
+            title: t('common.next'),
+            disabled: !selectedItem,
+            onPress: () => {},
+          },
+          {
+            title: t('common.cancel'),
+            onPress: () => close(),
+          },
+        ]}
       />
     </View>
   );

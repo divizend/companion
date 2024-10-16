@@ -10,6 +10,7 @@ import { impersonateUser, useUserProfile } from '@/common/profile';
 import ImpersonateUserModal from '@/components/ImpersonateUserModal';
 import ModalView from '@/components/ModalView';
 import SectionList from '@/components/SectionList';
+import { usePrompt } from '@/hooks/usePrompt';
 import { t } from '@/i18n';
 
 import SubscriptionCarousel from './features/subscription/SubscriptionCarousel';
@@ -21,6 +22,7 @@ interface SettingsViewProps {
 
 export default function SettingsView({ visible, onClose }: SettingsViewProps) {
   const { toggleColorScheme } = useColorScheme();
+  const { showCustom } = usePrompt();
   const { profile, isPrivileged } = useUserProfile();
   const [resettingProfileLoading, setResettingProfileLoading] = useState(false);
   const [impersonateModalVisible, setImpersonateModalVisible] = useState(false);
@@ -70,6 +72,15 @@ export default function SettingsView({ visible, onClose }: SettingsViewProps) {
             onPress: handleResetProfile,
             disabled: resettingProfileLoading,
           },
+          {
+            title: t('subscription.subscribe'),
+            leftIcon: {
+              name: 'star-outline',
+              type: 'material',
+            },
+            onPress: () => showCustom(SubscriptionCarousel),
+            disabled: resettingProfileLoading,
+          },
         ]}
         bottomText={t('settings.accountSection.bottomText')}
         containerStyle={styles.container}
@@ -117,8 +128,6 @@ export default function SettingsView({ visible, onClose }: SettingsViewProps) {
           },
         ]}
       />
-
-      <SubscriptionCarousel />
 
       <ImpersonateUserModal visible={impersonateModalVisible} onClose={() => setImpersonateModalVisible(false)} />
     </ModalView>
