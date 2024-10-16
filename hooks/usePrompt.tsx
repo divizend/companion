@@ -31,12 +31,28 @@ type InputPromptConfig = PromptConfig & {
   cancelText?: string;
 };
 
-type PromptConfigInternal = { id: string; hasInput?: boolean } & (PromptConfig | InputPromptConfig);
+type PromptConfigInternal = {
+  id: string;
+} & (
+  | {
+      type: 'alert';
+      config: PromptConfig;
+    }
+  | {
+      type: 'input';
+      config: InputPromptConfig;
+    }
+  | {
+      type: 'custom';
+      Component: React.ComponentType<any>;
+    }
+);
 
 // Define the context type
 interface PromptContextType {
   showAlert: (config: PromptConfig) => void;
   showPrompt: (config: InputPromptConfig) => Promise<string | null>;
+  showCustom: (config: React.ComponentType<any>) => void;
 }
 
 // Create the context
@@ -65,38 +81,51 @@ const PromptProvider: React.FC<PromptProviderProps> = ({ children }) => {
 
   const showAlert = (prompt: PromptConfig) => {
     // If there's a current prompt, add the new one to the front of the queue
-    const internalPromp = { ...prompt, id: uniqueId() };
-    setPromptQueue(prevQueue => [internalPromp, ...prevQueue]);
-    setCurrentPrompt(internalPromp);
+    const internalPrompt: PromptConfigInternal = { config: prompt, id: uniqueId(), type: 'alert' };
+    setPromptQueue((prev: PromptConfigInternal[]) => [internalPrompt, ...prev]);
+    // setPromptQueue((prevQueue: PromptConfigInternal[]) => [internalPromp, ...prevQueue]);
+    setCurrentPrompt({ ...internalPrompt, type: 'alert' });
   };
 
   const showPrompt = (config: InputPromptConfig): Promise<string | null> => {
     return new Promise<string | null>(resolve => {
       const internalPrompt: PromptConfigInternal = {
-        ...config,
         id: uniqueId(),
-        hasInput: true,
-        actions: [
-          {
-            title: config.submitText || t('common.submit'),
-            onPress: () => {
-              resolve(inputValueRef.current);
-              closeCurrentPrompt();
+        type: 'input',
+        config: {
+          ...config,
+          actions: [
+            {
+              title: config.submitText || t('common.submit'),
+              onPress: () => {
+                resolve(inputValueRef.current);
+                closeCurrentPrompt();
+              },
             },
-          },
-          {
-            title: config.cancelText || t('common.cancel'),
-            onPress: () => {
-              resolve(null);
-              closeCurrentPrompt();
+            {
+              title: config.cancelText || t('common.cancel'),
+              onPress: () => {
+                resolve(null);
+                closeCurrentPrompt();
+              },
             },
-          },
-          ...(config.actions ?? []),
-        ],
+            ...(config.actions ?? []),
+          ],
+        },
       };
       setPromptQueue(prevQueue => [internalPrompt, ...prevQueue]);
       setCurrentPrompt(internalPrompt);
     });
+  };
+
+  const showCustom = (Component: React.ComponentType) => {
+    const internalPrompt: PromptConfigInternal = {
+      id: uniqueId(),
+      type: 'custom',
+      Component,
+    };
+    setPromptQueue(prevQueue => [internalPrompt, ...prevQueue]);
+    setCurrentPrompt(internalPrompt);
   };
 
   const closeCurrentPrompt = () => {
@@ -112,8 +141,10 @@ const PromptProvider: React.FC<PromptProviderProps> = ({ children }) => {
     }
   }, [currentPrompt, promptQueue]);
 
+  const Component = currentPrompt?.type === 'custom' ? currentPrompt.Component : () => <></>;
+
   return (
-    <PromptContext.Provider value={{ showAlert, showPrompt }}>
+    <PromptContext.Provider value={{ showAlert, showPrompt, showCustom }}>
       {children}
       <Modal onTouchCancel={() => {}} transparent visible={!!currentPrompt}>
         <GestureHandlerRootView>
@@ -141,31 +172,37 @@ const PromptProvider: React.FC<PromptProviderProps> = ({ children }) => {
                   behavior="padding"
                   className={clsx('py-10 px-5', Platform.OS === 'ios' && 'mb-12')}
                 >
-                  {/* Title */}
-                  <Text h2 className="text-center mb-5">
-                    {currentPrompt.title}
-                  </Text>
+                  {currentPrompt.type === 'custom' ? (
+                    <Component />
+                  ) : (
+                    <>
+                      {/* Title */}
+                      <Text h2 className="text-center mb-5">
+                        {currentPrompt.config.title}
+                      </Text>
 
-                  {/* Mesasge */}
-                  {currentPrompt.message && (
-                    <Text className="text-sm text-center color-gray-500 mb-5">{currentPrompt.message}</Text>
-                  )}
+                      {/* Mesasge */}
+                      {currentPrompt.config.message && (
+                        <Text className="text-sm text-center color-gray-500 mb-5">{currentPrompt.config.message}</Text>
+                      )}
 
-                  {/* Show text input if it's an input prompt */}
-                  {!!currentPrompt.hasInput && (
-                    <TextInput
-                      component={BottomSheetTextInput}
-                      placeholder="Type here..."
-                      defaultValue={inputValueRef.current}
-                      onChange={e => {
-                        inputValueRef.current = e.nativeEvent.text;
-                      }}
-                      className={clsx('mb-5', (currentPrompt as InputPromptConfig).textInputProps?.className)}
-                      {...(currentPrompt as InputPromptConfig).textInputProps}
-                    />
+                      {/* Show text input if it's an input prompt */}
+                      {currentPrompt.type === 'input' && (
+                        <TextInput
+                          component={BottomSheetTextInput}
+                          placeholder="Type here..."
+                          defaultValue={inputValueRef.current}
+                          onChange={e => {
+                            inputValueRef.current = e.nativeEvent.text;
+                          }}
+                          className={clsx('mb-5', currentPrompt.config.textInputProps?.className)}
+                          {...currentPrompt.config.textInputProps}
+                        />
+                      )}
+                    </>
                   )}
                   <SectionList
-                    items={(currentPrompt.actions || []).map(item => ({
+                    items={(currentPrompt.type !== 'custom' ? currentPrompt.config.actions || [] : []).map(item => ({
                       ...item,
                       onPress: () => {
                         if (item.onPress) item.onPress();
