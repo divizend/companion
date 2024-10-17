@@ -95,6 +95,7 @@ export async function logout(throwOnError?: boolean) {
     `${usedConfig.api.url}/${usedConfig.api.versionCode}/auth/logout/${sessionToken}?` +
       new URLSearchParams({
         postLogoutRedirectUri: 'divizend://authcallback',
+        authServerUrl: usedConfig.auth.url + '/oauth2',
       }).toString(),
   );
 
