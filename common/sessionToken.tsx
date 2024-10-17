@@ -6,7 +6,6 @@ import * as SecureStore from 'expo-secure-store';
 export const SESSION_TOKEN_KEY = 'sessionToken';
 
 export function getSessionToken(): Promise<string | null> {
-  // return Promise.resolve(null);
   return SecureStore.getItemAsync(SESSION_TOKEN_KEY);
 }
 
