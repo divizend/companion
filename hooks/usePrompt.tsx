@@ -83,7 +83,6 @@ const PromptProvider: React.FC<PromptProviderProps> = ({ children }) => {
     // If there's a current prompt, add the new one to the front of the queue
     const internalPrompt: PromptConfigInternal = { config: prompt, id: uniqueId(), type: 'alert' };
     setPromptQueue((prev: PromptConfigInternal[]) => [internalPrompt, ...prev]);
-    // setPromptQueue((prevQueue: PromptConfigInternal[]) => [internalPromp, ...prevQueue]);
     setCurrentPrompt({ ...internalPrompt, type: 'alert' });
   };
 
@@ -131,7 +130,8 @@ const PromptProvider: React.FC<PromptProviderProps> = ({ children }) => {
   const closeCurrentPrompt = () => {
     setPromptQueue(queue => queue.filter(item => item.id !== currentPrompt?.id));
     inputValueRef.current = '';
-    setCurrentPrompt(null);
+    // This will automatically trigger the onClose of the BottomSheet which sets the currentPrompt to null.
+    bottomSheetRef.current?.close();
   };
 
   useEffect(() => {
@@ -151,16 +151,18 @@ const PromptProvider: React.FC<PromptProviderProps> = ({ children }) => {
           {currentPrompt && (
             <BottomSheet
               animateOnMount
-              onClose={closeCurrentPrompt}
+              onClose={() => setCurrentPrompt(null)}
               backdropComponent={backdropProps => (
                 <BottomSheetBackdrop
                   {...backdropProps}
                   disappearsOnIndex={-1}
                   enableTouchThrough={false}
                   pressBehavior="close"
+                  onPress={closeCurrentPrompt}
                 />
               )}
               android_keyboardInputMode="adjustResize"
+              animationConfigs={{ duration: 100 }}
               ref={bottomSheetRef}
               enableDynamicSizing
               backgroundComponent={backgroundProps => (
