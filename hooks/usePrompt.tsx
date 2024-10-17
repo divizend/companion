@@ -1,6 +1,6 @@
 import React, { ReactNode, createContext, useContext, useEffect, useRef, useState } from 'react';
 
-import BottomSheet, { BottomSheetBackdrop, BottomSheetTextInput, BottomSheetView } from '@gorhom/bottom-sheet';
+import BottomSheet, { BottomSheetBackdrop, BottomSheetScrollView, BottomSheetTextInput } from '@gorhom/bottom-sheet';
 import { uniqueId } from 'lodash';
 import { Keyboard, KeyboardAvoidingView, Modal, Platform, TextInputProps, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -170,7 +170,7 @@ const PromptProvider: React.FC<PromptProviderProps> = ({ children }) => {
                 <View {...backgroundProps} className="bg-primary-light dark:bg-primary-dark rounded-3xl" />
               )}
             >
-              <BottomSheetView>
+              <BottomSheetScrollView>
                 <KeyboardAvoidingView
                   behavior="padding"
                   className={clsx('py-10 px-5', Platform.OS === 'ios' && 'mb-12')}
@@ -214,7 +214,7 @@ const PromptProvider: React.FC<PromptProviderProps> = ({ children }) => {
                     }))}
                   />
                 </KeyboardAvoidingView>
-              </BottomSheetView>
+              </BottomSheetScrollView>
             </BottomSheet>
           )}
         </GestureHandlerRootView>
