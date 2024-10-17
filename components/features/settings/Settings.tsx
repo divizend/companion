@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 
+import { useNavigation } from '@react-navigation/native';
 import { useColorScheme } from 'nativewind';
 import { StyleSheet } from 'react-native';
 import RNRestart from 'react-native-restart';
@@ -8,21 +9,12 @@ import { apiDelete, logout } from '@/common/api';
 import { showConfirmationDialog } from '@/common/inputDialog';
 import { impersonateUser, useUserProfile } from '@/common/profile';
 import ImpersonateUserModal from '@/components/ImpersonateUserModal';
-import ModalView from '@/components/ModalView';
 import SectionList from '@/components/SectionList';
-import { usePrompt } from '@/hooks/usePrompt';
 import { t } from '@/i18n';
 
-import SubscriptionCarousel from './features/subscription/SubscriptionCarousel';
-
-interface SettingsViewProps {
-  visible: boolean;
-  onClose: () => void;
-}
-
-export default function SettingsView({ visible, onClose }: SettingsViewProps) {
+export default function SettingsView() {
   const { toggleColorScheme } = useColorScheme();
-  const { showCustom } = usePrompt();
+  const navigation = useNavigation();
   const { profile, isPrivileged } = useUserProfile();
   const [resettingProfileLoading, setResettingProfileLoading] = useState(false);
   const [impersonateModalVisible, setImpersonateModalVisible] = useState(false);
@@ -54,7 +46,7 @@ export default function SettingsView({ visible, onClose }: SettingsViewProps) {
   };
 
   return (
-    <ModalView visible={visible} onClose={onClose} title={t('settings.title')}>
+    <>
       <SectionList
         title={t('settings.accountSection.title')}
         items={[
@@ -73,12 +65,12 @@ export default function SettingsView({ visible, onClose }: SettingsViewProps) {
             disabled: resettingProfileLoading,
           },
           {
-            title: t('subscription.subscribe'),
+            title: t('settings.currentPlan.title'),
             leftIcon: {
               name: 'star-outline',
               type: 'material',
             },
-            onPress: () => showCustom(SubscriptionCarousel),
+            onPress: () => navigation.navigate('Plan' as never),
             disabled: resettingProfileLoading,
           },
         ]}
@@ -130,7 +122,7 @@ export default function SettingsView({ visible, onClose }: SettingsViewProps) {
       />
 
       <ImpersonateUserModal visible={impersonateModalVisible} onClose={() => setImpersonateModalVisible(false)} />
-    </ModalView>
+    </>
   );
 }
 

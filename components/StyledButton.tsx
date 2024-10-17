@@ -1,26 +1,20 @@
-import React from "react";
-import { StyleSheet, ViewStyle, TextStyle } from "react-native";
-import { Button, ButtonProps } from "@rneui/themed";
+import React from 'react';
 
-export interface StyledButtonProps extends ButtonProps {
-  containerStyle?: ViewStyle;
-  titleStyle?: TextStyle;
-}
+import { Button, ButtonProps } from '@rneui/themed';
+import { StyleSheet } from 'react-native';
 
-const StyledButton: React.FC<StyledButtonProps> = ({
-  containerStyle,
-  titleStyle,
-  loading,
-  onPress,
-  ...rest
-}) => {
+import '@/global.css';
+
+export interface StyledButtonProps extends ButtonProps {}
+
+const StyledButton: React.FC<StyledButtonProps> = ({ loading, onPress, ...rest }) => {
   return (
     <Button
-      disabledStyle={styles.disabledButton}
-      disabledTitleStyle={styles.disabledText}
-      buttonStyle={styles.button}
-      containerStyle={[styles.buttonContainer, containerStyle]}
-      titleStyle={[styles.buttonText, titleStyle]}
+      disabledStyle={[styles.disabledButton, rest.disabledStyle]}
+      disabledTitleStyle={[styles.disabledText, rest.disabledTitleStyle]}
+      buttonStyle={[styles.button, rest.buttonStyle]}
+      containerStyle={[styles.buttonContainer, rest.containerStyle]}
+      titleStyle={[styles.buttonText, rest.titleStyle]}
       loading={loading}
       onPress={loading ? undefined : onPress}
       {...rest}
@@ -31,24 +25,24 @@ const StyledButton: React.FC<StyledButtonProps> = ({
 const styles = StyleSheet.create({
   buttonContainer: {
     borderRadius: 100,
-    overflow: "hidden",
+    overflow: 'hidden',
   },
   button: {
-    backgroundColor: "#007AFF",
+    backgroundColor: '#007AFF',
     paddingVertical: 12,
     paddingHorizontal: 20,
   },
   disabledButton: {
-    backgroundColor: "#A0A0A0",
+    backgroundColor: '#A0A0A0',
   },
   buttonText: {
-    color: "#FFFFFF",
+    color: '#FFFFFF',
     fontSize: 16,
-    fontWeight: "bold",
-    textAlign: "center",
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
   disabledText: {
-    color: "#D0D0D0",
+    color: '#D0D0D0',
   },
 });
 

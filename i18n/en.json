@@ -45,7 +45,10 @@
       "title": "Impersonate user",
       "emailPlaceholder": "Enter user email"
     },
-    "theme": "Toggle theme"
+    "theme": "Toggle theme",
+    "currentPlan": {
+      "title": "Your plan"
+    }
   },
   "tabs": {
     "learn": "Visionary",
@@ -258,7 +261,7 @@
     }
   },
   "subscription": {
-    "subscribe": "Subscribe",
+    "getStarted": "Get started",
     "choosePlan": "Choose a plan"
   },
   "country": {

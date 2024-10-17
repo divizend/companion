@@ -1,10 +1,10 @@
 import { useSignalEffect } from '@preact/signals-react';
 import { BottomTabHeaderProps } from '@react-navigation/bottom-tabs';
+import { useNavigation } from '@react-navigation/native';
 import { Avatar } from '@rneui/themed';
 import { BlurView } from 'expo-blur';
-import Constants from 'expo-constants';
 import { useColorScheme } from 'nativewind';
-import { Platform, StyleSheet, TouchableOpacity } from 'react-native';
+import { StyleSheet, TouchableOpacity } from 'react-native';
 import Animated, {
   Easing,
   useAnimatedProps,
@@ -15,7 +15,7 @@ import Animated, {
 
 import { useUserProfile } from '@/common/profile';
 import { useThemeColor } from '@/hooks/useThemeColor';
-import { isHeaderVisible, isSettingsModalVisible } from '@/signals/app.signal';
+import { isHeaderVisible } from '@/signals/app.signal';
 
 import { Text } from '../base';
 
@@ -24,6 +24,7 @@ type BlurredHeaderProps = BottomTabHeaderProps;
 const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
 
 export default function BlurredHeader(props: BlurredHeaderProps) {
+  const navigation = useNavigation();
   const theme = useThemeColor();
   const { profile } = useUserProfile();
   const { colorScheme } = useColorScheme();
@@ -31,7 +32,7 @@ export default function BlurredHeader(props: BlurredHeaderProps) {
   const intensity = useSharedValue(0);
   const color = useSharedValue(theme.style === 'light' ? 'rgba(255, 255, 255, 1)' : 'rgba(0, 0, 0, 1)');
 
-  const shouldBlur = Platform.OS === 'ios' || Constants.appOwnership === 'expo';
+  const shouldBlur = true;
 
   const config = {
     duration: 300,
@@ -72,7 +73,7 @@ export default function BlurredHeader(props: BlurredHeaderProps) {
       </Text>
       <TouchableOpacity
         style={{ position: 'absolute', right: 15, bottom: 10 }}
-        onPress={() => (isSettingsModalVisible.value = true)}
+        onPress={() => navigation.navigate('SettingsModal' as never)}
       >
         <Avatar rounded title={profile.email[0].toUpperCase()} containerStyle={{ backgroundColor: theme.theme }} />
       </TouchableOpacity>

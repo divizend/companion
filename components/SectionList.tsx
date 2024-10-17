@@ -46,7 +46,7 @@ export default function SectionList({
       {title && (
         <Text className="text-xs mb-1.5 mx-5 uppercase text-gray-600 dark:text-gray-300">{title.toUpperCase()}</Text>
       )}
-      <View className="rounded-xl overflow-hidden ">
+      <View className="rounded-xl overflow-hidden">
         {items.map((item, index) => (
           <ItemComponent key={item.key ?? index} style={item.containerStyle}>
             <TouchableOpacity onPress={item.onPress} disabled={item.disabled || !item.onPress}>

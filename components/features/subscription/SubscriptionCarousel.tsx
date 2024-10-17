@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 import { Dimensions, Pressable, View } from 'react-native';
 import { PurchasesStoreProduct } from 'react-native-purchases';
@@ -6,14 +6,16 @@ import { useSharedValue } from 'react-native-reanimated';
 import Carousel, { ICarouselInstance } from 'react-native-reanimated-carousel';
 
 import { clsx } from '@/common/clsx';
-import SectionList from '@/components/SectionList';
+import StyledButton from '@/components/StyledButton';
 import { Text } from '@/components/base';
 import { usePurchases } from '@/hooks/usePurchases';
+import { useThemeColor } from '@/hooks/useThemeColor';
 import { t } from '@/i18n';
 
 type Props = { close: () => void };
 
 export default function SubscriptionCarousel({ close }: Props) {
+  const theme = useThemeColor();
   const { loading, products } = usePurchases();
   const ref = React.useRef<ICarouselInstance>(null);
   const progress = useSharedValue<number>(0);
@@ -67,18 +69,23 @@ export default function SubscriptionCarousel({ close }: Props) {
           </Pressable>
         )}
       />
-      <SectionList
-        items={[
-          {
-            title: t('common.next'),
-            disabled: !selectedItem,
-            onPress: () => {},
-          },
-          {
-            title: t('common.cancel'),
-            onPress: () => close(),
-          },
-        ]}
+
+      <StyledButton
+        disabled={!selectedItem}
+        title={
+          <Text
+            style={{
+              textAlign: 'center',
+              color: theme.allColors.dark.text,
+              fontSize: 16,
+              fontWeight: 'bold',
+            }}
+          >
+            {t('subscription.getStarted')}
+          </Text>
+        }
+        containerStyle={{ borderRadius: 12, width: '85%', alignSelf: 'center' }}
+        buttonStyle={{ backgroundColor: theme.theme }}
       />
     </View>
   );
