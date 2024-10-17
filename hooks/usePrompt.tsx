@@ -2,7 +2,7 @@ import React, { ReactNode, createContext, useContext, useEffect, useRef, useStat
 
 import BottomSheet, { BottomSheetBackdrop, BottomSheetTextInput, BottomSheetView } from '@gorhom/bottom-sheet';
 import { uniqueId } from 'lodash';
-import { KeyboardAvoidingView, Modal, Platform, TextInputProps, View } from 'react-native';
+import { Keyboard, KeyboardAvoidingView, Modal, Platform, TextInputProps, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { clsx } from '@/common/clsx';
@@ -131,7 +131,8 @@ const PromptProvider: React.FC<PromptProviderProps> = ({ children }) => {
     setPromptQueue(queue => queue.filter(item => item.id !== currentPrompt?.id));
     inputValueRef.current = '';
     // This will automatically trigger the onClose of the BottomSheet which sets the currentPrompt to null.
-    bottomSheetRef.current?.close();
+    setTimeout(() => bottomSheetRef.current?.close());
+    Keyboard.dismiss();
   };
 
   useEffect(() => {
