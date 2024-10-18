@@ -18,7 +18,7 @@ export default function ModalView({ visible, onClose, title, noScrollView, child
   const theme = useThemeColor();
   return (
     <Modal visible={visible} animationType="slide" presentationStyle="pageSheet" onRequestClose={onClose}>
-      <View className="flex-1 dark:bg-primary-dark bg-primary-light py-10">
+      <View className="flex-1 dark:bg-primary-dark bg-primary-light">
         <Header
           backgroundColor={theme.backgroundPrimary}
           centerComponent={

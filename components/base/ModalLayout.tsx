@@ -17,7 +17,7 @@ export default function ModalLayout({ title, children, canGoBack = true }: Modal
   const navigation = useNavigation();
   const theme = useThemeColor();
   return (
-    <View className="flex-1 dark:bg-primary-dark bg-primary-light py-10">
+    <View className="flex-1 dark:bg-primary-dark bg-primary-light">
       <Header
         backgroundColor={theme.backgroundPrimary}
         centerComponent={
