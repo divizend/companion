@@ -10,6 +10,8 @@ import SectionList, { SectionListProps } from '@/components/SectionList';
 import { Text, TextInput } from '@/components/base';
 import { t } from '@/i18n';
 
+import { useThemeColor } from './useThemeColor';
+
 // Define the types for the prompt configuration
 type PromptConfig = {
   title: string;
@@ -75,6 +77,7 @@ interface PromptProviderProps {
 const PromptProvider: React.FC<PromptProviderProps> = ({ children }) => {
   const [promptQueue, setPromptQueue] = useState<PromptConfigInternal[]>([]);
   const [currentPrompt, setCurrentPrompt] = useState<PromptConfigInternal | null>(null);
+  const theme = useThemeColor();
 
   const inputValueRef = useRef('');
   const bottomSheetRef = useRef<BottomSheet>(null);
@@ -151,14 +154,16 @@ const PromptProvider: React.FC<PromptProviderProps> = ({ children }) => {
         <GestureHandlerRootView>
           {currentPrompt && (
             <BottomSheet
+              handleIndicatorStyle={{ backgroundColor: theme.text }}
               animateOnMount
+              keyboardBlurBehavior="restore"
               onClose={() => setCurrentPrompt(null)}
               backdropComponent={backdropProps => (
                 <BottomSheetBackdrop
                   {...backdropProps}
                   disappearsOnIndex={-1}
                   enableTouchThrough={false}
-                  pressBehavior="close"
+                  pressBehavior="collapse"
                   onPress={closeCurrentPrompt}
                 />
               )}
@@ -170,7 +175,7 @@ const PromptProvider: React.FC<PromptProviderProps> = ({ children }) => {
                 <View {...backgroundProps} className="bg-primary-light dark:bg-primary-dark rounded-3xl" />
               )}
             >
-              <BottomSheetScrollView>
+              <BottomSheetScrollView keyboardShouldPersistTaps="handled">
                 <KeyboardAvoidingView
                   behavior="padding"
                   className={clsx('py-10 px-5', Platform.OS === 'ios' && 'mb-12')}
