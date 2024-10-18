@@ -86,7 +86,6 @@ const PromptProvider: React.FC<PromptProviderProps> = ({ children }) => {
     // If there's a current prompt, add the new one to the front of the queue
     const internalPrompt: PromptConfigInternal = { config: prompt, id: uniqueId(), type: 'alert' };
     setPromptQueue((prev: PromptConfigInternal[]) => [internalPrompt, ...prev]);
-    setCurrentPrompt({ ...internalPrompt, type: 'alert' });
   };
 
   const showPrompt = (config: InputPromptConfig): Promise<string | null> => {
@@ -116,7 +115,6 @@ const PromptProvider: React.FC<PromptProviderProps> = ({ children }) => {
         },
       };
       setPromptQueue(prevQueue => [internalPrompt, ...prevQueue]);
-      setCurrentPrompt(internalPrompt);
     });
   };
 
@@ -127,7 +125,6 @@ const PromptProvider: React.FC<PromptProviderProps> = ({ children }) => {
       Component,
     };
     setPromptQueue(prevQueue => [internalPrompt, ...prevQueue]);
-    setCurrentPrompt(internalPrompt);
   };
 
   const closeCurrentPrompt = () => {
