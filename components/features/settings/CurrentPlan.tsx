@@ -5,6 +5,7 @@ import { View } from 'react-native';
 
 import SectionList from '@/components/SectionList';
 import { ScrollView, Text } from '@/components/base';
+import '@/global.css';
 import { usePrompt } from '@/hooks/usePrompt';
 import { useThemeColor } from '@/hooks/useThemeColor';
 
@@ -15,6 +16,11 @@ export default function CurrentPlan() {
   const { showCustom } = usePrompt();
   return (
     <ScrollView>
+      {/* Crown subscription showoff */}
+      <View>
+        <Icon name="crown-outline" type="material-community"></Icon>
+      </View>
+
       {/* Free tiral notice */}
       <View className="flex items-center bg-secondary-light dark:bg-secondary-dark px-2 py-5 rounded-xl gap-3 mb-8">
         <View className="bg-primary-light dark:bg-primary-dark rounded-3xl p-2">
@@ -51,7 +57,7 @@ export default function CurrentPlan() {
         </View>
       </View>
 
-      <SectionList
+      {/* <SectionList
         title="actions"
         items={[
           {
@@ -62,7 +68,7 @@ export default function CurrentPlan() {
             onPress: () => showCustom(SubscriptionCarousel),
           },
         ]}
-      />
+      /> */}
     </ScrollView>
   );
 }
