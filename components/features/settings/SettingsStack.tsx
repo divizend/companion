@@ -20,7 +20,7 @@ function SettingsViewScreen() {
 
 function CurrentPlanScreen() {
   return (
-    <ModalLayout title={t('settings.currentPlan.title')}>
+    <ModalLayout noScrollView title={t('settings.currentPlan.title')}>
       <CurrentPlan />
     </ModalLayout>
   );

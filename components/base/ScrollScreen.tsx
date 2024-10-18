@@ -29,6 +29,7 @@ export const ScrollScreen = forwardRef<NativeScrollView, Props>(
         ref={ref}
         style={[
           {
+            flex: 1,
             marginTop: 40,
             overflow: 'visible',
           },

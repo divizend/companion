@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 
-import { Dimensions, Pressable, View } from 'react-native';
+import { BackgroundImage } from '@rneui/base';
+import { Dimensions, Image, ImageBackground, Pressable, View } from 'react-native';
 import { PurchasesStoreProduct } from 'react-native-purchases';
 import { useSharedValue } from 'react-native-reanimated';
 import Carousel, { ICarouselInstance } from 'react-native-reanimated-carousel';
@@ -40,32 +41,39 @@ export default function SubscriptionCarousel({ close }: Props) {
         onProgressChange={progress}
         renderItem={({ item }) => (
           <Pressable className="flex-1" onPress={() => setSelectedItem(item)}>
-            <View
-              key={item.identifier}
-              className={clsx(
-                'flex-1 flex flex-row bg-secondary-light dark:bg-transparent border border-gray-200 justify-between p-6 m-2 rounded-xl shadow-sm',
-                item.identifier === selectedItem?.identifier &&
-                  'border-theme border-2 bg-[#3939ff1a] dark:bg-[#3939ff1a] shadow-none',
-              )}
+            <ImageBackground
+              alt="background-bubbles"
+              className="flex-1 m-2 rounded-xl "
+              imageStyle={{ opacity: 0.3 }}
+              source={require('@/assets/images/card-background.png')}
             >
-              <View className="flex justify-between">
-                <Text h2 className="font-bold mb-2">
-                  {item.title}
-                </Text>
-                <Text type="muted" className="mb-2 max-w-[80%]">
-                  {item.description}
-                </Text>
-                <Text type="muted" className="mb-2 max-w-[80%]">
-                  Cancel anytime
-                </Text>
+              <View
+                key={item.identifier}
+                className={clsx(
+                  'flex-1 flex flex-row  dark:bg-transparent border border-gray-200 rounded-xl justify-between p-6  ',
+                  item.identifier === selectedItem?.identifier &&
+                    'border-theme border-2 bg-[#3939ff1a] dark:bg-[#3939ff1a] shadow-none',
+                )}
+              >
+                <View className="flex justify-between">
+                  <Text h2 className="font-bold mb-2">
+                    {item.title}
+                  </Text>
+                  <Text type="muted" className="mb-2 max-w-[80%]">
+                    {item.description}
+                  </Text>
+                  <Text type="muted" className="mb-2 max-w-[80%]">
+                    Cancel anytime
+                  </Text>
+                </View>
+                <View>
+                  <Text className="text-end" h3>
+                    {item.pricePerMonthString}
+                  </Text>
+                  <Text className="text-end">{item.subscriptionPeriod}</Text>
+                </View>
               </View>
-              <View>
-                <Text className="text-end" h3>
-                  {item.pricePerMonthString}
-                </Text>
-                <Text className="text-end">{item.subscriptionPeriod}</Text>
-              </View>
-            </View>
+            </ImageBackground>
           </Pressable>
         )}
       />

@@ -11,9 +11,10 @@ interface ModalLayoutProps {
   title: string;
   children: React.ReactNode;
   canGoBack?: boolean;
+  noScrollView?: boolean;
 }
 
-export default function ModalLayout({ title, children, canGoBack = true }: ModalLayoutProps) {
+export default function ModalLayout({ title, children, canGoBack = true, noScrollView }: ModalLayoutProps) {
   const navigation = useNavigation();
   const theme = useThemeColor();
   return (
@@ -43,9 +44,13 @@ export default function ModalLayout({ title, children, canGoBack = true }: Modal
         }
         containerStyle={{ borderBottomWidth: 0 }}
       />
-      <ScrollView>
-        <View className="p-5">{children}</View>
-      </ScrollView>
+      {noScrollView ? (
+        <View className="flex-1 p-5">{children}</View>
+      ) : (
+        <ScrollView>
+          <View className="p-5">{children}</View>
+        </ScrollView>
+      )}
     </View>
   );
 }

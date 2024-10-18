@@ -85,7 +85,7 @@ export default function Index() {
 
   return (
     <View style={styles.container}>
-      <Image source={require('../assets/images/logo.png')} style={styles.logo} resizeMode="contain" />
+      {/* <Image source={require('../assets/images/logo.png')} style={styles.logo} resizeMode="contain" /> */}
       <StyledButton
         title={t('common.login')}
         disabled={!request}
