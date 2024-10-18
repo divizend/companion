@@ -4,7 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 
 import { apiPost } from '@/common/api';
-import { ScrollView, Text } from '@/components/base';
+import { ScrollScreen, Text } from '@/components/base';
 import { SafeAreaView } from '@/components/base/SafeAreaView';
 import { t } from '@/i18n';
 
@@ -26,7 +26,7 @@ export default function GenerateGoals() {
 
   return (
     <SafeAreaView>
-      <ScrollView>
+      <ScrollScreen>
         <Text className="text-3xl font-bold mb-5 mx-1.5">{t('learn.goals.title')}</Text>
         <TouchableOpacity onPress={() => navigation.navigate('Insights' as never)}>
           <Text className="text-gray-500 mx-1.5 mb-2.5">{t('learn.goals.backLink')}</Text>
@@ -42,7 +42,7 @@ export default function GenerateGoals() {
           parentGoalId={null}
           allowRedetermine
         />
-      </ScrollView>
+      </ScrollScreen>
     </SafeAreaView>
   );
 }

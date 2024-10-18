@@ -8,7 +8,7 @@ import { apiPost } from '@/common/api';
 import { CompanionProfileLearnQuestion, useUserProfile } from '@/common/profile';
 import SectionList from '@/components/SectionList';
 import StyledButton from '@/components/StyledButton';
-import { SafeAreaView, ScrollView, Text } from '@/components/base';
+import { SafeAreaView, ScrollScreen, Text } from '@/components/base';
 import { usePrompt } from '@/hooks/usePrompt';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { t } from '@/i18n';
@@ -88,7 +88,7 @@ export default function GenerateInsights() {
         backgroundColor: theme.backgroundPrimary,
       }}
     >
-      <ScrollView>
+      <ScrollScreen>
         <Text className="text-3xl font-bold mb-5 mx-1.5">{t('learn.insights.title')}</Text>
         <View className="mb-9 mx-1">
           <Text className="text-[16px] mb-2.5">{t('learn.vision')}</Text>
@@ -142,7 +142,7 @@ export default function GenerateInsights() {
             />
           </>
         )}
-      </ScrollView>
+      </ScrollScreen>
     </SafeAreaView>
   );
 }

@@ -7,9 +7,9 @@ import { isHeaderVisible } from '@/signals/app.signal';
 
 type Props = ScrollViewProps;
 
-export type ScrollViewRef = NativeScrollView;
+export type ScrollScreenRef = NativeScrollView;
 
-export const ScrollView = forwardRef<NativeScrollView, Props>(
+export const ScrollScreen = forwardRef<NativeScrollView, Props>(
   ({ children, style, contentContainerStyle, ...props }, ref) => {
     const scrollY = useRef<number>();
     const isFocused = useRef<boolean>(true);

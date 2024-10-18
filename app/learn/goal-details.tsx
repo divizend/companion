@@ -8,7 +8,7 @@ import { showConfirmationDialog } from '@/common/inputDialog';
 import { useGoal, useUserProfile } from '@/common/profile';
 import ChatModal from '@/components/ChatModal';
 import SectionList from '@/components/SectionList';
-import { ScrollView, ScrollViewRef, Text } from '@/components/base';
+import { ScrollScreen, ScrollScreenRef, Text } from '@/components/base';
 import { SafeAreaView } from '@/components/base/SafeAreaView';
 import { usePrompt } from '@/hooks/usePrompt';
 import { t } from '@/i18n';
@@ -32,7 +32,7 @@ export default function GoalDetails() {
   const [chatModalOpenLearningIntentionId, setChatModalOpenLearningIntentionId] = useState<string | null>(null);
   const [isModifyingEmoji, setIsModifyingEmoji] = useState(false);
 
-  const scrollViewRef = useRef<ScrollViewRef>(null);
+  const scrollViewRef = useRef<ScrollScreenRef>(null);
 
   const handleRemoveReality = async (realityId: string) => {
     const realityToRemove = goal.realities.find(r => r.id === realityId);
@@ -158,7 +158,7 @@ export default function GoalDetails() {
 
   return (
     <SafeAreaView>
-      <ScrollView ref={scrollViewRef}>
+      <ScrollScreen ref={scrollViewRef}>
         <TouchableOpacity onPress={handleModifyEmoji} activeOpacity={1}>
           {goal.emoji || isModifyingEmoji ? (
             <Text style={styles.emojiIcon}>{isModifyingEmoji ? '⏳' : goal.emoji}</Text>
@@ -249,7 +249,7 @@ export default function GoalDetails() {
         <GoalsSectionList parentGoalId={goalId} allowRedetermine />
 
         <AssessRealitiesModal visible={showAssessModal} onClose={() => setShowAssessModal(false)} goalId={goalId} />
-      </ScrollView>
+      </ScrollScreen>
     </SafeAreaView>
   );
 }

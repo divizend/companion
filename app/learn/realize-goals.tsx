@@ -2,7 +2,7 @@ import React from 'react';
 
 import { StyleSheet } from 'react-native';
 
-import { ScrollView, Text } from '@/components/base';
+import { ScrollScreen, Text } from '@/components/base';
 import { SafeAreaView } from '@/components/base/SafeAreaView';
 import { t } from '@/i18n';
 
@@ -12,14 +12,14 @@ import UserInsightsSectionList from './UserInsightsSectionList';
 export default function RealizeGoals() {
   return (
     <SafeAreaView>
-      <ScrollView>
+      <ScrollScreen>
         <Text h1 style={styles.title}>
           {t('learn.realizeGoals.title')}
         </Text>
         <Text style={styles.explanationText}>{t('learn.realizeGoals.explanation')}</Text>
         <GoalsSectionList parentGoalId={null} />
         <UserInsightsSectionList />
-      </ScrollView>
+      </ScrollScreen>
     </SafeAreaView>
   );
 }

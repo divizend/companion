@@ -4,7 +4,7 @@ import { Icon } from '@rneui/base';
 import { View } from 'react-native';
 
 import SectionList from '@/components/SectionList';
-import { ScrollView, Text } from '@/components/base';
+import { ScrollScreen, Text } from '@/components/base';
 import '@/global.css';
 import { usePrompt } from '@/hooks/usePrompt';
 import { useThemeColor } from '@/hooks/useThemeColor';
@@ -15,7 +15,7 @@ export default function CurrentPlan() {
   const theme = useThemeColor();
   const { showCustom } = usePrompt();
   return (
-    <ScrollView>
+    <ScrollScreen>
       {/* Crown subscription showoff */}
       <View>
         <Icon name="crown-outline" type="material-community"></Icon>
@@ -69,6 +69,6 @@ export default function CurrentPlan() {
           },
         ]}
       /> */}
-    </ScrollView>
+    </ScrollScreen>
   );
 }
