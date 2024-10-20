@@ -43,16 +43,16 @@ export default function SubscriptionCarousel({ close }: Props) {
           <Pressable className="flex-1" onPress={() => setSelectedItem(item)}>
             <ImageBackground
               alt="background-bubbles"
-              className="flex-1 m-2 rounded-xl "
+              className="flex-1 m-2 rounded-xl"
               imageStyle={{ opacity: 0.3 }}
               source={require('@/assets/images/card-background.png')}
             >
               <View
                 key={item.identifier}
                 className={clsx(
-                  'flex-1 flex flex-row  dark:bg-transparent border border-gray-200 rounded-xl justify-between p-6  ',
+                  'flex-1 flex flex-row dark:bg-transparent border border-gray-200 rounded-xl justify-between p-6',
                   item.identifier === selectedItem?.identifier &&
-                    'border-theme border-2 bg-[#3939ff1a] dark:bg-[#3939ff1a] shadow-none',
+                    'border-theme border-2 bg-[#3939ff1a] dark:bg-[#3939ff1a]',
                 )}
               >
                 <View className="flex justify-between">
