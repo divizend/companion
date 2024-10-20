@@ -13,6 +13,8 @@ import { withUserProfile } from '@/common/withUserProfile';
 import OnboardingModal from '@/components/OnboardingModal';
 import SettingsStackNavigator from '@/components/features/settings/SettingsStack';
 import BlurredHeader from '@/components/global/BlurredHeader';
+import PromptProvider from '@/hooks/usePrompt';
+import { RevenueCatProvider } from '@/hooks/usePurchases';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { t } from '@/i18n';
 
@@ -108,14 +110,20 @@ function Main() {
   }
 
   return (
-    <>
-      <OnboardingModal visible={!profile?.flags?.allowedCompanionAI} />
-      <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
-      <RootStack.Navigator screenOptions={{ headerShown: false }}>
-        <RootStack.Screen name="App" component={AppTabNavigator} />
-        <RootStack.Screen name="SettingsModal" component={SettingsStackNavigator} options={{ presentation: 'modal' }} />
-      </RootStack.Navigator>
-    </>
+    <RevenueCatProvider>
+      <PromptProvider>
+        <OnboardingModal visible={!profile?.flags?.allowedCompanionAI} />
+        <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
+        <RootStack.Navigator screenOptions={{ headerShown: false }}>
+          <RootStack.Screen name="App" component={AppTabNavigator} />
+          <RootStack.Screen
+            name="SettingsModal"
+            component={SettingsStackNavigator}
+            options={{ presentation: 'modal' }}
+          />
+        </RootStack.Navigator>
+      </PromptProvider>
+    </RevenueCatProvider>
   );
 }
 

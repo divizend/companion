@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 
 import Purchases, { LOG_LEVEL, PurchasesConfiguration, PurchasesStoreProduct } from 'react-native-purchases';
 
+import { useUserProfile } from '@/common/profile';
 import { productsMock } from '@/common/revenuecat-mock';
 
 interface RevenueCatContextType {
@@ -26,27 +27,32 @@ interface RevenueCatProviderProps {
 export const RevenueCatProvider: React.FC<RevenueCatProviderProps> = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [products, setProducts] = useState<PurchasesStoreProduct[] | undefined>();
+  const { profile } = useUserProfile();
 
   useEffect(() => {
     const configureRevenueCat = async () => {
       try {
         Purchases.setLogLevel(LOG_LEVEL.DEBUG);
         const configuration: PurchasesConfiguration = {
+          // TODO: Also configure for iOS. Currently only configured with Android and the Play Store.
           apiKey: 'goog_cfpJuVihNJVjRmkmxMlRhqoQyQr',
-          // Add other configuration options as needed
+          // This ensures that the subscriptions are tied to the user's ID, otherwise the user loses their subscripton when they delete the app.
+          appUserID: profile.id,
         };
 
-        setProducts(productsMock);
-        // await Purchases.configure(configuration);
+        // setProducts(productsMock);
+        await Purchases.configure(configuration);
         setLoading(false);
-        // await Purchases.getOfferings().then(console.log);
+        await Purchases.getOfferings().then(res => {
+          setProducts(res.current?.availablePackages.map(availablePackage => availablePackage.product));
+        });
       } catch (error) {
         console.error('Failed to configure RevenueCat:', JSON.stringify(error));
       }
     };
 
-    configureRevenueCat();
-  }, []);
+    if (profile) configureRevenueCat();
+  }, [profile.id]);
 
   return <RevenueCatContext.Provider value={{ loading, products }}>{children}</RevenueCatContext.Provider>;
 };

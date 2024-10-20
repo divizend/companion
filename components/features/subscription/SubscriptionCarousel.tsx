@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 
-import { BackgroundImage } from '@rneui/base';
-import { Dimensions, Image, ImageBackground, Pressable, View } from 'react-native';
-import { PurchasesStoreProduct } from 'react-native-purchases';
+import { Dimensions, ImageBackground, Pressable, View } from 'react-native';
+import Purchases, { PurchasesStoreProduct } from 'react-native-purchases';
 import { useSharedValue } from 'react-native-reanimated';
 import Carousel, { ICarouselInstance } from 'react-native-reanimated-carousel';
 
@@ -68,7 +67,7 @@ export default function SubscriptionCarousel({ close }: Props) {
                 </View>
                 <View>
                   <Text className="text-end" h3>
-                    {item.pricePerMonthString}
+                    {item.priceString}
                   </Text>
                   <Text className="text-end">{item.subscriptionPeriod}</Text>
                 </View>
@@ -80,6 +79,7 @@ export default function SubscriptionCarousel({ close }: Props) {
 
       <StyledButton
         disabled={!selectedItem}
+        onPress={() => selectedItem && Purchases.purchaseStoreProduct(selectedItem, null)}
         title={
           <Text
             style={{

@@ -1,8 +1,8 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { produce } from 'immer';
 import RNRestart from 'react-native-restart';
-import { useFetch, apiGet, apiPost } from './api';
-import { t } from '@/i18n';
+
+import { apiGet, useFetch } from './api';
 import { setSessionToken } from './sessionToken';
 
 export type CompanionProfileLearnQuestion = {
@@ -59,6 +59,7 @@ export type LegalEntity = {
 };
 
 export type UserProfile = {
+  id: string;
   email: string;
   legalEntities: LegalEntity[];
   flags: {
@@ -88,8 +89,8 @@ export function getEmptyCompanionProfile(): CompanionProfile {
 
 export function useUserProfile() {
   const queryClient = useQueryClient();
-  const profileRaw = useFetch('userProfile');
-  const profile = profileRaw.data as UserProfile;
+  const profileRaw = useFetch<UserProfile>('userProfile');
+  const profile = profileRaw.data!;
 
   const updateProfile = (fn: (draft: UserProfile) => void) => {
     const newProfile = produce(profile, fn);
