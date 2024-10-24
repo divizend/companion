@@ -6,6 +6,8 @@ import 'react-native-gesture-handler';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
+import { SnackbarProvider } from '@/components/global/Snackbar';
+
 import '../global.css';
 
 export const queryClient = new QueryClient();
@@ -15,7 +17,9 @@ export default function Layout() {
     <QueryClientProvider client={queryClient}>
       <SafeAreaProvider>
         <GestureHandlerRootView>
-          <Slot />
+          <SnackbarProvider>
+            <Slot />
+          </SnackbarProvider>
         </GestureHandlerRootView>
       </SafeAreaProvider>
     </QueryClientProvider>
