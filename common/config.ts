@@ -1,4 +1,4 @@
-import Constants from "expo-constants";
+import Constants from 'expo-constants';
 
 export type Config = {
   auth: {
@@ -9,6 +9,10 @@ export type Config = {
   api: {
     url: string;
     versionCode: string;
+  };
+  revenueCat: {
+    playStore: string;
+    appStore: string;
   };
 };
 
