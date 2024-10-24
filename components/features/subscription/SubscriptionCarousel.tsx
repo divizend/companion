@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { Dimensions, ImageBackground, Pressable, View } from 'react-native';
+import { ActivityIndicator, Dimensions, ImageBackground, Pressable, View } from 'react-native';
 import Purchases, { PurchasesStoreProduct } from 'react-native-purchases';
 import { useSharedValue } from 'react-native-reanimated';
 import Carousel, { ICarouselInstance } from 'react-native-reanimated-carousel';
@@ -8,6 +8,7 @@ import Carousel, { ICarouselInstance } from 'react-native-reanimated-carousel';
 import { clsx } from '@/common/clsx';
 import StyledButton from '@/components/StyledButton';
 import { Text } from '@/components/base';
+import { useSnackbar } from '@/components/global/Snackbar';
 import { usePurchases } from '@/hooks/usePurchases';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { t } from '@/i18n';
@@ -15,13 +16,31 @@ import { t } from '@/i18n';
 type Props = { close: () => void };
 
 export default function SubscriptionCarousel({ close }: Props) {
+  const { showSnackbar } = useSnackbar();
   const theme = useThemeColor();
-  const { loading, products } = usePurchases();
+  const { loading, products, setCustomerInfo } = usePurchases();
   const ref = React.useRef<ICarouselInstance>(null);
   const progress = useSharedValue<number>(0);
   const [selectedItem, setSelectedItem] = useState<PurchasesStoreProduct>();
+  const [isSubscribing, setIsSubscribing] = useState(false);
 
-  if (loading || !products) return null;
+  const handleSubscribe = async (product: PurchasesStoreProduct) => {
+    setIsSubscribing(true);
+    await Purchases.purchaseStoreProduct(product)
+      .then(makePurchaseResult => setCustomerInfo(makePurchaseResult.customerInfo))
+      .catch(err => showSnackbar('Purchase was cancelled', { type: 'error' }))
+      .finally(() => {
+        setIsSubscribing(false);
+        close();
+      });
+  };
+
+  if (loading || !products)
+    return (
+      <View className="flex-1">
+        <ActivityIndicator />
+      </View>
+    );
 
   return (
     <View>
@@ -79,7 +98,8 @@ export default function SubscriptionCarousel({ close }: Props) {
 
       <StyledButton
         disabled={!selectedItem}
-        onPress={() => selectedItem && Purchases.purchaseStoreProduct(selectedItem, null)}
+        loading={isSubscribing}
+        onPress={() => selectedItem && handleSubscribe(selectedItem)}
         title={
           <Text
             style={{

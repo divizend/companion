@@ -1,13 +1,17 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 
-import Purchases, { LOG_LEVEL, PurchasesConfiguration, PurchasesStoreProduct } from 'react-native-purchases';
+import { Platform } from 'react-native';
+import Purchases, { CustomerInfo, PurchasesConfiguration, PurchasesStoreProduct } from 'react-native-purchases';
 
+import { usedConfig } from '@/common/config';
 import { useUserProfile } from '@/common/profile';
-import { productsMock } from '@/common/revenuecat-mock';
+import { useSnackbar } from '@/components/global/Snackbar';
 
 interface RevenueCatContextType {
   loading: boolean;
   products?: PurchasesStoreProduct[];
+  customerInfo?: CustomerInfo;
+  setCustomerInfo: React.Dispatch<React.SetStateAction<CustomerInfo | undefined>>;
 }
 
 const RevenueCatContext = createContext<RevenueCatContextType | undefined>(undefined);
@@ -25,28 +29,40 @@ interface RevenueCatProviderProps {
 }
 
 export const RevenueCatProvider: React.FC<RevenueCatProviderProps> = ({ children }) => {
+  const { showSnackbar } = useSnackbar();
   const [loading, setLoading] = useState(true);
   const [products, setProducts] = useState<PurchasesStoreProduct[] | undefined>();
+  const [customerInfo, setCustomerInfo] = useState<CustomerInfo | undefined>(undefined);
   const { profile } = useUserProfile();
 
   useEffect(() => {
     const configureRevenueCat = async () => {
       try {
-        Purchases.setLogLevel(LOG_LEVEL.DEBUG);
+        await Purchases.setLogLevel(Purchases.LOG_LEVEL.DEBUG);
         const configuration: PurchasesConfiguration = {
-          // TODO: Also configure for iOS. Currently only configured with Android and the Play Store.
-          apiKey: 'goog_cfpJuVihNJVjRmkmxMlRhqoQyQr',
-          // This ensures that the subscriptions are tied to the user's ID, otherwise the user loses their subscripton when they delete the app.
-          appUserID: profile.id,
+          apiKey: Platform.OS === 'ios' ? usedConfig.revenueCat.appStore : usedConfig.revenueCat.playStore,
         };
 
-        // setProducts(productsMock);
-        await Purchases.configure(configuration);
+        try {
+          // Only configure the SDK when it's already configured. Calling configure multiple times is not recommended.
+          // Read more here https://community.revenuecat.com/sdks-51/is-it-safe-to-call-purchases-configure-multiple-times-3608?postid=11617#post11617
+          if (!(await Purchases.isConfigured())) Purchases.configure(configuration);
+        } catch (error) {
+          console.log(error);
+        }
+        await Promise.all([
+          Purchases.getOfferings().then(res =>
+            setProducts(res.current?.availablePackages.map(availablePackage => availablePackage.product)),
+          ),
+          // This ensures that the customer is identified by their Divizend user ID.
+          // Customers can benefit from their subscriptions on multiple platforms as long as they use the same Divizend account containing the subscription.
+          Purchases.logIn(profile.id).then(loginResult => setCustomerInfo(loginResult.customerInfo)),
+        ]);
         setLoading(false);
-        await Purchases.getOfferings().then(res => {
-          setProducts(res.current?.availablePackages.map(availablePackage => availablePackage.product));
-        });
+
+        Purchases.addCustomerInfoUpdateListener(info => setCustomerInfo(info));
       } catch (error) {
+        showSnackbar('Failed to configure RevenueCat: ' + JSON.stringify(error));
         console.error('Failed to configure RevenueCat:', JSON.stringify(error));
       }
     };
@@ -54,5 +70,9 @@ export const RevenueCatProvider: React.FC<RevenueCatProviderProps> = ({ children
     if (profile) configureRevenueCat();
   }, [profile.id]);
 
-  return <RevenueCatContext.Provider value={{ loading, products }}>{children}</RevenueCatContext.Provider>;
+  return (
+    <RevenueCatContext.Provider value={{ loading, products, customerInfo, setCustomerInfo }}>
+      {children}
+    </RevenueCatContext.Provider>
+  );
 };

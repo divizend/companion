@@ -21,6 +21,7 @@ module.exports = {
       },
       colors: {
         theme: '#3939ff',
+        muted: '#6c757d',
       },
     },
   },
