@@ -10,10 +10,11 @@ import { showConfirmationDialog } from '@/common/inputDialog';
 import { impersonateUser, useUserProfile } from '@/common/profile';
 import ImpersonateUserModal from '@/components/ImpersonateUserModal';
 import SectionList from '@/components/SectionList';
+import { useThemeColor } from '@/hooks/useThemeColor';
 import { t } from '@/i18n';
 
 export default function SettingsView() {
-  const { toggleColorScheme } = useColorScheme();
+  const { toggleTheme } = useThemeColor();
   const navigation = useNavigation();
   const { profile, isPrivileged } = useUserProfile();
   const [resettingProfileLoading, setResettingProfileLoading] = useState(false);
@@ -116,7 +117,7 @@ export default function SettingsView() {
           {
             title: t('settings.theme'),
             leftIcon: { name: 'dark-mode', type: 'material' },
-            onPress: toggleColorScheme,
+            onPress: toggleTheme,
           },
         ]}
       />
