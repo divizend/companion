@@ -1,4 +1,5 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
+import { makeRedirectUri } from 'expo-auth-session';
 import { router } from 'expo-router';
 import * as WebBrowser from 'expo-web-browser';
 
@@ -48,11 +49,11 @@ export const apiGet = (endpoint: string, queryParams?: Record<string, string>) =
   return apiFetch(endpoint + (queryParams ? '?' + new URLSearchParams(queryParams).toString() : ''), { method: 'GET' });
 };
 
-export const apiPost = (endpoint: string, body: any) => {
+export const apiPost = <T = any>(endpoint: string, body: any) => {
   return apiFetch(endpoint, {
     method: 'POST',
     body,
-  });
+  }) as Promise<T>;
 };
 
 export const apiDelete = (endpoint: string) => {
@@ -84,8 +85,9 @@ export async function logout(throwOnError?: boolean) {
   const resp = await WebBrowser.openAuthSessionAsync(
     `${usedConfig.api.url}/${usedConfig.api.versionCode}/auth/logout/${sessionToken}?` +
       new URLSearchParams({
-        postLogoutRedirectUri: 'divizend://authcallback',
+        postLogoutRedirectUri: makeRedirectUri({ scheme: 'divizend', path: 'authcallback' }),
       }).toString(),
+    makeRedirectUri({ scheme: 'divizend', path: 'authcallback' }),
   );
 
   if (resp.type === 'success') {

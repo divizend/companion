@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-import { useAuthRequest, useAutoDiscovery } from 'expo-auth-session';
+import { makeRedirectUri, useAuthRequest, useAutoDiscovery } from 'expo-auth-session';
 import { router } from 'expo-router';
 import * as WebBrowser from 'expo-web-browser';
 import { Alert, Image, StyleSheet, View } from 'react-native';
@@ -23,10 +23,15 @@ export default function Index() {
     }
   }, [sessionToken, sessionTokenLoading]);
 
+  const redirectUri = makeRedirectUri({
+    scheme: 'divizend',
+    path: 'authcallback',
+  });
+
   const [request, _, promptAsync] = useAuthRequest(
     {
       clientId: usedConfig.auth.clientId,
-      redirectUri: 'divizend://authcallback',
+      redirectUri,
       scopes: ['offline_access'],
       responseType: 'code',
       extraParams: {
