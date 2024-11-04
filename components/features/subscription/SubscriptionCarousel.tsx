@@ -1,17 +1,22 @@
 import React, { useState } from 'react';
 
+import { Icon } from '@rneui/themed';
 import { ActivityIndicator, Dimensions, ImageBackground, Pressable, View } from 'react-native';
-import Purchases, { PurchasesStoreProduct } from 'react-native-purchases';
+import Purchases, { PurchasesPackage } from 'react-native-purchases';
 import { useSharedValue } from 'react-native-reanimated';
 import Carousel, { ICarouselInstance } from 'react-native-reanimated-carousel';
 
+import { apiPost, useFetch } from '@/common/api';
 import { clsx } from '@/common/clsx';
 import StyledButton from '@/components/StyledButton';
 import { Text } from '@/components/base';
 import { useSnackbar } from '@/components/global/Snackbar';
+import { usePrompt } from '@/hooks/usePrompt';
 import { usePurchases } from '@/hooks/usePurchases';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { t } from '@/i18n';
+
+import { requiresWaitlist } from './util';
 
 type Props = { close: () => void };
 
@@ -21,26 +26,62 @@ export default function SubscriptionCarousel({ close }: Props) {
   const { loading, products, setCustomerInfo } = usePurchases();
   const ref = React.useRef<ICarouselInstance>(null);
   const progress = useSharedValue<number>(0);
-  const [selectedItem, setSelectedItem] = useState<PurchasesStoreProduct>();
+  const [selectedPackage, setSelectedPackage] = useState<PurchasesPackage>();
   const [isSubscribing, setIsSubscribing] = useState(false);
+  const { showAlert } = usePrompt();
+  const { data, isLoading } = useFetch('waitlist-status', '/waitlist-status');
 
-  const handleSubscribe = async (product: PurchasesStoreProduct) => {
-    setIsSubscribing(true);
-    await Purchases.purchaseStoreProduct(product)
+  const handleSubscribe = async (product: PurchasesPackage) => {
+    await Purchases.purchasePackage(product)
       .then(makePurchaseResult => setCustomerInfo(makePurchaseResult.customerInfo))
-      .catch(err => showSnackbar('Purchase was cancelled', { type: 'error' }))
-      .finally(() => {
-        setIsSubscribing(false);
-        close();
-      });
+      .catch(err => showSnackbar(err.message, { type: 'error' }));
   };
 
-  if (loading || !products)
+  if (loading || !products || isLoading)
     return (
       <View className="flex-1">
-        <ActivityIndicator />
+        <ActivityIndicator color={theme.theme} />
       </View>
     );
+
+  const userInWaitlist = !!data.waitingForPoints;
+  const userReservedSpot = !!data.waitingForPoints && data.waitingForPoints >= data.spotsReserved;
+
+  const attemptSubscribe = async (purchasePackage: PurchasesPackage) => {
+    try {
+      setIsSubscribing(true);
+
+      const pointsRequired = requiresWaitlist(purchasePackage);
+      if (!pointsRequired) return await handleSubscribe(purchasePackage);
+      // Can purhcase only returns true when the spots were reserved on that call.
+      const canPurchase = await apiPost<boolean>('/sponsored-purchase/initialize', {
+        points: pointsRequired,
+      });
+      if (canPurchase || userReservedSpot) return await handleSubscribe(purchasePackage);
+      else {
+        showAlert({
+          title: 'You joined the waitlist',
+          message:
+            'You have opted for a sponsored subscription plan but there are no available spots. We will send you an email when you are ready to finalize the subscription.',
+          actions: [{ title: 'OK' }],
+        });
+      }
+    } catch (error) {
+      console.error(error);
+      showSnackbar('Error', { type: 'error' });
+    } finally {
+      setIsSubscribing(false);
+      close();
+    }
+  };
+
+  const featureMatrix: { [key: string]: string[] } = {};
+  Object.values(products).forEach(product => {
+    featureMatrix[product.identifier] = [
+      ...t(`subscription.commonFeatures`),
+      ...(t(`subscription.subscriptionPlans.${product.identifier}.features`) as unknown as string[]),
+    ];
+  });
 
   return (
     <View>
@@ -50,7 +91,7 @@ export default function SubscriptionCarousel({ close }: Props) {
       <Carousel
         ref={ref}
         width={Dimensions.get('window').width}
-        height={(Dimensions.get('window').width - 40) / 2}
+        height={(Dimensions.get('window').width - 40) / 1.5}
         data={products}
         loop={false}
         mode="parallax"
@@ -58,7 +99,7 @@ export default function SubscriptionCarousel({ close }: Props) {
         modeConfig={{}}
         onProgressChange={progress}
         renderItem={({ item }) => (
-          <Pressable className="flex-1" onPress={() => setSelectedItem(item)}>
+          <Pressable className="flex-1" onPress={() => setSelectedPackage(item)}>
             <ImageBackground
               alt="background-bubbles"
               className="flex-1 m-2 rounded-xl"
@@ -69,26 +110,30 @@ export default function SubscriptionCarousel({ close }: Props) {
                 key={item.identifier}
                 className={clsx(
                   'flex-1 flex flex-row dark:bg-transparent border border-gray-200 rounded-xl justify-between p-6',
-                  item.identifier === selectedItem?.identifier &&
+                  item.identifier === selectedPackage?.identifier &&
                     'border-theme border-2 bg-[#3939ff1a] dark:bg-[#3939ff1a]',
                 )}
               >
-                <View className="flex justify-between">
-                  <Text h2 className="font-bold mb-2">
-                    {item.title}
+                <View className="flex justify-between max-w-[70%]">
+                  <Text h2 className="font-bold mb-2 ">
+                    {t(`subscription.subscriptionPlans.${item.identifier}.title`)}
                   </Text>
-                  <Text type="muted" className="mb-2 max-w-[80%]">
-                    {item.description}
-                  </Text>
-                  <Text type="muted" className="mb-2 max-w-[80%]">
-                    Cancel anytime
-                  </Text>
+                  <View className="mb-2 max-w-[100%]">
+                    {featureMatrix[item.identifier].map((feature, index) => (
+                      <View key={index} className="flex flex-row items-start gap-2">
+                        <Icon name="check" color={theme.muted} size={18} />
+                        <Text className="text-sm" type="muted">
+                          {feature}
+                        </Text>
+                      </View>
+                    ))}
+                  </View>
                 </View>
                 <View>
                   <Text className="text-end" h3>
-                    {item.priceString}
+                    {item.product.priceString}
                   </Text>
-                  <Text className="text-end">{item.subscriptionPeriod}</Text>
+                  <Text className="text-end">{t('subscription.monthly')}</Text>
                 </View>
               </View>
             </ImageBackground>
@@ -97,9 +142,9 @@ export default function SubscriptionCarousel({ close }: Props) {
       />
 
       <StyledButton
-        disabled={!selectedItem}
+        disabled={!selectedPackage}
         loading={isSubscribing}
-        onPress={() => selectedItem && handleSubscribe(selectedItem)}
+        onPress={() => selectedPackage && attemptSubscribe(selectedPackage)}
         title={
           <Text
             style={{
@@ -109,7 +154,19 @@ export default function SubscriptionCarousel({ close }: Props) {
               fontWeight: 'bold',
             }}
           >
-            {t('subscription.getStarted')}
+            {(!selectedPackage ||
+              !requiresWaitlist(selectedPackage) ||
+              requiresWaitlist(selectedPackage) <= data.unreservedSpots) &&
+              t('subscription.actions.getStarted')}
+            {!!selectedPackage &&
+            !!requiresWaitlist(selectedPackage) &&
+            requiresWaitlist(selectedPackage) >= data.unreservedSpots
+              ? userReservedSpot
+                ? t('subscription.actions.spotsReservedSubscribe')
+                : userInWaitlist
+                  ? t('subscription.actions.alreadyInWaitlist')
+                  : t('subscription.actions.joinWaitlist')
+              : ''}
           </Text>
         }
         containerStyle={{ borderRadius: 12, width: '85%', alignSelf: 'center' }}

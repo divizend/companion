@@ -11,7 +11,7 @@ import '@/global.css';
 import { usePrompt } from '@/hooks/usePrompt';
 import { usePurchases } from '@/hooks/usePurchases';
 import { useThemeColor } from '@/hooks/useThemeColor';
-import { l } from '@/i18n';
+import { l, t } from '@/i18n';
 
 import SubscriptionCarousel from '../subscription/SubscriptionCarousel';
 
@@ -60,11 +60,11 @@ export default function CurrentPlan() {
             )}
           />
           <Text type={!!activeSubscription ? 'success' : 'danger'} className="text-center">
-            {!!activeSubscription ? 'Active' : 'Inactive'}
+            {!!activeSubscription ? t('subscription.currentPlan.active') : t('subscription.currentPlan.inactive')}
           </Text>
         </View>
         <Text h1 className="text-center mb-8 font-semibold">
-          {activeSubscription?.title || 'No active subscription'}
+          {activeSubscription?.product.title || t('subscription.currentPlan.noActiveSubscription')}
         </Text>
 
         {/* Free tiral notice */}
@@ -86,14 +86,14 @@ export default function CurrentPlan() {
               <Text type="muted" className="flex-1">
                 Plan
               </Text>
-              <Text className="flex-1 font-bold">{activeSubscription.description}</Text>
+              <Text className="flex-1 font-bold">{activeSubscription.product.description}</Text>
             </View>
 
             <View className="flex flex-row">
               <Text type="muted" className="flex-1">
                 Price
               </Text>
-              <Text className="flex-1 font-bold">{activeSubscription.pricePerMonthString}</Text>
+              <Text className="flex-1 font-bold">{activeSubscription.product.pricePerMonthString}</Text>
             </View>
 
             <View className="flex flex-row">
@@ -104,35 +104,28 @@ export default function CurrentPlan() {
                 {l('date.formats.long', customerInfo.entitlements.active['divizend-membership'].expirationDate)}
               </Text>
             </View>
-
-            <View className="flex flex-row">
-              <Text type="muted" className="flex-1">
-                Will renew
-              </Text>
-              <Text className="flex-1 font-bold">
-                {customerInfo.entitlements.active['divizend-membership'].willRenew ? 'Yes' : 'No'}
-              </Text>
-            </View>
           </View>
         )}
       </ScrollScreen>
       <View className="flex gap-2">
-        <StyledButton
-          title={
-            <Text
-              style={{
-                textAlign: 'center',
-                color: theme.allColors.dark.text,
-                fontSize: 16,
-                fontWeight: 'bold',
-              }}
-            >
-              Manage plan
-            </Text>
-          }
-          onPress={() => showCustom(SubscriptionCarousel)}
-          buttonStyle={{ backgroundColor: theme.theme, borderRadius: 12 }}
-        />
+        {!activeSubscription && (
+          <StyledButton
+            title={
+              <Text
+                style={{
+                  textAlign: 'center',
+                  color: theme.allColors.dark.text,
+                  fontSize: 16,
+                  fontWeight: 'bold',
+                }}
+              >
+                {t('subscription.actions.subscribe')}
+              </Text>
+            }
+            onPress={() => showCustom(SubscriptionCarousel)}
+            buttonStyle={{ backgroundColor: theme.theme, borderRadius: 12 }}
+          />
+        )}
         {!!activeSubscription && (
           <StyledButton
             onPress={() => customerInfo.managementURL && Linking.openURL(customerInfo.managementURL)}
@@ -145,7 +138,7 @@ export default function CurrentPlan() {
                   fontWeight: 'bold',
                 }}
               >
-                Cancel plan
+                {t('subscription.actions.managePlan')}
               </Text>
             }
             buttonStyle={{ borderRadius: 12, backgroundColor: theme.backgroundSecondary }}

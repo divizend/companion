@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 
 import { Platform } from 'react-native';
-import Purchases, { CustomerInfo, PurchasesConfiguration, PurchasesStoreProduct } from 'react-native-purchases';
+import Purchases, { CustomerInfo, PurchasesConfiguration, PurchasesPackage } from 'react-native-purchases';
 
 import { usedConfig } from '@/common/config';
 import { useUserProfile } from '@/common/profile';
@@ -9,7 +9,7 @@ import { useSnackbar } from '@/components/global/Snackbar';
 
 interface RevenueCatContextType {
   loading: boolean;
-  products?: PurchasesStoreProduct[];
+  products?: PurchasesPackage[];
   customerInfo?: CustomerInfo;
   setCustomerInfo: React.Dispatch<React.SetStateAction<CustomerInfo | undefined>>;
 }
@@ -31,7 +31,7 @@ interface RevenueCatProviderProps {
 export const RevenueCatProvider: React.FC<RevenueCatProviderProps> = ({ children }) => {
   const { showSnackbar } = useSnackbar();
   const [loading, setLoading] = useState(true);
-  const [products, setProducts] = useState<PurchasesStoreProduct[] | undefined>();
+  const [products, setProducts] = useState<PurchasesPackage[] | undefined>();
   const [customerInfo, setCustomerInfo] = useState<CustomerInfo | undefined>(undefined);
   const { profile } = useUserProfile();
 
@@ -43,17 +43,12 @@ export const RevenueCatProvider: React.FC<RevenueCatProviderProps> = ({ children
           apiKey: Platform.OS === 'ios' ? usedConfig.revenueCat.appStore : usedConfig.revenueCat.playStore,
         };
 
-        try {
-          // Only configure the SDK when it's already configured. Calling configure multiple times is not recommended.
-          // Read more here https://community.revenuecat.com/sdks-51/is-it-safe-to-call-purchases-configure-multiple-times-3608?postid=11617#post11617
-          if (!(await Purchases.isConfigured())) Purchases.configure(configuration);
-        } catch (error) {
-          console.log(error);
-        }
+        // Only configure the SDK when it's already configured. Calling configure multiple times is not recommended.
+        // Read more here https://community.revenuecat.com/sdks-51/is-it-safe-to-call-purchases-configure-multiple-times-3608?postid=11617#post11617
+        if (!(await Purchases.isConfigured())) Purchases.configure(configuration);
+
         await Promise.all([
-          Purchases.getOfferings().then(res =>
-            setProducts(res.current?.availablePackages.map(availablePackage => availablePackage.product)),
-          ),
+          Purchases.getOfferings().then(res => setProducts(res.current?.availablePackages)),
           // This ensures that the customer is identified by their Divizend user ID.
           // Customers can benefit from their subscriptions on multiple platforms as long as they use the same Divizend account containing the subscription.
           Purchases.logIn(profile.id).then(loginResult => setCustomerInfo(loginResult.customerInfo)),
@@ -62,8 +57,9 @@ export const RevenueCatProvider: React.FC<RevenueCatProviderProps> = ({ children
 
         Purchases.addCustomerInfoUpdateListener(info => setCustomerInfo(info));
       } catch (error) {
-        showSnackbar('Failed to configure RevenueCat: ' + JSON.stringify(error));
-        console.error('Failed to configure RevenueCat:', JSON.stringify(error));
+        showSnackbar('Failed to configure in-app-purchases');
+        // TODO: Sentry call here
+        console.error(error);
       }
     };
 

@@ -70,7 +70,7 @@ export const SnackbarProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     if (snackbars.length > 0) {
       const timer = setTimeout(() => {
         dismissSnackbar(snackbars[0].id);
-      }, 1000);
+      }, 3000);
 
       return () => clearTimeout(timer);
     }
