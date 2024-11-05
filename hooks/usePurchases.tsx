@@ -9,7 +9,7 @@ import { useSnackbar } from '@/components/global/Snackbar';
 
 interface RevenueCatContextType {
   loading: boolean;
-  products?: PurchasesPackage[];
+  purchasePackages?: PurchasesPackage[];
   customerInfo?: CustomerInfo;
   setCustomerInfo: React.Dispatch<React.SetStateAction<CustomerInfo | undefined>>;
 }
@@ -31,7 +31,7 @@ interface RevenueCatProviderProps {
 export const RevenueCatProvider: React.FC<RevenueCatProviderProps> = ({ children }) => {
   const { showSnackbar } = useSnackbar();
   const [loading, setLoading] = useState(true);
-  const [products, setProducts] = useState<PurchasesPackage[] | undefined>();
+  const [purchasePackages, setPurchasePackages] = useState<PurchasesPackage[] | undefined>();
   const [customerInfo, setCustomerInfo] = useState<CustomerInfo | undefined>(undefined);
   const { profile } = useUserProfile();
 
@@ -48,7 +48,7 @@ export const RevenueCatProvider: React.FC<RevenueCatProviderProps> = ({ children
         if (!(await Purchases.isConfigured())) Purchases.configure(configuration);
 
         await Promise.all([
-          Purchases.getOfferings().then(res => setProducts(res.current?.availablePackages)),
+          Purchases.getOfferings().then(res => setPurchasePackages(res.current?.availablePackages)),
           // This ensures that the customer is identified by their Divizend user ID.
           // Customers can benefit from their subscriptions on multiple platforms as long as they use the same Divizend account containing the subscription.
           Purchases.logIn(profile.id).then(loginResult => setCustomerInfo(loginResult.customerInfo)),
@@ -67,7 +67,7 @@ export const RevenueCatProvider: React.FC<RevenueCatProviderProps> = ({ children
   }, [profile.id]);
 
   return (
-    <RevenueCatContext.Provider value={{ loading, products, customerInfo, setCustomerInfo }}>
+    <RevenueCatContext.Provider value={{ loading, purchasePackages, customerInfo, setCustomerInfo }}>
       {children}
     </RevenueCatContext.Provider>
   );

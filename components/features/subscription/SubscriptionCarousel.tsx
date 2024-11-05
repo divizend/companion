@@ -6,7 +6,7 @@ import Purchases, { PurchasesPackage } from 'react-native-purchases';
 import { useSharedValue } from 'react-native-reanimated';
 import Carousel, { ICarouselInstance } from 'react-native-reanimated-carousel';
 
-import { apiPost, useFetch } from '@/common/api';
+import { apiPost } from '@/common/api';
 import { clsx } from '@/common/clsx';
 import StyledButton from '@/components/StyledButton';
 import { Text } from '@/components/base';
@@ -16,6 +16,7 @@ import { usePurchases } from '@/hooks/usePurchases';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { t } from '@/i18n';
 
+import { useWaitlistStatus } from '../settings/queries';
 import { requiresWaitlist } from './util';
 
 type Props = { close: () => void };
@@ -23,13 +24,13 @@ type Props = { close: () => void };
 export default function SubscriptionCarousel({ close }: Props) {
   const { showSnackbar } = useSnackbar();
   const theme = useThemeColor();
-  const { loading, products, setCustomerInfo } = usePurchases();
+  const { loading, purchasePackages, setCustomerInfo } = usePurchases();
   const ref = React.useRef<ICarouselInstance>(null);
   const progress = useSharedValue<number>(0);
   const [selectedPackage, setSelectedPackage] = useState<PurchasesPackage>();
   const [isSubscribing, setIsSubscribing] = useState(false);
   const { showAlert } = usePrompt();
-  const { data, isLoading } = useFetch('waitlist-status', '/waitlist-status');
+  const { data, isLoading } = useWaitlistStatus();
 
   const handleSubscribe = async (product: PurchasesPackage) => {
     await Purchases.purchasePackage(product)
@@ -37,7 +38,7 @@ export default function SubscriptionCarousel({ close }: Props) {
       .catch(err => showSnackbar(err.message, { type: 'error' }));
   };
 
-  if (loading || !products || isLoading)
+  if (loading || !purchasePackages || isLoading || !data)
     return (
       <View className="flex-1">
         <ActivityIndicator color={theme.theme} />
@@ -45,7 +46,12 @@ export default function SubscriptionCarousel({ close }: Props) {
     );
 
   const userInWaitlist = !!data.waitingForPoints;
-  const userReservedSpot = !!data.waitingForPoints && data.waitingForPoints >= data.spotsReserved;
+
+  const isSpotReserved = (purchasePackage: PurchasesPackage): boolean => {
+    if (!data.waitingForPoints) return false;
+    if (requiresWaitlist(purchasePackage) === data.spotsReserved) return true;
+    return false;
+  };
 
   const attemptSubscribe = async (purchasePackage: PurchasesPackage) => {
     try {
@@ -57,7 +63,7 @@ export default function SubscriptionCarousel({ close }: Props) {
       const canPurchase = await apiPost<boolean>('/sponsored-purchase/initialize', {
         points: pointsRequired,
       });
-      if (canPurchase || userReservedSpot) return await handleSubscribe(purchasePackage);
+      if (canPurchase || isSpotReserved(purchasePackage)) return await handleSubscribe(purchasePackage);
       else {
         showAlert({
           title: 'You joined the waitlist',
@@ -76,7 +82,7 @@ export default function SubscriptionCarousel({ close }: Props) {
   };
 
   const featureMatrix: { [key: string]: string[] } = {};
-  Object.values(products).forEach(product => {
+  Object.values(purchasePackages).forEach(product => {
     featureMatrix[product.identifier] = [
       ...t(`subscription.commonFeatures`),
       ...(t(`subscription.subscriptionPlans.${product.identifier}.features`) as unknown as string[]),
@@ -92,7 +98,7 @@ export default function SubscriptionCarousel({ close }: Props) {
         ref={ref}
         width={Dimensions.get('window').width}
         height={(Dimensions.get('window').width - 40) / 1.5}
-        data={products}
+        data={purchasePackages}
         loop={false}
         mode="parallax"
         style={{ marginLeft: -20, marginRight: -20 }}
@@ -142,7 +148,10 @@ export default function SubscriptionCarousel({ close }: Props) {
       />
 
       <StyledButton
-        disabled={!selectedPackage}
+        disabled={
+          !selectedPackage ||
+          (userInWaitlist && !isSpotReserved(selectedPackage) && !!requiresWaitlist(selectedPackage))
+        }
         loading={isSubscribing}
         onPress={() => selectedPackage && attemptSubscribe(selectedPackage)}
         title={
@@ -161,7 +170,7 @@ export default function SubscriptionCarousel({ close }: Props) {
             {!!selectedPackage &&
             !!requiresWaitlist(selectedPackage) &&
             requiresWaitlist(selectedPackage) >= data.unreservedSpots
-              ? userReservedSpot
+              ? isSpotReserved(selectedPackage)
                 ? t('subscription.actions.spotsReservedSubscribe')
                 : userInWaitlist
                   ? t('subscription.actions.alreadyInWaitlist')

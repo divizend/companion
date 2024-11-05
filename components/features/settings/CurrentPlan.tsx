@@ -14,13 +14,16 @@ import { useThemeColor } from '@/hooks/useThemeColor';
 import { l, t } from '@/i18n';
 
 import SubscriptionCarousel from '../subscription/SubscriptionCarousel';
+import { requiresWaitlist } from '../subscription/util';
+import { useWaitlistStatus } from './queries';
 
 export default function CurrentPlan() {
   const theme = useThemeColor();
   const { showCustom } = usePrompt();
-  const { products, loading, customerInfo } = usePurchases();
+  const { purchasePackages, loading, customerInfo } = usePurchases();
+  const { data, isLoading } = useWaitlistStatus();
 
-  if (loading || !customerInfo || !products)
+  if (loading || !customerInfo || !purchasePackages || isLoading || !data)
     return (
       <View className="flex-1 justify-center">
         <ActivityIndicator />
@@ -30,10 +33,14 @@ export default function CurrentPlan() {
   const activeSubscription =
     JSON.stringify(customerInfo.entitlements.active) === '{}'
       ? undefined
-      : products.find(product => {
+      : purchasePackages.find(purchasePackage => {
           const plan = customerInfo.entitlements.active['divizend-membership'];
-          return product.identifier === plan.productIdentifier + ':' + plan.productPlanIdentifier;
+          return purchasePackage.product.identifier === plan.productIdentifier + ':' + plan.productPlanIdentifier;
         });
+
+  const awaitedPurchasePackage =
+    !!data.waitingForPoints &&
+    purchasePackages.find(purchasePackage => requiresWaitlist(purchasePackage) === data.waitingForPoints);
 
   return (
     <>
@@ -79,6 +86,24 @@ export default function CurrentPlan() {
             After that you will be automatically billed $49.99
           </Text>
         </View> */}
+
+        {/* Waitlist information */}
+        {!!awaitedPurchasePackage && (
+          <View className="flex items-center bg-secondary-light dark:bg-secondary-dark px-2 py-5 rounded-xl gap-3 mb-8 shadow-lg">
+            <View className="bg-primary-light dark:bg-primary-dark rounded-3xl p-2">
+              <Icon name="info" type="material" size={20} color={theme.text} />
+            </View>
+            <Text h4 className="max-w-[85%] font-bold text-center">
+              You are in the waiting list for{' '}
+              {t(`subscription.subscriptionPlans.${awaitedPurchasePackage.identifier}.title`)}
+            </Text>
+            <Text type="muted" className="max-w-[95%] text-center">
+              {data.spotsReserved === data.waitingForPoints
+                ? 'You have until. You can now subscribe to Companion for a reduced price.'
+                : 'You are yet to be selected to get the sponsorship.'}
+            </Text>
+          </View>
+        )}
         {/* Plan details table */}
         {!!activeSubscription && (
           <View className="gap-4 mb-8 px-6 py-5">
