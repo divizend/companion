@@ -75,6 +75,7 @@
       "message": "Please enter your date of birth.",
       "openDatepicker": "Select date of birth"
     },
+    "freeTrial": "Start free trial!",
     "finalConfirm": "Let's get started!",
     "allSet": {
       "title": "You're all set!",
@@ -261,8 +262,62 @@
     }
   },
   "subscription": {
-    "getStarted": "Get started",
-    "choosePlan": "Choose a plan"
+    "currentPlan": {
+      "active": "Active",
+      "inactive": "Inactive",
+      "noActiveSubscription": "No active subscription",
+      "table": {
+        "plan": "Plan",
+        "price": "Price",
+        "expiresAt": "Expires at"
+      },
+      "freeTrial": {
+        "ends": "Your free trial will end on {{date,dayLongAndTime}}",
+        "after": "After that you will be automatically billed {{price}} per month."
+      }
+    },
+    "choosePlan": "Choose a plan",
+    "commonFeatures": [
+      "Full access to Companion AI financial adviser.",
+      "The full features of Divizend portfolio editor."
+    ],
+    "subscriptionPlans": {
+      "monthly_factor_0": {
+        "title": "Divizend Membership (Solidarity price)",
+        "features": ["Sponsored."]
+      },
+      "monthly_factor_0_5": {
+        "title": "Divizend Membership (Factor 0.5)",
+        "features": ["Sponsored."]
+      },
+      "monthly_factor_1": {
+        "title": "Divizend Membership (Factor 1)",
+        "features": []
+      },
+      "monthly_factor_1_5": {
+        "title": "Divizend Membership (Factor 1.5)",
+        "features": ["Sponsor 1 user to access the app at a lower cost"]
+      },
+      "monthly_factor_2": {
+        "title": "Divizend Membership (Factor 2)",
+        "features": ["Sponsor up to 2 users to access the app at a lower cost."]
+      }
+    },
+    "trialPeriod": {
+      "P1W": {
+        "free": "Get one week for free.",
+        "after": "And {{price}} per {{period}} after that."
+      }
+    },
+    "monthly": "Per month",
+    "actions": {
+      "subscribe": "Subscribe",
+      "managePlan": "Manage plan",
+      "getStarted": "Get started",
+      "spotsReservedSubscribe": "Spots reserved. Subscribe now!",
+      "joinWaitlist": "Join waitlist",
+      "alreadyInWaitlist": "Already in waitlist"
+    }
   },
   "country": {
     "xx": "Demo Country",

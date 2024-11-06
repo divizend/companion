@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 
-import DateTimePicker, { DateTimePickerAndroid, DateTimePickerEvent } from '@react-native-community/datetimepicker';
+import { DateTimePickerEvent } from '@react-native-community/datetimepicker';
 import { Picker } from '@react-native-picker/picker';
 import { Button } from '@rneui/themed';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -10,21 +10,23 @@ import {
   Modal,
   NativeScrollEvent,
   NativeSyntheticEvent,
-  Platform,
   ScrollView,
   StatusBar,
   StyleSheet,
   Text,
   View,
 } from 'react-native';
+import Purchases from 'react-native-purchases';
 
 import { apiPost } from '@/common/api';
 import { colors } from '@/common/colors';
 import { countries } from '@/common/countries';
 import { usePrincipalLegalEntity, useUserProfile } from '@/common/profile';
-import { i18n, t } from '@/i18n';
+import { usePurchases } from '@/hooks/usePurchases';
+import { t } from '@/i18n';
 
 import { SafeAreaView } from './base/SafeAreaView';
+import { useSnackbar } from './global/Snackbar';
 
 interface OnboardingModalProps {
   visible: boolean;
@@ -40,6 +42,10 @@ export default function OnboardingModal({ visible }: OnboardingModalProps) {
   const [birthday, setBirthday] = useState<Date | null>(
     principalLegalEntity?.data.info.birthday ? new Date(principalLegalEntity.data.info.birthday) : new Date('1-1-2000'),
   );
+
+  const { showSnackbar } = useSnackbar();
+  const { eligibleForTrial } = usePurchases();
+
   const onDateChange = (event: DateTimePickerEvent, selectedDate?: Date | undefined) => {
     if (event.type === 'set') {
       // Only update if a date is selected
@@ -138,6 +144,20 @@ export default function OnboardingModal({ visible }: OnboardingModalProps) {
             )} */}
           </View>
         </View>
+        {!!eligibleForTrial && (
+          <View style={styles.page}>
+            <Text style={styles.modalTitle}>Start your journey with a Free trial</Text>
+            <Text style={styles.modalText}>
+              {t(`subscription.trialPeriod.${eligibleForTrial.product.introPrice!.period}.free`)}
+            </Text>
+            <Text style={styles.modalText}>
+              {t(`subscription.trialPeriod.${eligibleForTrial.product.introPrice!.period}.after`, {
+                price: eligibleForTrial.product.pricePerMonthString,
+                period: 'Month',
+              })}
+            </Text>
+          </View>
+        )}
         {availablePages >= 5 && (
           <View style={styles.page}>
             <Text style={styles.modalTitle}>{t('onboarding.allSet.title')}</Text>
@@ -170,7 +190,13 @@ export default function OnboardingModal({ visible }: OnboardingModalProps) {
           {renderPageIndicator()}
           <Button
             title={
-              currentPage !== 4 ? t('common.next') : isLoading ? t('common.loading') : t('onboarding.finalConfirm')
+              currentPage !== 4
+                ? t('common.next')
+                : isLoading
+                  ? t('common.loading')
+                  : !!eligibleForTrial
+                    ? t('onboarding.freeTrial')
+                    : t('onboarding.finalConfirm')
             }
             onPress={async () => {
               if (currentPage === 0 || currentPage === 1) {
@@ -223,7 +249,13 @@ export default function OnboardingModal({ visible }: OnboardingModalProps) {
                 }
               } else if (currentPage === 4) {
                 setIsLoading(true);
+                // Here add logic for trial if eligible.
                 try {
+                  if (eligibleForTrial) {
+                    await Purchases.purchaseSubscriptionOption(
+                      eligibleForTrial.product.subscriptionOptions?.find(item => !!item.freePhase)!,
+                    );
+                  }
                   await apiPost('/users/flag', {
                     name: 'allowedCompanionAI',
                     value: true,
@@ -231,7 +263,8 @@ export default function OnboardingModal({ visible }: OnboardingModalProps) {
                   updateProfile(p => {
                     p.flags.allowedCompanionAI = true;
                   });
-                } catch (error) {
+                } catch (error: any) {
+                  showSnackbar(error.message);
                   console.log(error);
                 } finally {
                   setIsLoading(false);

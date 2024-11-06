@@ -30,7 +30,7 @@ export default function SubscriptionCarousel({ close }: Props) {
   const [selectedPackage, setSelectedPackage] = useState<PurchasesPackage>();
   const [isSubscribing, setIsSubscribing] = useState(false);
   const { showAlert } = usePrompt();
-  const { data, isLoading } = useWaitlistStatus();
+  const { data, isLoading, refetch } = useWaitlistStatus();
 
   const handleSubscribe = async (product: PurchasesPackage) => {
     await Purchases.purchasePackage(product)
@@ -65,6 +65,7 @@ export default function SubscriptionCarousel({ close }: Props) {
       });
       if (canPurchase || isSpotReserved(purchasePackage)) return await handleSubscribe(purchasePackage);
       else {
+        refetch();
         showAlert({
           title: 'You joined the waitlist',
           message:

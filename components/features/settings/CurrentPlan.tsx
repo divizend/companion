@@ -11,7 +11,7 @@ import '@/global.css';
 import { usePrompt } from '@/hooks/usePrompt';
 import { usePurchases } from '@/hooks/usePurchases';
 import { useThemeColor } from '@/hooks/useThemeColor';
-import { l, t } from '@/i18n';
+import { t } from '@/i18n';
 
 import SubscriptionCarousel from '../subscription/SubscriptionCarousel';
 import { requiresWaitlist } from '../subscription/util';
@@ -75,17 +75,25 @@ export default function CurrentPlan() {
         </Text>
 
         {/* Free tiral notice */}
-        {/* <View className="flex items-center bg-secondary-light dark:bg-secondary-dark px-2 py-5 rounded-xl gap-3 mb-8 shadow-lg">
-          <View className="bg-primary-light dark:bg-primary-dark rounded-3xl p-2">
-            <Icon name="info" type="material" size={20} color={theme.text} />
-          </View>
-          <Text h4 className="max-w-[85%] font-bold text-center">
-            Your free trial will end on July 1, 2024 at 12:00 AM
-          </Text>
-          <Text type="muted" className="max-w-[95%] text-center">
-            After that you will be automatically billed $49.99
-          </Text>
-        </View> */}
+        {!!activeSubscription &&
+          customerInfo.entitlements.active['divizend-membership'].periodType === 'TRIAL' &&
+          activeSubscription && (
+            <View className="flex items-center bg-secondary-light dark:bg-secondary-dark px-2 py-5 rounded-xl gap-3 mb-8 shadow-lg">
+              <View className="bg-primary-light dark:bg-primary-dark rounded-3xl p-2">
+                <Icon name="info" type="material" size={20} color={theme.text} />
+              </View>
+              <Text h4 className="max-w-[85%] font-bold text-center">
+                {t('subscription.currentPlan.freeTrial.ends', {
+                  date: new Date(customerInfo.entitlements.active['divizend-membership'].expirationDateMillis!),
+                })}
+              </Text>
+              <Text type="muted" className="max-w-[95%] text-center">
+                {t('subscription.currentPlan.freeTrial.after', {
+                  price: activeSubscription.product.pricePerMonthString,
+                })}
+              </Text>
+            </View>
+          )}
 
         {/* Waitlist information */}
         {!!awaitedPurchasePackage && (
@@ -109,24 +117,28 @@ export default function CurrentPlan() {
           <View className="gap-4 mb-8 px-6 py-5">
             <View className="flex flex-row">
               <Text type="muted" className="flex-1">
-                Plan
+                {t('subscription.currentSubscription.table.plan')}
               </Text>
-              <Text className="flex-1 font-bold">{activeSubscription.product.description}</Text>
+              <Text className="flex-1 font-bold">
+                {t(`subscription.subscriptionPlans.${activeSubscription.identifier}.title`)}
+              </Text>
             </View>
 
             <View className="flex flex-row">
               <Text type="muted" className="flex-1">
-                Price
+                {t('subscription.currentSubscription.table.price')}
               </Text>
               <Text className="flex-1 font-bold">{activeSubscription.product.pricePerMonthString}</Text>
             </View>
 
             <View className="flex flex-row">
               <Text type="muted" className="flex-1">
-                Expires at
+                {t('subscription.currentSubscription.table.expiresAt')}
               </Text>
               <Text className="flex-1 font-bold">
-                {l('date.formats.long', customerInfo.entitlements.active['divizend-membership'].expirationDate)}
+                {t('{{date,dayLongAndTime}}', {
+                  date: customerInfo.entitlements.active['divizend-membership'].expirationDate,
+                })}
               </Text>
             </View>
           </View>
