@@ -25,7 +25,7 @@ export default function GenerateInsights() {
   const { showAlert, showPrompt } = usePrompt();
 
   const [defaultQuestions] = useState<CompanionProfileLearnQuestion[]>(
-    (t('learn.insights.defaultQuestions') as any).map((q: any) => ({
+    (t('learn.insights.defaultQuestions', { returnObjects: true }) as any).map((q: any) => ({
       ...q,
       id: uuid.v4(),
     })) as CompanionProfileLearnQuestion[],

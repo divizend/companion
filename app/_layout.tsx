@@ -7,6 +7,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { SnackbarProvider } from '@/components/global/Snackbar';
+import '@/i18n';
 
 import '../global.css';
 

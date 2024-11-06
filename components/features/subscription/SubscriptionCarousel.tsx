@@ -84,8 +84,8 @@ export default function SubscriptionCarousel({ close }: Props) {
   const featureMatrix: { [key: string]: string[] } = {};
   Object.values(purchasePackages).forEach(product => {
     featureMatrix[product.identifier] = [
-      ...t(`subscription.commonFeatures`),
-      ...(t(`subscription.subscriptionPlans.${product.identifier}.features`) as unknown as string[]),
+      ...t(`subscription.commonFeatures`, { returnObjects: true }),
+      ...t(`subscription.subscriptionPlans.${product.identifier}.features`, { returnObjects: true }),
     ];
   });
 
