@@ -35,7 +35,10 @@ export default function CurrentPlan() {
       ? undefined
       : purchasePackages.find(purchasePackage => {
           const plan = customerInfo.entitlements.active['divizend-membership'];
-          return purchasePackage.product.identifier === plan.productIdentifier + ':' + plan.productPlanIdentifier;
+          return (
+            purchasePackage.product.identifier === plan.productIdentifier + ':' + plan.productPlanIdentifier ||
+            purchasePackage.product.identifier === plan.productIdentifier
+          );
         });
 
   const awaitedPurchasePackage =
