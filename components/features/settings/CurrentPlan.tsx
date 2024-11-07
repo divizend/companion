@@ -117,7 +117,7 @@ export default function CurrentPlan() {
           <View className="gap-4 mb-8 px-6 py-5">
             <View className="flex flex-row">
               <Text type="muted" className="flex-1">
-                {t('subscription.currentSubscription.table.plan')}
+                {t('subscription.currentPlan.table.plan')}
               </Text>
               <Text className="flex-1 font-bold">
                 {t(`subscription.subscriptionPlans.${activeSubscription.identifier}.title`)}
@@ -126,14 +126,14 @@ export default function CurrentPlan() {
 
             <View className="flex flex-row">
               <Text type="muted" className="flex-1">
-                {t('subscription.currentSubscription.table.price')}
+                {t('subscription.currentPlan.table.price')}
               </Text>
               <Text className="flex-1 font-bold">{activeSubscription.product.pricePerMonthString}</Text>
             </View>
 
             <View className="flex flex-row">
               <Text type="muted" className="flex-1">
-                {t('subscription.currentSubscription.table.expiresAt')}
+                {t('subscription.currentPlan.table.expiresAt')}
               </Text>
               <Text className="flex-1 font-bold">
                 {t('{{date,dayLongAndTime}}', {
