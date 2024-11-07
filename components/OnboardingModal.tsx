@@ -1,19 +1,22 @@
 import React, { useRef, useState } from 'react';
 
-import { DateTimePickerEvent } from '@react-native-community/datetimepicker';
+import RNDateTimePicker, { DateTimePickerAndroid, DateTimePickerEvent } from '@react-native-community/datetimepicker';
 import { Picker } from '@react-native-picker/picker';
-import { Button } from '@rneui/themed';
+import { Button, Icon } from '@rneui/themed';
 import { LinearGradient } from 'expo-linear-gradient';
+import i18next from 'i18next';
 import {
   Alert,
   Dimensions,
   Modal,
   NativeScrollEvent,
   NativeSyntheticEvent,
+  Platform,
   ScrollView,
   StatusBar,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from 'react-native';
 import Purchases from 'react-native-purchases';
@@ -23,6 +26,7 @@ import { colors } from '@/common/colors';
 import { countries } from '@/common/countries';
 import { usePrincipalLegalEntity, useUserProfile } from '@/common/profile';
 import { usePurchases } from '@/hooks/usePurchases';
+import { useThemeColor } from '@/hooks/useThemeColor';
 import { t } from '@/i18n';
 
 import { SafeAreaView } from './base/SafeAreaView';
@@ -35,12 +39,13 @@ interface OnboardingModalProps {
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
 export default function OnboardingModal({ visible }: OnboardingModalProps) {
+  const theme = useThemeColor();
   const { updateProfile, updatePrincipalLegalEntity } = useUserProfile();
   const principalLegalEntity = usePrincipalLegalEntity();
   const [currentPage, setCurrentPage] = useState(0);
   const [selectedCountry, setSelectedCountry] = useState(principalLegalEntity?.data.info.nationality ?? '');
   const [birthday, setBirthday] = useState<Date | null>(
-    principalLegalEntity?.data.info.birthday ? new Date(principalLegalEntity.data.info.birthday) : new Date('1-1-2000'),
+    principalLegalEntity?.data.info.birthday ? new Date(principalLegalEntity.data.info.birthday) : null,
   );
 
   const { showSnackbar } = useSnackbar();
@@ -127,21 +132,27 @@ export default function OnboardingModal({ visible }: OnboardingModalProps) {
           <Text style={styles.modalTitle}>{t('onboarding.birthday.title')}</Text>
           <Text style={styles.modalText}>{t('onboarding.birthday.message')}</Text>
           <View>
-            {/* {Platform.OS === 'android' ? (
-              <Button
-                buttonStyle={styles.modalButton}
-                title={t('onboarding.birthday.openDatepicker')}
-                onPress={() => DateTimePickerAndroid.open({ value: birthday || new Date() })}
-              />
+            {Platform.OS === 'android' ? (
+              <View className="flex gap-2 justify-center">
+                <TouchableOpacity
+                  onPress={() => DateTimePickerAndroid.open({ value: birthday || new Date(), onChange: onDateChange })}
+                  className="px-5 py-4 bg-secondary-light rounded-xl flex flex-row justify-between items-center w-[100%]"
+                >
+                  <Text className="text-slate-800 text-lg">
+                    {!!birthday ? t('{{date,day}}', { date: birthday }) : ''}
+                  </Text>
+                  <Icon name="event" color={theme.theme} type="material" />
+                </TouchableOpacity>
+              </View>
             ) : (
-              <DateTimePicker
+              <RNDateTimePicker
                 value={birthday || new Date()}
                 onChange={onDateChange}
-                locale={i18n.locale} // Use i18n locale
+                locale={i18next.language} // Use i18n locale
                 mode="date"
                 display="default"
               />
-            )} */}
+            )}
           </View>
         </View>
         {!!eligibleForTrial && (
