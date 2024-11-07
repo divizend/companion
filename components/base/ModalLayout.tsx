@@ -45,7 +45,7 @@ export default function ModalLayout({ title, children, canGoBack = true, noScrol
         containerStyle={{ borderBottomWidth: 0 }}
       />
       {noScrollView ? (
-        <View className="flex-1 p-5">{children}</View>
+        <View className="flex-1">{children}</View>
       ) : (
         <ScrollView>
           <View className="p-5">{children}</View>

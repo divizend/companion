@@ -144,7 +144,7 @@ export default function CurrentPlan() {
           </View>
         )}
       </ScrollScreen>
-      <View className="flex gap-2">
+      <View className="flex gap-2 bg-primary-light p-5 pt-0">
         {!activeSubscription && (
           <StyledButton
             title={
@@ -152,7 +152,7 @@ export default function CurrentPlan() {
                 style={{
                   textAlign: 'center',
                   color: theme.allColors.dark.text,
-                  fontSize: 16,
+                  fontSize: 18,
                   fontWeight: 'bold',
                 }}
               >
@@ -160,7 +160,7 @@ export default function CurrentPlan() {
               </Text>
             }
             onPress={() => showCustom(SubscriptionCarousel)}
-            buttonStyle={{ backgroundColor: theme.theme, borderRadius: 12 }}
+            buttonStyle={{ backgroundColor: theme.theme, borderRadius: 12, paddingVertical: 15 }}
           />
         )}
         {!!activeSubscription && (
@@ -171,14 +171,14 @@ export default function CurrentPlan() {
                 style={{
                   textAlign: 'center',
                   color: theme.text,
-                  fontSize: 16,
+                  fontSize: 18,
                   fontWeight: 'bold',
                 }}
               >
                 {t('subscription.actions.managePlan')}
               </Text>
             }
-            buttonStyle={{ borderRadius: 12, backgroundColor: theme.backgroundSecondary }}
+            buttonStyle={{ borderRadius: 12, backgroundColor: theme.backgroundSecondary, paddingVertical: 15 }}
           />
         )}
       </View>
