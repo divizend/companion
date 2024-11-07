@@ -263,9 +263,11 @@ export default function OnboardingModal({ visible }: OnboardingModalProps) {
                 // Here add logic for trial if eligible.
                 try {
                   if (eligibleForTrial) {
-                    await Purchases.purchaseSubscriptionOption(
-                      eligibleForTrial.product.subscriptionOptions?.find(item => !!item.freePhase)!,
-                    );
+                    if (Platform.OS === 'android')
+                      await Purchases.purchaseSubscriptionOption(
+                        eligibleForTrial.product.subscriptionOptions?.find(item => !!item.freePhase)!,
+                      );
+                    else await Purchases.purchaseStoreProduct(eligibleForTrial.product);
                   }
                   await apiPost('/users/flag', {
                     name: 'allowedCompanionAI',
