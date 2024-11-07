@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { useNavigation } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Icon } from '@rneui/themed';
 import { BlurView } from 'expo-blur';
+import { Redirect } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useColorScheme } from 'nativewind';
-import { StyleSheet } from 'react-native';
+import { ActivityIndicator, StyleSheet, View } from 'react-native';
 
 import { useUserProfile } from '@/common/profile';
 import { withUserProfile } from '@/common/withUserProfile';
@@ -14,7 +16,7 @@ import OnboardingModal from '@/components/OnboardingModal';
 import SettingsStackNavigator from '@/components/features/settings/SettingsStack';
 import BlurredHeader from '@/components/global/BlurredHeader';
 import PromptProvider from '@/hooks/usePrompt';
-import { RevenueCatProvider } from '@/hooks/usePurchases';
+import { RevenueCatProvider, usePurchases } from '@/hooks/usePurchases';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { t } from '@/i18n';
 
@@ -49,6 +51,25 @@ function LearnStackNavigator() {
 function AppTabNavigator() {
   const theme = useThemeColor();
   const { colorScheme } = useColorScheme();
+  const { customerInfo } = usePurchases();
+  const { navigate } = useNavigation();
+
+  useEffect(() => {
+    if (!customerInfo) return;
+    if (!customerInfo.entitlements.active['divizend-membership']) {
+      console.log('navigating because', customerInfo.entitlements.active['divizend-membership']);
+      return navigate('SettingsModal' as never);
+    }
+  }, [customerInfo, navigate]);
+
+  if (!customerInfo)
+    return (
+      <View className="flex-1">
+        <ActivityIndicator />
+      </View>
+    );
+
+  if (!customerInfo.entitlements.active['divizend-membership']) return <Redirect href={'/main'} />;
 
   return (
     <Tab.Navigator
