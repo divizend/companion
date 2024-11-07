@@ -105,6 +105,7 @@ i18next.use(initReactI18next).init({
           return i18next.t('country:' + value);
         }
         case 'weekDayAndTime': {
+          // Example: "Sun, 01:45 PM"
           return new Intl.DateTimeFormat(lng, {
             weekday: 'short',
             hour: '2-digit',
@@ -112,12 +113,14 @@ i18next.use(initReactI18next).init({
           }).format(new Date(value));
         }
         case 'weekDayAndHour': {
+          // Example: "Sun, 1 PM"
           return new Intl.DateTimeFormat(lng, {
             weekday: 'short',
             hour: 'numeric',
           }).format(new Date(value));
         }
         case 'day': {
+          // Example: "15/10/2023"
           return new Intl.DateTimeFormat(lng, {
             day: '2-digit',
             month: '2-digit',
@@ -125,12 +128,14 @@ i18next.use(initReactI18next).init({
           }).format(new Date(value));
         }
         case 'dayShort': {
+          // Example: "15 Oct"
           return new Intl.DateTimeFormat(lng, {
             day: '2-digit',
             month: 'short',
           }).format(new Date(value));
         }
         case 'dayUTC': {
+          // Example: "15/10/2023"
           return new Intl.DateTimeFormat(lng, {
             day: '2-digit',
             month: '2-digit',
@@ -139,6 +144,7 @@ i18next.use(initReactI18next).init({
           }).format(new Date(value));
         }
         case 'dayLongUTC': {
+          // Example: "15 October 2023"
           return new Intl.DateTimeFormat(lng, {
             day: 'numeric',
             month: 'long',
@@ -147,6 +153,7 @@ i18next.use(initReactI18next).init({
           }).format(new Date(value));
         }
         case 'dayLongAndTime': {
+          // Example: "15 October 2023, 01:45:30 PM"
           return new Intl.DateTimeFormat(lng, {
             day: 'numeric',
             month: 'long',
@@ -157,38 +164,47 @@ i18next.use(initReactI18next).init({
           }).format(new Date(value));
         }
         case 'weekDayShort': {
+          // Example: "Sun"
           return new Intl.DateTimeFormat(lng, {
             weekday: 'short',
           }).format(new Date(value));
         }
         case 'monthUTC': {
+          // Example: "10/2023"
           return new Intl.DateTimeFormat(lng, { month: '2-digit', year: 'numeric', timeZone: 'UTC' }).format(
             new Date(value),
           );
         }
         case 'monthShort': {
+          // Example: "Oct 2023"
           return new Intl.DateTimeFormat(lng, { month: 'short', year: 'numeric' }).format(new Date(value));
         }
         case 'monthLong': {
+          // Example: "October 2023"
           return new Intl.DateTimeFormat(lng, { month: 'long', year: 'numeric' }).format(new Date(value));
         }
         case 'monthLongUTC': {
+          // Example: "October 2023"
           return new Intl.DateTimeFormat(lng, { month: 'long', year: 'numeric', timeZone: 'UTC' }).format(
             new Date(value),
           );
         }
         case 'monthShortUTC': {
+          // Example: "Oct"
           return new Intl.DateTimeFormat(lng, { month: 'short', timeZone: 'UTC' }).format(new Date(value));
         }
         case 'yearUTC': {
+          // Example: "2023"
           return new Intl.DateTimeFormat(lng, { year: 'numeric', timeZone: 'UTC' }).format(new Date(value));
         }
         case 'monthShortYear2DigitUTC': {
+          // Example: "Oct '23"
           return new Intl.DateTimeFormat(lng, { month: 'short', year: '2-digit', timeZone: 'UTC' }).format(
             new Date(value),
           );
         }
         case 'year2DigitUTC': {
+          // Example: "’23"
           return '’' + new Intl.DateTimeFormat(lng, { year: '2-digit', timeZone: 'UTC' }).format(new Date(value));
         }
         default: {
