@@ -1,8 +1,9 @@
-import { useState, useEffect } from "react";
-import * as SecureStore from "expo-secure-store";
-import { router } from "expo-router";
+import { useEffect, useState } from 'react';
 
-export const SESSION_TOKEN_KEY = "sessionToken";
+import { router } from 'expo-router';
+import * as SecureStore from 'expo-secure-store';
+
+export const SESSION_TOKEN_KEY = 'sessionToken';
 
 export function getSessionToken(): Promise<string | null> {
   return SecureStore.getItemAsync(SESSION_TOKEN_KEY);
@@ -27,7 +28,7 @@ export function useSessionToken(): [string | null, boolean] {
         setSessionToken(token);
         setLoading(false);
       } catch (error) {
-        console.error("Error retrieving session token:", error);
+        console.error('Error retrieving session token:', error);
       }
     })();
   }, []);
@@ -42,7 +43,7 @@ export const withSessionToken = (Component: React.FC) => {
     if (sessionTokenLoading) {
       return null;
     } else if (!sessionToken) {
-      router.replace("/");
+      router.replace('/');
       return null;
     }
 

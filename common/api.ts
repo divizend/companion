@@ -8,6 +8,15 @@ import { usedConfig } from './config';
 import { getSessionToken } from './sessionToken';
 import { deleteSessionToken } from './sessionToken';
 
+export class ApiError extends Error {
+  httpStatus: number;
+
+  constructor(message: string, httpStatus: number) {
+    super(message);
+    this.httpStatus = httpStatus;
+  }
+}
+
 export const apiFetch = async (endpoint: string, options: any = {}) => {
   const token = await getSessionToken();
 
@@ -33,12 +42,13 @@ export const apiFetch = async (endpoint: string, options: any = {}) => {
   }
 
   if (!response.ok) {
-    throw new Error(
+    throw new ApiError(
       `HTTP error! status: ${response.status}${
         json?.error?.message
           ? ` (${json?.error?.message}${response.status === 422 ? ': ' + JSON.stringify(json?.error?.details) : ''})`
           : ''
       }`,
+      response.status,
     );
   }
 
@@ -63,7 +73,7 @@ export const apiDelete = (endpoint: string) => {
 };
 
 export const useFetch = <T = any>(key: string, endpoint?: string) => {
-  return useQuery<T>({
+  return useQuery<T, ApiError>({
     queryKey: [key],
     queryFn: endpoint ? () => apiFetch(endpoint) : undefined,
   });

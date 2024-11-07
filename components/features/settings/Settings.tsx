@@ -25,7 +25,7 @@ export default function SettingsView() {
   }
 
   const handleLogout = async () => {
-    if (await showConfirmationDialog(t('common.logout'), t('common.logoutConfirmation'))) {
+    if (await showConfirmationDialog(t('common.logout'), t('settings.logoutConfirmation'))) {
       await logout();
     }
   };
