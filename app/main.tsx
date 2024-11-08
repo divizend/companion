@@ -1,19 +1,21 @@
 import React, { useEffect } from 'react';
 
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { NavigatorScreenParams } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Icon } from '@rneui/themed';
 import { BlurView } from 'expo-blur';
 import { Redirect } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useColorScheme } from 'nativewind';
-import { ActivityIndicator, StyleSheet, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { NativeStackScreenProps } from 'react-native-screens/lib/typescript/native-stack/types';
 
 import { useUserProfile } from '@/common/profile';
 import { withUserProfile } from '@/common/withUserProfile';
+import FullScreenActivityIndicator from '@/components/FullScreenActivityIndicator';
 import OnboardingModal from '@/components/OnboardingModal';
-import SettingsStackNavigator from '@/components/features/settings/SettingsStack';
+import SettingsStackNavigator, { SettingsStackParamList } from '@/components/features/settings/SettingsStack';
 import BlurredHeader from '@/components/global/BlurredHeader';
 import PromptProvider from '@/hooks/usePrompt';
 import { RevenueCatProvider, usePurchases } from '@/hooks/usePurchases';
@@ -31,7 +33,7 @@ import TrackScreen from './track';
 
 export type RootStackParamList = {
   App: undefined;
-  SettingsModal?: { subscriptionInactive?: boolean };
+  SettingsModal: NavigatorScreenParams<SettingsStackParamList>;
 };
 
 const RootStack = createStackNavigator<RootStackParamList>();
@@ -61,16 +63,11 @@ function AppTabNavigator({ navigation }: NativeStackScreenProps<RootStackParamLi
   useEffect(() => {
     if (!customerInfo) return;
     if (!customerInfo.entitlements.active['divizend-membership']) {
-      return navigation.navigate('SettingsModal', { subscriptionInactive: true });
+      return navigation.navigate('SettingsModal', { screen: 'Plan', params: { subscriptionInactive: true } });
     }
   }, [customerInfo, navigation]);
 
-  if (!customerInfo)
-    return (
-      <View className="flex-1">
-        <ActivityIndicator />
-      </View>
-    );
+  if (!customerInfo) return <FullScreenActivityIndicator />;
 
   if (!customerInfo.entitlements.active['divizend-membership']) return <Redirect href="/main" />;
 

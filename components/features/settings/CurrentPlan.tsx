@@ -28,13 +28,13 @@ export default function CurrentPlan({ route }: Props) {
   const { data, isLoading } = useWaitlistStatus();
 
   useEffect(() => {
-    if (route.params.subscriptionInactive)
+    if (route.params?.subscriptionInactive)
       showAlert({
         title: 'Your subscription is inactive',
         message: 'Please make sure your subscription is active to continue using the app.',
         actions: [{ title: 'See subscription options', onPress: () => showCustom(SubscriptionCarousel) }],
       });
-  }, [route.params]);
+  }, [route.params?.subscriptionInactive]);
 
   if (loading || !customerInfo || !purchasePackages || isLoading || !data)
     return (

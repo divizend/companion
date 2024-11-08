@@ -11,7 +11,7 @@ import SettingsView from './Settings';
 
 export type SettingsStackParamList = {
   Settings: undefined;
-  Plan: { subscriptionInactive?: boolean };
+  Plan?: { subscriptionInactive?: boolean };
 };
 
 const SettingsStack = createStackNavigator<SettingsStackParamList>();
