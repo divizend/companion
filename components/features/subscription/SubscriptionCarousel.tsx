@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 
 import { Icon } from '@rneui/themed';
-import { ActivityIndicator, Dimensions, ImageBackground, Pressable, View } from 'react-native';
+import { Dimensions, ImageBackground, Pressable, View } from 'react-native';
 import Purchases, { PurchasesPackage } from 'react-native-purchases';
 import { useSharedValue } from 'react-native-reanimated';
 import Carousel, { ICarouselInstance } from 'react-native-reanimated-carousel';
 
 import { apiPost } from '@/common/api';
 import { clsx } from '@/common/clsx';
+import FullScreenActivityIndicator from '@/components/FullScreenActivityIndicator';
 import StyledButton from '@/components/StyledButton';
 import { Text } from '@/components/base';
 import { useSnackbar } from '@/components/global/Snackbar';
@@ -38,12 +39,7 @@ export default function SubscriptionCarousel({ close }: Props) {
       .catch(err => showSnackbar(err.message, { type: 'error' }));
   };
 
-  if (loading || !purchasePackages || isLoading || !data)
-    return (
-      <View className="flex-1">
-        <ActivityIndicator color={theme.theme} />
-      </View>
-    );
+  if (loading || !purchasePackages || isLoading || !data) return <FullScreenActivityIndicator />;
 
   const userInWaitlist = !!data.waitingForPoints;
 

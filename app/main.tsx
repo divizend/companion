@@ -32,6 +32,7 @@ import RealizeGoalsScreen from './learn/realize-goals';
 import TrackScreen from './track';
 
 export type RootStackParamList = {
+  Onboarding: undefined;
   App: undefined;
   SettingsModal: NavigatorScreenParams<SettingsStackParamList>;
 };
@@ -126,16 +127,17 @@ function Main() {
   const { colorScheme } = useColorScheme();
   const { profile } = useUserProfile();
 
-  if (!profile) {
-    return null;
-  }
+  if (!profile) return <FullScreenActivityIndicator />;
 
   return (
     <RevenueCatProvider>
       <PromptProvider>
-        <OnboardingModal visible={!profile?.flags?.allowedCompanionAI} />
         <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
-        <RootStack.Navigator screenOptions={{ headerShown: false }}>
+        <RootStack.Navigator
+          initialRouteName={!profile?.flags?.allowedCompanionAI ? 'Onboarding' : 'App'}
+          screenOptions={{ headerShown: false }}
+        >
+          {!profile?.flags?.allowedCompanionAI && <RootStack.Screen name="Onboarding" component={OnboardingModal} />}
           <RootStack.Screen name="App" component={AppTabNavigator} />
           <RootStack.Screen
             name="SettingsModal"

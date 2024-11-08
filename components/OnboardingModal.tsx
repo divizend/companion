@@ -32,13 +32,9 @@ import { t } from '@/i18n';
 import { SafeAreaView } from './base/SafeAreaView';
 import { useSnackbar } from './global/Snackbar';
 
-interface OnboardingModalProps {
-  visible: boolean;
-}
-
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
-export default function OnboardingModal({ visible }: OnboardingModalProps) {
+export default function OnboardingModal() {
   const theme = useThemeColor();
   const { updateProfile, updatePrincipalLegalEntity } = useUserProfile();
   const principalLegalEntity = usePrincipalLegalEntity();
@@ -187,7 +183,7 @@ export default function OnboardingModal({ visible }: OnboardingModalProps) {
   };
 
   return (
-    <Modal visible={visible} animationType="slide" presentationStyle="pageSheet" onRequestClose={() => {}}>
+    <>
       <StatusBar barStyle="dark-content" />
       <SafeAreaView style={styles.safeArea}>
         <LinearGradient
@@ -295,7 +291,7 @@ export default function OnboardingModal({ visible }: OnboardingModalProps) {
           />
         </View>
       </SafeAreaView>
-    </Modal>
+    </>
   );
 }
 

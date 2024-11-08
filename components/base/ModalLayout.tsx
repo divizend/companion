@@ -5,6 +5,7 @@ import { Header, Icon } from '@rneui/themed';
 import { ScrollView, TouchableOpacity, View } from 'react-native';
 
 import { Text } from '@/components/base';
+import { usePurchases } from '@/hooks/usePurchases';
 import { useThemeColor } from '@/hooks/useThemeColor';
 
 interface ModalLayoutProps {
@@ -17,6 +18,7 @@ interface ModalLayoutProps {
 export default function ModalLayout({ title, children, canGoBack = true, noScrollView }: ModalLayoutProps) {
   const navigation = useNavigation();
   const theme = useThemeColor();
+  const { customerInfo } = usePurchases();
   return (
     <View className="flex-1 dark:bg-primary-dark bg-primary-light">
       <Header
@@ -28,15 +30,25 @@ export default function ModalLayout({ title, children, canGoBack = true, noScrol
         }
         leftComponent={
           canGoBack ? (
-            <TouchableOpacity pressRetentionOffset={20} onPress={navigation.goBack}>
+            <TouchableOpacity pressRetentionOffset={20} onPress={() => navigation.navigate('Settings' as never)}>
               <View className="dark:bg-[#232223] bg-[#e0e0e0] rounded-2xl p-1 m-[5px]">
                 <Icon name="arrow-back" size={16} color="#666" />
               </View>
             </TouchableOpacity>
           ) : undefined
         }
+        // Only show exit button when user has access back to the app
         rightComponent={
-          <TouchableOpacity onPress={() => navigation.navigate('App' as never)}>
+          <TouchableOpacity
+            {...(!customerInfo?.entitlements.active['divizend-membership'] && {
+              style: { opacity: 0 },
+              activeOpacity: 0,
+              disabled: true,
+            })}
+            onPress={() =>
+              !!customerInfo?.entitlements.active['divizend-membership'] && navigation.navigate('App' as never)
+            }
+          >
             <View className="dark:bg-[#232223] bg-[#e0e0e0] rounded-2xl p-1 m-[5px]">
               <Icon name="close" size={16} color="#666" />
             </View>

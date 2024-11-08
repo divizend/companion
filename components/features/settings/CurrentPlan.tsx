@@ -2,10 +2,11 @@ import React, { useEffect } from 'react';
 
 import { Icon } from '@rneui/base';
 import * as Linking from 'expo-linking';
-import { ActivityIndicator, View } from 'react-native';
+import { View } from 'react-native';
 import { NativeStackScreenProps } from 'react-native-screens/lib/typescript/native-stack/types';
 
 import { clsx } from '@/common/clsx';
+import FullScreenActivityIndicator from '@/components/FullScreenActivityIndicator';
 import StyledButton from '@/components/StyledButton';
 import { ScrollScreen, Text } from '@/components/base';
 import '@/global.css';
@@ -36,12 +37,7 @@ export default function CurrentPlan({ route }: Props) {
       });
   }, [route.params?.subscriptionInactive]);
 
-  if (loading || !customerInfo || !purchasePackages || isLoading || !data)
-    return (
-      <View className="flex-1 justify-center">
-        <ActivityIndicator />
-      </View>
-    );
+  if (loading || !customerInfo || !purchasePackages || isLoading || !data) return <FullScreenActivityIndicator />;
 
   const activeSubscription =
     JSON.stringify(customerInfo.entitlements.active) === '{}'
