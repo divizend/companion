@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { useNavigation } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Icon } from '@rneui/themed';
 import { BlurView } from 'expo-blur';
@@ -9,6 +8,7 @@ import { Redirect } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useColorScheme } from 'nativewind';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
+import { NativeStackScreenProps } from 'react-native-screens/lib/typescript/native-stack/types';
 
 import { useUserProfile } from '@/common/profile';
 import { withUserProfile } from '@/common/withUserProfile';
@@ -29,7 +29,12 @@ import InsightsScreen from './learn/insights';
 import RealizeGoalsScreen from './learn/realize-goals';
 import TrackScreen from './track';
 
-const RootStack = createStackNavigator();
+export type RootStackParamList = {
+  App: undefined;
+  SettingsModal?: { subscriptionInactive?: boolean };
+};
+
+const RootStack = createStackNavigator<RootStackParamList>();
 const Tab = createBottomTabNavigator();
 const LearnStack = createStackNavigator();
 
@@ -48,10 +53,17 @@ function LearnStackNavigator() {
   );
 }
 
-function AppTabNavigator() {
+function AppTabNavigator({ navigation }: NativeStackScreenProps<RootStackParamList, 'App'>) {
   const theme = useThemeColor();
   const { colorScheme } = useColorScheme();
   const { customerInfo } = usePurchases();
+
+  useEffect(() => {
+    if (!customerInfo) return;
+    if (!customerInfo.entitlements.active['divizend-membership']) {
+      return navigation.navigate('SettingsModal', { subscriptionInactive: true });
+    }
+  }, [customerInfo, navigation]);
 
   if (!customerInfo)
     return (
@@ -60,7 +72,7 @@ function AppTabNavigator() {
       </View>
     );
 
-  if (!customerInfo.entitlements.active['divizend-membership']) return <Redirect href={'/main'} />;
+  if (!customerInfo.entitlements.active['divizend-membership']) return <Redirect href="/main" />;
 
   return (
     <Tab.Navigator

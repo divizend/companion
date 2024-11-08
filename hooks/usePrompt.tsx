@@ -25,6 +25,7 @@ type PromptConfig = {
    * default 50%
    */
   height?: string | number;
+  onClose?: (...args: any[]) => void;
 };
 
 type InputPromptConfig = PromptConfig & {
@@ -46,7 +47,7 @@ type PromptConfigInternal = {
     }
   | {
       type: 'custom';
-      Component: React.ComponentType<any>;
+      config: { Component: React.ComponentType<any>; onClose?: (...args: any[]) => void };
     }
 );
 
@@ -122,7 +123,7 @@ const PromptProvider: React.FC<PromptProviderProps> = ({ children }) => {
     const internalPrompt: PromptConfigInternal = {
       id: uniqueId(),
       type: 'custom',
-      Component,
+      config: { Component },
     };
     setPromptQueue(prevQueue => [internalPrompt, ...prevQueue]);
   };
@@ -133,6 +134,7 @@ const PromptProvider: React.FC<PromptProviderProps> = ({ children }) => {
     // This will automatically trigger the onClose of the BottomSheet which sets the currentPrompt to null.
     setTimeout(() => bottomSheetRef.current?.close());
     Keyboard.dismiss();
+    if (currentPrompt?.config.onClose) currentPrompt?.config.onClose();
   };
 
   useEffect(() => {
@@ -142,7 +144,7 @@ const PromptProvider: React.FC<PromptProviderProps> = ({ children }) => {
     }
   }, [currentPrompt, promptQueue]);
 
-  const Component = currentPrompt?.type === 'custom' ? currentPrompt.Component : () => <></>;
+  const Component = currentPrompt?.type === 'custom' ? currentPrompt.config.Component : () => <></>;
 
   return (
     <PromptContext.Provider value={{ showAlert, showPrompt, showCustom }}>

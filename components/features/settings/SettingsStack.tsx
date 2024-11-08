@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { createStackNavigator } from '@react-navigation/stack';
+import { NativeStackScreenProps } from 'react-native-screens/lib/typescript/native-stack/types';
 
 import ModalLayout from '@/components/base/ModalLayout';
 import { t } from '@/i18n';
@@ -8,7 +9,12 @@ import { t } from '@/i18n';
 import CurrentPlan from './CurrentPlan';
 import SettingsView from './Settings';
 
-const SettingsStack = createStackNavigator();
+export type SettingsStackParamList = {
+  Settings: undefined;
+  Plan: { subscriptionInactive?: boolean };
+};
+
+const SettingsStack = createStackNavigator<SettingsStackParamList>();
 
 function SettingsViewScreen() {
   return (
@@ -18,10 +24,10 @@ function SettingsViewScreen() {
   );
 }
 
-function CurrentPlanScreen() {
+function CurrentPlanScreen(screenProps: NativeStackScreenProps<SettingsStackParamList, 'Plan'>) {
   return (
     <ModalLayout noScrollView title={t('settings.currentPlan.title')}>
-      <CurrentPlan />
+      <CurrentPlan {...screenProps} />
     </ModalLayout>
   );
 }

@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import { Icon } from '@rneui/base';
 import * as Linking from 'expo-linking';
 import { ActivityIndicator, View } from 'react-native';
+import { NativeStackScreenProps } from 'react-native-screens/lib/typescript/native-stack/types';
 
 import { clsx } from '@/common/clsx';
 import StyledButton from '@/components/StyledButton';
@@ -15,13 +16,25 @@ import { t } from '@/i18n';
 
 import SubscriptionCarousel from '../subscription/SubscriptionCarousel';
 import { requiresWaitlist } from '../subscription/util';
+import { SettingsStackParamList } from './SettingsStack';
 import { useWaitlistStatus } from './queries';
 
-export default function CurrentPlan() {
+type Props = NativeStackScreenProps<SettingsStackParamList, 'Plan'>;
+
+export default function CurrentPlan({ route }: Props) {
   const theme = useThemeColor();
-  const { showCustom } = usePrompt();
+  const { showCustom, showAlert } = usePrompt();
   const { purchasePackages, loading, customerInfo } = usePurchases();
   const { data, isLoading } = useWaitlistStatus();
+
+  useEffect(() => {
+    if (route.params.subscriptionInactive)
+      showAlert({
+        title: 'Your subscription is inactive',
+        message: 'Please make sure your subscription is active to continue using the app.',
+        actions: [{ title: 'See subscription options', onPress: () => showCustom(SubscriptionCarousel) }],
+      });
+  }, [route.params]);
 
   if (loading || !customerInfo || !purchasePackages || isLoading || !data)
     return (
