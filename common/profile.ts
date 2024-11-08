@@ -2,7 +2,8 @@ import { useQueryClient } from '@tanstack/react-query';
 import { produce } from 'immer';
 import RNRestart from 'react-native-restart';
 
-import { apiGet, useFetch } from './api';
+import { apiGet } from './api';
+import { useUserProfileQuery } from './queries';
 import { setSessionToken } from './sessionToken';
 
 export type CompanionProfileLearnQuestion = {
@@ -89,7 +90,7 @@ export function getEmptyCompanionProfile(): CompanionProfile {
 
 export function useUserProfile() {
   const queryClient = useQueryClient();
-  const profileRaw = useFetch<UserProfile>('userProfile');
+  const profileRaw = useUserProfileQuery();
   const profile = profileRaw.data!;
 
   const updateProfile = (fn: (draft: UserProfile) => void) => {

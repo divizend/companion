@@ -7,12 +7,13 @@ import { queryClient } from '@/app/_layout';
 import FullScreenActivityIndicator from '@/components/FullScreenActivityIndicator';
 import { t } from '@/i18n';
 
-import { logout, useFetch } from './api';
+import { logout } from './api';
+import { useUserProfileQuery } from './queries';
 import { deleteSessionToken, withSessionToken } from './sessionToken';
 
 export const withUserProfile = (Component: React.FC) => {
   return withSessionToken((props: any) => {
-    const { data, error, isLoading } = useFetch('userProfile', '/users/me');
+    const { data, error, isLoading } = useUserProfileQuery();
 
     const doErrorAlert = () =>
       Alert.alert(t('common.error'), error?.message, [
