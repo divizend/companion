@@ -52,15 +52,6 @@ function AppTabNavigator() {
   const theme = useThemeColor();
   const { colorScheme } = useColorScheme();
   const { customerInfo } = usePurchases();
-  const { navigate } = useNavigation();
-
-  useEffect(() => {
-    if (!customerInfo) return;
-    if (!customerInfo.entitlements.active['divizend-membership']) {
-      console.log('navigating because', customerInfo.entitlements.active['divizend-membership']);
-      return navigate('SettingsModal' as never);
-    }
-  }, [customerInfo, navigate]);
 
   if (!customerInfo)
     return (
