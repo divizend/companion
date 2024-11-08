@@ -160,7 +160,7 @@ export default function CurrentPlan({ route }: Props) {
           </View>
         )}
       </ScrollScreen>
-      <View className="flex gap-2 bg-primary-light p-5 pt-0">
+      <View className="flex gap-2 p-5 pt-0">
         {!activeSubscription && (
           <StyledButton
             title={
