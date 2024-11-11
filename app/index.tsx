@@ -19,7 +19,7 @@ export default function Index() {
 
   useEffect(() => {
     if (sessionToken && !sessionTokenLoading) {
-      router.replace('/main/app');
+      router.replace('/main');
     }
   }, [sessionToken, sessionTokenLoading]);
 
@@ -74,7 +74,7 @@ export default function Index() {
       const { sessionToken } = JSON.parse(sessionTokenResp);
 
       await setSessionToken(sessionToken);
-      router.replace('/main/app');
+      router.replace('/main');
     } catch (error: any) {
       if (error.message !== 'cancel') {
         Alert.alert(t('common.error'), error.message);

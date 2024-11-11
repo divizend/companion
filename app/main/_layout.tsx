@@ -18,7 +18,7 @@ function Layout() {
     <RevenueCatProvider>
       <ModalProvider>
         <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
-        <JsStack initialRouteName="onboarding" screenOptions={{ headerShown: false }}>
+        <JsStack initialRouteName="app" screenOptions={{ headerShown: false }}>
           <JsStack.Screen name="onboarding" options={{ presentation: 'modal' }} />
           <JsStack.Screen name="settings" options={{ presentation: 'modal' }} />
         </JsStack>

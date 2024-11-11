@@ -4,6 +4,7 @@ import RNDateTimePicker, { DateTimePickerAndroid, DateTimePickerEvent } from '@r
 import { Picker } from '@react-native-picker/picker';
 import { Button, Icon } from '@rneui/themed';
 import { LinearGradient } from 'expo-linear-gradient';
+import { router } from 'expo-router';
 import i18next from 'i18next';
 import {
   Alert,
@@ -270,6 +271,7 @@ export default function OnboardingModal() {
                   updateProfile(p => {
                     p.flags.allowedCompanionAI = true;
                   });
+                  router.navigate('/main/app');
                 } catch (error: any) {
                   showSnackbar(error.message);
                   console.log(error);
