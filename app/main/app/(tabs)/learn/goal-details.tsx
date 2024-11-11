@@ -12,7 +12,8 @@ import { ScrollScreen, ScrollScreenRef, Text } from '@/components/base';
 import { SafeAreaView } from '@/components/base/SafeAreaView';
 import AssessRealitiesModal from '@/components/features/learn/AssessRealitiesModal';
 import GoalsSectionList from '@/components/features/learn/GoalsSectionList';
-import { usePrompt } from '@/hooks/usePrompt';
+import { ModalManager } from '@/components/global/modal';
+import { showPrompt } from '@/components/global/prompt';
 import { t } from '@/i18n';
 
 export default function GoalDetails() {
@@ -20,15 +21,12 @@ export default function GoalDetails() {
   const { goalId } = route.params as { goalId: string };
   const { updateCompanionProfile } = useUserProfile();
   const goal = useGoal(goalId)!;
-  const { showPrompt } = usePrompt();
 
-  const [showAssessModal, setShowAssessModal] = useState(false);
   const [isRefiningRealityId, setIsRefiningRealityId] = useState<string | null>(null);
   const [isRemovingRealityId, setIsRemovingRealityId] = useState<string | null>(null);
   const [isAddingLearningIntentions, setIsAddingLearningIntentions] = useState(false);
   const [isRemovingLearningIntentionId, setIsRemovingLearningIntentionId] = useState<string | null>(null);
   const [isClearingLearningIntentions, setIsClearingLearningIntentions] = useState(false);
-  const [chatModalOpenLearningIntentionId, setChatModalOpenLearningIntentionId] = useState<string | null>(null);
   const [isModifyingEmoji, setIsModifyingEmoji] = useState(false);
 
   const scrollViewRef = useRef<ScrollScreenRef>(null);
@@ -155,6 +153,10 @@ export default function GoalDetails() {
     return null;
   }
 
+  const AssessRealities = ({ dismiss }: { dismiss: () => void }) => (
+    <AssessRealitiesModal dismiss={dismiss} goalId={goal.id} />
+  );
+
   return (
     <SafeAreaView>
       <ScrollScreen ref={scrollViewRef}>
@@ -177,12 +179,10 @@ export default function GoalDetails() {
               leftIcon: intention.emoji,
               onRemove: () => handleRemoveLearningIntention(intention.id),
               disabled: isRemovingLearningIntentionId === intention.id,
-              onPress: () => setChatModalOpenLearningIntentionId(intention.id),
-              additional:
-                chatModalOpenLearningIntentionId === intention.id ? (
+              onPress: () =>
+                ModalManager.showModal(({ dismiss }) => (
                   <ChatModal
-                    visible={chatModalOpenLearningIntentionId === intention.id}
-                    onClose={() => setChatModalOpenLearningIntentionId(null)}
+                    dismiss={dismiss}
                     systemPrompt={`You are an AI assistant that helps the user with the goal of \"${
                       goal.description
                     }\". Never use Markdown. Make sure to give exceptionally intelligent and helpful responses. All responses should always be practical, pragmatic, as specific as possible and clearly actionable. The user already stated the following facts and context for this goal, which should be considered in all responses:\n${goal.realities
@@ -190,7 +190,7 @@ export default function GoalDetails() {
                       .join('\n')}`}
                     initialUserMessage={intention.question}
                   />
-                ) : null,
+                )),
             })),
             {
               title: isAddingLearningIntentions
@@ -237,7 +237,7 @@ export default function GoalDetails() {
             })),
             {
               title: t('learn.goalDetails.realities.assess.cta'),
-              onPress: () => setShowAssessModal(true),
+              onPress: () => ModalManager.showModal(AssessRealities),
               leftIcon: { name: 'add', type: 'material' },
             },
           ]}
@@ -246,8 +246,6 @@ export default function GoalDetails() {
         />
 
         <GoalsSectionList parentGoalId={goalId} allowRedetermine />
-
-        <AssessRealitiesModal visible={showAssessModal} onClose={() => setShowAssessModal(false)} goalId={goalId} />
       </ScrollScreen>
     </SafeAreaView>
   );

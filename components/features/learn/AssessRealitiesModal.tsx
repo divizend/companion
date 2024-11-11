@@ -5,18 +5,17 @@ import { Alert, StyleSheet, View } from 'react-native';
 
 import { apiGet, apiPost } from '@/common/api';
 import { useGoal, useUserProfile } from '@/common/profile';
-import ModalView from '@/components/ModalView';
 import SectionList from '@/components/SectionList';
-import { usePrompt } from '@/hooks/usePrompt';
+import ModalLayout from '@/components/global/ModalLayout';
+import { showPrompt } from '@/components/global/prompt';
 import { t } from '@/i18n';
 
 interface AssessRealitiesModalProps {
-  visible: boolean;
-  onClose: () => void;
+  dismiss: () => void;
   goalId: string;
 }
 
-export default function AssessRealitiesModal({ visible, onClose, goalId }: AssessRealitiesModalProps) {
+export default function AssessRealitiesModal({ dismiss, goalId }: AssessRealitiesModalProps) {
   const { updateCompanionProfile } = useUserProfile();
   const goal = useGoal(goalId);
   const [isAddingReality, setIsAddingReality] = useState(false);
@@ -24,7 +23,6 @@ export default function AssessRealitiesModal({ visible, onClose, goalId }: Asses
   const [questions, setQuestions] = useState<string[]>([]);
   const [isLoadingQuestions, setIsLoadingQuestions] = useState<boolean>(true);
   const [realitiesAddedSinceLastLoad, setRealitiesAddedSinceLastLoad] = useState(false);
-  const { showPrompt } = usePrompt();
 
   const loadQuestions = async () => {
     try {
@@ -38,10 +36,8 @@ export default function AssessRealitiesModal({ visible, onClose, goalId }: Asses
   };
 
   useEffect(() => {
-    if (visible) {
-      loadQuestions();
-    }
-  }, [visible]);
+    loadQuestions();
+  }, []);
 
   const handleAddRealityFromQuestion = async (questionIndex: number) => {
     const text = await showPrompt({ title: questions[questionIndex] });
@@ -84,7 +80,7 @@ export default function AssessRealitiesModal({ visible, onClose, goalId }: Asses
   };
 
   return (
-    <ModalView visible={visible} onClose={onClose} title={t('learn.goalDetails.realities.assess.title')}>
+    <ModalLayout dismiss={dismiss} title={t('learn.goalDetails.realities.assess.title')}>
       <View style={styles.container}>
         <Text style={styles.explanation}>
           {t('learn.goalDetails.realities.assess.explanation', {
@@ -126,7 +122,7 @@ export default function AssessRealitiesModal({ visible, onClose, goalId }: Asses
           />
         )}
       </View>
-    </ModalView>
+    </ModalLayout>
   );
 }
 

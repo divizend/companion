@@ -1,13 +1,15 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 import { router } from 'expo-router';
 import { StyleSheet } from 'react-native';
 
 import { useUserProfile } from '@/common/profile';
 import SectionList from '@/components/SectionList';
+import ModalLayout from '@/components/global/ModalLayout';
+import { ModalManager } from '@/components/global/modal';
 import { t } from '@/i18n';
 
-import GoalsManagerModal from './GoalsManagerModal';
+import GoalsManager from './GoalsManager';
 
 interface GoalsSectionListProps {
   parentGoalId: string | null;
@@ -18,8 +20,13 @@ interface GoalsSectionListProps {
 export default function GoalsSectionList({ parentGoalId, allowRedetermine, style }: GoalsSectionListProps) {
   const { profile } = useUserProfile();
 
-  const [showGoalsManagerModal, setShowGoalsManagerModal] = useState(false);
   const variant = parentGoalId ? 'secondary' : 'primary';
+
+  const GoalsManagerModal = ({ dismiss }: any) => (
+    <ModalLayout dismiss={() => dismiss()} title={t(`learn.goalsManager.${variant}.title`)}>
+      <GoalsManager parentGoalId={parentGoalId} allowRedetermine />
+    </ModalLayout>
+  );
 
   return (
     <>
@@ -36,19 +43,12 @@ export default function GoalsSectionList({ parentGoalId, allowRedetermine, style
             })),
           {
             title: t(`learn.goalsManager.${variant}.title`),
-            onPress: () => setShowGoalsManagerModal(true),
+            onPress: () => ModalManager.showModal(GoalsManagerModal),
             leftIcon: { name: 'edit', type: 'material' },
           },
         ]}
         containerStyle={style ?? styles.sectionContainer}
         bottomText={variant === 'secondary' ? t(`learn.goalsManager.${variant}.explanation`) : undefined}
-      />
-
-      <GoalsManagerModal
-        visible={showGoalsManagerModal}
-        onClose={() => setShowGoalsManagerModal(false)}
-        parentGoalId={parentGoalId}
-        allowRedetermine={allowRedetermine}
       />
     </>
   );

@@ -10,6 +10,7 @@ import { showConfirmationDialog } from '@/common/inputDialog';
 import { impersonateUser, useUserProfile } from '@/common/profile';
 import ImpersonateUserModal from '@/components/ImpersonateUserModal';
 import SectionList from '@/components/SectionList';
+import { ModalManager } from '@/components/global/modal';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { t } from '@/i18n';
 
@@ -17,7 +18,6 @@ export default function SettingsView() {
   const { toggleTheme } = useThemeColor();
   const { profile, isPrivileged } = useUserProfile();
   const [resettingProfileLoading, setResettingProfileLoading] = useState(false);
-  const [impersonateModalVisible, setImpersonateModalVisible] = useState(false);
 
   if (!profile) {
     return null;
@@ -84,7 +84,7 @@ export default function SettingsView() {
           items={[
             {
               title: t('settings.privilegedActions.impersonateUser'),
-              onPress: () => setImpersonateModalVisible(true),
+              onPress: () => ModalManager.showModal(ImpersonateUserModal),
               leftIcon: { name: 'person-outline', type: 'material' },
             },
             profile.impersonation
@@ -120,8 +120,6 @@ export default function SettingsView() {
           },
         ]}
       />
-
-      <ImpersonateUserModal visible={impersonateModalVisible} onClose={() => setImpersonateModalVisible(false)} />
     </View>
   );
 }

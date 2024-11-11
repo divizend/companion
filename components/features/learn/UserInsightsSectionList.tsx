@@ -5,7 +5,7 @@ import { Alert, StyleSheet } from 'react-native';
 import { apiPost } from '@/common/api';
 import { CompanionProfileUserInsight, useUserProfile } from '@/common/profile';
 import SectionList from '@/components/SectionList';
-import { usePrompt } from '@/hooks/usePrompt';
+import { showPrompt } from '@/components/global/prompt';
 import { t } from '@/i18n';
 
 interface UserInsightsSectionListProps {
@@ -16,7 +16,6 @@ export default function UserInsightsSectionList({ isOnboarding }: UserInsightsSe
   const { profile, updateCompanionProfile } = useUserProfile();
   const [removingInsightId, setRemovingInsightId] = useState<string | null>(null);
   const [addingInsight, setAddingInsight] = useState<boolean>(false);
-  const { showPrompt } = usePrompt();
 
   const handleRemoveInsight = (insightId: string) => {
     Alert.alert(

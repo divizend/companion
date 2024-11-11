@@ -12,15 +12,14 @@ import { ScrollScreen, Text } from '@/components/base';
 import SubscriptionCarousel from '@/components/features/subscription/SubscriptionCarousel';
 import { useWaitlistStatus } from '@/components/features/subscription/queries';
 import { requiresWaitlist } from '@/components/features/subscription/util';
+import { showAlert, showCustom } from '@/components/global/prompt';
 import '@/global.css';
-import { usePrompt } from '@/hooks/usePrompt';
 import { usePurchases } from '@/hooks/usePurchases';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { t } from '@/i18n';
 
 export default function CurrentPlan() {
   const theme = useThemeColor();
-  const { showCustom, showAlert } = usePrompt();
   const { purchasePackages, loading, customerInfo } = usePurchases();
   const { data, isLoading } = useWaitlistStatus();
   const params = useLocalSearchParams();
@@ -30,7 +29,9 @@ export default function CurrentPlan() {
       showAlert({
         title: 'Your subscription is inactive',
         message: 'Please make sure your subscription is active to continue using the app.',
-        actions: [{ title: 'See subscription options', onPress: () => showCustom(SubscriptionCarousel) }],
+        actions: [
+          { title: 'See subscription options', onPress: () => showCustom(SubscriptionCarousel as React.ComponentType) },
+        ],
       });
   }, [params?.subscriptionInactive]);
 
@@ -168,7 +169,7 @@ export default function CurrentPlan() {
                 {t('subscription.actions.subscribe')}
               </Text>
             }
-            onPress={() => showCustom(SubscriptionCarousel)}
+            onPress={() => showCustom(SubscriptionCarousel as React.ComponentType)}
             buttonStyle={{ backgroundColor: theme.theme, borderRadius: 12, paddingVertical: 15 }}
           />
         )}

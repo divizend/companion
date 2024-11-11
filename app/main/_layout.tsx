@@ -5,7 +5,7 @@ import { useUserProfile } from '@/common/profile';
 import { withUserProfile } from '@/common/withUserProfile';
 import FullScreenActivityIndicator from '@/components/FullScreenActivityIndicator';
 import { JsStack } from '@/components/global/JsStack';
-import PromptProvider from '@/hooks/usePrompt';
+import { ModalProvider } from '@/components/global/modal';
 import { RevenueCatProvider } from '@/hooks/usePurchases';
 
 function Layout() {
@@ -16,13 +16,13 @@ function Layout() {
 
   return (
     <RevenueCatProvider>
-      <PromptProvider>
+      <ModalProvider>
         <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
         <JsStack initialRouteName="onboarding" screenOptions={{ headerShown: false }}>
           <JsStack.Screen name="onboarding" options={{ presentation: 'modal' }} />
           <JsStack.Screen name="settings" options={{ presentation: 'modal' }} />
         </JsStack>
-      </PromptProvider>
+      </ModalProvider>
     </RevenueCatProvider>
   );
 }

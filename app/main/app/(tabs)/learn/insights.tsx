@@ -10,7 +10,7 @@ import SectionList from '@/components/SectionList';
 import StyledButton from '@/components/StyledButton';
 import { SafeAreaView, ScrollScreen, Text } from '@/components/base';
 import UserInsightsSectionList from '@/components/features/learn/UserInsightsSectionList';
-import { usePrompt } from '@/hooks/usePrompt';
+import { showAlert, showPrompt } from '@/components/global/prompt';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { t } from '@/i18n';
 
@@ -20,7 +20,6 @@ export default function Insights() {
   const [similarQuestionsLoadingQuestionId, setSimilarQuestionsLoadingQuestionId] = useState<string | null>(null);
   const [generateInsightLoadingQuestionId, setGenerateInsightLoadingQuestionId] = useState<string | null>(null);
   const theme = useThemeColor();
-  const { showAlert, showPrompt } = usePrompt();
 
   const [defaultQuestions] = useState<CompanionProfileLearnQuestion[]>(
     (t('learn.insights.defaultQuestions', { returnObjects: true }) as any).map((q: any) => ({

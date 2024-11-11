@@ -6,7 +6,7 @@ import { apiDelete, apiGet, apiPost } from '@/common/api';
 import { CompanionProfileGoal, useUserProfile } from '@/common/profile';
 import SectionList from '@/components/SectionList';
 import StyledButton, { StyledButtonProps } from '@/components/StyledButton';
-import { usePrompt } from '@/hooks/usePrompt';
+import { showAlert, showPrompt } from '@/components/global/prompt';
 import { t } from '@/i18n';
 
 interface GoalsManagerProps {
@@ -21,7 +21,6 @@ export default function GoalsManager({ confirmButtonProps, allowRedetermine, par
   const [addingManualGoal, setAddingManualGoal] = useState<boolean>(false);
   const [refiningGoalId, setRefiningGoalId] = useState<string | null>(null);
   const [removingGoalId, setRemovingGoalId] = useState<string | null>(null);
-  const { showAlert, showPrompt } = usePrompt();
 
   const variant = parentGoalId ? 'secondary' : 'primary';
   const relevantGoals = profile.companionProfile.goals.filter(g => g.parentGoalId === parentGoalId);

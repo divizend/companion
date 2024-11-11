@@ -12,7 +12,7 @@ import FullScreenActivityIndicator from '@/components/FullScreenActivityIndicato
 import StyledButton from '@/components/StyledButton';
 import { Text } from '@/components/base';
 import { useSnackbar } from '@/components/global/Snackbar';
-import { usePrompt } from '@/hooks/usePrompt';
+import { showAlert } from '@/components/global/prompt';
 import { usePurchases } from '@/hooks/usePurchases';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { t } from '@/i18n';
@@ -30,7 +30,6 @@ export default function SubscriptionCarousel({ close }: Props) {
   const progress = useSharedValue<number>(0);
   const [selectedPackage, setSelectedPackage] = useState<PurchasesPackage>();
   const [isSubscribing, setIsSubscribing] = useState(false);
-  const { showAlert } = usePrompt();
   const { data, isLoading, refetch } = useWaitlistStatus();
 
   const handleSubscribe = async (product: PurchasesPackage) => {
