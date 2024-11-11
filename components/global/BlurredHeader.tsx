@@ -89,7 +89,7 @@ export default function BlurredHeader(props: BlurredHeaderProps) {
 
   return shouldBlur ? (
     <AnimatedBlurView
-      experimentalBlurMethod="none"
+      experimentalBlurMethod="dimezisBlurView"
       tint={colorScheme === 'dark' ? 'dark' : 'extraLight'}
       animatedProps={animatedProps}
       style={{

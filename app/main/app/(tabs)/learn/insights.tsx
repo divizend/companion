@@ -136,7 +136,6 @@ export default function Insights() {
             <StyledButton
               title={t(`learn.insights.confirmButton`)}
               onPress={() => router.navigate('/main/app/(tabs)/learn/goals')}
-              // onPress={() => navigation.navigate('Goals' as never)}
               containerStyle={styles.confirmButton}
             />
           </>
