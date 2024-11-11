@@ -10,11 +10,10 @@ import ChatModal from '@/components/ChatModal';
 import SectionList from '@/components/SectionList';
 import { ScrollScreen, ScrollScreenRef, Text } from '@/components/base';
 import { SafeAreaView } from '@/components/base/SafeAreaView';
+import AssessRealitiesModal from '@/components/features/learn/AssessRealitiesModal';
+import GoalsSectionList from '@/components/features/learn/GoalsSectionList';
 import { usePrompt } from '@/hooks/usePrompt';
 import { t } from '@/i18n';
-
-import AssessRealitiesModal from './AssessRealitiesModal';
-import GoalsSectionList from './GoalsSectionList';
 
 export default function GoalDetails() {
   const route = useRoute();

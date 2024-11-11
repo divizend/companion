@@ -2,40 +2,37 @@ import React, { useEffect } from 'react';
 
 import { Icon } from '@rneui/base';
 import * as Linking from 'expo-linking';
+import { useLocalSearchParams } from 'expo-router';
 import { View } from 'react-native';
-import { NativeStackScreenProps } from 'react-native-screens/lib/typescript/native-stack/types';
 
 import { clsx } from '@/common/clsx';
 import FullScreenActivityIndicator from '@/components/FullScreenActivityIndicator';
 import StyledButton from '@/components/StyledButton';
 import { ScrollScreen, Text } from '@/components/base';
+import SubscriptionCarousel from '@/components/features/subscription/SubscriptionCarousel';
+import { useWaitlistStatus } from '@/components/features/subscription/queries';
+import { requiresWaitlist } from '@/components/features/subscription/util';
 import '@/global.css';
 import { usePrompt } from '@/hooks/usePrompt';
 import { usePurchases } from '@/hooks/usePurchases';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { t } from '@/i18n';
 
-import SubscriptionCarousel from '../subscription/SubscriptionCarousel';
-import { requiresWaitlist } from '../subscription/util';
-import { SettingsStackParamList } from './SettingsStack';
-import { useWaitlistStatus } from './queries';
-
-type Props = NativeStackScreenProps<SettingsStackParamList, 'Plan'>;
-
-export default function CurrentPlan({ route }: Props) {
+export default function CurrentPlan() {
   const theme = useThemeColor();
   const { showCustom, showAlert } = usePrompt();
   const { purchasePackages, loading, customerInfo } = usePurchases();
   const { data, isLoading } = useWaitlistStatus();
+  const params = useLocalSearchParams();
 
   useEffect(() => {
-    if (route.params?.subscriptionInactive)
+    if (params?.subscriptionInactive)
       showAlert({
         title: 'Your subscription is inactive',
         message: 'Please make sure your subscription is active to continue using the app.',
         actions: [{ title: 'See subscription options', onPress: () => showCustom(SubscriptionCarousel) }],
       });
-  }, [route.params?.subscriptionInactive]);
+  }, [params?.subscriptionInactive]);
 
   if (loading || !customerInfo || !purchasePackages || isLoading || !data) return <FullScreenActivityIndicator />;
 
@@ -55,7 +52,7 @@ export default function CurrentPlan({ route }: Props) {
     purchasePackages.find(purchasePackage => requiresWaitlist(purchasePackage) === data.waitingForPoints);
 
   return (
-    <>
+    <View className="flex-1">
       <ScrollScreen style={{ flex: 1 }}>
         <View
           className={clsx(
@@ -156,7 +153,7 @@ export default function CurrentPlan({ route }: Props) {
           </View>
         )}
       </ScrollScreen>
-      <View className="flex gap-2 p-5 pt-0">
+      <View className="absolute bottom-0 left-0 right-0 flex gap-2 p-5 pt-0 bg-primary-light dark:bg-primary-dark">
         {!activeSubscription && (
           <StyledButton
             title={
@@ -194,6 +191,6 @@ export default function CurrentPlan({ route }: Props) {
           />
         )}
       </View>
-    </>
+    </View>
   );
 }

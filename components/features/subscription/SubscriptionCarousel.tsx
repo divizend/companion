@@ -17,7 +17,7 @@ import { usePurchases } from '@/hooks/usePurchases';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { t } from '@/i18n';
 
-import { useWaitlistStatus } from '../settings/queries';
+import { useWaitlistStatus } from './queries';
 import { requiresWaitlist } from './util';
 
 type Props = { close: () => void };

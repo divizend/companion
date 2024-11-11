@@ -4,10 +4,9 @@ import { StyleSheet } from 'react-native';
 
 import { ScrollScreen, Text } from '@/components/base';
 import { SafeAreaView } from '@/components/base/SafeAreaView';
+import GoalsSectionList from '@/components/features/learn/GoalsSectionList';
+import UserInsightsSectionList from '@/components/features/learn/UserInsightsSectionList';
 import { t } from '@/i18n';
-
-import GoalsSectionList from './GoalsSectionList';
-import UserInsightsSectionList from './UserInsightsSectionList';
 
 export default function RealizeGoals() {
   return (

@@ -24,6 +24,10 @@
   },
   "askEmoji": "Which emoji do you want?",
   "settings": {
+    "pages": {
+      "settings": "Settings",
+      "plan": "Plan"
+    },
     "title": "Settings",
     "accountSection": {
       "title": "Account",

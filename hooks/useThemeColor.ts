@@ -16,7 +16,7 @@ export function useThemeColor() {
     const storedTheme = SecureStore.getItem('theme');
     if (!storedTheme) SecureStore.setItemAsync('theme', theme);
     if (storedTheme !== theme) toggleColorScheme();
-  }, []);
+  }, [toggleColorScheme, theme]);
 
   return {
     ...Colors[theme as 'light' | 'dark'],

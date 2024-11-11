@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-import { useNavigation } from '@react-navigation/native';
+import { router } from 'expo-router';
 import { Animated, StyleSheet, View } from 'react-native';
 import uuid from 'react-native-uuid';
 
@@ -9,14 +9,12 @@ import { CompanionProfileLearnQuestion, useUserProfile } from '@/common/profile'
 import SectionList from '@/components/SectionList';
 import StyledButton from '@/components/StyledButton';
 import { SafeAreaView, ScrollScreen, Text } from '@/components/base';
+import UserInsightsSectionList from '@/components/features/learn/UserInsightsSectionList';
 import { usePrompt } from '@/hooks/usePrompt';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { t } from '@/i18n';
 
-import UserInsightsSectionList from './UserInsightsSectionList';
-
-export default function GenerateInsights() {
-  const navigation = useNavigation();
+export default function Insights() {
   const { profile, updateCompanionProfile } = useUserProfile();
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const [similarQuestionsLoadingQuestionId, setSimilarQuestionsLoadingQuestionId] = useState<string | null>(null);
@@ -137,7 +135,8 @@ export default function GenerateInsights() {
             <UserInsightsSectionList isOnboarding />
             <StyledButton
               title={t(`learn.insights.confirmButton`)}
-              onPress={() => navigation.navigate('Goals' as never)}
+              onPress={() => router.navigate('/main/app/(tabs)/learn/goals')}
+              // onPress={() => navigation.navigate('Goals' as never)}
               containerStyle={styles.confirmButton}
             />
           </>

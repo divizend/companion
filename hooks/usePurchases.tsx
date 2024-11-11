@@ -63,7 +63,7 @@ export const RevenueCatProvider: React.FC<RevenueCatProviderProps> = ({ children
 
         Purchases.addCustomerInfoUpdateListener(info => setCustomerInfo(info));
         // If profile has already been setup, do not calculate this.
-        if (!profile.flags.allowedCompanionAI) await isEligibleForTrial(packages!).then(setEligibleForTrial);
+        await isEligibleForTrial(packages!).then(setEligibleForTrial);
       } catch (error) {
         showSnackbar('Failed to configure in-app-purchases');
         // TODO: Sentry call here
@@ -71,8 +71,8 @@ export const RevenueCatProvider: React.FC<RevenueCatProviderProps> = ({ children
       }
     };
 
-    if (profile) configureRevenueCat();
-  }, [profile.id]);
+    if (profile.id) configureRevenueCat();
+  }, [profile.id, showSnackbar]);
 
   return (
     <RevenueCatContext.Provider value={{ loading, purchasePackages, customerInfo, setCustomerInfo, eligibleForTrial }}>
@@ -80,3 +80,88 @@ export const RevenueCatProvider: React.FC<RevenueCatProviderProps> = ({ children
     </RevenueCatContext.Provider>
   );
 };
+
+// To use in order to simulate a subscription (TRIAL)
+// {
+//   "nonSubscriptionTransactions": [],
+//   "originalPurchaseDate": null,
+//   "allPurchaseDatesMillis": {
+//     "companion_basic_0:factor-1": 1730904858000
+//   },
+//   "managementURL": "https://play.google.com/store/account/subscriptions",
+//   "allPurchaseDates": {
+//     "companion_basic_0:factor-1": "2024-11-06T14:54:18.000Z"
+//   },
+//   "originalAppUserId": "65d604e5f38a586135e224a5",
+//   "allExpirationDates": {
+//     "companion_basic_0:factor-1": "2024-11-06T14:57:16.000Z"
+//   },
+//   "firstSeen": "2024-10-25T11:44:12.000Z",
+//   "originalPurchaseDateMillis": null,
+//   "allExpirationDatesMillis": {
+//     "companion_basic_0:factor-1": 1730905036000
+//   },
+//   "requestDateMillis": 1730904863712,
+//   "latestExpirationDate": "2024-11-06T14:57:16.000Z",
+//   "firstSeenMillis": 1729856652000,
+//   "allPurchasedProductIdentifiers": [
+//     "companion_basic_0:factor-1"
+//   ],
+//   "requestDate": "2024-11-06T14:54:23.712Z",
+//   "latestExpirationDateMillis": 1730905036000,
+//   "originalApplicationVersion": null,
+//   "activeSubscriptions": [
+//     "companion_basic_0:factor-1"
+//   ],
+//   "entitlements": {
+//     "active": {
+//       "divizend-membership": {
+//         "billingIssueDetectedAtMillis": null,
+//         "billingIssueDetectedAt": null,
+//         "unsubscribeDetectedAtMillis": null,
+//         "productIdentifier": "companion_basic_0",
+//         "unsubscribeDetectedAt": null,
+//         "productPlanIdentifier": "factor-1",
+//         "identifier": "divizend-membership",
+//         "isActive": true,
+//         "periodType": "TRIAL",
+//         "store": "PLAY_STORE",
+//         "expirationDateMillis": 1730905036000,
+//         "originalPurchaseDateMillis": 1730904858000,
+//         "ownershipType": "UNKNOWN",
+//         "willRenew": true,
+//         "latestPurchaseDate": "2024-11-06T14:54:18.000Z",
+//         "expirationDate": "2024-11-06T14:57:16.000Z",
+//         "verification": "NOT_REQUESTED",
+//         "originalPurchaseDate": "2024-11-06T14:54:18.000Z",
+//         "isSandbox": true,
+//         "latestPurchaseDateMillis": 1730904858000
+//       }
+//     },
+//     "verification": "NOT_REQUESTED",
+//     "all": {
+//       "divizend-membership": {
+//         "billingIssueDetectedAtMillis": null,
+//         "billingIssueDetectedAt": null,
+//         "unsubscribeDetectedAtMillis": null,
+//         "productIdentifier": "companion_basic_0",
+//         "unsubscribeDetectedAt": null,
+//         "productPlanIdentifier": "factor-1",
+//         "identifier": "divizend-membership",
+//         "isActive": true,
+//         "periodType": "TRIAL",
+//         "store": "PLAY_STORE",
+//         "expirationDateMillis": 1730905036000,
+//         "originalPurchaseDateMillis": 1730904858000,
+//         "ownershipType": "UNKNOWN",
+//         "willRenew": true,
+//         "latestPurchaseDate": "2024-11-06T14:54:18.000Z",
+//         "expirationDate": "2024-11-06T14:57:16.000Z",
+//         "verification": "NOT_REQUESTED",
+//         "originalPurchaseDate": "2024-11-06T14:54:18.000Z",
+//         "isSandbox": true,
+//         "latestPurchaseDateMillis": 1730904858000
+//       }
+//     }
+//   }
+// }

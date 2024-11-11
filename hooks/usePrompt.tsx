@@ -19,7 +19,7 @@ type PromptConfig = {
   /**
    * hideOnClick default is true
    */
-  actions?: Array<SectionListProps['items'][number] & { hideOnPress?: boolean }>;
+  actions?: (SectionListProps['items'][number] & { hideOnPress?: boolean })[];
   /**
    * In pixels or in percentage
    * default 50%

@@ -8,7 +8,6 @@ import i18next from 'i18next';
 import {
   Alert,
   Dimensions,
-  Modal,
   NativeScrollEvent,
   NativeSyntheticEvent,
   Platform,
@@ -25,12 +24,11 @@ import { apiPost } from '@/common/api';
 import { colors } from '@/common/colors';
 import { countries } from '@/common/countries';
 import { usePrincipalLegalEntity, useUserProfile } from '@/common/profile';
+import { SafeAreaView } from '@/components/base';
+import { useSnackbar } from '@/components/global/Snackbar';
 import { usePurchases } from '@/hooks/usePurchases';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { t } from '@/i18n';
-
-import { SafeAreaView } from './base/SafeAreaView';
-import { useSnackbar } from './global/Snackbar';
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
@@ -256,7 +254,7 @@ export default function OnboardingModal() {
                 }
               } else if (currentPage === 4) {
                 setIsLoading(true);
-                // Here add logic for trial if eligible.
+                // Logic for trial if eligible.
                 try {
                   if (eligibleForTrial) {
                     if (Platform.OS === 'android')

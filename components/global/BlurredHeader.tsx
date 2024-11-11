@@ -1,8 +1,8 @@
 import { useSignalEffect } from '@preact/signals-react';
 import { BottomTabHeaderProps } from '@react-navigation/bottom-tabs';
-import { useNavigation } from '@react-navigation/native';
 import { Avatar } from '@rneui/themed';
 import { BlurView } from 'expo-blur';
+import { router } from 'expo-router';
 import { useColorScheme } from 'nativewind';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import Animated, {
@@ -24,7 +24,6 @@ type BlurredHeaderProps = BottomTabHeaderProps;
 const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
 
 export default function BlurredHeader(props: BlurredHeaderProps) {
-  const navigation = useNavigation();
   const theme = useThemeColor();
   const { profile } = useUserProfile();
   const { colorScheme } = useColorScheme();
@@ -73,16 +72,24 @@ export default function BlurredHeader(props: BlurredHeaderProps) {
       </Text>
       <TouchableOpacity
         style={{ position: 'absolute', right: 15, bottom: 10 }}
-        onPress={() => navigation.navigate('SettingsModal' as never)}
+        onPress={() => router.navigate('/main/settings')}
       >
-        <Avatar rounded title={profile.email[0].toUpperCase()} containerStyle={{ backgroundColor: theme.theme }} />
+        <Avatar
+          // Added empty source to remove Image source not found warning (which is a bug from rneui)
+          // Look here for more info https://github.com/react-native-elements/react-native-elements/issues/3742#issuecomment-1978783981
+          source={{ uri: 'data:image/png' }}
+          rounded
+          title={profile.email[0].toUpperCase()}
+          containerStyle={{ backgroundColor: theme.theme }}
+          placeholderStyle={{ backgroundColor: 'transparent' }}
+        />
       </TouchableOpacity>
     </>
   );
 
   return shouldBlur ? (
     <AnimatedBlurView
-      experimentalBlurMethod="dimezisBlurView"
+      experimentalBlurMethod="none"
       tint={colorScheme === 'dark' ? 'dark' : 'extraLight'}
       animatedProps={animatedProps}
       style={{

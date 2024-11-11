@@ -9,7 +9,7 @@ import { useThemeColor } from '@/hooks/useThemeColor';
 
 export type SectionListProps = {
   title?: string;
-  items: Array<{
+  items: {
     key?: string;
     title: string | React.ReactNode;
     onPress?: () => void;
@@ -26,7 +26,7 @@ export type SectionListProps = {
     onRemove?: () => void;
     disabled?: boolean;
     additional?: React.ReactNode;
-  }>;
+  }[];
   bottomText?: string;
   containerStyle?: ViewStyle;
   ItemComponent?: React.ComponentType<any>;

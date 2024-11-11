@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
-import { StyleSheet, StyleProp, ViewStyle } from 'react-native';
-import { t } from '@/i18n';
+
+import { router } from 'expo-router';
+import { StyleSheet } from 'react-native';
+
 import { useUserProfile } from '@/common/profile';
-import { useNavigation } from '@react-navigation/native';
 import SectionList from '@/components/SectionList';
+import { t } from '@/i18n';
+
 import GoalsManagerModal from './GoalsManagerModal';
 
 interface GoalsSectionListProps {
@@ -13,7 +16,6 @@ interface GoalsSectionListProps {
 }
 
 export default function GoalsSectionList({ parentGoalId, allowRedetermine, style }: GoalsSectionListProps) {
-  const navigation = useNavigation();
   const { profile } = useUserProfile();
 
   const [showGoalsManagerModal, setShowGoalsManagerModal] = useState(false);
@@ -29,10 +31,7 @@ export default function GoalsSectionList({ parentGoalId, allowRedetermine, style
             .map(goal => ({
               title: goal.description,
               onPress: () =>
-                // super ugly typecast to avoid TS errors relating to "never"
-                (navigation.navigate as any)('GoalDetails', {
-                  goalId: goal.id,
-                }),
+                router.push({ pathname: '/main/app/(tabs)/learn/goal-details', params: { goalId: goal.id } }),
               leftIcon: goal.emoji,
             })),
           {

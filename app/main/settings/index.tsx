@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 
-import { useNavigation } from '@react-navigation/native';
-import { useColorScheme } from 'nativewind';
+import { router } from 'expo-router';
 import { StyleSheet } from 'react-native';
+import { View } from 'react-native';
 import RNRestart from 'react-native-restart';
 
 import { apiDelete, logout } from '@/common/api';
@@ -15,7 +15,6 @@ import { t } from '@/i18n';
 
 export default function SettingsView() {
   const { toggleTheme } = useThemeColor();
-  const navigation = useNavigation();
   const { profile, isPrivileged } = useUserProfile();
   const [resettingProfileLoading, setResettingProfileLoading] = useState(false);
   const [impersonateModalVisible, setImpersonateModalVisible] = useState(false);
@@ -47,7 +46,7 @@ export default function SettingsView() {
   };
 
   return (
-    <>
+    <View className="flex-1 p-5">
       <SectionList
         title={t('settings.accountSection.title')}
         items={[
@@ -71,7 +70,7 @@ export default function SettingsView() {
               name: 'star-outline',
               type: 'material',
             },
-            onPress: () => navigation.navigate('Plan' as never),
+            onPress: () => router.navigate('/main/settings/plan'),
             disabled: resettingProfileLoading,
           },
         ]}
@@ -123,7 +122,7 @@ export default function SettingsView() {
       />
 
       <ImpersonateUserModal visible={impersonateModalVisible} onClose={() => setImpersonateModalVisible(false)} />
-    </>
+    </View>
   );
 }
 
