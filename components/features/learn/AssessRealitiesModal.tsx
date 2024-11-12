@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 
-import { Text } from '@rneui/themed';
 import { Alert, StyleSheet, View } from 'react-native';
 
 import { apiGet, apiPost } from '@/common/api';
 import { useGoal, useUserProfile } from '@/common/profile';
 import SectionList from '@/components/SectionList';
+import { Text } from '@/components/base';
 import ModalLayout from '@/components/global/ModalLayout';
 import { showPrompt } from '@/components/global/prompt';
 import { t } from '@/i18n';

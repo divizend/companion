@@ -14,8 +14,17 @@ type ModalComponentProps = Record<string, unknown>;
 type WithDismiss<T> = T & BaseModalProps;
 
 // Add proper type for modal stack items
-interface ModalStackItem extends React.ReactElement {
+interface ModalStackItem {
+  element: React.ReactElement;
+  metadata: ModalMetadata;
   key: string;
+}
+
+// Add metadata type definition
+interface ModalMetadata {
+  presentationStyle?: 'fullScreen' | 'pageSheet' | 'formSheet' | 'overFullScreen';
+  animationType?: 'none' | 'slide' | 'fade';
+  transparent?: boolean;
 }
 
 // Create a singleton instance to manage modals
@@ -39,6 +48,7 @@ class ModalManagerClass {
   public showModal<T extends ModalComponentProps>(
     Component: React.ComponentType<WithDismiss<T>>,
     props?: Omit<T, keyof BaseModalProps>,
+    metadata?: ModalMetadata,
   ): string {
     if (!this.setModalStack) {
       console.warn('ModalManager not initialized');
@@ -46,10 +56,16 @@ class ModalManagerClass {
     }
     const id = uniqueId();
     Component.displayName = id;
-    // @ts-ignore
     this.setModalStack(prev => {
-      // @ts-ignore
-      return [...prev, <Component key={id} dismiss={() => this.hideModal(id)} {...props} />];
+      return [
+        ...prev,
+        {
+          //@ts-ignore
+          element: <Component key={id} dismiss={() => this.hideModal(id)} {...props} />,
+          metadata: metadata || {},
+          key: id,
+        },
+      ];
     });
     return id;
   }
@@ -78,9 +94,16 @@ export const ModalProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const renderNestedModals = (index: number = 0): React.ReactNode => {
     if (index >= modalStack.length) return null;
 
+    const { element, metadata } = modalStack[index];
+
     return (
-      <Modal animationType="slide" transparent visible key={index}>
-        {modalStack[index]}
+      <Modal
+        animationType={metadata.transparent ? undefined : (metadata.animationType ?? 'slide')}
+        presentationStyle={metadata.transparent ? undefined : (metadata.presentationStyle ?? 'pageSheet')}
+        transparent={metadata.transparent ?? undefined}
+        visible
+      >
+        {element}
         {renderNestedModals(index + 1)}
       </Modal>
     );
@@ -94,11 +117,12 @@ export const ModalProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   );
 };
 
-// Update the hook to match the new types
+// Update the hook to include metadata parameter
 export const useModal = () => ({
   showModal: <T extends ModalComponentProps>(
     Component: React.ComponentType<WithDismiss<T>>,
     props?: Omit<T, keyof BaseModalProps>,
-  ) => ModalManager.showModal(Component, props),
+    metadata?: ModalMetadata,
+  ) => ModalManager.showModal(Component, props, metadata),
   hideModal: (id: string) => ModalManager.hideModal(id),
 });
