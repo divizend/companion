@@ -1,15 +1,15 @@
 import React from 'react';
 
-import { Button, ButtonProps } from '@rneui/themed';
+import { ButtonProps, Button as NativeButton } from '@rneui/themed';
 import { StyleSheet } from 'react-native';
 
 import '@/global.css';
 
 export interface StyledButtonProps extends ButtonProps {}
 
-const StyledButton: React.FC<StyledButtonProps> = ({ loading, onPress, ...rest }) => {
+export const Button: React.FC<StyledButtonProps> = ({ loading, onPress, ...rest }) => {
   return (
-    <Button
+    <NativeButton
       disabledStyle={[styles.disabledButton, rest.disabledStyle]}
       disabledTitleStyle={[styles.disabledText, rest.disabledTitleStyle]}
       buttonStyle={[styles.button, rest.buttonStyle]}
@@ -46,5 +46,3 @@ const styles = StyleSheet.create({
     color: '#D0D0D0',
   },
 });
-
-export default StyledButton;

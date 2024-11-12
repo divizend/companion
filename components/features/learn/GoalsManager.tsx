@@ -5,7 +5,7 @@ import { StyleSheet } from 'react-native';
 import { apiDelete, apiGet, apiPost } from '@/common/api';
 import { CompanionProfileGoal, useUserProfile } from '@/common/profile';
 import SectionList from '@/components/SectionList';
-import StyledButton, { StyledButtonProps } from '@/components/StyledButton';
+import { Button, StyledButtonProps } from '@/components/base';
 import { showAlert, showPrompt } from '@/components/global/prompt';
 import { t } from '@/i18n';
 
@@ -191,7 +191,7 @@ export default function GoalsManager({ confirmButtonProps, allowRedetermine, par
         containerStyle={styles.addManualGoalContainer}
       />
       {relevantGoals.length > 0 && confirmButtonProps && (
-        <StyledButton containerStyle={styles.confirmGoalsButton} {...confirmButtonProps} />
+        <Button containerStyle={styles.confirmGoalsButton} {...confirmButtonProps} />
       )}
     </>
   );

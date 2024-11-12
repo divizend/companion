@@ -5,9 +5,10 @@ import { router } from 'expo-router';
 import * as WebBrowser from 'expo-web-browser';
 import { Alert, Image, StyleSheet, View } from 'react-native';
 
+import { Button } from '@/components/base';
+
 import { usedConfig } from '../common/config';
 import { setSessionToken, useSessionToken } from '../common/sessionToken';
-import StyledButton from '../components/StyledButton';
 import { t } from '../i18n';
 
 WebBrowser.maybeCompleteAuthSession();
@@ -91,12 +92,7 @@ export default function Index() {
   return (
     <View style={styles.container}>
       <Image source={require('../assets/images/logo.png')} style={styles.logo} resizeMode="contain" />
-      <StyledButton
-        title={t('common.login')}
-        disabled={!request}
-        loading={handleLoginInProgress}
-        onPress={handleLogin}
-      />
+      <Button title={t('common.login')} disabled={!request} loading={handleLoginInProgress} onPress={handleLogin} />
     </View>
   );
 }

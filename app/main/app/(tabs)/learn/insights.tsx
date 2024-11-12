@@ -7,8 +7,7 @@ import uuid from 'react-native-uuid';
 import { apiPost } from '@/common/api';
 import { CompanionProfileLearnQuestion, useUserProfile } from '@/common/profile';
 import SectionList from '@/components/SectionList';
-import StyledButton from '@/components/StyledButton';
-import { SafeAreaView, ScrollScreen, Text } from '@/components/base';
+import { Button, SafeAreaView, ScrollScreen, Text } from '@/components/base';
 import UserInsightsSectionList from '@/components/features/learn/UserInsightsSectionList';
 import { showAlert, showPrompt } from '@/components/global/prompt';
 import { useThemeColor } from '@/hooks/useThemeColor';
@@ -132,7 +131,7 @@ export default function Insights() {
         {profile.companionProfile.userInsights?.length > 0 && (
           <>
             <UserInsightsSectionList isOnboarding />
-            <StyledButton
+            <Button
               title={t(`learn.insights.confirmButton`)}
               onPress={() => router.navigate('/main/app/(tabs)/learn/goals')}
               containerStyle={styles.confirmButton}

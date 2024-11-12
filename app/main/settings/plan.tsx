@@ -7,8 +7,7 @@ import { View } from 'react-native';
 
 import { clsx } from '@/common/clsx';
 import FullScreenActivityIndicator from '@/components/FullScreenActivityIndicator';
-import StyledButton from '@/components/StyledButton';
-import { ScrollScreen, Text } from '@/components/base';
+import { Button, ScrollScreen, Text } from '@/components/base';
 import SubscriptionCarousel from '@/components/features/subscription/SubscriptionCarousel';
 import { useWaitlistStatus } from '@/components/features/subscription/queries';
 import { requiresWaitlist } from '@/components/features/subscription/util';
@@ -156,7 +155,7 @@ export default function CurrentPlan() {
       </ScrollScreen>
       <View className="absolute bottom-0 left-0 right-0 flex gap-2 p-5 pt-0 bg-primary-light dark:bg-primary-dark">
         {!activeSubscription && (
-          <StyledButton
+          <Button
             title={
               <Text
                 style={{
@@ -174,7 +173,7 @@ export default function CurrentPlan() {
           />
         )}
         {!!activeSubscription && (
-          <StyledButton
+          <Button
             onPress={() => customerInfo.managementURL && Linking.openURL(customerInfo.managementURL)}
             title={
               <Text

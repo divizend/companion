@@ -9,8 +9,7 @@ import Carousel, { ICarouselInstance } from 'react-native-reanimated-carousel';
 import { apiPost } from '@/common/api';
 import { clsx } from '@/common/clsx';
 import FullScreenActivityIndicator from '@/components/FullScreenActivityIndicator';
-import StyledButton from '@/components/StyledButton';
-import { Text } from '@/components/base';
+import { Button, Text } from '@/components/base';
 import { useSnackbar } from '@/components/global/Snackbar';
 import { showAlert } from '@/components/global/prompt';
 import { usePurchases } from '@/hooks/usePurchases';
@@ -143,7 +142,7 @@ export default function SubscriptionCarousel({ close }: Props) {
         )}
       />
 
-      <StyledButton
+      <Button
         disabled={
           !selectedPackage ||
           (userInWaitlist && !isSpotReserved(selectedPackage) && !!requiresWaitlist(selectedPackage))
