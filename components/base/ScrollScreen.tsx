@@ -20,6 +20,7 @@ export const ScrollScreen = forwardRef<NativeScrollView, Props>(
 
       return () => {
         isFocused.current = false;
+        isHeaderVisible.value = false;
       };
     });
 
