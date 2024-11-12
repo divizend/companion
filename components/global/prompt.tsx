@@ -80,7 +80,13 @@ export const showAlert = (prompt: PromptConfig) => {
   // If there's a current prompt, add the new one to the front of the queue
   const internalPrompt: PromptConfigInternal = { config: prompt, id: uniqueId(), type: 'alert' };
   // setPromptQueue((prev: PromptConfigInternal[]) => [internalPrompt, ...prev]);
-  ModalManager.showModal(renderModal({ prompt: internalPrompt }), {});
+  ModalManager.showModal(
+    renderModal({ prompt: internalPrompt }),
+    {},
+    {
+      transparent: true,
+    },
+  );
 };
 
 export const showPrompt = (config: InputPromptConfig): Promise<string | null> => {
@@ -90,7 +96,13 @@ export const showPrompt = (config: InputPromptConfig): Promise<string | null> =>
       type: 'input',
       config,
     };
-    ModalManager.showModal(renderModal({ prompt: internalPrompt, resolve }), {});
+    ModalManager.showModal(
+      renderModal({ prompt: internalPrompt, resolve }),
+      {},
+      {
+        transparent: true,
+      },
+    );
     // setPromptQueue(prevQueue => [internalPrompt, ...prevQueue]);
   });
 };
@@ -106,6 +118,9 @@ export const showCustom = (Component: React.ComponentType) => {
       prompt: internalPrompt,
     }),
     {},
+    {
+      transparent: true,
+    },
   );
 };
 
