@@ -60,8 +60,7 @@ class ModalManagerClass {
       return [
         ...prev,
         {
-          //@ts-ignore
-          element: <Component key={id} dismiss={() => this.hideModal(id)} {...props} />,
+          element: <Component key={id} dismiss={() => this.hideModal(id)} {...(props as T)} />,
           metadata: metadata || {},
           key: id,
         },

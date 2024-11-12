@@ -21,11 +21,6 @@ type PromptConfig = {
    * hideOnClick default is true
    */
   actions?: (SectionListProps['items'][number] & { hideOnPress?: boolean })[];
-  /**
-   * In pixels or in percentage
-   * default 50%
-   */
-  height?: string | number;
   onClose?: (...args: any[]) => void;
 };
 
@@ -55,9 +50,7 @@ type PromptConfigInternal = {
 // Define the context type
 
 export const showAlert = (prompt: PromptConfig) => {
-  // If there's a current prompt, add the new one to the front of the queue
   const internalPrompt: PromptConfigInternal = { config: prompt, id: uniqueId(), type: 'alert' };
-  // setPromptQueue((prev: PromptConfigInternal[]) => [internalPrompt, ...prev]);
   ModalManager.showModal(
     renderModal({ prompt: internalPrompt }),
     {},
@@ -81,7 +74,6 @@ export const showPrompt = (config: InputPromptConfig): Promise<string | null> =>
         transparent: true,
       },
     );
-    // setPromptQueue(prevQueue => [internalPrompt, ...prevQueue]);
   });
 };
 

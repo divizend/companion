@@ -58,7 +58,6 @@ export default function Insights() {
 
     const answer = await showPrompt({
       title: question.question,
-      height: 350,
     });
 
     if (answer) {
@@ -116,7 +115,6 @@ export default function Insights() {
                     title: t('common.cancel'),
                   },
                 ],
-                height: 350,
               });
             },
             disabled:
