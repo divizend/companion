@@ -19,7 +19,7 @@ import { isHeaderVisible } from '@/signals/app.signal';
 
 import { Text } from '../base';
 
-type BlurredHeaderProps = BottomTabHeaderProps;
+type BlurredHeaderProps = BottomTabHeaderProps & { title: string };
 
 const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
 
@@ -68,7 +68,7 @@ export default function BlurredHeader(props: BlurredHeaderProps) {
   const RenderContent = () => (
     <>
       <Text h3 animated style={style}>
-        {props.route.name}
+        {props.title}
       </Text>
       <TouchableOpacity
         style={{ position: 'absolute', right: 15, bottom: 10 }}

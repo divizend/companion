@@ -28,7 +28,7 @@ export default function TabLayout() {
         },
         tabBarActiveTintColor: theme.theme,
         tabBarInactiveTintColor: 'gray',
-        header: props => <BlurredHeader {...props} />,
+        header: props => <BlurredHeader title={t(`${route.name}.title`)} {...props} />,
         tabBarBackground: () => (
           <BlurView
             experimentalBlurMethod="dimezisBlurView"
