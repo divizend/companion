@@ -1,4 +1,4 @@
-import React, { ReactNode, createContext, useContext, useRef } from 'react';
+import React, { useRef } from 'react';
 
 import BottomSheet, { BottomSheetBackdrop, BottomSheetScrollView, BottomSheetTextInput } from '@gorhom/bottom-sheet';
 import { uniqueId } from 'lodash';
@@ -53,28 +53,6 @@ type PromptConfigInternal = {
 );
 
 // Define the context type
-interface PromptContextType {
-  showAlert: (config: PromptConfig) => void;
-  showPrompt: (config: InputPromptConfig) => Promise<string | null>;
-  showCustom: (config: React.ComponentType<any>) => void;
-}
-
-// Create the context
-const PromptContext = createContext<PromptContextType | undefined>(undefined);
-
-// Hook to use the prompt context
-export const usePrompt = (): PromptContextType => {
-  const context = useContext(PromptContext);
-  if (!context) {
-    throw new Error('usePrompt must be used within a PromptProvider');
-  }
-  return context;
-};
-
-// Define the props for the provider
-interface PromptProviderProps {
-  children: ReactNode;
-}
 
 export const showAlert = (prompt: PromptConfig) => {
   // If there's a current prompt, add the new one to the front of the queue
@@ -204,15 +182,14 @@ const Content = ({
   return <></>;
 };
 
-const renderModal =
-  ({
-    prompt,
-    resolve,
-  }: {
-    prompt: PromptConfigInternal;
-    resolve?: (value: string | PromiseLike<string | null> | null) => void;
-  }) =>
-  (props: any) => {
+const renderModal = ({
+  prompt,
+  resolve,
+}: {
+  prompt: PromptConfigInternal;
+  resolve?: (value: string | PromiseLike<string | null> | null) => void;
+}) => {
+  const PromptModal = (props: any) => {
     const theme = useThemeColor();
     const ref = useRef<BottomSheet>(null);
     return (
@@ -248,3 +225,6 @@ const renderModal =
       </GestureHandlerRootView>
     );
   };
+  PromptModal.displayName = 'PromptModal';
+  return PromptModal;
+};
