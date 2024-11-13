@@ -33,11 +33,20 @@ import { t } from '@/i18n';
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
+enum OnboardingPage {
+  INTRO = 0,
+  AI_DISCLAIMER = 1,
+  TAX_RESIDENCY = 2,
+  BIRTHDAY = 3,
+  FREE_TRIAL = 4,
+  ALL_SET = 5,
+}
+
 export default function OnboardingModal() {
   const theme = useThemeColor();
   const { updateProfile, updatePrincipalLegalEntity } = useUserProfile();
   const principalLegalEntity = usePrincipalLegalEntity();
-  const [currentPage, setCurrentPage] = useState(0);
+  const [currentPage, setCurrentPage] = useState<OnboardingPage>(OnboardingPage.INTRO);
   const [selectedCountry, setSelectedCountry] = useState(principalLegalEntity?.data.info.nationality ?? '');
   const [birthday, setBirthday] = useState<Date | null>(
     principalLegalEntity?.data.info.birthday ? new Date(principalLegalEntity.data.info.birthday) : null,
@@ -66,7 +75,7 @@ export default function OnboardingModal() {
   const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     const contentOffsetX = event.nativeEvent.contentOffset.x;
     const page = Math.round(contentOffsetX / screenWidth);
-    setCurrentPage(page);
+    setCurrentPage(page as OnboardingPage);
   };
 
   let availablePages = 3;
@@ -74,6 +83,9 @@ export default function OnboardingModal() {
     availablePages = 4;
     if (principalLegalEntity?.data.info.birthday) {
       availablePages = 5;
+      if (!!eligibleForTrial) {
+        availablePages = 6;
+      }
     }
   }
 
@@ -143,7 +155,7 @@ export default function OnboardingModal() {
               <RNDateTimePicker
                 value={birthday || new Date()}
                 onChange={onDateChange}
-                locale={i18next.language} // Use i18n locale
+                locale={i18next.language}
                 mode="date"
                 display="default"
               />
@@ -152,14 +164,13 @@ export default function OnboardingModal() {
         </View>
         {!!eligibleForTrial && (
           <View style={styles.page}>
-            <Text style={styles.modalTitle}>Start your journey with a Free trial</Text>
+            <Text style={styles.modalTitle}>{t('onboarding.freeTrial.title')}</Text>
             <Text style={styles.modalText}>
               {t(`subscription.trialPeriod.${eligibleForTrial.product.introPrice!.period}.free`)}
             </Text>
-            <Text style={styles.modalText}>
+            <Text className="text-muted max-w-[70%] text-center">
               {t(`subscription.trialPeriod.${eligibleForTrial.product.introPrice!.period}.after`, {
                 price: eligibleForTrial.product.pricePerMonthString,
-                period: 'Month',
               })}
             </Text>
           </View>
@@ -196,21 +207,22 @@ export default function OnboardingModal() {
           {renderPageIndicator()}
           <Button
             title={
-              currentPage !== 4
+              currentPage !== OnboardingPage.ALL_SET && currentPage !== OnboardingPage.FREE_TRIAL
                 ? t('common.next')
                 : isLoading
                   ? t('common.loading')
-                  : !!eligibleForTrial
-                    ? t('onboarding.freeTrial')
+                  : currentPage === OnboardingPage.FREE_TRIAL && !!eligibleForTrial
+                    ? t('onboarding.freeTrial.startTrial')
                     : t('onboarding.finalConfirm')
             }
             onPress={async () => {
-              if (currentPage === 0 || currentPage === 1) {
+              console.log(currentPage);
+              if (currentPage === OnboardingPage.INTRO || currentPage === OnboardingPage.AI_DISCLAIMER) {
                 scrollViewRef.current?.scrollTo({
                   x: screenWidth * (currentPage + 1),
                   animated: true,
                 });
-              } else if (currentPage === 2) {
+              } else if (currentPage === OnboardingPage.TAX_RESIDENCY) {
                 setIsLoading(true);
                 try {
                   await apiPost(`/legalEntities/${principalLegalEntity?.id}/nationality`, {
@@ -232,7 +244,7 @@ export default function OnboardingModal() {
                 } finally {
                   setIsLoading(false);
                 }
-              } else if (currentPage === 3) {
+              } else if (currentPage === OnboardingPage.BIRTHDAY) {
                 setIsLoading(true);
                 try {
                   const formattedBirthday = formatDate(birthday!);
@@ -253,10 +265,9 @@ export default function OnboardingModal() {
                 } finally {
                   setIsLoading(false);
                 }
-              } else if (currentPage === 4) {
-                setIsLoading(true);
-                // Logic for trial if eligible.
+              } else if (currentPage === OnboardingPage.FREE_TRIAL && !!eligibleForTrial) {
                 try {
+                  // Logic for trial if eligible.
                   if (eligibleForTrial) {
                     if (Platform.OS === 'android')
                       await Purchases.purchaseSubscriptionOption(
@@ -264,6 +275,23 @@ export default function OnboardingModal() {
                       );
                     else await Purchases.purchaseStoreProduct(eligibleForTrial.product);
                   }
+                  setTimeout(
+                    () =>
+                      scrollViewRef.current?.scrollTo({
+                        x: screenWidth * 5,
+                        animated: true,
+                      }),
+                    200,
+                  );
+                } catch (error: any) {
+                  showSnackbar(error.message, { type: 'error' });
+                }
+              } else if (
+                currentPage === OnboardingPage.ALL_SET ||
+                (currentPage === OnboardingPage.FREE_TRIAL && !eligibleForTrial)
+              ) {
+                setIsLoading(true);
+                try {
                   await apiPost('/users/flag', {
                     name: 'allowedCompanionAI',
                     value: true,
@@ -273,8 +301,7 @@ export default function OnboardingModal() {
                   });
                   router.navigate('/main/app');
                 } catch (error: any) {
-                  showSnackbar(error.message);
-                  console.log(error);
+                  showSnackbar(error.message, { type: 'error' });
                 } finally {
                   setIsLoading(false);
                 }
@@ -285,8 +312,8 @@ export default function OnboardingModal() {
             loading={isLoading}
             disabled={
               isLoading ||
-              (currentPage === 2 && !selectedCountry) ||
-              (currentPage === 3 && (!birthday || !isValidBirthday(birthday)))
+              (currentPage === OnboardingPage.TAX_RESIDENCY && !selectedCountry) ||
+              (currentPage === OnboardingPage.BIRTHDAY && (!birthday || !isValidBirthday(birthday)))
             }
           />
         </View>

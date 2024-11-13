@@ -79,7 +79,10 @@
       "message": "Please enter your date of birth.",
       "openDatepicker": "Select date of birth"
     },
-    "freeTrial": "Start free trial!",
+    "freeTrial": {
+      "title": "Start your journey with a free trial",
+      "startTrial": "Start free trial!"
+    },
     "finalConfirm": "Let's get started!",
     "allSet": {
       "title": "You're all set!",
@@ -309,8 +312,8 @@
     },
     "trialPeriod": {
       "P1W": {
-        "free": "Get one week for free.",
-        "after": "And {{price}} per {{period}} after that."
+        "free": "Get access for one week completely free.",
+        "after": "The subscription costs {{price}} per month after the trial ends."
       }
     },
     "monthly": "Per month",
