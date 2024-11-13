@@ -53,7 +53,7 @@ export default function OnboardingModal() {
   );
 
   const { showSnackbar } = useSnackbar();
-  const { eligibleForTrial } = usePurchases();
+  const { eligibleForTrial, setCustomerInfo } = usePurchases();
 
   const onDateChange = (event: DateTimePickerEvent, selectedDate?: Date | undefined) => {
     if (event.type === 'set') {
@@ -216,7 +216,6 @@ export default function OnboardingModal() {
                     : t('onboarding.finalConfirm')
             }
             onPress={async () => {
-              console.log(currentPage);
               if (currentPage === OnboardingPage.INTRO || currentPage === OnboardingPage.AI_DISCLAIMER) {
                 scrollViewRef.current?.scrollTo({
                   x: screenWidth * (currentPage + 1),
@@ -270,11 +269,13 @@ export default function OnboardingModal() {
                   // Logic for trial if eligible.
                   if (eligibleForTrial) {
                     setIsLoading(true);
-                    if (Platform.OS === 'android')
-                      await Purchases.purchaseSubscriptionOption(
-                        eligibleForTrial.product.subscriptionOptions?.find(item => !!item.freePhase)!,
-                      );
-                    else await Purchases.purchaseStoreProduct(eligibleForTrial.product);
+                    await (
+                      Platform.OS === 'android'
+                        ? Purchases.purchaseSubscriptionOption(
+                            eligibleForTrial.product.subscriptionOptions?.find(item => !!item.freePhase)!,
+                          )
+                        : Purchases.purchaseStoreProduct(eligibleForTrial.product)
+                    ).then(res => setCustomerInfo(res.customerInfo));
                   }
                   setTimeout(
                     () =>
