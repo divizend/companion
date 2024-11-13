@@ -26,10 +26,13 @@ export default function CurrentPlan() {
   useEffect(() => {
     if (params?.subscriptionInactive)
       showAlert({
-        title: 'Your subscription is inactive',
-        message: 'Please make sure your subscription is active to continue using the app.',
+        title: t('subscription.currentPlan.paywallDisclaimer.title'),
+        message: t('subscription.currentPlan.paywallDisclaimer.message'),
         actions: [
-          { title: 'See subscription options', onPress: () => showCustom(SubscriptionCarousel as React.ComponentType) },
+          {
+            title: t('subscription.currentPlan.paywallDisclaimer.options'),
+            onPress: () => showCustom(SubscriptionCarousel as React.ComponentType),
+          },
         ],
       });
   }, [params?.subscriptionInactive]);

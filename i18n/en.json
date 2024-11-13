@@ -281,6 +281,11 @@
       "freeTrial": {
         "ends": "Your free trial will end on {{date,dayLongAndTime}}",
         "after": "After that you will be automatically billed {{price}} per month."
+      },
+      "paywallDisclaimer": {
+        "title": "Your subscription is inactive",
+        "message": "Please make sure your subscription is active to continue using the app.",
+        "options": "See subscription options"
       }
     },
     "choosePlan": "Choose a plan",
