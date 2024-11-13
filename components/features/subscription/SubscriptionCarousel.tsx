@@ -85,7 +85,7 @@ export default function SubscriptionCarousel({ close }: Props) {
   });
 
   return (
-    <View>
+    <View className="mb-4">
       <Text h1 className="text-center">
         {t('subscription.choosePlan')}
       </Text>

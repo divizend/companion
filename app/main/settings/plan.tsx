@@ -156,7 +156,7 @@ export default function CurrentPlan() {
           </View>
         )}
       </ScrollScreen>
-      <View className="absolute bottom-0 left-0 right-0 flex gap-2 p-5 pt-0 bg-primary-light dark:bg-primary-dark">
+      <View className="absolute bottom-0 left-0 right-0 flex gap-2 p-5 pb-8 pt-0 bg-primary-light dark:bg-primary-dark">
         {!activeSubscription && (
           <Button
             title={
