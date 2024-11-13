@@ -269,6 +269,7 @@ export default function OnboardingModal() {
                 try {
                   // Logic for trial if eligible.
                   if (eligibleForTrial) {
+                    setIsLoading(true);
                     if (Platform.OS === 'android')
                       await Purchases.purchaseSubscriptionOption(
                         eligibleForTrial.product.subscriptionOptions?.find(item => !!item.freePhase)!,
@@ -285,6 +286,8 @@ export default function OnboardingModal() {
                   );
                 } catch (error: any) {
                   showSnackbar(error.message, { type: 'error' });
+                } finally {
+                  setIsLoading(false);
                 }
               } else if (
                 currentPage === OnboardingPage.ALL_SET ||
