@@ -286,6 +286,11 @@
         "title": "Your subscription is inactive",
         "message": "Please make sure your subscription is active to continue using the app.",
         "options": "See subscription options"
+      },
+      "waitlist": {
+        "title": "You are in the waiting list for {{name}}",
+        "ready": "You can now subscribe to Companion for a reduced price.",
+        "waiting": "You are yet to be selected to get the sponsorship."
       }
     },
     "choosePlan": "Choose a plan",

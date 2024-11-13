@@ -164,7 +164,7 @@ export default function SubscriptionCarousel({ close }: Props) {
               t('subscription.actions.getStarted')}
             {!!selectedPackage &&
             !!requiresWaitlist(selectedPackage) &&
-            requiresWaitlist(selectedPackage) >= data.unreservedSpots
+            requiresWaitlist(selectedPackage) > data.unreservedSpots
               ? isSpotReserved(selectedPackage)
                 ? t('subscription.actions.spotsReservedSubscribe')
                 : userInWaitlist

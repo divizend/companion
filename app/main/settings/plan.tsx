@@ -114,13 +114,14 @@ export default function CurrentPlan() {
               <Icon name="info" type="material" size={20} color={theme.text} />
             </View>
             <Text h4 className="max-w-[85%] font-bold text-center">
-              You are in the waiting list for{' '}
-              {t(`subscription.subscriptionPlans.${awaitedPurchasePackage.identifier}.title`)}
+              {t('subscription.currentPlan.waitlist.title', {
+                name: t(`subscription.subscriptionPlans.${awaitedPurchasePackage.identifier}.title`),
+              })}
             </Text>
             <Text type="muted" className="max-w-[95%] text-center">
               {data.spotsReserved === data.waitingForPoints
-                ? 'You have until. You can now subscribe to Companion for a reduced price.'
-                : 'You are yet to be selected to get the sponsorship.'}
+                ? t('subscription.currentPlan.waitlist.ready')
+                : t('subscription.currentPlan.waitlist.waiting')}
             </Text>
           </View>
         )}
