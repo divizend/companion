@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 
 import { SafeAreaView } from '@/components/base/SafeAreaView';
 
@@ -9,13 +9,29 @@ import NavigationButtons from './navigationbuttons';
 import PlotsView from './plotsview';
 
 export default function AnalyzeScreen() {
-  const [portfolioData, setPortfolioData] = useState(null);
+  // const [depotID, setDepotID] = useState('671a81f4a36d31f8e9d4e820');
+  const [depotID, setDepotID] = useState('672a47e0bae468d6209a8bcc');
+  const [portfolioID, setPortfolioID] = useState(null);
+  const [depotData, setDepotData] = useState(null);
+  const [mptData, setMPTData] = useState(null);
   const [explainText, setExplainText] = useState(null);
+  const [pageNumber, setPageNumber] = useState(1);
 
   return (
     <SafeAreaView style={styles.container}>
-      <NavigationButtons setPortfolioData={setPortfolioData} setExplainText={setExplainText} />
-      <PlotsView portfolioData={portfolioData} />
+      <NavigationButtons
+        depotID={depotID}
+        portfolioID={portfolioID}
+        setPortfolioID={setPortfolioID}
+        depotData={depotData}
+        setDepotData={setDepotData}
+        mptData={mptData}
+        setMPTData={setMPTData}
+        setExplainText={setExplainText}
+        setPageNumber={setPageNumber}
+        pageNumber={pageNumber}
+      />
+      <PlotsView depotData={depotData} mptData={mptData} pageNumber={pageNumber} />
       <ExplainView explainText={explainText} />
     </SafeAreaView>
   );

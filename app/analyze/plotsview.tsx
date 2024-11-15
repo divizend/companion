@@ -1,32 +1,37 @@
-import React, { useEffect, useState } from 'react';
+import { StyleSheet, View } from 'react-native';
 
-import { Alert, StyleSheet, View } from 'react-native';
+import MPTBarChart from '@/app/analyze/mptBarChart';
+import PortfolioBarChart from '@/app/analyze/portfolioBarChart';
 
-import CustomBarChart from '@/app/analyze/bar_chart';
-import { apiGet, apiPost } from '@/common/api';
-import StyledButton from '@/components/StyledButton';
-import { Text } from '@/components/base';
-import { SafeAreaView } from '@/components/base/SafeAreaView';
-
-import NavigationButtons from './navigationbuttons';
-
-export default function PlotsView({ portfolioData }) {
-  return (
-    <View style={styles.plotcontainer}>
-      {portfolioData ? (
-        <CustomBarChart data={portfolioData} />
-      ) : (
-        <Text>No portfolio data available. Press the button to fetch data.</Text>
-      )}
-    </View>
-  );
+export default function PlotsView({ depotData, mptData, pageNumber }) {
+  if (pageNumber == 1) {
+    return null;
+  } else if (pageNumber == 2) {
+    return null;
+  } else if (pageNumber == 3 && depotData !== null && depotData !== undefined) {
+    return <View style={styles.plotcontainer}>{depotData ? <PortfolioBarChart depotData={depotData} /> : null}</View>;
+  } else if (
+    pageNumber == 4 &&
+    depotData !== null &&
+    depotData !== undefined &&
+    mptData !== null &&
+    mptData !== undefined
+  ) {
+    return (
+      <View style={styles.plotcontainer}>
+        {mptData ? <MPTBarChart depotData={depotData} mptData={mptData} /> : null}
+      </View>
+    );
+  } else {
+    return null;
+  }
 }
 
 const styles = StyleSheet.create({
   plotcontainer: {
-    flex: 1,
-    margin: 20,
-    padding: 16,
+    flex: 2,
+    margin: 0,
+    padding: 0,
     justifyContent: 'center',
     alignItems: 'center',
     //   borderWidth: 2,

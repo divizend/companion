@@ -2,7 +2,20 @@ import React from 'react';
 
 import { StyleSheet, Text, View } from 'react-native';
 
-const CustomBarChart = ({ data }) => {
+const transformDepotDataForChart = depotData => {
+  const { weights, security_isins, security_names } = depotData;
+
+  // Map the weights object to an array, matching each ISIN with its name
+  return Object.keys(weights).map((isin, index) => {
+    const label = security_names[security_isins.indexOf(isin)] || isin; // Match ISIN to name, or use ISIN if name is unavailable
+    const value = parseFloat(weights[isin].toFixed(2));
+    return { label, value };
+  });
+};
+
+export default function PortfolioBarChart({ depotData }) {
+  const data = transformDepotDataForChart(depotData);
+
   // Find the maximum value in the dataset for scaling
   const maxValue = Math.max(...data.map(item => item.value));
 
@@ -29,7 +42,7 @@ const CustomBarChart = ({ data }) => {
       ))}
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -45,7 +58,7 @@ const styles = StyleSheet.create({
   },
   barContainer: {
     alignItems: 'center',
-    width: 35,
+    width: 45,
   },
   label: {
     color: '#EEEEEE',
@@ -63,5 +76,3 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
 });
-
-export default CustomBarChart;

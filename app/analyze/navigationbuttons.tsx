@@ -1,24 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { Alert, StyleSheet, View } from 'react-native';
 
-import CustomBarChart from '@/app/analyze/bar_chart';
 import { apiGet, apiPost } from '@/common/api';
 import { Text } from '@/components/base';
-import { SafeAreaView } from '@/components/base/SafeAreaView';
 
+import fetchText from './explainTextLogic';
 import StyledButton from './styled_button';
-
-const transformDataForChart = data => {
-  const { weights, security_isins, security_names } = data;
-
-  // Map the weights object to an array, matching each ISIN with its name
-  return Object.keys(weights).map((isin, index) => {
-    const label = security_names[security_isins.indexOf(isin)] || isin; // Match ISIN to name, or use ISIN if name is unavailable
-    const value = parseFloat(weights[isin].toFixed(2));
-    return { label, value };
-  });
-};
 
 const mainButtonTitle = page_number => {
   if (page_number == 1) {
@@ -65,39 +53,61 @@ const thirdButtonTitle = page_number => {
   }
 };
 
-export default function NavigationButtons({ setPortfolioData, setExplainText }) {
-  const [pageNumber, setPageNumber] = useState(1);
-
+export default function NavigationButtons({
+  depotID,
+  portfolioID,
+  setPortfolioID,
+  depotData,
+  setDepotData,
+  mptData,
+  setMPTData,
+  setExplainText,
+  setPageNumber,
+  pageNumber,
+}) {
   const nextPage = async () => {
-    if (pageNumber < 4) {
-      setPageNumber(pageNumber + 1);
-    } else {
-      setPageNumber(1);
+    setPageNumber(prevPageNumber => (prevPageNumber < 4 ? prevPageNumber + 1 : 1));
+  };
+
+  const handleNextPage = async pageNumber => {
+    fetchText(setExplainText, pageNumber, depotData, mptData);
+    if (pageNumber == 2) {
+      fetchPortfolio(setDepotData, setPortfolioID);
+    }
+    if (pageNumber == 3) {
+      fetchMPT(setMPTData, depotData);
     }
   };
 
-  const fetchText = async topic => {
-    const queryParams = new URLSearchParams({ topic: topic }).toString();
-    const urlWithParams = `/companion/explain?${queryParams}`;
-    const response = await apiGet(urlWithParams);
-    const text = response.text;
-    setExplainText(text);
-  };
-
-  const handleMainButtonPress = async () => {
-    await nextPage();
-    const topic = 'Modern Portfolio Theory';
-    await fetchText(topic);
-    const postbody = { depot_id: '671a81f4a36d31f8e9d4e820' };
-    const taskAnswer = await apiPost(`/companion/portfolio`, postbody);
-    if (taskAnswer) {
-      const { id } = taskAnswer;
+  const fetchPortfolio = async (setPortfolioData, setPortfolioID) => {
+    const postbody = { depot_id: depotID };
+    const portfolioPostAnswer = await apiPost(`/companion/portfolio`, postbody);
+    if (portfolioPostAnswer) {
+      const { id } = portfolioPostAnswer;
+      setPortfolioID(id);
       const queryParams = new URLSearchParams({ portfolio_id: id }).toString();
       const urlWithParams = `/companion/portfolio?${queryParams}`;
-      const portfolio = await apiGet(urlWithParams);
-      const data = transformDataForChart(portfolio);
-      setPortfolioData(data);
+      const depot = await apiGet(urlWithParams);
+      setPortfolioData(depot);
+      const postbody = { portfolio_id: id };
+      const mptPostAnswer = await apiPost(`/companion/mpt`, postbody);
     }
+  };
+
+  const fetchMPT = async (setMPTData, depotData) => {
+    const queryParams = new URLSearchParams({ portfolio_id: portfolioID }).toString();
+    const urlWithParams = `/companion/mpt?${queryParams}`;
+    const mptData = await apiGet(urlWithParams);
+    setMPTData(mptData);
+  };
+
+  useEffect(() => {
+    handleNextPage(pageNumber);
+  }, [pageNumber]);
+
+  const handleMainButtonPress = async () => {
+    console.log(portfolioID);
+    await nextPage();
   };
   const handleSecondButtonPress = () => {
     Alert.alert('Efficient Frontier is coming soon!');
@@ -131,16 +141,16 @@ export default function NavigationButtons({ setPortfolioData, setExplainText }) 
 const styles = StyleSheet.create({
   buttonscontainer: {
     flex: 1,
-    marginTop: 100,
+    marginTop: 130,
     marginHorizontal: 20,
-    padding: 16,
+    padding: 10,
     justifyContent: 'center',
     alignItems: 'center',
     //   borderWidth: 2,
     //   borderColor: "#FFFFFF",
   },
   title: {
-    fontSize: 15,
+    fontSize: 14,
     marginBottom: 2,
   },
 });
