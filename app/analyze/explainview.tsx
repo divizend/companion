@@ -1,6 +1,10 @@
 import { StyleSheet, Text, View } from 'react-native';
 
-export default function ExplainView({ explainText }) {
+interface ExplainViewProps {
+  explainText: string;
+}
+
+export default function ExplainView({ explainText }: ExplainViewProps) {
   return (
     <View style={styles.explaincontainer}>
       <Text style={styles.text}>{explainText}</Text>

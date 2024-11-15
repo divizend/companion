@@ -8,7 +8,7 @@ import { Text } from '@/components/base';
 import fetchText from './explainTextLogic';
 import StyledButton from './styled_button';
 
-const mainButtonTitle = page_number => {
+const mainButtonTitle = (page_number: number) => {
   if (page_number == 1) {
     return 'Modern Portfolio Theory';
   }
@@ -23,7 +23,7 @@ const mainButtonTitle = page_number => {
   }
 };
 
-const secondButtonTitle = page_number => {
+const secondButtonTitle = (page_number: number) => {
   if (page_number == 1) {
     return 'Efficient Frontier (Coming soon)';
   }
@@ -38,7 +38,7 @@ const secondButtonTitle = page_number => {
   }
 };
 
-const thirdButtonTitle = page_number => {
+const thirdButtonTitle = (page_number: number) => {
   if (page_number == 1) {
     return 'Simulate crashes (Coming soon)';
   }
@@ -53,6 +53,19 @@ const thirdButtonTitle = page_number => {
   }
 };
 
+interface NavigationButtonsProps {
+  depotID: string;
+  portfolioID: string;
+  setPortfolioID: (pageNumber: string) => void;
+  depotData: {};
+  setDepotData: (depotData: {}) => void;
+  mptData: {};
+  setMPTData: (mptData: {}) => void;
+  setExplainText: (explainText: string) => void;
+  pageNumber: number;
+  setPageNumber: (pageNumber: number) => void;
+}
+
 export default function NavigationButtons({
   depotID,
   portfolioID,
@@ -62,14 +75,15 @@ export default function NavigationButtons({
   mptData,
   setMPTData,
   setExplainText,
-  setPageNumber,
   pageNumber,
-}) {
-  const nextPage = async () => {
-    setPageNumber(prevPageNumber => (prevPageNumber < 4 ? prevPageNumber + 1 : 1));
+  setPageNumber,
+}: NavigationButtonsProps) {
+  const nextPage = async (): Promise<void> => {
+    pageNumber = pageNumber < 4 ? pageNumber + 1 : 1;
+    setPageNumber(pageNumber);
   };
 
-  const handleNextPage = async pageNumber => {
+  const handleNextPage = async (pageNumber: number) => {
     fetchText(setExplainText, pageNumber, depotData, mptData);
     if (pageNumber == 2) {
       fetchPortfolio(setDepotData, setPortfolioID);
@@ -79,7 +93,7 @@ export default function NavigationButtons({
     }
   };
 
-  const fetchPortfolio = async (setPortfolioData, setPortfolioID) => {
+  const fetchPortfolio = async (setPortfolioData: {}, setPortfolioID: string) => {
     const postbody = { depot_id: depotID };
     const portfolioPostAnswer = await apiPost(`/companion/portfolio`, postbody);
     if (portfolioPostAnswer) {
@@ -94,7 +108,7 @@ export default function NavigationButtons({
     }
   };
 
-  const fetchMPT = async (setMPTData, depotData) => {
+  const fetchMPT = async (setMPTData: (mptData: {}) => void, depotData: {}) => {
     const queryParams = new URLSearchParams({ portfolio_id: portfolioID }).toString();
     const urlWithParams = `/companion/mpt?${queryParams}`;
     const mptData = await apiGet(urlWithParams);
@@ -106,7 +120,6 @@ export default function NavigationButtons({
   }, [pageNumber]);
 
   const handleMainButtonPress = async () => {
-    console.log(portfolioID);
     await nextPage();
   };
   const handleSecondButtonPress = () => {
@@ -119,21 +132,9 @@ export default function NavigationButtons({
   return (
     <View style={styles.buttonscontainer}>
       <Text style={styles.title}>Chose one of the following options:</Text>
-      <StyledButton
-        containerStyle={styles.buttoncontainer}
-        title={mainButtonTitle(pageNumber)}
-        onPress={handleMainButtonPress}
-      />
-      <StyledButton
-        containerStyle={styles.buttoncontainer}
-        title={secondButtonTitle(pageNumber)}
-        onPress={handleSecondButtonPress}
-      />
-      <StyledButton
-        containerStyle={styles.buttoncontainer}
-        title={thirdButtonTitle(pageNumber)}
-        onPress={handleThirdButtonPress}
-      />
+      <StyledButton title={mainButtonTitle(pageNumber)} onPress={handleMainButtonPress} />
+      <StyledButton title={secondButtonTitle(pageNumber)} onPress={handleSecondButtonPress} />
+      <StyledButton title={thirdButtonTitle(pageNumber)} onPress={handleThirdButtonPress} />
     </View>
   );
 }

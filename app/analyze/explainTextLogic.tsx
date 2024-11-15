@@ -51,7 +51,6 @@ export default async function fetchText(setExplainText, pageNumber, depotData, m
     const depotWeights = JSON.stringify(getNamesAndWeights(depotData), null, 2);
     const optimizedWeights = JSON.stringify(getNamesAndWeightsFromMPT(depotData, mptData), null, 2);
     const topic = ` how the portfolio ${depotWeights} was optimized to ${optimizedWeights} and why the optimized version is better.`;
-    console.log(topic);
     const queryParams = new URLSearchParams({ topic: topic }).toString();
     const urlWithParams = `/companion/explain?${queryParams}`;
     const response = await apiGet(urlWithParams);

@@ -3,7 +3,13 @@ import { StyleSheet, View } from 'react-native';
 import MPTBarChart from '@/app/analyze/mptBarChart';
 import PortfolioBarChart from '@/app/analyze/portfolioBarChart';
 
-export default function PlotsView({ depotData, mptData, pageNumber }) {
+interface PlotsViewProps {
+  depotData: {};
+  mptData: {};
+  pageNumber: number;
+}
+
+export default function PlotsView({ depotData, mptData, pageNumber }: PlotsViewProps) {
   if (pageNumber == 1) {
     return null;
   } else if (pageNumber == 2) {

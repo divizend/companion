@@ -2,7 +2,7 @@ import React from 'react';
 
 import { StyleSheet, Text, View } from 'react-native';
 
-const transformDepotDataForChart = data => {
+const transformDepotDataForChart = (data: {}) => {
   const { weights, security_isins, security_names } = data;
 
   // Map the weights object to an array, matching each ISIN with its name
@@ -13,7 +13,7 @@ const transformDepotDataForChart = data => {
   });
 };
 
-const transformMPTDataForChart = (mptData, depotData) => {
+const transformMPTDataForChart = (mptData: {}, depotData: {}) => {
   const { weights } = mptData;
   const { security_isins, security_names } = depotData;
 
@@ -26,7 +26,6 @@ const transformMPTDataForChart = (mptData, depotData) => {
 };
 
 export default function MPTBarChart({ mptData, depotData }) {
-  console.log(mptData);
   portfolio1 = transformDepotDataForChart(depotData);
   portfolio2 = transformMPTDataForChart(mptData, depotData);
 
