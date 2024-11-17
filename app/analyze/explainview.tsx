@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
 interface ExplainViewProps {
   explainText: string;
@@ -7,7 +7,9 @@ interface ExplainViewProps {
 export default function ExplainView({ explainText }: ExplainViewProps) {
   return (
     <View style={styles.explaincontainer}>
-      <Text style={styles.text}>{explainText}</Text>
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <Text style={styles.text}>{explainText}</Text>
+      </ScrollView>
     </View>
   );
 }
@@ -23,6 +25,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     // borderWidth: 2,
     // borderColor: "#FFFFFF",
+  },
+  scrollContainer: {
+    flexGrow: 1,
+    paddingBottom: 30,
   },
   text: {
     margin: 0,

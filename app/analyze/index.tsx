@@ -14,7 +14,10 @@ export default function AnalyzeScreen() {
   const [portfolioID, setPortfolioID] = useState('');
   const [depotData, setDepotData] = useState({});
   const [mptData, setMPTData] = useState({});
+
   const [explainText, setExplainText] = useState('');
+  const [explainTextLength, setExplainTextLength] = useState(2);
+
   const [pageNumber, setPageNumber] = useState(1);
 
   return (
@@ -28,6 +31,8 @@ export default function AnalyzeScreen() {
         mptData={mptData}
         setMPTData={setMPTData}
         setExplainText={setExplainText}
+        explainTextLength={explainTextLength}
+        setExplainTextLength={setExplainTextLength}
         pageNumber={pageNumber}
         setPageNumber={setPageNumber}
       />

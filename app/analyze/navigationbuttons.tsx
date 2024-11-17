@@ -5,7 +5,7 @@ import { Alert, StyleSheet, View } from 'react-native';
 import { apiGet, apiPost } from '@/common/api';
 import { Text } from '@/components/base';
 
-import fetchText from './explainTextLogic';
+import fetchExplainText from './explainTextLogic';
 import StyledButton from './styled_button';
 
 const mainButtonTitle = (page_number: number) => {
@@ -62,6 +62,8 @@ interface NavigationButtonsProps {
   mptData: {};
   setMPTData: (mptData: {}) => void;
   setExplainText: (explainText: string) => void;
+  explainTextLength: number;
+  setExplainTextLength: (explainTextLength: number) => void;
   pageNumber: number;
   setPageNumber: (pageNumber: number) => void;
 }
@@ -75,6 +77,8 @@ export default function NavigationButtons({
   mptData,
   setMPTData,
   setExplainText,
+  explainTextLength,
+  setExplainTextLength,
   pageNumber,
   setPageNumber,
 }: NavigationButtonsProps) {
@@ -84,7 +88,7 @@ export default function NavigationButtons({
   };
 
   const handleNextPage = async (pageNumber: number) => {
-    fetchText(setExplainText, pageNumber, depotData, mptData);
+    setExplainTextLength(2);
     if (pageNumber == 2) {
       fetchPortfolio(setDepotData, setPortfolioID);
     }
@@ -119,11 +123,22 @@ export default function NavigationButtons({
     handleNextPage(pageNumber);
   }, [pageNumber]);
 
+  useEffect(() => {
+    fetchExplainText(setExplainText, pageNumber, depotData, mptData, explainTextLength);
+  }, [explainTextLength]);
+
   const handleMainButtonPress = async () => {
     await nextPage();
   };
   const handleSecondButtonPress = () => {
-    Alert.alert('Efficient Frontier is coming soon!');
+    if (pageNumber == 1) {
+      Alert.alert('Efficient Frontier is coming soon!');
+    } else {
+      setExplainTextLength(Math.min(explainTextLength * 2, 8));
+      if (explainTextLength == 8) {
+        Alert.alert('Reached maximum detail degree!');
+      }
+    }
   };
   const handleThirdButtonPress = () => {
     Alert.alert('Simulation is coming soon!');
@@ -134,7 +149,7 @@ export default function NavigationButtons({
       <Text style={styles.title}>Chose one of the following options:</Text>
       <StyledButton title={mainButtonTitle(pageNumber)} onPress={handleMainButtonPress} />
       <StyledButton title={secondButtonTitle(pageNumber)} onPress={handleSecondButtonPress} />
-      <StyledButton title={thirdButtonTitle(pageNumber)} onPress={handleThirdButtonPress} />
+      {pageNumber == 1 ? <StyledButton title={thirdButtonTitle(pageNumber)} onPress={handleThirdButtonPress} /> : null}
     </View>
   );
 }
@@ -142,10 +157,10 @@ export default function NavigationButtons({
 const styles = StyleSheet.create({
   buttonscontainer: {
     flex: 1,
-    marginTop: 130,
+    marginTop: 100,
     marginHorizontal: 20,
     padding: 10,
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     alignItems: 'center',
     //   borderWidth: 2,
     //   borderColor: "#FFFFFF",
