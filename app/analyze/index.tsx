@@ -14,6 +14,7 @@ export default function AnalyzeScreen() {
   const [portfolioID, setPortfolioID] = useState('');
   const [depotData, setDepotData] = useState({});
   const [mptData, setMPTData] = useState({});
+  const [targetReturn, setTargetReturn] = useState(0.07);
 
   const [explainText, setExplainText] = useState('');
   const [explainTextLength, setExplainTextLength] = useState(2);
@@ -30,6 +31,8 @@ export default function AnalyzeScreen() {
         setDepotData={setDepotData}
         mptData={mptData}
         setMPTData={setMPTData}
+        targetReturn={targetReturn}
+        setTargetReturn={setTargetReturn}
         setExplainText={setExplainText}
         explainTextLength={explainTextLength}
         setExplainTextLength={setExplainTextLength}

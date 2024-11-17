@@ -6,6 +6,7 @@ import { apiGet, apiPost } from '@/common/api';
 import { Text } from '@/components/base';
 
 import fetchExplainText from './explainTextLogic';
+import CustomSlider from './slider';
 import StyledButton from './styled_button';
 
 const mainButtonTitle = (page_number: number) => {
@@ -49,7 +50,7 @@ const thirdButtonTitle = (page_number: number) => {
     return 'Explain Risk managment';
   }
   if (page_number == 4) {
-    return 'Explain Sharpe Ratio';
+    return 'Recalculate';
   }
 };
 
@@ -61,6 +62,8 @@ interface NavigationButtonsProps {
   setDepotData: (depotData: {}) => void;
   mptData: {};
   setMPTData: (mptData: {}) => void;
+  targetReturn: number;
+  setTargetReturn: (targetReturn: number) => void;
   setExplainText: (explainText: string) => void;
   explainTextLength: number;
   setExplainTextLength: (explainTextLength: number) => void;
@@ -76,6 +79,8 @@ export default function NavigationButtons({
   setDepotData,
   mptData,
   setMPTData,
+  targetReturn,
+  setTargetReturn,
   setExplainText,
   explainTextLength,
   setExplainTextLength,
@@ -89,6 +94,7 @@ export default function NavigationButtons({
 
   const handleNextPage = async (pageNumber: number) => {
     setExplainTextLength(2);
+    fetchExplainText(setExplainText, pageNumber, depotData, mptData, 2);
     if (pageNumber == 2) {
       fetchPortfolio(setDepotData, setPortfolioID);
     }
@@ -107,16 +113,39 @@ export default function NavigationButtons({
       const urlWithParams = `/companion/portfolio?${queryParams}`;
       const depot = await apiGet(urlWithParams);
       setPortfolioData(depot);
-      const postbody = { portfolio_id: id };
+      const postbody = { portfolio_id: id, targetReturn: targetReturn };
       const mptPostAnswer = await apiPost(`/companion/mpt`, postbody);
     }
   };
 
-  const fetchMPT = async (setMPTData: (mptData: {}) => void, depotData: {}) => {
+  const fetchMPT = async (setMPTData: (mptData: {}) => void) => {
     const queryParams = new URLSearchParams({ portfolio_id: portfolioID }).toString();
     const urlWithParams = `/companion/mpt?${queryParams}`;
     const mptData = await apiGet(urlWithParams);
     setMPTData(mptData);
+  };
+
+  const updateMPT = async () => {
+    const postbody = { portfolio_id: portfolioID, targetReturn: targetReturn };
+    const mptPostAnswer = await apiPost(`/companion/mpt`, postbody);
+
+    const pollMPTData = async () => {
+      const queryParams = new URLSearchParams({ portfolio_id: portfolioID }).toString();
+      const urlWithParams = `/companion/mpt?${queryParams}`;
+
+      while (true) {
+        const mptData = await apiGet(urlWithParams);
+
+        // Check if the status is 'done'
+        if (mptData.status === 'done') {
+          setMPTData(mptData);
+          break;
+        }
+
+        await new Promise(resolve => setTimeout(resolve, 1000));
+      }
+    };
+    pollMPTData();
   };
 
   useEffect(() => {
@@ -126,6 +155,10 @@ export default function NavigationButtons({
   useEffect(() => {
     fetchExplainText(setExplainText, pageNumber, depotData, mptData, explainTextLength);
   }, [explainTextLength]);
+
+  useEffect(() => {
+    updateMPT();
+  }, [targetReturn]);
 
   const handleMainButtonPress = async () => {
     await nextPage();
@@ -140,8 +173,11 @@ export default function NavigationButtons({
       }
     }
   };
-  const handleThirdButtonPress = () => {
+  const handleThirdButtonPress = async () => {
     Alert.alert('Simulation is coming soon!');
+  };
+  const handleSliderChange = async value => {
+    setTargetReturn(value);
   };
 
   return (
@@ -149,7 +185,21 @@ export default function NavigationButtons({
       <Text style={styles.title}>Chose one of the following options:</Text>
       <StyledButton title={mainButtonTitle(pageNumber)} onPress={handleMainButtonPress} />
       <StyledButton title={secondButtonTitle(pageNumber)} onPress={handleSecondButtonPress} />
-      {pageNumber == 1 ? <StyledButton title={thirdButtonTitle(pageNumber)} onPress={handleThirdButtonPress} /> : null}
+      {pageNumber === 1 || pageNumber === 4 ? (
+        pageNumber === 4 ? (
+          <View>
+            <Text style={styles.sliderText}>Target Return: {targetReturn.toFixed(2)}</Text>
+            <CustomSlider
+              value={targetReturn}
+              onSlidingComplete={handleSliderChange}
+              thumbStyle={styles.thumb}
+              trackStyle={styles.track}
+            />
+          </View>
+        ) : (
+          <StyledButton title={thirdButtonTitle(pageNumber)} onPress={handleThirdButtonPress} />
+        )
+      ) : null}
     </View>
   );
 }
@@ -157,9 +207,10 @@ export default function NavigationButtons({
 const styles = StyleSheet.create({
   buttonscontainer: {
     flex: 1,
-    marginTop: 100,
+    marginTop: 80,
     marginHorizontal: 20,
     padding: 10,
+    paddingBottom: 40,
     justifyContent: 'flex-start',
     alignItems: 'center',
     //   borderWidth: 2,
@@ -168,5 +219,22 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 14,
     marginBottom: 2,
+  },
+  sliderText: {
+    fontSize: 12,
+    textAlign: 'center',
+  },
+  thumb: {
+    width: 25,
+    height: 25,
+    borderRadius: 12.5,
+    backgroundColor: '#f44336',
+    borderWidth: 2,
+    borderColor: '#ffffff',
+  },
+  track: {
+    width: 320,
+    height: 3,
+    borderRadius: 0,
   },
 });
