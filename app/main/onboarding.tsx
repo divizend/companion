@@ -19,7 +19,6 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import Purchases from 'react-native-purchases';
 
 import { apiPost } from '@/common/api';
 import { colors } from '@/common/colors';
@@ -44,7 +43,7 @@ enum OnboardingPage {
 
 export default function OnboardingModal() {
   const theme = useThemeColor();
-  const { updateProfile, updatePrincipalLegalEntity } = useUserProfile();
+  const { updateProfile, updatePrincipalLegalEntity, profile } = useUserProfile();
   const principalLegalEntity = usePrincipalLegalEntity();
   const [currentPage, setCurrentPage] = useState<OnboardingPage>(OnboardingPage.INTRO);
   const [selectedCountry, setSelectedCountry] = useState(principalLegalEntity?.data.info.nationality ?? '');
@@ -52,8 +51,9 @@ export default function OnboardingModal() {
     principalLegalEntity?.data.info.birthday ? new Date(principalLegalEntity.data.info.birthday) : null,
   );
 
+  const { refreshCustomerInfo } = usePurchases();
+
   const { showSnackbar } = useSnackbar();
-  const { eligibleForTrial, setCustomerInfo } = usePurchases();
 
   const onDateChange = (event: DateTimePickerEvent, selectedDate?: Date | undefined) => {
     if (event.type === 'set') {
@@ -83,7 +83,7 @@ export default function OnboardingModal() {
     availablePages = 4;
     if (principalLegalEntity?.data.info.birthday) {
       availablePages = 5;
-      if (!!eligibleForTrial) {
+      if (!profile.flags.usedCompanionTrial) {
         availablePages = 6;
       }
     }
@@ -162,17 +162,11 @@ export default function OnboardingModal() {
             )}
           </View>
         </View>
-        {!!eligibleForTrial && (
+        {!profile.flags.usedCompanionTrial && (
           <View style={styles.page}>
             <Text style={styles.modalTitle}>{t('onboarding.freeTrial.title')}</Text>
-            <Text style={styles.modalText}>
-              {t(`subscription.trialPeriod.${eligibleForTrial.product.introPrice!.period}.free`)}
-            </Text>
-            <Text className="text-muted max-w-[70%] text-center">
-              {t(`subscription.trialPeriod.${eligibleForTrial.product.introPrice!.period}.after`, {
-                price: eligibleForTrial.product.pricePerMonthString,
-              })}
-            </Text>
+            <Text style={styles.modalText}>{t(`subscription.trialPeriod.free`)}</Text>
+            <Text className="text-muted max-w-[80%] text-center">{t(`subscription.trialPeriod.after`)}</Text>
           </View>
         )}
         {availablePages >= 5 && (
@@ -211,7 +205,7 @@ export default function OnboardingModal() {
                 ? t('common.next')
                 : isLoading
                   ? t('common.loading')
-                  : currentPage === OnboardingPage.FREE_TRIAL && !!eligibleForTrial
+                  : currentPage === OnboardingPage.FREE_TRIAL && !profile.flags.usedCompanionTrial
                     ? t('onboarding.freeTrial.startTrial')
                     : t('onboarding.finalConfirm')
             }
@@ -264,19 +258,10 @@ export default function OnboardingModal() {
                 } finally {
                   setIsLoading(false);
                 }
-              } else if (currentPage === OnboardingPage.FREE_TRIAL && !!eligibleForTrial) {
+              } else if (currentPage === OnboardingPage.FREE_TRIAL && !profile.flags.usedCompanionTrial) {
                 try {
-                  // Logic for trial if eligible.
-                  if (eligibleForTrial) {
-                    setIsLoading(true);
-                    await (
-                      Platform.OS === 'android'
-                        ? Purchases.purchaseSubscriptionOption(
-                            eligibleForTrial.product.subscriptionOptions?.find(item => !!item.freePhase)!,
-                          )
-                        : Purchases.purchaseStoreProduct(eligibleForTrial.product)
-                    ).then(res => setCustomerInfo(res.customerInfo));
-                  }
+                  setIsLoading(true);
+                  await apiPost('/activate-trial', {}).then(refreshCustomerInfo);
                   setTimeout(
                     () =>
                       scrollViewRef.current?.scrollTo({
@@ -292,7 +277,7 @@ export default function OnboardingModal() {
                 }
               } else if (
                 currentPage === OnboardingPage.ALL_SET ||
-                (currentPage === OnboardingPage.FREE_TRIAL && !eligibleForTrial)
+                (currentPage === OnboardingPage.FREE_TRIAL && !profile.flags.usedCompanionTrial)
               ) {
                 setIsLoading(true);
                 try {

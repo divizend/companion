@@ -5,7 +5,6 @@ import Purchases, { CustomerInfo, PurchasesConfiguration, PurchasesPackage } fro
 
 import { usedConfig } from '@/common/config';
 import { useUserProfile } from '@/common/profile';
-import { isEligibleForTrial } from '@/components/features/subscription/util';
 import { useSnackbar } from '@/components/global/Snackbar';
 
 interface RevenueCatContextType {
@@ -13,7 +12,7 @@ interface RevenueCatContextType {
   purchasePackages?: PurchasesPackage[];
   customerInfo?: CustomerInfo;
   setCustomerInfo: React.Dispatch<React.SetStateAction<CustomerInfo | undefined>>;
-  eligibleForTrial?: PurchasesPackage | false;
+  refreshCustomerInfo: () => Promise<void>;
 }
 
 const RevenueCatContext = createContext<RevenueCatContextType | undefined>(undefined);
@@ -35,8 +34,13 @@ export const RevenueCatProvider: React.FC<RevenueCatProviderProps> = ({ children
   const [loading, setLoading] = useState(true);
   const [purchasePackages, setPurchasePackages] = useState<PurchasesPackage[] | undefined>();
   const [customerInfo, setCustomerInfo] = useState<CustomerInfo | undefined>(undefined);
-  const [eligibleForTrial, setEligibleForTrial] = useState<PurchasesPackage | false | undefined>();
   const { profile } = useUserProfile();
+
+  // This should only be used in case the customer info was updated outside the app (fetching a new grant or updates that happened through the RevenueCat dashboard)
+  const refreshCustomerInfo = async () => {
+    Purchases.invalidateCustomerInfoCache();
+    Purchases.getCustomerInfo().then(setCustomerInfo);
+  };
 
   useEffect(() => {
     const configureRevenueCat = async () => {
@@ -50,7 +54,7 @@ export const RevenueCatProvider: React.FC<RevenueCatProviderProps> = ({ children
         // Read more here https://community.revenuecat.com/sdks-51/is-it-safe-to-call-purchases-configure-multiple-times-3608?postid=11617#post11617
         if (!(await Purchases.isConfigured())) Purchases.configure(configuration);
 
-        const [packages] = await Promise.all([
+        await Promise.all([
           Purchases.getOfferings().then(res => {
             setPurchasePackages(res.current?.availablePackages);
             return res.current?.availablePackages;
@@ -63,7 +67,6 @@ export const RevenueCatProvider: React.FC<RevenueCatProviderProps> = ({ children
 
         Purchases.addCustomerInfoUpdateListener(info => setCustomerInfo(info));
         // If profile has already been setup, do not calculate this.
-        await isEligibleForTrial(packages!).then(setEligibleForTrial);
       } catch (error) {
         showSnackbar('Failed to configure in-app-purchases');
         // TODO: Sentry call here
@@ -75,7 +78,9 @@ export const RevenueCatProvider: React.FC<RevenueCatProviderProps> = ({ children
   }, [profile.id, showSnackbar]);
 
   return (
-    <RevenueCatContext.Provider value={{ loading, purchasePackages, customerInfo, setCustomerInfo, eligibleForTrial }}>
+    <RevenueCatContext.Provider
+      value={{ loading, purchasePackages, customerInfo, setCustomerInfo, refreshCustomerInfo }}
+    >
       {children}
     </RevenueCatContext.Provider>
   );

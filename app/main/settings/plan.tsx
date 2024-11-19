@@ -39,16 +39,17 @@ export default function CurrentPlan() {
 
   if (loading || !customerInfo || !purchasePackages || isLoading || !data) return <FullScreenActivityIndicator />;
 
-  const activeSubscription =
-    JSON.stringify(customerInfo.entitlements.active) === '{}'
-      ? undefined
-      : purchasePackages.find(purchasePackage => {
-          const plan = customerInfo.entitlements.active['divizend-membership'];
-          return (
-            purchasePackage.product.identifier === plan.productIdentifier + ':' + plan.productPlanIdentifier ||
-            purchasePackage.product.identifier === plan.productIdentifier
-          );
-        });
+  const entitlement = customerInfo.entitlements.active['divizend-membership'];
+
+  const activeSubscription = !entitlement
+    ? undefined
+    : purchasePackages.find(purchasePackage => {
+        return (
+          purchasePackage.product.identifier ===
+            entitlement.productIdentifier + ':' + entitlement.productPlanIdentifier ||
+          purchasePackage.product.identifier === entitlement.productIdentifier
+        );
+      });
 
   const awaitedPurchasePackage =
     !!data.waitingForPoints &&
@@ -75,37 +76,35 @@ export default function CurrentPlan() {
           <View
             className={clsx(
               'w-2 h-2 dark:bg-green-400 bg-green-600 rounded-full',
-              !activeSubscription && 'bg-red-500 dark:bg-red-500',
+              !entitlement && 'bg-red-500 dark:bg-red-500',
             )}
           />
-          <Text type={!!activeSubscription ? 'success' : 'danger'} className="text-center">
-            {!!activeSubscription ? t('subscription.currentPlan.active') : t('subscription.currentPlan.inactive')}
+          <Text type={!!entitlement ? 'success' : 'danger'} className="text-center">
+            {!!entitlement ? t('subscription.currentPlan.active') : t('subscription.currentPlan.inactive')}
           </Text>
         </View>
         <Text h1 className="text-center mb-8 font-semibold">
-          {activeSubscription?.product.title || t('subscription.currentPlan.noActiveSubscription')}
+          {!!entitlement
+            ? t('subscription.currentPlan.membership')
+            : t('subscription.currentPlan.noActiveSubscription')}
         </Text>
 
         {/* Free tiral notice */}
-        {!!activeSubscription &&
-          customerInfo.entitlements.active['divizend-membership'].periodType === 'TRIAL' &&
-          activeSubscription && (
-            <View className="flex items-center bg-secondary-light dark:bg-secondary-dark px-2 py-5 rounded-xl gap-3 mb-8 shadow-lg">
-              <View className="bg-primary-light dark:bg-primary-dark rounded-3xl p-2">
-                <Icon name="info" type="material" size={20} color={theme.text} />
-              </View>
-              <Text h4 className="max-w-[85%] font-bold text-center">
-                {t('subscription.currentPlan.freeTrial.ends', {
-                  date: new Date(customerInfo.entitlements.active['divizend-membership'].expirationDateMillis!),
-                })}
-              </Text>
-              <Text type="muted" className="max-w-[95%] text-center">
-                {t('subscription.currentPlan.freeTrial.after', {
-                  price: activeSubscription.product.pricePerMonthString,
-                })}
-              </Text>
+        {!!entitlement && entitlement.store === 'PROMOTIONAL' && (
+          <View className="flex items-center bg-secondary-light dark:bg-secondary-dark px-2 py-5 rounded-xl gap-3 mb-8 shadow-lg">
+            <View className="bg-primary-light dark:bg-primary-dark rounded-3xl p-2">
+              <Icon name="info" type="material" size={20} color={theme.text} />
             </View>
-          )}
+            <Text h4 className="max-w-[85%] font-bold text-center">
+              {t('subscription.currentPlan.freeTrial.ends', {
+                date: new Date(entitlement.expirationDateMillis!),
+              })}
+            </Text>
+            <Text type="muted" className="max-w-[95%] text-center">
+              {t('subscription.currentPlan.freeTrial.after')}
+            </Text>
+          </View>
+        )}
 
         {/* Waitlist information */}
         {!!awaitedPurchasePackage && (
