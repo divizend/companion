@@ -1,15 +1,14 @@
 import React, { useState } from 'react';
 
-import { Icon } from '@rneui/themed';
-import { Dimensions, ImageBackground, Pressable, View } from 'react-native';
+import { CheckBox } from '@rneui/themed';
+import { ImageBackground, Pressable, View } from 'react-native';
 import Purchases, { PurchasesPackage } from 'react-native-purchases';
-import { useSharedValue } from 'react-native-reanimated';
-import Carousel, { ICarouselInstance } from 'react-native-reanimated-carousel';
 
 import { apiDelete, apiPost } from '@/common/api';
 import { clsx } from '@/common/clsx';
 import FullScreenActivityIndicator from '@/components/FullScreenActivityIndicator';
 import { Button, Text } from '@/components/base';
+import Accordion from '@/components/base/Accordion';
 import { useSnackbar } from '@/components/global/Snackbar';
 import { showAlert } from '@/components/global/prompt';
 import { usePurchases } from '@/hooks/usePurchases';
@@ -21,12 +20,67 @@ import { requiresWaitlist } from './util';
 
 type Props = { close: () => void };
 
+function SubscriptionCard({
+  product,
+  setSelectedPackage,
+  isSelected,
+}: {
+  product: PurchasesPackage;
+  setSelectedPackage: React.Dispatch<React.SetStateAction<PurchasesPackage | undefined>>;
+  isSelected: boolean;
+}) {
+  const theme = useThemeColor();
+  return (
+    <Pressable key={product.identifier} className="flex-1" onPress={() => setSelectedPackage(product)}>
+      <ImageBackground
+        alt="background-bubbles"
+        className="flex-1 rounded-xl"
+        imageStyle={{ opacity: 0.3 }}
+        source={require('@/assets/images/card-background.png')}
+      >
+        <View
+          key={product.identifier}
+          className={clsx(
+            'flex-1 flex flex-row dark:bg-transparent border border-gray-200 rounded-xl justify-between items-start p-6',
+            isSelected && 'border-theme border-2 bg-[#3939ff1a] dark:bg-[#3939ff1a]',
+          )}
+        >
+          <View className="flex justify-between max-w-[70%]">
+            <Text h3 type="muted" className="font-semibold mb-2 tracking-widest">
+              {t(`subscription.subscriptionPlans.${product.identifier}.title`)}
+            </Text>
+            <View>
+              <Text className="text-end" h3>
+                {product.product.priceString}
+              </Text>
+              <Text className="text-end">{t('subscription.monthly')}</Text>
+            </View>
+          </View>
+          <CheckBox
+            wrapperStyle={{ backgroundColor: 'transparent', margin: 0, padding: 0 }}
+            iconType="material-community"
+            checkedIcon="radiobox-marked"
+            uncheckedIcon="radiobox-blank"
+            checkedColor={theme.theme}
+            containerStyle={{
+              backgroundColor: 'transparent',
+              margin: 0,
+              padding: 0,
+              marginLeft: 0,
+              marginRight: 0,
+            }}
+            checked={isSelected}
+          />
+        </View>
+      </ImageBackground>
+    </Pressable>
+  );
+}
+
 export default function SubscriptionCarousel({ close }: Props) {
   const { showSnackbar } = useSnackbar();
   const theme = useThemeColor();
   const { loading, purchasePackages, setCustomerInfo, refreshCustomerInfo } = usePurchases();
-  const ref = React.useRef<ICarouselInstance>(null);
-  const progress = useSharedValue<number>(0);
   const [selectedPackage, setSelectedPackage] = useState<PurchasesPackage>();
   const [isSubscribing, setIsSubscribing] = useState(false);
   const { data, isLoading, refetch } = useWaitlistStatus();
@@ -44,6 +98,8 @@ export default function SubscriptionCarousel({ close }: Props) {
 
   if (loading || !purchasePackages || isLoading || !data) return <FullScreenActivityIndicator />;
 
+  const solidarityProducts = purchasePackages.slice(0, 2);
+  const productsRest = purchasePackages.slice(2);
   const userInWaitlist = !!data.waitingForPoints;
 
   const isSpotReserved = (purchasePackage: PurchasesPackage): boolean => {
@@ -81,71 +137,34 @@ export default function SubscriptionCarousel({ close }: Props) {
     }
   };
 
-  const featureMatrix: { [key: string]: string[] } = {};
-  Object.values(purchasePackages).forEach(product => {
-    featureMatrix[product.identifier] = [
-      ...t(`subscription.commonFeatures`, { returnObjects: true }),
-      ...t(`subscription.subscriptionPlans.${product.identifier}.features`, { returnObjects: true }),
-    ];
-  });
-
   return (
-    <View className="mb-4">
-      <Text h1 className="text-center">
-        {t('subscription.choosePlan')}
-      </Text>
-      <Carousel
-        ref={ref}
-        width={Dimensions.get('window').width}
-        height={(Dimensions.get('window').width - 40) / 1.5}
-        data={purchasePackages}
-        loop={false}
-        mode="parallax"
-        style={{ marginLeft: -20, marginRight: -20 }}
-        modeConfig={{}}
-        onProgressChange={progress}
-        renderItem={({ item }) => (
-          <Pressable className="flex-1" onPress={() => setSelectedPackage(item)}>
-            <ImageBackground
-              alt="background-bubbles"
-              className="flex-1 m-2 rounded-xl"
-              imageStyle={{ opacity: 0.3 }}
-              source={require('@/assets/images/card-background.png')}
-            >
-              <View
+    <View className="mb-4 flex-1 gap-2">
+      <Accordion
+        title={t('subscription.solidarityPrices')}
+        content={
+          <View className="flex gap-2">
+            {solidarityProducts.map(item => (
+              <SubscriptionCard
                 key={item.identifier}
-                className={clsx(
-                  'flex-1 flex flex-row dark:bg-transparent border border-gray-200 rounded-xl justify-between p-6',
-                  item.identifier === selectedPackage?.identifier &&
-                    'border-theme border-2 bg-[#3939ff1a] dark:bg-[#3939ff1a]',
-                )}
-              >
-                <View className="flex justify-between max-w-[70%]">
-                  <Text h2 className="font-bold mb-2 ">
-                    {t(`subscription.subscriptionPlans.${item.identifier}.title`)}
-                  </Text>
-                  <View className="mb-2 max-w-[100%]">
-                    {featureMatrix[item.identifier].map((feature, index) => (
-                      <View key={index} className="flex flex-row items-start gap-2">
-                        <Icon name="check" color={theme.muted} size={18} />
-                        <Text className="text-sm" type="muted">
-                          {feature}
-                        </Text>
-                      </View>
-                    ))}
-                  </View>
-                </View>
-                <View>
-                  <Text className="text-end" h3>
-                    {item.product.priceString}
-                  </Text>
-                  <Text className="text-end">{t('subscription.monthly')}</Text>
-                </View>
-              </View>
-            </ImageBackground>
-          </Pressable>
-        )}
+                isSelected={selectedPackage?.identifier === item.identifier}
+                product={item}
+                setSelectedPackage={setSelectedPackage}
+              />
+            ))}
+          </View>
+        }
       />
+
+      <View className="flex gap-2">
+        {productsRest.map(item => (
+          <SubscriptionCard
+            key={item.identifier}
+            isSelected={selectedPackage?.identifier === item.identifier}
+            product={item}
+            setSelectedPackage={setSelectedPackage}
+          />
+        ))}
+      </View>
 
       <Button
         disabled={

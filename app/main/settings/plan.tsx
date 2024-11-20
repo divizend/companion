@@ -11,11 +11,20 @@ import { Button, ScrollScreen, Text } from '@/components/base';
 import SubscriptionCarousel from '@/components/features/subscription/SubscriptionCarousel';
 import { useWaitlistStatus } from '@/components/features/subscription/queries';
 import { requiresWaitlist } from '@/components/features/subscription/util';
-import { showAlert, showCustom } from '@/components/global/prompt';
+import ModalLayout from '@/components/global/ModalLayout';
+import { ModalManager } from '@/components/global/modal';
+import { showAlert } from '@/components/global/prompt';
 import '@/global.css';
 import { usePurchases } from '@/hooks/usePurchases';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { t } from '@/i18n';
+
+const showSubscriptionModal = () =>
+  ModalManager.showModal(({ dismiss }) => (
+    <ModalLayout title={t('subscription.choosePlan')} dismiss={dismiss}>
+      <SubscriptionCarousel close={dismiss} />
+    </ModalLayout>
+  ));
 
 export default function CurrentPlan() {
   const theme = useThemeColor();
@@ -31,7 +40,7 @@ export default function CurrentPlan() {
         actions: [
           {
             title: t('subscription.currentPlan.paywallDisclaimer.options'),
-            onPress: () => showCustom(SubscriptionCarousel as React.ComponentType),
+            onPress: () => showSubscriptionModal(),
           },
         ],
       });
@@ -171,7 +180,7 @@ export default function CurrentPlan() {
                 {t('subscription.actions.subscribe')}
               </Text>
             }
-            onPress={() => showCustom(SubscriptionCarousel as React.ComponentType)}
+            onPress={showSubscriptionModal}
             buttonStyle={{ backgroundColor: theme.theme, borderRadius: 12, paddingVertical: 15 }}
           />
         )}
