@@ -272,6 +272,7 @@
     "currentPlan": {
       "active": "Active",
       "inactive": "Inactive",
+      "membership": "Divizend membership",
       "noActiveSubscription": "No active subscription",
       "table": {
         "plan": "Plan",
@@ -280,7 +281,7 @@
       },
       "freeTrial": {
         "ends": "Your free trial will end on {{date,dayLongAndTime}}",
-        "after": "After that you will be automatically billed {{price}} per month."
+        "after": "Your access will be limited afterwards."
       },
       "paywallDisclaimer": {
         "title": "Your subscription is inactive",
@@ -321,10 +322,8 @@
       }
     },
     "trialPeriod": {
-      "P1W": {
-        "free": "Get access for one week completely free.",
-        "after": "The subscription costs {{price}} per month after the trial ends."
-      }
+      "free": "Get access for one week completely free.",
+      "after": "You will only be charged if you purchase a new membership."
     },
     "monthly": "Per month",
     "actions": {
