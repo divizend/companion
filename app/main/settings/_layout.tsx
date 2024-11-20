@@ -29,10 +29,7 @@ export default function Layout() {
         // The back button should only be used to go back to the main settings menu or any nested routes in the settings stack. It should never be used to go back to 'app' stack.
         leftComponent={
           segments.at(-1) !== 'settings' ? (
-            <TouchableOpacity
-              pressRetentionOffset={20}
-              onPress={() => (router.canGoBack() ? router.back() : router.navigate('/main/settings'))}
-            >
+            <TouchableOpacity pressRetentionOffset={20} onPress={() => router.navigate('/main/settings')}>
               <View className="dark:bg-[#232223] bg-[#e0e0e0] rounded-2xl p-1 m-[5px]">
                 <Icon name="arrow-back" size={16} color="#666" />
               </View>

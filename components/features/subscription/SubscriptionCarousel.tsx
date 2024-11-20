@@ -6,7 +6,7 @@ import Purchases, { PurchasesPackage } from 'react-native-purchases';
 import { useSharedValue } from 'react-native-reanimated';
 import Carousel, { ICarouselInstance } from 'react-native-reanimated-carousel';
 
-import { apiPost } from '@/common/api';
+import { apiDelete, apiPost } from '@/common/api';
 import { clsx } from '@/common/clsx';
 import FullScreenActivityIndicator from '@/components/FullScreenActivityIndicator';
 import { Button, Text } from '@/components/base';
@@ -24,7 +24,7 @@ type Props = { close: () => void };
 export default function SubscriptionCarousel({ close }: Props) {
   const { showSnackbar } = useSnackbar();
   const theme = useThemeColor();
-  const { loading, purchasePackages, setCustomerInfo } = usePurchases();
+  const { loading, purchasePackages, setCustomerInfo, refreshCustomerInfo } = usePurchases();
   const ref = React.useRef<ICarouselInstance>(null);
   const progress = useSharedValue<number>(0);
   const [selectedPackage, setSelectedPackage] = useState<PurchasesPackage>();
@@ -33,7 +33,12 @@ export default function SubscriptionCarousel({ close }: Props) {
 
   const handleSubscribe = async (product: PurchasesPackage) => {
     await Purchases.purchasePackage(product)
-      .then(makePurchaseResult => setCustomerInfo(makePurchaseResult.customerInfo))
+      .then(makePurchaseResult =>
+        makePurchaseResult.customerInfo.entitlements.all['divizend-membership']?.store === 'PROMOTIONAL'
+          ? // If a trial exists, revoke it so the user gets the right package displayed instead of the trial after purchase.
+            apiDelete('/revoke-trial').then(refreshCustomerInfo)
+          : setCustomerInfo(makePurchaseResult.customerInfo),
+      )
       .catch(err => showSnackbar(err.message, { type: 'error' }));
   };
 
