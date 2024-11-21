@@ -1,7 +1,7 @@
 import { StyleSheet, View } from 'react-native';
 
-import MPTBarChart from '@/app/analyze/mptBarChart';
-import PortfolioBarChart from '@/app/analyze/portfolioBarChart';
+import MPTBarChart from '@/app/analyze/ComparisonBarChart';
+import PortfolioBarChart from '@/app/analyze/SingleBarChart';
 
 interface PlotsViewProps {
   depotData: {};

@@ -30,7 +30,7 @@ function getNamesAndWeightsFromMPT(depotData, mptData) {
   return namesAndOptimizedWeights;
 }
 
-export default async function fetchExplainText(setExplainText, pageNumber, depotData, mptData, explainTextLength) {
+export async function fetchExplainText(setExplainText, pageNumber, depotData, mptData, explainTextLength) {
   if (pageNumber == 1) {
     setExplainText(null);
   } else if (pageNumber == 2) {
