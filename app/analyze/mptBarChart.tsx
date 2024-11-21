@@ -18,11 +18,13 @@ const transformMPTDataForChart = (mptData: {}, depotData: {}) => {
   const { security_isins, security_names } = depotData;
 
   // Map the weights object to an array, matching each ISIN with its name
-  return Object.keys(weights).map((isin, index) => {
-    const label = security_names[security_isins.indexOf(isin)] || isin; // Match ISIN to name, or use ISIN if name is unavailable
-    const value = parseFloat(weights[isin].toFixed(2));
-    return { label, value };
-  });
+  if (weights && security_isins && security_names) {
+    return Object.keys(weights).map((isin, index) => {
+      const label = security_names[security_isins.indexOf(isin)] || isin; // Match ISIN to name, or use ISIN if name is unavailable
+      const value = parseFloat(weights[isin].toFixed(2));
+      return { label, value };
+    });
+  }
 };
 
 export default function MPTBarChart({ mptData, depotData }) {

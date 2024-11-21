@@ -64,6 +64,8 @@ interface NavigationButtonsProps {
   setMPTData: (mptData: {}) => void;
   targetReturn: number;
   setTargetReturn: (targetReturn: number) => void;
+  returnRange: number[];
+  setReturnRange: (returnRange: number[]) => void;
   setExplainText: (explainText: string) => void;
   explainTextLength: number;
   setExplainTextLength: (explainTextLength: number) => void;
@@ -81,6 +83,8 @@ export default function NavigationButtons({
   setMPTData,
   targetReturn,
   setTargetReturn,
+  returnRange,
+  setReturnRange,
   setExplainText,
   explainTextLength,
   setExplainTextLength,
@@ -123,6 +127,47 @@ export default function NavigationButtons({
     const urlWithParams = `/companion/mpt?${queryParams}`;
     const mptData = await apiGet(urlWithParams);
     setMPTData(mptData);
+    console.log(mptData);
+    console.log('start ef calculations');
+    const postbody = { portfolio_id: portfolioID, targetReturn: targetReturn };
+    const efPostAnswer = await apiPost(`/companion/ef`, postbody);
+    const efurlWithParams = `/companion/ef?${queryParams}`;
+
+    const pollEfData = async () => {
+      const maxRetries = 30; // Maximum number of retries (e.g., 30 seconds)
+      let retries = 0;
+
+      while (retries < maxRetries) {
+        const efData = await apiGet(efurlWithParams);
+
+        // Check if the status is "done"
+        if (efData.status === 'done') {
+          console.log('Efficient frontier computation completed!');
+          return efData; // Exit the loop and return the data
+        }
+
+        // Wait for 1 second before retrying
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        retries++;
+      }
+
+      console.error("Polling timed out. Status did not reach 'done' in time.");
+      throw new Error('Efficient frontier computation timed out.');
+    };
+
+    try {
+      const finalEfData = await pollEfData();
+      //console.log("Final Data:", finalEfData);
+      const min_return = finalEfData['minimized_volatility']['performance']['expected_return'];
+      const max_return = finalEfData['maximized_return']['performance']['expected_return'];
+      const sharpe_return = finalEfData['maximized_sharpe_ratio']['performance']['expected_return'];
+      const return_range = [min_return, max_return];
+      console.log(return_range);
+      setReturnRange(return_range);
+      setTargetReturn(sharpe_return);
+    } catch (error) {
+      console.error('Error during polling:', error);
+    }
   };
 
   const updateMPT = async () => {
@@ -135,7 +180,6 @@ export default function NavigationButtons({
 
       while (true) {
         const mptData = await apiGet(urlWithParams);
-
         // Check if the status is 'done'
         if (mptData.status === 'done') {
           setMPTData(mptData);
@@ -157,7 +201,9 @@ export default function NavigationButtons({
   }, [explainTextLength]);
 
   useEffect(() => {
-    updateMPT();
+    if (pageNumber == 4) {
+      updateMPT();
+    }
   }, [targetReturn]);
 
   const handleMainButtonPress = async () => {
@@ -194,6 +240,8 @@ export default function NavigationButtons({
               onSlidingComplete={handleSliderChange}
               thumbStyle={styles.thumb}
               trackStyle={styles.track}
+              minimumValue={returnRange[0]}
+              maximumValue={returnRange[1]}
             />
           </View>
         ) : (

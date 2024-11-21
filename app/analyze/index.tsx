@@ -9,12 +9,15 @@ import NavigationButtons from './navigationbuttons';
 import PlotsView from './plotsview';
 
 export default function AnalyzeScreen() {
-  // const [depotID, setDepotID] = useState('671a81f4a36d31f8e9d4e820');
-  const [depotID, setDepotID] = useState('672a47e0bae468d6209a8bcc');
+  // const [depotID, setDepotID] = useState('671a81f4a36d31f8e9d4e820'); // with nvidia and etfs
+  // const [depotID, setDepotID] = useState('61029a442416930018344956'); // user depot 1
+  // const [depotID, setDepotID] = useState('61b0f5bc48801f001b86425f'); // user depot 2
+  const [depotID, setDepotID] = useState('672a47e0bae468d6209a8bcc'); // demo depot
   const [portfolioID, setPortfolioID] = useState('');
   const [depotData, setDepotData] = useState({});
   const [mptData, setMPTData] = useState({});
   const [targetReturn, setTargetReturn] = useState(0.07);
+  const [returnRange, setReturnRange] = useState<number[]>([0.01, 1]);
 
   const [explainText, setExplainText] = useState('');
   const [explainTextLength, setExplainTextLength] = useState(2);
@@ -33,6 +36,8 @@ export default function AnalyzeScreen() {
         setMPTData={setMPTData}
         targetReturn={targetReturn}
         setTargetReturn={setTargetReturn}
+        returnRange={returnRange}
+        setReturnRange={setReturnRange}
         setExplainText={setExplainText}
         explainTextLength={explainTextLength}
         setExplainTextLength={setExplainTextLength}
