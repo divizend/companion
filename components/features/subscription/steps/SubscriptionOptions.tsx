@@ -1,24 +1,16 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 import { CheckBox } from '@rneui/themed';
-import { ImageBackground, Pressable, View } from 'react-native';
-import Purchases, { PurchasesPackage } from 'react-native-purchases';
+import { ImageBackground, Pressable, ScrollView, View } from 'react-native';
+import { PurchasesPackage } from 'react-native-purchases';
 
-import { apiDelete, apiPost } from '@/common/api';
 import { clsx } from '@/common/clsx';
 import FullScreenActivityIndicator from '@/components/FullScreenActivityIndicator';
-import { Button, Text } from '@/components/base';
+import { Text } from '@/components/base';
 import Accordion from '@/components/base/Accordion';
-import { useSnackbar } from '@/components/global/Snackbar';
-import { showAlert } from '@/components/global/prompt';
 import { usePurchases } from '@/hooks/usePurchases';
 import { useThemeColor } from '@/hooks/useThemeColor';
-import { t } from '@/i18n';
-
-import { useWaitlistStatus } from './queries';
-import { requiresWaitlist } from './util';
-
-type Props = { close: () => void };
+import { t as tBase } from '@/i18n';
 
 function SubscriptionCard({
   product,
@@ -30,6 +22,7 @@ function SubscriptionCard({
   isSelected: boolean;
 }) {
   const theme = useThemeColor();
+
   return (
     <Pressable key={product.identifier} className="flex-1" onPress={() => setSelectedPackage(product)}>
       <ImageBackground
@@ -41,19 +34,21 @@ function SubscriptionCard({
         <View
           key={product.identifier}
           className={clsx(
-            'flex-1 flex flex-row dark:bg-transparent border border-gray-200 rounded-xl justify-between items-start p-6',
+            'flex-1 flex flex-row dark:bg-transparent border border-gray-200 rounded-xl justify-between items-start p-5',
             isSelected && 'border-theme border-2 bg-[#3939ff1a] dark:bg-[#3939ff1a]',
           )}
         >
           <View className="flex justify-between max-w-[70%]">
             <Text h3 type="muted" className="font-semibold mb-2 tracking-widest">
-              {t(`subscription.subscriptionPlans.${product.identifier}.title`)}
+              {tBase(`subscription.subscriptionPlans.${product.identifier}.title`)}
             </Text>
             <View>
               <Text className="text-end" h3>
-                {product.product.priceString}
+                {product.product.priceString}{' '}
+                <Text type="muted" className="font-normal" h4>
+                  {tBase('subscription.monthly')}
+                </Text>
               </Text>
-              <Text className="text-end">{t('subscription.monthly')}</Text>
             </View>
           </View>
           <CheckBox
@@ -77,70 +72,81 @@ function SubscriptionCard({
   );
 }
 
-export default function SubscriptionCarousel({ close }: Props) {
-  const { showSnackbar } = useSnackbar();
-  const theme = useThemeColor();
-  const { loading, purchasePackages, setCustomerInfo, refreshCustomerInfo } = usePurchases();
-  const [selectedPackage, setSelectedPackage] = useState<PurchasesPackage>();
-  const [isSubscribing, setIsSubscribing] = useState(false);
-  const { data, isLoading, refetch } = useWaitlistStatus();
+export default function SubscriptionOptions({
+  selectedPackage,
+  setSelectedPackage,
+}: {
+  selectedPackage: PurchasesPackage | undefined;
+  setSelectedPackage: React.Dispatch<React.SetStateAction<PurchasesPackage | undefined>>;
+}) {
+  const { loading, purchasePackages } = usePurchases();
 
-  const handleSubscribe = async (product: PurchasesPackage) => {
-    await Purchases.purchasePackage(product)
-      .then(makePurchaseResult =>
-        makePurchaseResult.customerInfo.entitlements.all['divizend-membership']?.store === 'PROMOTIONAL'
-          ? // If a trial exists, revoke it so the user gets the right package displayed instead of the trial after purchase.
-            apiDelete('/revoke-trial').then(refreshCustomerInfo)
-          : setCustomerInfo(makePurchaseResult.customerInfo),
-      )
-      .catch(err => showSnackbar(err.message, { type: 'error' }));
-  };
+  const t = (key: string, data?: any) => tBase('subscription.choosePlan.steps.plans.' + key, data);
 
-  if (loading || !purchasePackages || isLoading || !data) return <FullScreenActivityIndicator />;
+  // TODO: Disable button when there's no subscription
+
+  // const handleSubscribe = async (product: PurchasesPackage) => {
+  //   await Purchases.purchasePackage(product)
+  //     .then(makePurchaseResult =>
+  //       makePurchaseResult.customerInfo.entitlements.all['divizend-membership']?.store === 'PROMOTIONAL'
+  //         ? // If a trial exists, revoke it so the user gets the right package displayed instead of the trial after purchase.
+  //           apiDelete('/revoke-trial').then(refreshCustomerInfo)
+  //         : setCustomerInfo(makePurchaseResult.customerInfo),
+  //     )
+  //     .catch(err => showSnackbar(err.message, { type: 'error' }));
+  // };
+
+  // if (loading || !purchasePackages || isLoading || !data) return <FullScreenActivityIndicator />;
+
+  // const solidarityProducts = purchasePackages.slice(0, 2);
+  // const productsRest = purchasePackages.slice(2);
+
+  // const isSpotReserved = (purchasePackage: PurchasesPackage): boolean => {
+  //   if (!data.waitingForPoints) return false;
+  //   if (requiresWaitlist(purchasePackage) === data.spotsReserved) return true;
+  //   return false;
+  // };
+
+  // const attemptSubscribe = async (purchasePackage: PurchasesPackage) => {
+  //   try {
+  //     setIsSubscribing(true);
+
+  //     const pointsRequired = requiresWaitlist(purchasePackage);
+  //     if (!pointsRequired) return await handleSubscribe(purchasePackage);
+  //     // Can purhcase only returns true when the spots were reserved on that call.
+  //     const canPurchase = await apiPost<boolean>('/sponsored-purchase/initialize', {
+  //       points: pointsRequired,
+  //     });
+  //     if (canPurchase || isSpotReserved(purchasePackage)) return await handleSubscribe(purchasePackage);
+  //     else {
+  //       refetch();
+  //       showAlert({
+  //         title: 'You joined the waitlist',
+  //         message:
+  //           'You have opted for a sponsored subscription plan but there are no available spots. We will send you an email when you are ready to finalize the subscription.',
+  //         actions: [{ title: 'OK' }],
+  //       });
+  //     }
+  //   } catch (error) {
+  //     console.error(error);
+  //     showSnackbar('Error', { type: 'error' });
+  //   } finally {
+  //     setIsSubscribing(false);
+  //   }
+  // };
+
+  if (loading || !purchasePackages) return <FullScreenActivityIndicator />;
 
   const solidarityProducts = purchasePackages.slice(0, 2);
   const productsRest = purchasePackages.slice(2);
-  const userInWaitlist = !!data.waitingForPoints;
-
-  const isSpotReserved = (purchasePackage: PurchasesPackage): boolean => {
-    if (!data.waitingForPoints) return false;
-    if (requiresWaitlist(purchasePackage) === data.spotsReserved) return true;
-    return false;
-  };
-
-  const attemptSubscribe = async (purchasePackage: PurchasesPackage) => {
-    try {
-      setIsSubscribing(true);
-
-      const pointsRequired = requiresWaitlist(purchasePackage);
-      if (!pointsRequired) return await handleSubscribe(purchasePackage);
-      // Can purhcase only returns true when the spots were reserved on that call.
-      const canPurchase = await apiPost<boolean>('/sponsored-purchase/initialize', {
-        points: pointsRequired,
-      });
-      if (canPurchase || isSpotReserved(purchasePackage)) return await handleSubscribe(purchasePackage);
-      else {
-        refetch();
-        showAlert({
-          title: 'You joined the waitlist',
-          message:
-            'You have opted for a sponsored subscription plan but there are no available spots. We will send you an email when you are ready to finalize the subscription.',
-          actions: [{ title: 'OK' }],
-        });
-      }
-    } catch (error) {
-      console.error(error);
-      showSnackbar('Error', { type: 'error' });
-    } finally {
-      setIsSubscribing(false);
-      close();
-    }
-  };
 
   return (
-    <View className="mb-4 flex-1 gap-2">
+    <ScrollView className="p-4 flex-1 gap-2">
+      <Text className="mb-4 text-center" id="title" h2>
+        {t('title')}
+      </Text>
       <Accordion
-        title={t('subscription.solidarityPrices')}
+        title={t('solidarityPrices')}
         content={
           <View className="flex gap-2">
             {solidarityProducts.map(item => (
@@ -166,7 +172,7 @@ export default function SubscriptionCarousel({ close }: Props) {
         ))}
       </View>
 
-      <Button
+      {/* <Button
         disabled={
           !selectedPackage ||
           (userInWaitlist && !isSpotReserved(selectedPackage) && !!requiresWaitlist(selectedPackage))
@@ -199,7 +205,7 @@ export default function SubscriptionCarousel({ close }: Props) {
         }
         containerStyle={{ borderRadius: 12, width: '85%', alignSelf: 'center' }}
         buttonStyle={{ backgroundColor: theme.theme }}
-      />
-    </View>
+      /> */}
+    </ScrollView>
   );
 }

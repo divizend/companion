@@ -8,10 +8,9 @@ import { View } from 'react-native';
 import { clsx } from '@/common/clsx';
 import FullScreenActivityIndicator from '@/components/FullScreenActivityIndicator';
 import { Button, ScrollScreen, Text } from '@/components/base';
-import SubscriptionCarousel from '@/components/features/subscription/SubscriptionCarousel';
+import SubscriptionModal from '@/components/features/subscription/SubscriptionModal';
 import { useWaitlistStatus } from '@/components/features/subscription/queries';
 import { requiresWaitlist } from '@/components/features/subscription/util';
-import ModalLayout from '@/components/global/ModalLayout';
 import { ModalManager } from '@/components/global/modal';
 import { showAlert } from '@/components/global/prompt';
 import '@/global.css';
@@ -19,12 +18,7 @@ import { usePurchases } from '@/hooks/usePurchases';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { t } from '@/i18n';
 
-const showSubscriptionModal = () =>
-  ModalManager.showModal(({ dismiss }) => (
-    <ModalLayout title={t('subscription.choosePlan')} dismiss={dismiss}>
-      <SubscriptionCarousel close={dismiss} />
-    </ModalLayout>
-  ));
+const showSubscriptionModal = () => ModalManager.showModal(SubscriptionModal);
 
 export default function CurrentPlan() {
   const theme = useThemeColor();
