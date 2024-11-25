@@ -1,10 +1,12 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { Icon } from '@rneui/base';
 import * as Linking from 'expo-linking';
 import { useLocalSearchParams } from 'expo-router';
 import { View } from 'react-native';
+import Purchases from 'react-native-purchases';
 
+import { apiDelete } from '@/common/api';
 import { clsx } from '@/common/clsx';
 import FullScreenActivityIndicator from '@/components/FullScreenActivityIndicator';
 import { Button, ScrollScreen, Text } from '@/components/base';
@@ -22,9 +24,10 @@ const showSubscriptionModal = () => ModalManager.showModal(SubscriptionModal);
 
 export default function CurrentPlan() {
   const theme = useThemeColor();
-  const { purchasePackages, loading, customerInfo } = usePurchases();
-  const { data, isLoading } = useWaitlistStatus();
+  const { purchasePackages, loading, customerInfo, refreshCustomerInfo, setCustomerInfo } = usePurchases();
+  const { data, isLoading, refetch } = useWaitlistStatus();
   const params = useLocalSearchParams();
+  const [isSubscribing, setIsSubscribing] = useState(false);
 
   useEffect(() => {
     if (params?.subscriptionInactive)
@@ -125,20 +128,39 @@ export default function CurrentPlan() {
                 ? t('subscription.currentPlan.waitlist.ready')
                 : t('subscription.currentPlan.waitlist.waiting')}
             </Text>
+            {data.spotsReserved === data.waitingForPoints && (
+              <Text className="max-w-[95%] text-center"> {t('subscription.currentPlan.waitlist.notification')}</Text>
+            )}
+            {data.spotsReserved === data.waitingForPoints && (
+              <View className="mt-3 w-full">
+                <Button
+                  loading={isSubscribing}
+                  buttonStyle={{ backgroundColor: theme.theme, borderRadius: 12, paddingVertical: 10 }}
+                  title={'Activate now'}
+                  onPress={async () => {
+                    setIsSubscribing(true);
+                    await Purchases.purchasePackage(awaitedPurchasePackage)
+                      .then(makePurchaseResult => {
+                        if (
+                          makePurchaseResult.customerInfo.entitlements.all['divizend-membership']?.store ===
+                          'PROMOTIONAL'
+                        )
+                          // If a trial exists, revoke it so the user gets the right package displayed instead of the trial after purchase.
+                          apiDelete('/revoke-trial').then(refreshCustomerInfo);
+                        else setCustomerInfo(makePurchaseResult.customerInfo);
+                        refetch();
+                      })
+                      .catch(console.error)
+                      .finally(() => setIsSubscribing(false));
+                  }}
+                />
+              </View>
+            )}
           </View>
         )}
         {/* Plan details table */}
         {!!activeSubscription && (
           <View className="gap-4 mb-8 px-6 py-5">
-            <View className="flex flex-row">
-              <Text type="muted" className="flex-1">
-                {t('subscription.currentPlan.table.plan')}
-              </Text>
-              <Text className="flex-1 font-bold">
-                {t(`subscription.subscriptionPlans.${activeSubscription.identifier}.title`)}
-              </Text>
-            </View>
-
             <View className="flex flex-row">
               <Text type="muted" className="flex-1">
                 {t('subscription.currentPlan.table.price')}
@@ -151,6 +173,7 @@ export default function CurrentPlan() {
                 {t('subscription.currentPlan.table.expiresAt')}
               </Text>
               <Text className="flex-1 font-bold">
+                {/* TODO: Make it dayLongUTC instead (leave it long for dev reasons) */}
                 {t('{{date,dayLongAndTime}}', {
                   date: customerInfo.entitlements.active['divizend-membership'].expirationDate,
                 })}

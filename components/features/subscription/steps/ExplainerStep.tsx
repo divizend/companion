@@ -20,7 +20,7 @@ export default function ExplainerStep({ setCanContinue, canContinue }: IStepProp
         <Text className="mb-4 text-center" id="title" h2>
           {t('title')}
         </Text>
-        <Text className="mb-4" id="description">
+        <Text className="mb-4 px-5" id="description">
           {t('description')}
         </Text>
         <Accordion
@@ -69,7 +69,7 @@ export default function ExplainerStep({ setCanContinue, canContinue }: IStepProp
             wrapperStyle={{ backgroundColor: 'transparent', margin: 0, padding: 0 }}
             iconType="material-community"
             checkedIcon="checkbox-marked"
-            uncheckedIcon="radiobox-blank"
+            uncheckedIcon="checkbox-blank-outline"
             checkedColor={theme.theme}
             containerStyle={{
               backgroundColor: 'transparent',

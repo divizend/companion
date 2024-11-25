@@ -6,7 +6,7 @@ import { t as tBase } from '@/i18n';
 
 import { IStepProps } from '../SubscriptionModal';
 
-export default function SolidarityDisclaimer({}: IStepProps) {
+export default function SolidarityDisclaimerStep({}: IStepProps) {
   const t = (key: string, data?: any) => tBase('subscription.choosePlan.steps.disclaimer.' + key, data);
 
   return (
@@ -14,7 +14,7 @@ export default function SolidarityDisclaimer({}: IStepProps) {
       <Text className="mb-4 text-center" id="title" h2>
         {t('title')}
       </Text>
-      <Text className="mb-4" id="description">
+      <Text className="mb-4 px-5" id="description">
         {t('description')}
       </Text>
 

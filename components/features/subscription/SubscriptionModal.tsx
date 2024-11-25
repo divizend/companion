@@ -8,13 +8,15 @@ import FullScreenActivityIndicator from '@/components/FullScreenActivityIndicato
 import { Button } from '@/components/base';
 import ModalLayout from '@/components/global/ModalLayout';
 import { useSnackbar } from '@/components/global/Snackbar';
-import { showAlert } from '@/components/global/prompt';
 import { usePurchases } from '@/hooks/usePurchases';
+import { useThemeColor } from '@/hooks/useThemeColor';
 import { t } from '@/i18n';
 
 import { useWaitlistStatus } from './queries';
+import ConfirmationStep from './steps/ConfirmationStep';
 import ExplainerStep from './steps/ExplainerStep';
-import SolidarityDisclaimer from './steps/SolidarityDisclaimer';
+import JoinedWaitlistStep from './steps/JoinedWaitlistStep';
+import SolidarityDisclaimerStep from './steps/SolidarityDisclaimerStep';
 import SubscriptionOptions from './steps/SubscriptionOptions';
 import { requiresWaitlist } from './util';
 
@@ -29,7 +31,7 @@ enum SubscriptionStep {
   ExplainerStep = 0,
   ChoosePlanStep = 1,
   SolidarityDisclaimerStep = 2,
-  ConfirmationStep = 3,
+  FinalStep = 3,
 }
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
@@ -38,11 +40,14 @@ export default function SubscriptionModal({ dismiss }: Props) {
   const { loading, purchasePackages, setCustomerInfo, refreshCustomerInfo } = usePurchases();
   const { showSnackbar } = useSnackbar();
 
+  const theme = useThemeColor();
+
   const [currentPage, setCurrentPage] = useState<SubscriptionStep>(SubscriptionStep.ExplainerStep);
   const [canContinue, setCanContinue] = useState<boolean>(false);
   const [selectedPackage, setSelectedPackage] = useState<PurchasesPackage>();
   const [isSubscribing, setIsSubscribing] = useState(false);
   const { data, isLoading, refetch } = useWaitlistStatus();
+  const [hasSubscribed, setHasSubscribed] = useState(false);
 
   const scrollViewRef = useRef<ScrollView>(null);
 
@@ -55,13 +60,23 @@ export default function SubscriptionModal({ dismiss }: Props) {
 
   const handleSubscribe = async (product: PurchasesPackage) => {
     await Purchases.purchasePackage(product)
-      .then(makePurchaseResult =>
-        makePurchaseResult.customerInfo.entitlements.all['divizend-membership']?.store === 'PROMOTIONAL'
-          ? // If a trial exists, revoke it so the user gets the right package displayed instead of the trial after purchase.
-            apiDelete('/revoke-trial').then(refreshCustomerInfo)
-          : setCustomerInfo(makePurchaseResult.customerInfo),
-      )
-      .catch(err => showSnackbar(err.message, { type: 'error' }));
+      .then(makePurchaseResult => {
+        if (makePurchaseResult.customerInfo.entitlements.all['divizend-membership']?.store === 'PROMOTIONAL')
+          // If a trial exists, revoke it so the user gets the right package displayed instead of the trial after purchase.
+          apiDelete('/revoke-trial').then(refreshCustomerInfo);
+        else setCustomerInfo(makePurchaseResult.customerInfo);
+        setHasSubscribed(true);
+      })
+      .then(() =>
+        setTimeout(
+          () =>
+            scrollViewRef.current?.scrollTo({
+              x: screenWidth * SubscriptionStep.FinalStep,
+              animated: true,
+            }),
+          200,
+        ),
+      );
   };
 
   if (loading || !purchasePackages || isLoading || !data) return <FullScreenActivityIndicator />;
@@ -76,35 +91,29 @@ export default function SubscriptionModal({ dismiss }: Props) {
     try {
       setIsSubscribing(true);
 
+      // If the subscription is not sponsored, directly open the payment modal.
       const pointsRequired = requiresWaitlist(purchasePackage);
       if (!pointsRequired) return await handleSubscribe(purchasePackage);
+
       // Can purhcase only returns true when the spots were reserved on that call.
       const canPurchase = await apiPost<boolean>('/sponsored-purchase/initialize', {
         points: pointsRequired,
       });
-      if (canPurchase || isSpotReserved(purchasePackage))
-        return await handleSubscribe(purchasePackage).then(() =>
-          setTimeout(
-            () =>
-              scrollViewRef.current?.scrollTo({
-                x: screenWidth * 3,
-                animated: true,
-              }),
-            200,
-          ),
-        );
+      if (canPurchase || isSpotReserved(purchasePackage)) return await handleSubscribe(purchasePackage);
       else {
         refetch();
-        showAlert({
-          title: 'You joined the waitlist',
-          message:
-            'You have opted for a sponsored subscription plan but there are no available spots. We will send you an email when you are ready to finalize the subscription.',
-          actions: [{ title: 'OK' }],
-        });
+        setTimeout(
+          () =>
+            scrollViewRef.current?.scrollTo({
+              x: screenWidth * SubscriptionStep.FinalStep,
+              animated: true,
+            }),
+          200,
+        );
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      showSnackbar('Error', { type: 'error' });
+      showSnackbar(error.message, { type: 'error' });
     } finally {
       setIsSubscribing(false);
     }
@@ -118,7 +127,7 @@ export default function SubscriptionModal({ dismiss }: Props) {
         setTimeout(
           () =>
             scrollViewRef.current?.scrollTo({
-              x: screenWidth * (currentPage + 1),
+              x: screenWidth * SubscriptionStep.ChoosePlanStep,
               animated: true,
             }),
           200,
@@ -131,23 +140,46 @@ export default function SubscriptionModal({ dismiss }: Props) {
           setTimeout(
             () =>
               scrollViewRef.current?.scrollTo({
-                x: screenWidth * (currentPage + 1),
+                x: screenWidth * SubscriptionStep.SolidarityDisclaimerStep,
                 animated: true,
               }),
             200,
           );
+        break;
+      }
+
+      case SubscriptionStep.SolidarityDisclaimerStep: {
+        if (selectedPackage && selectedPackage.identifier !== purchasePackages[2].identifier)
+          attemptSubscribe(selectedPackage);
+        break;
       }
 
       default:
+        dismiss();
         break;
     }
   };
+
+  let buttonText = t('subscription.choosePlan.button.continue');
+  switch (currentPage) {
+    case SubscriptionStep.ExplainerStep: {
+      buttonText = t('subscription.choosePlan.button.getStarted');
+      break;
+    }
+    case SubscriptionStep.FinalStep: {
+      buttonText = t('subscription.choosePlan.button.finalize');
+      break;
+    }
+
+    default:
+      break;
+  }
 
   return (
     <ModalLayout noScrollView title={t('subscription.choosePlan.title')} dismiss={dismiss}>
       <View className="flex-1 justify-center items-center">
         <ScrollView
-          scrollEnabled={false}
+          scrollEnabled={true}
           ref={scrollViewRef}
           showsHorizontalScrollIndicator={false}
           horizontal
@@ -161,14 +193,19 @@ export default function SubscriptionModal({ dismiss }: Props) {
             <SubscriptionOptions selectedPackage={selectedPackage} setSelectedPackage={setSelectedPackage} />
           </View>
           <View style={{ width: screenWidth }}>
-            <SolidarityDisclaimer canContinue={canContinue} setCanContinue={setCanContinue} />
+            <SolidarityDisclaimerStep canContinue={canContinue} setCanContinue={setCanContinue} />
           </View>
+          <View style={{ width: screenWidth }}>{!hasSubscribed ? <ConfirmationStep /> : <JoinedWaitlistStep />}</View>
         </ScrollView>
         <Button
+          loading={isSubscribing}
           onPress={handleNextStep}
-          disabled={!canContinue || (currentPage === SubscriptionStep.ChoosePlanStep && !selectedPackage)}
-          title={t('subscription.choosePlan.button.continue')}
+          disabled={
+            !canContinue || (currentPage === SubscriptionStep.ChoosePlanStep && !selectedPackage) || isSubscribing
+          }
+          title={buttonText}
           containerStyle={{ margin: 20, marginTop: 0, width: '70%' }}
+          buttonStyle={{ backgroundColor: theme.theme, borderRadius: 12 }}
         />
       </View>
     </ModalLayout>

@@ -273,10 +273,9 @@
       "active": "Active",
       "inactive": "Inactive",
       "membership": "Divizend membership",
-      "noActiveSubscription": "No active subscription",
+      "noActiveSubscription": "No active membership",
       "table": {
-        "plan": "Plan",
-        "price": "Price",
+        "price": "Price per month",
         "expiresAt": "Expires at"
       },
       "freeTrial": {
@@ -284,14 +283,15 @@
         "after": "Your access will be limited afterwards."
       },
       "paywallDisclaimer": {
-        "title": "Your subscription is inactive",
-        "message": "Please make sure your subscription is active to continue using the app.",
-        "options": "See subscription options"
+        "title": "Your membership is inactive",
+        "message": "Please make sure your membership is active to continue using the app.",
+        "options": "See membership options"
       },
       "waitlist": {
-        "title": "You are in the waiting list for {{name}}",
+        "title": "You are in the waiting list for {{name}}.",
         "ready": "You can now subscribe to Companion for a reduced price.",
-        "waiting": "You are yet to be selected to get the sponsorship."
+        "waiting": "You are yet to be selected to get the sponsorship.",
+        "notification": "We will notify you by email when you're ready to subscribe."
       }
     },
     "choosePlan": {
@@ -303,7 +303,7 @@
           "accordion": {
             "pricingOptions": {
               "title": "Why do we have different pricing options?",
-              "content": "We believe in community-driven support. Not everyone can afford the standard €20 subscription. By offering higher-factor options, you help subsidize the cost for others who might only pay as little as €0.99."
+              "content": "We believe in community-driven support. Not everyone can afford the standard €20 membership. By offering higher-factor options, you help subsidize the cost for others who might only pay as little as €0.99."
             },
             "factorMeaning": {
               "title": "What does it mean to choose a different factor option?",
@@ -326,13 +326,13 @@
           "understand": "I understand"
         },
         "plans": {
-          "title": "Choose the appropriate membership option for you.",
+          "title": "Choose the appropriate membership option for you",
           "solidarityPrices": "Show solidarity prices",
           "accordion": {}
         },
         "disclaimer": {
           "title": "How does it work?",
-          "description": "Whether you're sponsoring others or benefiting from a sponsored subscription, here's how the solidarity system works:",
+          "description": "Whether you're sponsoring others or benefiting from a sponsored membership, here's how the solidarity system works:",
           "accordion": {
             "factorMeaning": {
               "title": "How Does It Work?",
@@ -343,7 +343,7 @@
                 },
                 "lowerFactor": {
                   "title": "If you're subscribing to a sponsored plan (€10 or €0.99):",
-                  "bullet": "Your subscription depends on available spots created by sponsors. Matching is anonymous and based on a first-come, first-served system."
+                  "bullet": "Your membership depends on available spots created by sponsors. Matching is anonymous and based on a first-come, first-served system."
                 }
               }
             },
@@ -358,7 +358,7 @@
                 },
                 "sponsored": {
                   "title": "If you're subscribing to a sponsored plan (€10 or €0.99):",
-                  "bullet1": "Your subscription depends on available spots created by sponsors",
+                  "bullet1": "Your membership depends on available spots created by sponsors",
                   "bullet2": "Matching is anonymous and based on a first-come, first-served system"
                 }
               }
@@ -371,25 +371,54 @@
               }
             },
             "changes": {
-              "title": "Changing or Cancelling Subscriptions",
+              "title": "Changing or Cancelling Memberships",
               "content": {
-                "bullet1": "Solidarity Subscribers (€10 or €0.99): If you start subscribing but cancel, your spot is held for 15 minutes before you return to the end of the queue",
+                "bullet1": "Solidarity Members (€10 or €0.99): If you start subscribing but cancel, your spot is held for 15 minutes before you return to the end of the queue",
                 "bullet2": "Sponsors (€30 or €40): If you cancel, the sponsored user keeps their reduced price until they cancel",
                 "note": "Important Note:",
                 "bullet3": "Subscribing to any other plan while on the waitlist means you'll lose your spot"
               }
             }
           }
+        },
+        "confirmation": {
+          "title": "Your purchase is confirmed",
+          "thankYou": "Thank you for choosing to be part of our community!",
+          "activationMessage": "Your membership has been successfully activated, and we're excited to have you on board.",
+          "helpSection": {
+            "title": "Need Help or Have Questions?",
+            "message": "We're here for you every step of the way! If you have questions, concerns, or need guidance, don't hesitate to reach out. Our support team is ready to assist you at",
+            "email": "support@example.com"
+          }
+        },
+        "waitlist": {
+          "title": "You're on the waiting list",
+          "description": "You have chosen a sponsored membership option. Currently, there are no available spots, but you've been added to our waitlist.",
+          "accordion": {
+            "title": "How the waiting list works",
+            "spotMatching": {
+              "title": "1. Spot matching:",
+              "point1": "As soon as a spot becomes available, we'll reserve it for you.",
+              "point2": "Matching is done anonymously and on a first-come, first-served basis."
+            },
+            "notification": {
+              "title": "2. Notification:",
+              "point1": "You'll receive an email notification when a spot is reserved for you.",
+              "point2": "After receiving the notification, you'll have 7 days to activate your membership."
+            },
+            "forfeiting": {
+              "title": "3. Forfeiting spots:",
+              "point1": "If you don't activate within 7 days, the spot will be forfeited, and you'll remain on the waitlist."
+            }
+          }
         }
       },
       "button": {
-        "continue": "Continue"
+        "continue": "Continue",
+        "getStarted": "Get started",
+        "finalize": "Continue to app"
       }
     },
-    "commonFeatures": [
-      "Full access to Companion AI financial adviser.",
-      "The full features of Divizend portfolio editor."
-    ],
     "subscriptionPlans": {
       "monthly_factor_0": {
         "title": "Factor 0"

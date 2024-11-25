@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { CheckBox } from '@rneui/themed';
+import { CheckBox, Divider } from '@rneui/themed';
 import { ImageBackground, Pressable, ScrollView, View } from 'react-native';
 import { PurchasesPackage } from 'react-native-purchases';
 
@@ -83,8 +83,6 @@ export default function SubscriptionOptions({
 
   const t = (key: string, data?: any) => tBase('subscription.choosePlan.steps.plans.' + key, data);
 
-  // TODO: Disable button when there's no subscription
-
   // const handleSubscribe = async (product: PurchasesPackage) => {
   //   await Purchases.purchasePackage(product)
   //     .then(makePurchaseResult =>
@@ -157,6 +155,7 @@ export default function SubscriptionOptions({
                 setSelectedPackage={setSelectedPackage}
               />
             ))}
+            <Divider style={{ marginHorizontal: 40, marginVertical: 5 }} width={1} />
           </View>
         }
       />
