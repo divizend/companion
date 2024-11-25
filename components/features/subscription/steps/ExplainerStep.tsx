@@ -68,7 +68,7 @@ export default function ExplainerStep({ setCanContinue, canContinue }: IStepProp
           <CheckBox
             wrapperStyle={{ backgroundColor: 'transparent', margin: 0, padding: 0 }}
             iconType="material-community"
-            checkedIcon="radiobox-marked"
+            checkedIcon="checkbox-marked"
             uncheckedIcon="radiobox-blank"
             checkedColor={theme.theme}
             containerStyle={{
