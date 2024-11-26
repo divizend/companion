@@ -67,6 +67,10 @@ export default function SolidarityDisclaimerStep({}: IStepProps) {
               {' '}
               {`\u2022`} {t('accordion.waitlist.content.bullet2')}
             </Text>
+            <Text className="mb-3">
+              {' '}
+              {`\u2022`} {t('accordion.waitlist.content.bullet3')}
+            </Text>
           </View>
         }
       />

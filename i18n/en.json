@@ -303,7 +303,7 @@
           "accordion": {
             "pricingOptions": {
               "title": "Why do we have different pricing options?",
-              "content": "We believe in community-driven support. Not everyone can afford the standard €20 membership. By offering higher-factor options, you help subsidize the cost for others who might only pay as little as €0.99."
+              "content": "We believe in community-driven support. Not everyone can afford the standard membership. By offering higher-factor options, you help subsidize the cost for others who might only pay as little as €0.99."
             },
             "factorMeaning": {
               "title": "What does it mean to choose a different factor option?",
@@ -327,15 +327,13 @@
         },
         "plans": {
           "title": "Choose the appropriate membership option for you",
-          "solidarityPrices": "Show solidarity prices",
-          "accordion": {}
+          "solidarityPrices": "Show solidarity prices"
         },
         "disclaimer": {
           "title": "How does it work?",
           "description": "Whether you're sponsoring others or benefiting from a sponsored membership, here's how the solidarity system works:",
           "accordion": {
             "factorMeaning": {
-              "title": "How Does It Work?",
               "content": {
                 "higherFactor": {
                   "title": "If you sponsor (€30 or €40):",
@@ -366,14 +364,15 @@
             "waitlist": {
               "title": "Waitlist and Matching",
               "content": {
-                "bullet1": "If no spots are available, users join a waitlist",
-                "bullet2": "Once a spot is available, you'll receive an email notification and have 1 week to subscribe. After that, the spot is forfeited"
+                "bullet1": "If there are spots available, you are able to instantly activate your membership",
+                "bullet2": "If no spots are available, users join a waitlist",
+                "bullet3": "Once a spot is available, you'll receive an email notification and have 1 week to subscribe. After that, the spot is forfeited"
               }
             },
             "changes": {
               "title": "Changing or Cancelling Memberships",
               "content": {
-                "bullet1": "Solidarity Members (€10 or €0.99): If you start subscribing but cancel, your spot is held for 15 minutes before you return to the end of the queue",
+                "bullet1": "Solidarity Members (€10 or €0.99): If you start subscribing without spots being reserved for you but cancel, your spot is held for 5 minutes",
                 "bullet2": "Sponsors (€30 or €40): If you cancel, the sponsored user keeps their reduced price until they cancel",
                 "note": "Important Note:",
                 "bullet3": "Subscribing to any other plan while on the waitlist means you'll lose your spot"
@@ -388,7 +387,7 @@
           "helpSection": {
             "title": "Need Help or Have Questions?",
             "message": "We're here for you every step of the way! If you have questions, concerns, or need guidance, don't hesitate to reach out. Our support team is ready to assist you at",
-            "email": "support@example.com"
+            "email": "support@divizend.com"
           }
         },
         "waitlist": {

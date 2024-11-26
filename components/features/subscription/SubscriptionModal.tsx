@@ -34,7 +34,7 @@ enum SubscriptionStep {
   FinalStep = 3,
 }
 
-const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
+const { width: screenWidth } = Dimensions.get('window');
 
 export default function SubscriptionModal({ dismiss }: Props) {
   const { loading, purchasePackages, setCustomerInfo, refreshCustomerInfo } = usePurchases();
@@ -47,6 +47,7 @@ export default function SubscriptionModal({ dismiss }: Props) {
   const [selectedPackage, setSelectedPackage] = useState<PurchasesPackage>();
   const [isSubscribing, setIsSubscribing] = useState(false);
   const { data, isLoading, refetch } = useWaitlistStatus();
+  // A flag used to know if a user has purchased a plan or he was added to the waiting list.
   const [hasSubscribed, setHasSubscribed] = useState(false);
 
   const scrollViewRef = useRef<ScrollView>(null);
@@ -195,7 +196,7 @@ export default function SubscriptionModal({ dismiss }: Props) {
           <View style={{ width: screenWidth }}>
             <SolidarityDisclaimerStep canContinue={canContinue} setCanContinue={setCanContinue} />
           </View>
-          <View style={{ width: screenWidth }}>{!hasSubscribed ? <ConfirmationStep /> : <JoinedWaitlistStep />}</View>
+          <View style={{ width: screenWidth }}>{hasSubscribed ? <ConfirmationStep /> : <JoinedWaitlistStep />}</View>
         </ScrollView>
         <Button
           loading={isSubscribing}
