@@ -327,7 +327,9 @@
         },
         "plans": {
           "title": "Choose the appropriate membership option for you",
-          "solidarityPrices": "Show solidarity prices"
+          "solidarityPrices": "Show solidarity prices",
+          "positionDisclaimer": "Continuing with another membership option might result in abandoning your position in the waiting list.",
+          "reserved": "Reserved"
         },
         "disclaimer": {
           "title": "How does it work?",

@@ -66,6 +66,13 @@ export const apiPost = <T = any>(endpoint: string, body: any) => {
   }) as Promise<T>;
 };
 
+export const apiPatch = <T = any>(endpoint: string, body: any) => {
+  return apiFetch(endpoint, {
+    method: 'PATCH',
+    body,
+  }) as Promise<T>;
+};
+
 export const apiDelete = (endpoint: string) => {
   return apiFetch(endpoint, {
     method: 'DELETE',

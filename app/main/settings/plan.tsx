@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 import { Icon } from '@rneui/base';
 import * as Linking from 'expo-linking';
 import { useLocalSearchParams } from 'expo-router';
 import { View } from 'react-native';
-import Purchases from 'react-native-purchases';
+import Purchases, { PurchasesPackage } from 'react-native-purchases';
 
 import { apiDelete } from '@/common/api';
 import { clsx } from '@/common/clsx';
@@ -13,8 +13,8 @@ import { Button, ScrollScreen, Text } from '@/components/base';
 import SubscriptionModal from '@/components/features/subscription/SubscriptionModal';
 import { useWaitlistStatus } from '@/components/features/subscription/queries';
 import { requiresWaitlist } from '@/components/features/subscription/util';
+import { useSnackbar } from '@/components/global/Snackbar';
 import { ModalManager } from '@/components/global/modal';
-import { showAlert } from '@/components/global/prompt';
 import '@/global.css';
 import { usePurchases } from '@/hooks/usePurchases';
 import { useThemeColor } from '@/hooks/useThemeColor';
@@ -28,20 +28,22 @@ export default function CurrentPlan() {
   const { data, isLoading, refetch } = useWaitlistStatus();
   const params = useLocalSearchParams();
   const [isSubscribing, setIsSubscribing] = useState(false);
+  const { showSnackbar } = useSnackbar();
 
-  useEffect(() => {
-    if (params?.subscriptionInactive)
-      showAlert({
-        title: t('subscription.currentPlan.paywallDisclaimer.title'),
-        message: t('subscription.currentPlan.paywallDisclaimer.message'),
-        actions: [
-          {
-            title: t('subscription.currentPlan.paywallDisclaimer.options'),
-            onPress: () => showSubscriptionModal(),
-          },
-        ],
-      });
-  }, [params?.subscriptionInactive]);
+  // TODO: uncomment
+  // useEffect(() => {
+  //   if (params?.subscriptionInactive)
+  //     showAlert({
+  //       title: t('subscription.currentPlan.paywallDisclaimer.title'),
+  //       message: t('subscription.currentPlan.paywallDisclaimer.message'),
+  //       actions: [
+  //         {
+  //           title: t('subscription.currentPlan.paywallDisclaimer.options'),
+  //           onPress: () => showSubscriptionModal(),
+  //         },
+  //       ],
+  //     });
+  // }, [params?.subscriptionInactive]);
 
   if (loading || !customerInfo || !purchasePackages || isLoading || !data) return <FullScreenActivityIndicator />;
 
@@ -57,9 +59,9 @@ export default function CurrentPlan() {
         );
       });
 
-  const awaitedPurchasePackage =
-    !!data.waitingForPoints &&
-    purchasePackages.find(purchasePackage => requiresWaitlist(purchasePackage) === data.waitingForPoints);
+  const awaitedPurchasePackage = !!data.waitingForPoints
+    ? purchasePackages.find(purchasePackage => requiresWaitlist(purchasePackage) === data.waitingForPoints)
+    : undefined;
 
   return (
     <View className="flex-1">
@@ -128,8 +130,10 @@ export default function CurrentPlan() {
                 ? t('subscription.currentPlan.waitlist.ready')
                 : t('subscription.currentPlan.waitlist.waiting')}
             </Text>
-            {data.spotsReserved === data.waitingForPoints && (
-              <Text className="max-w-[95%] text-center"> {t('subscription.currentPlan.waitlist.notification')}</Text>
+            {data.spotsReserved !== data.waitingForPoints && (
+              <Text type="muted" className="max-w-[95%] text-center">
+                {t('subscription.currentPlan.waitlist.notification')}
+              </Text>
             )}
             {data.spotsReserved === data.waitingForPoints && (
               <View className="mt-3 w-full">
@@ -150,7 +154,7 @@ export default function CurrentPlan() {
                         else setCustomerInfo(makePurchaseResult.customerInfo);
                         refetch();
                       })
-                      .catch(console.error)
+                      .catch(err => showSnackbar(err.message, { type: 'error' }))
                       .finally(() => setIsSubscribing(false));
                   }}
                 />

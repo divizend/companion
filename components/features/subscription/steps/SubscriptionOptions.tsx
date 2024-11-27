@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { CheckBox, Divider } from '@rneui/themed';
+import { CheckBox, Divider, Icon } from '@rneui/themed';
 import { ImageBackground, Pressable, ScrollView, View } from 'react-native';
 import { PurchasesPackage } from 'react-native-purchases';
 
@@ -12,19 +12,34 @@ import { usePurchases } from '@/hooks/usePurchases';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { t as tBase } from '@/i18n';
 
+import { useWaitlistStatus } from '../queries';
+import { requiresWaitlist } from '../util';
+
 function SubscriptionCard({
   product,
   setSelectedPackage,
   isSelected,
+  awaitedPackage,
 }: {
   product: PurchasesPackage;
   setSelectedPackage: React.Dispatch<React.SetStateAction<PurchasesPackage | undefined>>;
   isSelected: boolean;
+  awaitedPackage?: PurchasesPackage;
 }) {
   const theme = useThemeColor();
+  const { data, isLoading } = useWaitlistStatus();
+  const t = (key: string, data?: any) => tBase('subscription.choosePlan.steps.plans.' + key, data);
+
+  if (!data || isLoading) return null;
+  const requiredPoints = requiresWaitlist(product);
+  const isReserved = !!requiredPoints && data.spotsReserved === requiredPoints;
 
   return (
-    <Pressable key={product.identifier} className="flex-1" onPress={() => setSelectedPackage(product)}>
+    <Pressable
+      key={product.identifier}
+      className="flex-1"
+      onPress={() => (awaitedPackage?.identifier !== product.identifier || isReserved) && setSelectedPackage(product)}
+    >
       <ImageBackground
         alt="background-bubbles"
         className="flex-1 rounded-xl"
@@ -42,8 +57,8 @@ function SubscriptionCard({
             <Text h3 type="muted" className="font-semibold mb-2 tracking-widest">
               {tBase(`subscription.subscriptionPlans.${product.identifier}.title`)}
             </Text>
-            <View>
-              <Text className="text-end" h3>
+            <View className="flex flex-row justify-between">
+              <Text h3>
                 {product.product.priceString}{' '}
                 <Text type="muted" className="font-normal" h4>
                   {tBase('subscription.monthly')}
@@ -51,21 +66,28 @@ function SubscriptionCard({
               </Text>
             </View>
           </View>
-          <CheckBox
-            wrapperStyle={{ backgroundColor: 'transparent', margin: 0, padding: 0 }}
-            iconType="material-community"
-            checkedIcon="radiobox-marked"
-            uncheckedIcon="radiobox-blank"
-            checkedColor={theme.theme}
-            containerStyle={{
-              backgroundColor: 'transparent',
-              margin: 0,
-              padding: 0,
-              marginLeft: 0,
-              marginRight: 0,
-            }}
-            checked={isSelected}
-          />
+          <View className="flex justify-between h-full items-end">
+            <CheckBox
+              wrapperStyle={{ backgroundColor: 'transparent', margin: 0, padding: 0 }}
+              iconType="material-community"
+              checkedIcon="radiobox-marked"
+              uncheckedIcon="radiobox-blank"
+              checkedColor={
+                awaitedPackage?.identifier === product.identifier && !isReserved ? theme.muted : theme.theme
+              }
+              containerStyle={{
+                backgroundColor: 'transparent',
+                margin: 0,
+                padding: 0,
+                marginLeft: 0,
+                marginRight: 0,
+              }}
+              checked={(awaitedPackage?.identifier === product.identifier && !isReserved) || isSelected}
+            />
+            {isReserved && (
+              <Text className="py-1 px-2 bg-theme rounded-sm text-lime-50 shadow-theme shadow-md">{t('reserved')}</Text>
+            )}
+          </View>
         </View>
       </ImageBackground>
     </Pressable>
@@ -75,65 +97,19 @@ function SubscriptionCard({
 export default function SubscriptionOptions({
   selectedPackage,
   setSelectedPackage,
+  awaitedPackage,
 }: {
   selectedPackage: PurchasesPackage | undefined;
   setSelectedPackage: React.Dispatch<React.SetStateAction<PurchasesPackage | undefined>>;
+  awaitedPackage?: PurchasesPackage;
 }) {
   const { loading, purchasePackages } = usePurchases();
+  const { data, isLoading } = useWaitlistStatus();
+  const theme = useThemeColor();
 
   const t = (key: string, data?: any) => tBase('subscription.choosePlan.steps.plans.' + key, data);
 
-  // const handleSubscribe = async (product: PurchasesPackage) => {
-  //   await Purchases.purchasePackage(product)
-  //     .then(makePurchaseResult =>
-  //       makePurchaseResult.customerInfo.entitlements.all['divizend-membership']?.store === 'PROMOTIONAL'
-  //         ? // If a trial exists, revoke it so the user gets the right package displayed instead of the trial after purchase.
-  //           apiDelete('/revoke-trial').then(refreshCustomerInfo)
-  //         : setCustomerInfo(makePurchaseResult.customerInfo),
-  //     )
-  //     .catch(err => showSnackbar(err.message, { type: 'error' }));
-  // };
-
-  // if (loading || !purchasePackages || isLoading || !data) return <FullScreenActivityIndicator />;
-
-  // const solidarityProducts = purchasePackages.slice(0, 2);
-  // const productsRest = purchasePackages.slice(2);
-
-  // const isSpotReserved = (purchasePackage: PurchasesPackage): boolean => {
-  //   if (!data.waitingForPoints) return false;
-  //   if (requiresWaitlist(purchasePackage) === data.spotsReserved) return true;
-  //   return false;
-  // };
-
-  // const attemptSubscribe = async (purchasePackage: PurchasesPackage) => {
-  //   try {
-  //     setIsSubscribing(true);
-
-  //     const pointsRequired = requiresWaitlist(purchasePackage);
-  //     if (!pointsRequired) return await handleSubscribe(purchasePackage);
-  //     // Can purhcase only returns true when the spots were reserved on that call.
-  //     const canPurchase = await apiPost<boolean>('/sponsored-purchase/initialize', {
-  //       points: pointsRequired,
-  //     });
-  //     if (canPurchase || isSpotReserved(purchasePackage)) return await handleSubscribe(purchasePackage);
-  //     else {
-  //       refetch();
-  //       showAlert({
-  //         title: 'You joined the waitlist',
-  //         message:
-  //           'You have opted for a sponsored subscription plan but there are no available spots. We will send you an email when you are ready to finalize the subscription.',
-  //         actions: [{ title: 'OK' }],
-  //       });
-  //     }
-  //   } catch (error) {
-  //     console.error(error);
-  //     showSnackbar('Error', { type: 'error' });
-  //   } finally {
-  //     setIsSubscribing(false);
-  //   }
-  // };
-
-  if (loading || !purchasePackages) return <FullScreenActivityIndicator />;
+  if (loading || !purchasePackages || isLoading || !data) return <FullScreenActivityIndicator />;
 
   const solidarityProducts = purchasePackages.slice(0, 2);
   const productsRest = purchasePackages.slice(2);
@@ -143,12 +119,29 @@ export default function SubscriptionOptions({
       <Text className="mb-4 text-center" id="title" h2>
         {t('title')}
       </Text>
+      {!!awaitedPackage && (
+        <View className="flex items-center bg-secondary-light dark:bg-secondary-dark px-2 py-5 rounded-xl gap-3 mb-8 shadow-lg">
+          <View className="bg-primary-light dark:bg-primary-dark rounded-3xl p-2">
+            <Icon name="info" type="material" size={20} color={theme.text} />
+          </View>
+          <Text h4 className="max-w-[85%] font-bold text-center">
+            {tBase('subscription.currentPlan.waitlist.title', {
+              name: tBase(`subscription.subscriptionPlans.${awaitedPackage.identifier}.title`),
+            })}
+          </Text>
+          <Text type="muted" className="max-w-[95%] text-center">
+            {t('positionDisclaimer')}
+          </Text>
+        </View>
+      )}
       <Accordion
         title={t('solidarityPrices')}
+        initiallyOpen={!!awaitedPackage}
         content={
           <View className="flex gap-2">
             {solidarityProducts.map(item => (
               <SubscriptionCard
+                awaitedPackage={awaitedPackage}
                 key={item.identifier}
                 isSelected={selectedPackage?.identifier === item.identifier}
                 product={item}
@@ -170,41 +163,6 @@ export default function SubscriptionOptions({
           />
         ))}
       </View>
-
-      {/* <Button
-        disabled={
-          !selectedPackage ||
-          (userInWaitlist && !isSpotReserved(selectedPackage) && !!requiresWaitlist(selectedPackage))
-        }
-        loading={isSubscribing}
-        onPress={() => selectedPackage && attemptSubscribe(selectedPackage)}
-        title={
-          <Text
-            style={{
-              textAlign: 'center',
-              color: theme.allColors.dark.text,
-              fontSize: 16,
-              fontWeight: 'bold',
-            }}
-          >
-            {(!selectedPackage ||
-              !requiresWaitlist(selectedPackage) ||
-              requiresWaitlist(selectedPackage) <= data.unreservedSpots) &&
-              t('subscription.actions.getStarted')}
-            {!!selectedPackage &&
-            !!requiresWaitlist(selectedPackage) &&
-            requiresWaitlist(selectedPackage) > data.unreservedSpots
-              ? isSpotReserved(selectedPackage)
-                ? t('subscription.actions.spotsReservedSubscribe')
-                : userInWaitlist
-                  ? t('subscription.actions.alreadyInWaitlist')
-                  : t('subscription.actions.joinWaitlist')
-              : ''}
-          </Text>
-        }
-        containerStyle={{ borderRadius: 12, width: '85%', alignSelf: 'center' }}
-        buttonStyle={{ backgroundColor: theme.theme }}
-      /> */}
     </ScrollView>
   );
 }

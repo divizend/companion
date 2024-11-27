@@ -60,6 +60,39 @@ export const showAlert = (prompt: PromptConfig) => {
   );
 };
 
+export const showConfirm = (prompt: Omit<PromptConfig, 'actions'>): Promise<void> => {
+  return new Promise<void>((resolve, reject) => {
+    const internalPrompt: PromptConfigInternal = {
+      id: uniqueId(),
+      type: 'alert',
+      config: {
+        ...prompt,
+        actions: [
+          {
+            title: t('common.confirm'),
+            onPress: () => resolve(),
+          },
+          {
+            title: t('common.cancel'),
+            onPress: () => reject(),
+          },
+        ],
+      },
+    };
+    ModalManager.showModal(
+      renderModal({
+        prompt: internalPrompt,
+        // TODO: Add onClose handler to reject if modal is dismissed
+        // onClose: () => reject(),
+      }),
+      {},
+      {
+        transparent: true,
+      },
+    );
+  });
+};
+
 export const showPrompt = (config: InputPromptConfig): Promise<string | null> => {
   return new Promise<string | null>(resolve => {
     const internalPrompt: PromptConfigInternal = {

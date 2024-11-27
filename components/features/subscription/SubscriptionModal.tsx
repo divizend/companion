@@ -3,11 +3,12 @@ import React, { useRef, useState } from 'react';
 import { Dimensions, NativeScrollEvent, NativeSyntheticEvent, ScrollView, View } from 'react-native';
 import Purchases, { PurchasesPackage } from 'react-native-purchases';
 
-import { apiDelete, apiPost } from '@/common/api';
+import { apiDelete, apiPatch, apiPost } from '@/common/api';
 import FullScreenActivityIndicator from '@/components/FullScreenActivityIndicator';
 import { Button } from '@/components/base';
 import ModalLayout from '@/components/global/ModalLayout';
 import { useSnackbar } from '@/components/global/Snackbar';
+import { showConfirm } from '@/components/global/prompt';
 import { usePurchases } from '@/hooks/usePurchases';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { t } from '@/i18n';
@@ -52,11 +53,50 @@ export default function SubscriptionModal({ dismiss }: Props) {
 
   const scrollViewRef = useRef<ScrollView>(null);
 
+  const goToPage = (step: SubscriptionStep) =>
+    setTimeout(
+      () =>
+        scrollViewRef.current?.scrollTo({
+          x: screenWidth * step,
+          animated: true,
+        }),
+      200,
+    );
+
   const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     if (!canContinue) return;
     const contentOffsetX = event.nativeEvent.contentOffset.x;
     const page = Math.round(contentOffsetX / screenWidth);
     setCurrentPage(page as SubscriptionStep);
+  };
+
+  /**
+   * Checks if the user has correct number of waiting list entries and attempts to reserve them.
+   * If reservation is successful, the user can purchase otherwise redirect to last step.
+   */
+
+  if (loading || !purchasePackages || isLoading || !data) return <FullScreenActivityIndicator />;
+
+  const awaitedPackage = !!data.waitingForPoints
+    ? purchasePackages.find(purchasePackage => requiresWaitlist(purchasePackage) === data.waitingForPoints)
+    : undefined;
+
+  const isSpotReserved = (purchasePackage: PurchasesPackage): boolean => {
+    if (!data.waitingForPoints) return false;
+    if (requiresWaitlist(purchasePackage) === data.spotsReserved) return true;
+    return false;
+  };
+
+  const checkPointsAndPurchase = async (purchasePackage: PurchasesPackage) => {
+    const pointsRequired = requiresWaitlist(purchasePackage);
+    const canPurchase = await apiPost<boolean>('/sponsored-purchase/initialize', {
+      points: pointsRequired,
+    });
+    if (canPurchase || isSpotReserved(purchasePackage)) return await handleSubscribe(purchasePackage);
+    else {
+      refetch();
+      goToPage(SubscriptionStep.FinalStep);
+    }
   };
 
   const handleSubscribe = async (product: PurchasesPackage) => {
@@ -68,50 +108,42 @@ export default function SubscriptionModal({ dismiss }: Props) {
         else setCustomerInfo(makePurchaseResult.customerInfo);
         setHasSubscribed(true);
       })
-      .then(() =>
-        setTimeout(
-          () =>
-            scrollViewRef.current?.scrollTo({
-              x: screenWidth * SubscriptionStep.FinalStep,
-              animated: true,
-            }),
-          200,
-        ),
-      );
+      .then(() => goToPage(SubscriptionStep.FinalStep));
   };
 
-  if (loading || !purchasePackages || isLoading || !data) return <FullScreenActivityIndicator />;
-
-  const isSpotReserved = (purchasePackage: PurchasesPackage): boolean => {
-    if (!data.waitingForPoints) return false;
-    if (requiresWaitlist(purchasePackage) === data.spotsReserved) return true;
-    return false;
-  };
-
+  // TODO: Test all cases.
   const attemptSubscribe = async (purchasePackage: PurchasesPackage) => {
     try {
       setIsSubscribing(true);
-
-      // If the subscription is not sponsored, directly open the payment modal.
       const pointsRequired = requiresWaitlist(purchasePackage);
-      if (!pointsRequired) return await handleSubscribe(purchasePackage);
+
+      // Handle non-sponsored options
+      if (!pointsRequired) {
+        if (!!awaitedPackage) {
+          await showConfirm({ title: 'You will be removed from the waiting list' });
+          // Abondon all spots if user chooses a non-sponsored option.
+          await apiPatch('/sponsored-purchase/abandon-spots', { points: data.waitingForPoints });
+          refetch();
+        }
+        return await handleSubscribe(purchasePackage);
+      }
+
+      if (!awaitedPackage) return checkPointsAndPurchase(purchasePackage);
 
       // Can purhcase only returns true when the spots were reserved on that call.
-      const canPurchase = await apiPost<boolean>('/sponsored-purchase/initialize', {
-        points: pointsRequired,
-      });
-      if (canPurchase || isSpotReserved(purchasePackage)) return await handleSubscribe(purchasePackage);
-      else {
-        refetch();
-        setTimeout(
-          () =>
-            scrollViewRef.current?.scrollTo({
-              x: screenWidth * SubscriptionStep.FinalStep,
-              animated: true,
-            }),
-          200,
-        );
-      }
+
+      if (pointsRequired > data.waitingForPoints) {
+        await showConfirm({ title: 'You will be at the end of the waiting list.' });
+        await apiPatch('/sponsored-purchase/abandon-spots', { points: data.waitingForPoints });
+        checkPointsAndPurchase(purchasePackage);
+
+        // try to subscribe i guess or not.
+      } else if (pointsRequired < data.waitingForPoints) {
+        await showConfirm({ title: "Your spot at the waiting list won't be affected." });
+        await apiPatch('/sponsored-purchase/abandon-spots', { points: data.waitingForPoints - pointsRequired });
+        // Try to buy
+        checkPointsAndPurchase(purchasePackage);
+      } else if (pointsRequired === data.waitingForPoints) checkPointsAndPurchase(purchasePackage);
     } catch (error: any) {
       console.error(error);
       showSnackbar(error.message, { type: 'error' });
@@ -120,32 +152,18 @@ export default function SubscriptionModal({ dismiss }: Props) {
     }
   };
 
-  const userInWaitlist = !!data.waitingForPoints;
-
+  // TODO: Subscription cards are cropped at the bottom of the screen
   const handleNextStep = () => {
     switch (currentPage) {
       case SubscriptionStep.ExplainerStep:
-        setTimeout(
-          () =>
-            scrollViewRef.current?.scrollTo({
-              x: screenWidth * SubscriptionStep.ChoosePlanStep,
-              animated: true,
-            }),
-          200,
-        );
+        goToPage(SubscriptionStep.ChoosePlanStep);
 
         break;
       case SubscriptionStep.ChoosePlanStep: {
+        if (!selectedPackage) break;
         if (selectedPackage?.identifier === purchasePackages[2].identifier) attemptSubscribe(selectedPackage);
-        else
-          setTimeout(
-            () =>
-              scrollViewRef.current?.scrollTo({
-                x: screenWidth * SubscriptionStep.SolidarityDisclaimerStep,
-                animated: true,
-              }),
-            200,
-          );
+        else goToPage(SubscriptionStep.SolidarityDisclaimerStep);
+
         break;
       }
 
@@ -191,7 +209,11 @@ export default function SubscriptionModal({ dismiss }: Props) {
             <ExplainerStep setCanContinue={setCanContinue} canContinue={canContinue} />
           </View>
           <View style={{ width: screenWidth }}>
-            <SubscriptionOptions selectedPackage={selectedPackage} setSelectedPackage={setSelectedPackage} />
+            <SubscriptionOptions
+              selectedPackage={selectedPackage}
+              setSelectedPackage={setSelectedPackage}
+              awaitedPackage={awaitedPackage}
+            />
           </View>
           <View style={{ width: screenWidth }}>
             <SolidarityDisclaimerStep canContinue={canContinue} setCanContinue={setCanContinue} />
