@@ -3,7 +3,7 @@ import React, { useRef, useState } from 'react';
 import { Dimensions, NativeScrollEvent, NativeSyntheticEvent, ScrollView, View } from 'react-native';
 import Purchases, { PurchasesPackage } from 'react-native-purchases';
 
-import { apiDelete, apiPatch, apiPost } from '@/common/api';
+import { apiDelete, apiGet, apiPatch, apiPost } from '@/common/api';
 import FullScreenActivityIndicator from '@/components/FullScreenActivityIndicator';
 import { Button } from '@/components/base';
 import ModalLayout from '@/components/global/ModalLayout';
@@ -89,10 +89,11 @@ export default function SubscriptionModal({ dismiss }: Props) {
 
   const checkPointsAndPurchase = async (purchasePackage: PurchasesPackage) => {
     const pointsRequired = requiresWaitlist(purchasePackage);
-    const canPurchase = await apiPost<boolean>('/sponsored-purchase/initialize', {
+    const reservedPoints = await apiPost<boolean>('/sponsored-purchase/initialize', {
       points: pointsRequired,
     });
-    if (canPurchase || isSpotReserved(purchasePackage)) return await handleSubscribe(purchasePackage);
+    const canPurchase = await apiGet(`/sponsored-purchase/can-purchase/${pointsRequired}`);
+    if (!!reservedPoints || !!canPurchase) return await handleSubscribe(purchasePackage);
     else {
       refetch();
       goToPage(SubscriptionStep.FinalStep);
@@ -106,6 +107,7 @@ export default function SubscriptionModal({ dismiss }: Props) {
           // If a trial exists, revoke it so the user gets the right package displayed instead of the trial after purchase.
           apiDelete('/revoke-trial').then(refreshCustomerInfo);
         else setCustomerInfo(makePurchaseResult.customerInfo);
+        refetch();
         setHasSubscribed(true);
       })
       .then(() => goToPage(SubscriptionStep.FinalStep));

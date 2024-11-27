@@ -16,7 +16,8 @@
     "loading": "Loading...",
     "refining": "Refining...",
     "removing": "Removing...",
-    "placeholder": "Type here..."
+    "placeholder": "Type here...",
+    "confirm": "Confirm"
   },
   "comingSoon": {
     "title": "Coming soon",
