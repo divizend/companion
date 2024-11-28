@@ -157,7 +157,9 @@ export default function CurrentPlan() {
 
             <View className="flex flex-row">
               <Text type="muted" className="flex-1">
-                {t('subscription.currentPlan.table.expiresAt')}
+                {!!entitlement.unsubscribeDetectedAtMillis
+                  ? t('subscription.currentPlan.table.expiresAt')
+                  : t('subscription.currentPlan.table.renewsAt')}
               </Text>
               <Text className="flex-1 font-bold">
                 {/* TODO: Make it dayLongUTC instead (leave it long for dev reasons) */}
@@ -166,6 +168,19 @@ export default function CurrentPlan() {
                 })}
               </Text>
             </View>
+
+            {!!entitlement.unsubscribeDetectedAtMillis && (
+              <View className="flex flex-row">
+                <Text type="muted" className="flex-1">
+                  {t('subscription.currentPlan.table.cancelledAt')}
+                </Text>
+                <Text className="flex-1 font-bold">
+                  {t('{{date,dayLongAndTime}}', {
+                    date: new Date(entitlement.unsubscribeDetectedAtMillis),
+                  })}
+                </Text>
+              </View>
+            )}
           </View>
         )}
       </ScrollScreen>
