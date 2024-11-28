@@ -27,7 +27,7 @@
   "settings": {
     "pages": {
       "settings": "Settings",
-      "plan": "Plan"
+      "plan": "Membership"
     },
     "title": "Settings",
     "accountSection": {
@@ -52,7 +52,7 @@
     },
     "theme": "Toggle theme",
     "currentPlan": {
-      "title": "Your plan"
+      "title": "Your membership"
     }
   },
   "paywall": {
@@ -294,9 +294,9 @@
       },
       "waitlist": {
         "title": "You are in the waiting list for {{name}}.",
-        "ready": "You can now subscribe to Companion for a reduced price.",
+        "ready": "You can now join to Companion for a reduced price.",
         "waiting": "You are yet to be selected to get the sponsorship.",
-        "notification": "We will notify you by email when you're ready to subscribe."
+        "notification": "We will notify you by email when you're ready to purchase a membership."
       }
     },
     "choosePlan": {
@@ -334,7 +334,13 @@
           "title": "Choose the appropriate membership option for you",
           "solidarityPrices": "Show solidarity prices",
           "positionDisclaimer": "Continuing with another membership option might result in abandoning your position in the waiting list.",
-          "reserved": "Reserved"
+          "reserved": "Reserved",
+          "crossgrading": {
+            "sponsored": {
+              "title": "You don't have access to sponsored memberships",
+              "description": "You cannot purchase a sponsored option when you already have an active membership."
+            }
+          }
         },
         "disclaimer": {
           "title": "How does it work?",
@@ -344,10 +350,10 @@
               "content": {
                 "higherFactor": {
                   "title": "If you sponsor (€30 or €40):",
-                  "bullet": "€30 (Factor 1.5): Creates 1 spot on the waitlist. €40 (Factor 2): Creates 2 spots on the waitlist. Each spot allows a user to subscribe at €10. Subscribers paying €0.99 require 2 spots."
+                  "bullet": "€30 (Factor 1.5): Creates 1 spot on the waiting list. €40 (Factor 2): Creates 2 spots on the waiting list. Each spot allows a user to join for €10. Members paying €0.99 require 2 spots."
                 },
                 "lowerFactor": {
-                  "title": "If you're subscribing to a sponsored plan (€10 or €0.99):",
+                  "title": "If you're subscribing to a sponsored membership (€10 or €0.99):",
                   "bullet": "Your membership depends on available spots created by sponsors. Matching is anonymous and based on a first-come, first-served system."
                 }
               }
@@ -357,23 +363,23 @@
               "content": {
                 "sponsors": {
                   "title": "If you choose higher factor options:",
-                  "bullet1": "Factor 1.5: Creates 1 spot on the waitlist",
-                  "bullet2": "Factor 2: Creates 2 spots on the waitlist",
-                  "bullet3": "Each spot allows a user to subscribe at €10. Subscribers paying €0.99 require 2 spots."
+                  "bullet1": "Factor 1.5: Creates 1 spot on the waiting list",
+                  "bullet2": "Factor 2: Creates 2 spots on the waiting list",
+                  "bullet3": "Each spot allows a user to purchase memberships for €10. Members paying €0.99 require 2 spots."
                 },
                 "sponsored": {
-                  "title": "If you're subscribing to a sponsored plan (€10 or €0.99):",
+                  "title": "If you're subscribing to a sponsored membership (€10 or €0.99):",
                   "bullet1": "Your membership depends on available spots created by sponsors",
                   "bullet2": "Matching is anonymous and based on a first-come, first-served system"
                 }
               }
             },
             "waitlist": {
-              "title": "Waitlist and Matching",
+              "title": "Waiting list and Matching",
               "content": {
                 "bullet1": "If there are spots available, you are able to instantly activate your membership",
-                "bullet2": "If no spots are available, users join a waitlist",
-                "bullet3": "Once a spot is available, you'll receive an email notification and have 1 week to subscribe. After that, the spot is forfeited"
+                "bullet2": "If no spots are available, users join a waiting list",
+                "bullet3": "Once a spot is available, you'll receive an email notification and have 1 week to activate your membership. After that, the spot is forfeited"
               }
             },
             "changes": {
@@ -382,7 +388,7 @@
                 "bullet1": "Solidarity Members (€10 or €0.99): If you start subscribing without spots being reserved for you but cancel, your spot is held for 5 minutes",
                 "bullet2": "Sponsors (€30 or €40): If you cancel, the sponsored user keeps their reduced price until they cancel",
                 "note": "Important Note:",
-                "bullet3": "Subscribing to any other plan while on the waitlist means you'll lose your spot"
+                "bullet3": "Purchasing any other membership while on the waiting list means you'll lose your spot"
               }
             }
           }
@@ -399,7 +405,7 @@
         },
         "waitlist": {
           "title": "You're on the waiting list",
-          "description": "You have chosen a sponsored membership option. Currently, there are no available spots, but you've been added to our waitlist.",
+          "description": "You have chosen a sponsored membership option. Currently, there are no available spots, but you've been added to our waiting list.",
           "accordion": {
             "title": "How the waiting list works",
             "spotMatching": {
@@ -414,7 +420,7 @@
             },
             "forfeiting": {
               "title": "3. Forfeiting spots:",
-              "point1": "If you don't activate within 7 days, the spot will be forfeited, and you'll remain on the waitlist."
+              "point1": "If you don't activate within 7 days, the spot will be forfeited, and you'll remain on the waiting list."
             }
           }
         }
@@ -454,12 +460,16 @@
     },
     "monthly": "per month",
     "actions": {
-      "subscribe": "Subscribe",
-      "managePlan": "Manage plan",
+      "subscribe": "Become a member",
+      "managePlan": {
+        "title": "Manage membership",
+        "cancelOrPause": "Cancel or pause membership",
+        "change": "Change membership"
+      },
       "getStarted": "Get started",
-      "spotsReservedSubscribe": "Spots reserved. Subscribe now!",
-      "joinWaitlist": "Join waitlist",
-      "alreadyInWaitlist": "Already in waitlist"
+      "spotsReservedSubscribe": "Spots reserved. Join now!",
+      "joinWaitlist": "Join waiting list",
+      "alreadyInWaitlist": "Already in waiting list"
     }
   },
   "country": {

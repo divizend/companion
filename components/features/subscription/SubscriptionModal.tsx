@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import { Dimensions, NativeScrollEvent, NativeSyntheticEvent, ScrollView, View } from 'react-native';
 import Purchases, { PurchasesPackage } from 'react-native-purchases';
@@ -21,7 +21,7 @@ import SolidarityDisclaimerStep from './steps/SolidarityDisclaimerStep';
 import SubscriptionOptions from './steps/SubscriptionOptions';
 import { requiresWaitlist } from './util';
 
-type Props = { dismiss: () => void };
+type Props = { dismiss: () => void; skipFirstStep?: boolean };
 
 export interface IStepProps {
   setCanContinue: React.Dispatch<React.SetStateAction<boolean>>;
@@ -37,7 +37,7 @@ enum SubscriptionStep {
 
 const { width: screenWidth } = Dimensions.get('window');
 
-export default function SubscriptionModal({ dismiss }: Props) {
+export default function SubscriptionModal({ dismiss, skipFirstStep = false }: Props) {
   const { loading, purchasePackages, setCustomerInfo, refreshCustomerInfo } = usePurchases();
   const { showSnackbar } = useSnackbar();
 
@@ -52,6 +52,13 @@ export default function SubscriptionModal({ dismiss }: Props) {
   const [hasSubscribed, setHasSubscribed] = useState(false);
 
   const scrollViewRef = useRef<ScrollView>(null);
+
+  useEffect(() => {
+    if (skipFirstStep && currentPage === SubscriptionStep.ExplainerStep) {
+      setCanContinue(true);
+      goToPage(SubscriptionStep.ChoosePlanStep);
+    }
+  }, []);
 
   const goToPage = (step: SubscriptionStep) =>
     setTimeout(

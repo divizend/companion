@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
 
 import { Icon } from '@rneui/base';
-import * as Linking from 'expo-linking';
-import { useLocalSearchParams } from 'expo-router';
-import { View } from 'react-native';
-import Purchases, { PurchasesPackage } from 'react-native-purchases';
+import { Linking, View } from 'react-native';
+import Purchases from 'react-native-purchases';
 
 import { apiDelete } from '@/common/api';
 import { clsx } from '@/common/clsx';
@@ -15,6 +13,7 @@ import { useWaitlistStatus } from '@/components/features/subscription/queries';
 import { requiresWaitlist } from '@/components/features/subscription/util';
 import { useSnackbar } from '@/components/global/Snackbar';
 import { ModalManager } from '@/components/global/modal';
+import { showAlert } from '@/components/global/prompt';
 import '@/global.css';
 import { usePurchases } from '@/hooks/usePurchases';
 import { useThemeColor } from '@/hooks/useThemeColor';
@@ -26,24 +25,8 @@ export default function CurrentPlan() {
   const theme = useThemeColor();
   const { purchasePackages, loading, customerInfo, refreshCustomerInfo, setCustomerInfo } = usePurchases();
   const { data, isLoading, refetch } = useWaitlistStatus();
-  const params = useLocalSearchParams();
   const [isSubscribing, setIsSubscribing] = useState(false);
   const { showSnackbar } = useSnackbar();
-
-  // TODO: uncomment
-  // useEffect(() => {
-  //   if (params?.subscriptionInactive)
-  //     showAlert({
-  //       title: t('subscription.currentPlan.paywallDisclaimer.title'),
-  //       message: t('subscription.currentPlan.paywallDisclaimer.message'),
-  //       actions: [
-  //         {
-  //           title: t('subscription.currentPlan.paywallDisclaimer.options'),
-  //           onPress: () => showSubscriptionModal(),
-  //         },
-  //       ],
-  //     });
-  // }, [params?.subscriptionInactive]);
 
   if (loading || !customerInfo || !purchasePackages || isLoading || !data) return <FullScreenActivityIndicator />;
 
@@ -207,7 +190,21 @@ export default function CurrentPlan() {
         )}
         {!!activeSubscription && (
           <Button
-            onPress={() => customerInfo.managementURL && Linking.openURL(customerInfo.managementURL)}
+            onPress={() =>
+              showAlert({
+                title: t('subscription.actions.managePlan.title'),
+                actions: [
+                  {
+                    title: t('subscription.actions.managePlan.change'),
+                    onPress: () => ModalManager.showModal(SubscriptionModal, { skipFirstStep: true }),
+                  },
+                  {
+                    title: t('subscription.actions.managePlan.cancelOrPause'),
+                    onPress: () => customerInfo.managementURL && Linking.openURL(customerInfo.managementURL),
+                  },
+                ],
+              })
+            }
             title={
               <Text
                 style={{
@@ -217,7 +214,7 @@ export default function CurrentPlan() {
                   fontWeight: 'bold',
                 }}
               >
-                {t('subscription.actions.managePlan')}
+                {t('subscription.actions.managePlan.title')}
               </Text>
             }
             buttonStyle={{ borderRadius: 12, backgroundColor: theme.backgroundSecondary, paddingVertical: 15 }}

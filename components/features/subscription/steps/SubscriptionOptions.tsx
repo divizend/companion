@@ -103,7 +103,7 @@ export default function SubscriptionOptions({
   setSelectedPackage: React.Dispatch<React.SetStateAction<PurchasesPackage | undefined>>;
   awaitedPackage?: PurchasesPackage;
 }) {
-  const { loading, purchasePackages } = usePurchases();
+  const { loading, purchasePackages, customerInfo } = usePurchases();
   const { data, isLoading } = useWaitlistStatus();
   const theme = useThemeColor();
 
@@ -113,6 +113,8 @@ export default function SubscriptionOptions({
 
   const solidarityProducts = purchasePackages.slice(0, 2);
   const productsRest = purchasePackages.slice(2);
+
+  const entitlement = customerInfo?.entitlements.active['divizend-membership'];
 
   return (
     <ScrollView className="p-4 flex-1 gap-2">
@@ -139,15 +141,29 @@ export default function SubscriptionOptions({
         initiallyOpen={!!awaitedPackage}
         content={
           <View className="flex gap-2">
-            {solidarityProducts.map(item => (
-              <SubscriptionCard
-                awaitedPackage={awaitedPackage}
-                key={item.identifier}
-                isSelected={selectedPackage?.identifier === item.identifier}
-                product={item}
-                setSelectedPackage={setSelectedPackage}
-              />
-            ))}
+            {entitlement && entitlement?.store !== 'PROMOTIONAL' ? (
+              <View className="flex items-center bg-secondary-light dark:bg-secondary-dark px-2 py-5 rounded-xl gap-3 shadow-lg">
+                <View className="bg-primary-light dark:bg-primary-dark rounded-3xl p-2">
+                  <Icon name="warning" type="material" size={20} color={theme.text} />
+                </View>
+                <Text h4 className="max-w-[85%] font-bold text-center">
+                  {t('crossgrading.sponsored.title')}
+                </Text>
+                <Text type="muted" className="max-w-[95%] text-center">
+                  {t('crossgrading.sponsored.description')}
+                </Text>
+              </View>
+            ) : (
+              solidarityProducts.map(item => (
+                <SubscriptionCard
+                  awaitedPackage={awaitedPackage}
+                  key={item.identifier}
+                  isSelected={selectedPackage?.identifier === item.identifier}
+                  product={item}
+                  setSelectedPackage={setSelectedPackage}
+                />
+              ))
+            )}
             <Divider style={{ marginHorizontal: 40, marginVertical: 5 }} width={1} />
           </View>
         }
