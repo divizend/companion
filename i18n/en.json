@@ -423,6 +423,12 @@
         "continue": "Continue",
         "getStarted": "Get started",
         "finalize": "Continue to app"
+      },
+      "alerts": {
+        "title": "Are you sure?",
+        "removed": "If you proceed, you will be removed from the waiting list",
+        "bottomWaitlist": "If you proceed, you will be placed at the bottom of the waiting list",
+        "losePosition": "If you proceed, you will renounce your reservation for the lower factor membership"
       }
     },
     "subscriptionPlans": {

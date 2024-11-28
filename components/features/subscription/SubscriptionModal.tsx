@@ -122,7 +122,10 @@ export default function SubscriptionModal({ dismiss }: Props) {
       // Handle non-sponsored options
       if (!pointsRequired) {
         if (!!awaitedPackage) {
-          await showConfirm({ title: 'You will be removed from the waiting list' });
+          await showConfirm({
+            title: t('subscription.choosePlan.alerts.title'),
+            message: t('subscription.choosePlan.alerts.removed'),
+          });
           // Abondon all spots if user chooses a non-sponsored option.
           await apiPatch('/sponsored-purchase/abandon-spots', { points: data.waitingForPoints });
           refetch();
@@ -135,13 +138,19 @@ export default function SubscriptionModal({ dismiss }: Props) {
       // Can purhcase only returns true when the spots were reserved on that call.
 
       if (pointsRequired > data.waitingForPoints) {
-        await showConfirm({ title: 'You will be at the end of the waiting list.' });
+        await showConfirm({
+          title: t('subscription.choosePlan.alerts.title'),
+          message: t('subscription.choosePlan.alerts.bottomWaitlist'),
+        });
         await apiPatch('/sponsored-purchase/abandon-spots', { points: data.waitingForPoints });
         checkPointsAndPurchase(purchasePackage);
 
         // try to subscribe i guess or not.
       } else if (pointsRequired < data.waitingForPoints) {
-        await showConfirm({ title: "Your spot at the waiting list won't be affected." });
+        await showConfirm({
+          title: t('subscription.choosePlan.alerts.title'),
+          message: t('subscription.choosePlan.alerts.losePosition'),
+        });
         await apiPatch('/sponsored-purchase/abandon-spots', { points: data.waitingForPoints - pointsRequired });
         // Try to buy
         checkPointsAndPurchase(purchasePackage);
