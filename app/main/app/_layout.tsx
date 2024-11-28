@@ -12,8 +12,6 @@ export default function Layout() {
 
   if (!profile.flags.allowedCompanionAI) return <Redirect href="/main/onboarding" />;
   if (!customerInfo || loading) return <FullScreenActivityIndicator />;
-  if (!customerInfo.entitlements.active['divizend-membership'])
-    return <Redirect href={{ pathname: '/main/settings/plan', params: { subscriptionInactive: 'true' } }} />;
 
   return (
     <Stack>

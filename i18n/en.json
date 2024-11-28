@@ -55,6 +55,10 @@
       "title": "Your plan"
     }
   },
+  "paywall": {
+    "reservedForMembers": "This section is reserved for members",
+    "pressToStart": "Press anywhere to start your membership"
+  },
   "tabs": {
     "learn": "Visionary",
     "analyze": "Analyze",

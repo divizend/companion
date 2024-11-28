@@ -5,13 +5,11 @@ import { Slot, router, useSegments } from 'expo-router';
 import { TouchableOpacity, View } from 'react-native';
 
 import { Text } from '@/components/base';
-import { usePurchases } from '@/hooks/usePurchases';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { t } from '@/i18n';
 
 export default function Layout() {
   const theme = useThemeColor();
-  const { customerInfo } = usePurchases();
 
   const segments = useSegments();
 
@@ -38,14 +36,7 @@ export default function Layout() {
         }
         // Only show exit button when user has access back to the app
         rightComponent={
-          <TouchableOpacity
-            {...(!customerInfo?.entitlements.active['divizend-membership'] && {
-              style: { opacity: 0 },
-              activeOpacity: 0,
-              disabled: true,
-            })}
-            onPress={() => !!customerInfo?.entitlements.active['divizend-membership'] && router.navigate('/main/app')}
-          >
+          <TouchableOpacity onPress={() => router.navigate('/main/app')}>
             <View className="dark:bg-[#232223] bg-[#e0e0e0] rounded-2xl p-1 m-[5px]">
               <Icon name="close" size={16} color="#666" />
             </View>
