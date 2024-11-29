@@ -164,7 +164,6 @@ export default function SubscriptionModal({ dismiss, skipFirstStep = false }: Pr
     }
   };
 
-  // TODO: Subscription cards are cropped at the bottom of the screen
   const handleNextStep = async () => {
     switch (currentPage) {
       case SubscriptionStep.ExplainerStep:

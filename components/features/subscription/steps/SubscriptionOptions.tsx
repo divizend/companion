@@ -135,10 +135,6 @@ export default function SubscriptionOptions({
         );
       });
 
-  // useEffect(() => {
-  //   setSelectedPackage(activeSubscription);
-  // }, []);
-
   return (
     <ScrollView className="p-4 flex-1 gap-2">
       <Text className="mb-4 text-center" id="title" h2>
@@ -192,7 +188,7 @@ export default function SubscriptionOptions({
         }
       />
 
-      <View className="flex gap-2">
+      <View className={clsx('flex gap-2', !!awaitedPackage && 'mb-6')}>
         {productsRest.map(item => (
           <SubscriptionCard
             isActive={item.identifier === activeSubscription?.identifier}
