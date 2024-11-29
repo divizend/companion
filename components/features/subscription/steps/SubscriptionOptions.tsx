@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import { CheckBox, Divider, Icon } from '@rneui/themed';
 import { ImageBackground, Pressable, ScrollView, View } from 'react-native';
@@ -17,11 +17,13 @@ import { requiresWaitlist } from '../util';
 
 function SubscriptionCard({
   product,
+  isActive,
   setSelectedPackage,
   isSelected,
   awaitedPackage,
 }: {
   product: PurchasesPackage;
+  isActive?: boolean;
   setSelectedPackage: React.Dispatch<React.SetStateAction<PurchasesPackage | undefined>>;
   isSelected: boolean;
   awaitedPackage?: PurchasesPackage;
@@ -38,7 +40,9 @@ function SubscriptionCard({
     <Pressable
       key={product.identifier}
       className="flex-1"
-      onPress={() => (awaitedPackage?.identifier !== product.identifier || isReserved) && setSelectedPackage(product)}
+      onPress={() =>
+        (awaitedPackage?.identifier !== product.identifier || isReserved) && !isActive && setSelectedPackage(product)
+      }
     >
       <ImageBackground
         alt="background-bubbles"
@@ -73,7 +77,9 @@ function SubscriptionCard({
               checkedIcon="radiobox-marked"
               uncheckedIcon="radiobox-blank"
               checkedColor={
-                awaitedPackage?.identifier === product.identifier && !isReserved ? theme.muted : theme.theme
+                (awaitedPackage?.identifier === product.identifier && !isReserved) || isActive
+                  ? theme.muted
+                  : theme.theme
               }
               containerStyle={{
                 backgroundColor: 'transparent',
@@ -82,10 +88,13 @@ function SubscriptionCard({
                 marginLeft: 0,
                 marginRight: 0,
               }}
-              checked={(awaitedPackage?.identifier === product.identifier && !isReserved) || isSelected}
+              checked={(awaitedPackage?.identifier === product.identifier && !isReserved) || isSelected || !!isActive}
             />
             {isReserved && (
               <Text className="py-1 px-2 bg-theme rounded-sm text-lime-50 shadow-theme shadow-md">{t('reserved')}</Text>
+            )}
+            {isActive && (
+              <Text className="py-1 px-2 bg-theme rounded-sm text-lime-50 shadow-theme shadow-md">{t('active')}</Text>
             )}
           </View>
         </View>
@@ -115,6 +124,20 @@ export default function SubscriptionOptions({
   const productsRest = purchasePackages.slice(2);
 
   const entitlement = customerInfo?.entitlements.active['divizend-membership'];
+
+  const activeSubscription = !entitlement
+    ? undefined
+    : purchasePackages.find(purchasePackage => {
+        return (
+          purchasePackage.product.identifier ===
+            entitlement.productIdentifier + ':' + entitlement.productPlanIdentifier ||
+          purchasePackage.product.identifier === entitlement.productIdentifier
+        );
+      });
+
+  // useEffect(() => {
+  //   setSelectedPackage(activeSubscription);
+  // }, []);
 
   return (
     <ScrollView className="p-4 flex-1 gap-2">
@@ -172,6 +195,7 @@ export default function SubscriptionOptions({
       <View className="flex gap-2">
         {productsRest.map(item => (
           <SubscriptionCard
+            isActive={item.identifier === activeSubscription?.identifier}
             key={item.identifier}
             isSelected={selectedPackage?.identifier === item.identifier}
             product={item}

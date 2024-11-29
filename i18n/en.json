@@ -281,7 +281,9 @@
       "noActiveSubscription": "No active membership",
       "table": {
         "price": "Price per month",
-        "expiresAt": "Expires at"
+        "expiresAt": "Expires at",
+        "renewsAt": "Renews at",
+        "cancelledAt": "Cancelled at"
       },
       "freeTrial": {
         "ends": "Your free trial will end on {{date,dayLongAndTime}}",
@@ -335,6 +337,7 @@
           "solidarityPrices": "Show solidarity prices",
           "positionDisclaimer": "Continuing with another membership option might result in abandoning your position in the waiting list.",
           "reserved": "Reserved",
+          "active": "Active",
           "crossgrading": {
             "sponsored": {
               "title": "You don't have access to sponsored memberships",
