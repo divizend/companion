@@ -88,12 +88,6 @@ export default function SubscriptionModal({ dismiss, skipFirstStep = false }: Pr
     ? purchasePackages.find(purchasePackage => requiresWaitlist(purchasePackage) === data.waitingForPoints)
     : undefined;
 
-  const isSpotReserved = (purchasePackage: PurchasesPackage): boolean => {
-    if (!data.waitingForPoints) return false;
-    if (requiresWaitlist(purchasePackage) === data.spotsReserved) return true;
-    return false;
-  };
-
   const checkPointsAndPurchase = async (purchasePackage: PurchasesPackage) => {
     const pointsRequired = requiresWaitlist(purchasePackage);
     const reservedPoints = await apiPost<boolean>('/sponsored-purchase/initialize', {
@@ -120,7 +114,6 @@ export default function SubscriptionModal({ dismiss, skipFirstStep = false }: Pr
       .then(() => goToPage(SubscriptionStep.FinalStep));
   };
 
-  // TODO: Test all cases.
   const attemptSubscribe = async (purchasePackage: PurchasesPackage) => {
     try {
       setIsSubscribing(true);
@@ -137,20 +130,20 @@ export default function SubscriptionModal({ dismiss, skipFirstStep = false }: Pr
           await apiPatch('/sponsored-purchase/abandon-spots', { points: data.waitingForPoints });
           refetch();
         }
-        return await handleSubscribe(purchasePackage);
+        await handleSubscribe(purchasePackage);
+        return;
       }
 
-      if (!awaitedPackage) return checkPointsAndPurchase(purchasePackage);
+      if (!awaitedPackage) return await checkPointsAndPurchase(purchasePackage);
 
       // Can purhcase only returns true when the spots were reserved on that call.
-
       if (pointsRequired > data.waitingForPoints) {
         await showConfirm({
           title: t('subscription.choosePlan.alerts.title'),
           message: t('subscription.choosePlan.alerts.bottomWaitlist'),
         });
         await apiPatch('/sponsored-purchase/abandon-spots', { points: data.waitingForPoints });
-        checkPointsAndPurchase(purchasePackage);
+        await checkPointsAndPurchase(purchasePackage);
 
         // try to subscribe i guess or not.
       } else if (pointsRequired < data.waitingForPoints) {
@@ -160,18 +153,19 @@ export default function SubscriptionModal({ dismiss, skipFirstStep = false }: Pr
         });
         await apiPatch('/sponsored-purchase/abandon-spots', { points: data.waitingForPoints - pointsRequired });
         // Try to buy
-        checkPointsAndPurchase(purchasePackage);
-      } else if (pointsRequired === data.waitingForPoints) checkPointsAndPurchase(purchasePackage);
+        await checkPointsAndPurchase(purchasePackage);
+      } else if (pointsRequired === data.waitingForPoints) await checkPointsAndPurchase(purchasePackage);
     } catch (error: any) {
-      console.error(error);
       showSnackbar(error.message, { type: 'error' });
+      refetch();
+      dismiss();
     } finally {
       setIsSubscribing(false);
     }
   };
 
   // TODO: Subscription cards are cropped at the bottom of the screen
-  const handleNextStep = () => {
+  const handleNextStep = async () => {
     switch (currentPage) {
       case SubscriptionStep.ExplainerStep:
         goToPage(SubscriptionStep.ChoosePlanStep);
@@ -179,7 +173,7 @@ export default function SubscriptionModal({ dismiss, skipFirstStep = false }: Pr
         break;
       case SubscriptionStep.ChoosePlanStep: {
         if (!selectedPackage) break;
-        if (selectedPackage?.identifier === purchasePackages[2].identifier) attemptSubscribe(selectedPackage);
+        if (selectedPackage?.identifier === purchasePackages[2].identifier) await attemptSubscribe(selectedPackage);
         else goToPage(SubscriptionStep.SolidarityDisclaimerStep);
 
         break;
@@ -187,7 +181,7 @@ export default function SubscriptionModal({ dismiss, skipFirstStep = false }: Pr
 
       case SubscriptionStep.SolidarityDisclaimerStep: {
         if (selectedPackage && selectedPackage.identifier !== purchasePackages[2].identifier)
-          attemptSubscribe(selectedPackage);
+          await attemptSubscribe(selectedPackage);
         break;
       }
 
