@@ -25,11 +25,12 @@ export default function Paywall() {
     <Pressable
       onPress={handlePress}
       disabled={isPressed}
-      className="justify-end items-center"
       style={{
         ...StyleSheet.absoluteFillObject,
         bottom: 49,
         backgroundColor: 'rgba(0, 0, 0, 0.1)',
+        justifyContent: 'flex-end',
+        alignItems: 'center',
       }}
     >
       <View className="bg-primary-light dark:bg-primary-dark w-full py-3 px-5 shadow-[0_-2px_4px_rgba(0,0,0,0.1)]">

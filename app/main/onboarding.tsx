@@ -109,6 +109,7 @@ export default function OnboardingModal() {
         pagingEnabled
         showsHorizontalScrollIndicator={false}
         onScroll={handleScroll}
+        scrollEnabled={false}
         scrollEventThrottle={16}
       >
         <View style={styles.page}>

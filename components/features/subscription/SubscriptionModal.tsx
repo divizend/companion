@@ -209,7 +209,7 @@ export default function SubscriptionModal({ dismiss, skipFirstStep = false }: Pr
     <ModalLayout noScrollView title={t('subscription.choosePlan.title')} dismiss={dismiss}>
       <View className="flex-1 justify-center items-center">
         <ScrollView
-          scrollEnabled={true}
+          scrollEnabled={false}
           ref={scrollViewRef}
           showsHorizontalScrollIndicator={false}
           horizontal
