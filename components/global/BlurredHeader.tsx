@@ -2,9 +2,9 @@ import { useSignalEffect } from '@preact/signals-react';
 import { BottomTabHeaderProps } from '@react-navigation/bottom-tabs';
 import { Avatar } from '@rneui/themed';
 import { BlurView } from 'expo-blur';
-import Constants from 'expo-constants';
+import { router } from 'expo-router';
 import { useColorScheme } from 'nativewind';
-import { Platform, StyleSheet, TouchableOpacity } from 'react-native';
+import { StyleSheet, TouchableOpacity } from 'react-native';
 import Animated, {
   Easing,
   useAnimatedProps,
@@ -15,11 +15,11 @@ import Animated, {
 
 import { useUserProfile } from '@/common/profile';
 import { useThemeColor } from '@/hooks/useThemeColor';
-import { isHeaderVisible, isSettingsModalVisible } from '@/signals/app.signal';
+import { isHeaderVisible } from '@/signals/app.signal';
 
 import { Text } from '../base';
 
-type BlurredHeaderProps = BottomTabHeaderProps;
+type BlurredHeaderProps = BottomTabHeaderProps & { title: string };
 
 const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
 
@@ -31,7 +31,7 @@ export default function BlurredHeader(props: BlurredHeaderProps) {
   const intensity = useSharedValue(0);
   const color = useSharedValue(theme.style === 'light' ? 'rgba(255, 255, 255, 1)' : 'rgba(0, 0, 0, 1)');
 
-  const shouldBlur = Platform.OS === 'ios' || Constants.appOwnership === 'expo';
+  const shouldBlur = true;
 
   const config = {
     duration: 300,
@@ -68,13 +68,21 @@ export default function BlurredHeader(props: BlurredHeaderProps) {
   const RenderContent = () => (
     <>
       <Text h3 animated style={style}>
-        {props.route.name}
+        {props.title}
       </Text>
       <TouchableOpacity
         style={{ position: 'absolute', right: 15, bottom: 10 }}
-        onPress={() => (isSettingsModalVisible.value = true)}
+        onPress={() => router.navigate('/main/settings')}
       >
-        <Avatar rounded title={profile.email[0].toUpperCase()} containerStyle={{ backgroundColor: theme.theme }} />
+        <Avatar
+          // Added empty source to remove Image source not found warning (which is a bug from rneui)
+          // Look here for more info https://github.com/react-native-elements/react-native-elements/issues/3742#issuecomment-1978783981
+          source={{ uri: 'data:image/png' }}
+          rounded
+          title={profile.email[0].toUpperCase()}
+          containerStyle={{ backgroundColor: theme.theme }}
+          placeholderStyle={{ backgroundColor: 'transparent' }}
+        />
       </TouchableOpacity>
     </>
   );

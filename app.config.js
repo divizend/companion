@@ -1,6 +1,6 @@
 export default ({ config }) => {
   const isProduction = process.env.NODE_ENV !== 'development' && process.env.APP_ENV !== 'development';
-  const localIp = process.env.EXPO_PUBLIC_LOCAL_IP || '192.168.178.151';
+  const localIp = process.env.EXPO_PUBLIC_LOCAL_IP || 'localhost';
   const fusionAuthClientId = process.env.EXPO_PUBLIC_FUSION_AUTH_CLIENT_ID || 'fa4aca16-0d68-433c-9b7f-24ccb1269d28';
   const fusionAuthTenantId = process.env.EXPO_PUBLIC_FUSION_AUTH_TENANT_ID || '9c88929b-785c-5e8f-522b-760f28db724e';
 

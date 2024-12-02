@@ -35,6 +35,16 @@
 - allow sharing goals with others (to get to the "connect to others" functionality, you have to naturally get to a point where that is logical for one of your goals)
 - fully automate i18n, i.e. use the ChatGPT API with prompts that include all necessary context (!) to automatically translate the app and the respective prompts in the backend into all the different languages we support
   - there should actually be two supported variants of German: either "du" or "Sie" (i.e. informal or formal addressing) and during onboarding, at least when the user uses the app in German, the user shall be able to select whether they want to be addressed with "du" or "Sie"
+- on the backend, execute "Gib mir Fragen, die Leute häufig über {{company}} stellen" ("Give me questions which people often ask about {{company}}") and show these questions in the app
+- intro email upon registering (similar to Perplexity, see https://drive.google.com/file/d/1_vdD8S_P3NhtUGdzhDHVYawmAl0GrH7P/view)
+
+## Prompt engineering
+
+- Ask me clarifying questions until you are 95% confident you can complete the task successfully.
+- Remember to search the internet for up-to-date information.
+- What's something most people wouldn't think of related to this topic?
+- List 10 uncommon desires and fears people have about this topic?
+- Now, take a deep breath and think it through step-by-step.
 
 ## Useful commands
 
