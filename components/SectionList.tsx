@@ -9,7 +9,7 @@ import { useThemeColor } from '@/hooks/useThemeColor';
 
 export type SectionListProps = {
   title?: string;
-  items: Array<{
+  items: {
     key?: string;
     title: string | React.ReactNode;
     onPress?: () => void;
@@ -26,7 +26,7 @@ export type SectionListProps = {
     onRemove?: () => void;
     disabled?: boolean;
     additional?: React.ReactNode;
-  }>;
+  }[];
   bottomText?: string;
   containerStyle?: ViewStyle;
   ItemComponent?: React.ComponentType<any>;
@@ -46,7 +46,7 @@ export default function SectionList({
       {title && (
         <Text className="text-xs mb-1.5 mx-5 uppercase text-gray-600 dark:text-gray-300">{title.toUpperCase()}</Text>
       )}
-      <View className="rounded-xl overflow-hidden ">
+      <View className="rounded-xl overflow-hidden">
         {items.map((item, index) => (
           <ItemComponent key={item.key ?? index} style={item.containerStyle}>
             <TouchableOpacity onPress={item.onPress} disabled={item.disabled || !item.onPress}>
@@ -71,8 +71,8 @@ export default function SectionList({
                   )
                 ) : null}
                 <ListItem.Content style={styles.listItemContent}>
-                  <ListItem.Title style={[styles.listItemTitle, item.disabled && styles.disabledTitle]}>
-                    <Text>{item.title}</Text>
+                  <ListItem.Title>
+                    <Text style={[styles.listItemTitle, item.disabled && styles.disabledTitle]}>{item.title}</Text>
                   </ListItem.Title>
                   {item.rightElement && (
                     <Text className="text-muted text-sm text-right shrink ml-3" numberOfLines={1} ellipsizeMode="tail">

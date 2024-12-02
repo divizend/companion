@@ -1,6 +1,8 @@
-import { useEffect, useState, useRef } from "react";
-import io, { Socket } from "socket.io-client";
-import { useSessionToken } from "@/common/sessionToken";
+import { useEffect, useRef, useState } from 'react';
+
+import io, { Socket } from 'socket.io-client';
+
+import { useSessionToken } from '@/common/sessionToken';
 
 export const useSocket = (url: string, options: any) => {
   const [sessionToken] = useSessionToken();
@@ -21,18 +23,18 @@ export const useSocket = (url: string, options: any) => {
 
     socketRef.current = socket;
 
-    socket.on("connect", () => {
+    socket.on('connect', () => {
       setIsConnected(true);
     });
 
-    socket.on("disconnect", () => {
+    socket.on('disconnect', () => {
       setIsConnected(false);
     });
 
     return () => {
       socket.disconnect();
     };
-  }, [url, sessionToken]);
+  }, [url, sessionToken, options]);
 
   return isConnected ? socketRef.current : null;
 };

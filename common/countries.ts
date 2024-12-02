@@ -1,7 +1,7 @@
-import { t } from "@/i18n";
+import { t } from '@/i18n';
 
-export const countries = Object.entries(t("country"))
-  .filter(([id, name]) => id !== "xx" && id.length === 2)
+export const countries = Object.entries(t('country', { returnObjects: true }))
+  .filter(([id, name]) => id !== 'xx' && id.length === 2)
   .map(([id, name]) => ({
     id,
     name,

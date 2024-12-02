@@ -1,9 +1,12 @@
-import { ActivityIndicator, View } from "react-native";
+import { ActivityIndicator, View } from 'react-native';
+
+import { useThemeColor } from '@/hooks/useThemeColor';
 
 export default function FullScreenActivityIndicator() {
+  const theme = useThemeColor();
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <ActivityIndicator size="small" color="#000000" />
+    <View className="flex-1 justify-center items-center bg-primary-light dark:bg-primary-dark">
+      <ActivityIndicator size="small" color={theme.text} />
     </View>
   );
 }

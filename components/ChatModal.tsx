@@ -28,7 +28,7 @@ import { useSessionToken } from '@/common/sessionToken';
 import { TextInput } from '@/components/base';
 import { t } from '@/i18n';
 
-import ModalView from './ModalView';
+import ModalLayout from './global/ModalLayout';
 
 enum MessageRole {
   SYSTEM = 'system',
@@ -94,20 +94,13 @@ const ChatMessage = ({ item }: { item: Message }) => {
 };
 
 interface ChatModalProps {
-  visible: boolean;
-  onClose: () => void;
+  dismiss: () => void;
   chatId?: string;
   systemPrompt?: string; // only relevant for new chats
   initialUserMessage?: string;
 }
 
-export default function ChatModal({
-  visible,
-  onClose,
-  chatId: givenChatId,
-  systemPrompt,
-  initialUserMessage,
-}: ChatModalProps) {
+export default function ChatModal({ chatId: givenChatId, systemPrompt, initialUserMessage, dismiss }: ChatModalProps) {
   const [sessionToken] = useSessionToken();
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputText, setInputText] = useState('');
@@ -134,7 +127,7 @@ export default function ChatModal({
         }
       } catch (error) {
         console.error('Failed to initialize chat:', error);
-        onClose();
+        dismiss();
       } finally {
         setIsLoading(false);
       }
@@ -241,7 +234,7 @@ export default function ChatModal({
   }, [isLoading, initialUserMessage]);
 
   return (
-    <ModalView visible={visible} onClose={onClose} title={t('chat.title')} noScrollView>
+    <ModalLayout noScrollView dismiss={dismiss} title={t('chat.title')}>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         className="flex-1"
@@ -303,7 +296,7 @@ export default function ChatModal({
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
-    </ModalView>
+    </ModalLayout>
   );
 }
 

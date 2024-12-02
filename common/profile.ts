@@ -1,8 +1,9 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { produce } from 'immer';
 import RNRestart from 'react-native-restart';
-import { useFetch, apiGet, apiPost } from './api';
-import { t } from '@/i18n';
+
+import { apiGet } from './api';
+import { useUserProfileQuery } from './queries';
 import { setSessionToken } from './sessionToken';
 
 export type CompanionProfileLearnQuestion = {
@@ -59,12 +60,14 @@ export type LegalEntity = {
 };
 
 export type UserProfile = {
+  id: string;
   email: string;
   legalEntities: LegalEntity[];
   flags: {
     canImpersonateUsers?: boolean;
     canModifyOwnInternalFlags?: boolean;
     allowedCompanionAI?: boolean;
+    usedCompanionTrial?: boolean;
   };
   impersonation?: {
     fromEmail: string;
@@ -88,8 +91,8 @@ export function getEmptyCompanionProfile(): CompanionProfile {
 
 export function useUserProfile() {
   const queryClient = useQueryClient();
-  const profileRaw = useFetch('userProfile');
-  const profile = profileRaw.data as UserProfile;
+  const profileRaw = useUserProfileQuery();
+  const profile = profileRaw.data!;
 
   const updateProfile = (fn: (draft: UserProfile) => void) => {
     const newProfile = produce(profile, fn);
