@@ -349,18 +349,6 @@
           "title": "How does it work?",
           "description": "Whether you're sponsoring others or benefiting from a sponsored membership, here's how the solidarity system works:",
           "accordion": {
-            "factorMeaning": {
-              "content": {
-                "higherFactor": {
-                  "title": "If you sponsor (€30 or €40):",
-                  "bullet": "€30 (Factor 1.5): Creates 1 spot on the waiting list. €40 (Factor 2): Creates 2 spots on the waiting list. Each spot allows a user to join for €10. Members paying €0.99 require 2 spots."
-                },
-                "lowerFactor": {
-                  "title": "If you're subscribing to a sponsored membership (€10 or €0.99):",
-                  "bullet": "Your membership depends on available spots created by sponsors. Matching is anonymous and based on a first-come, first-served system."
-                }
-              }
-            },
             "spotsContributions": {
               "title": "Spots and Contributions",
               "content": {
@@ -437,7 +425,7 @@
         "title": "Are you sure?",
         "removed": "If you proceed, you will be removed from the waiting list",
         "bottomWaitlist": "If you proceed, you will be placed at the bottom of the waiting list",
-        "losePosition": "If you proceed, you will renounce your reservation for the lower factor membership"
+        "losePosition": "If you proceed, you will renounce your spot in the waiting list for the lower factor membership"
       }
     },
     "subscriptionPlans": {
