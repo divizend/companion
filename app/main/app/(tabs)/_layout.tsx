@@ -42,7 +42,6 @@ export default function TabLayout() {
           />
         ),
         tabBarStyle: {
-          position: 'absolute',
           backgroundColor: 'transparent',
           borderTopColor: theme.backgroundPrimary,
           borderTopWidth: 0,

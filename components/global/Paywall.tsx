@@ -27,7 +27,7 @@ export default function Paywall() {
       disabled={isPressed}
       style={{
         ...StyleSheet.absoluteFillObject,
-        bottom: 49,
+        bottom: 0,
         backgroundColor: 'rgba(0, 0, 0, 0.1)',
         justifyContent: 'flex-end',
         alignItems: 'center',
