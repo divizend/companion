@@ -249,8 +249,8 @@ export default function SubscriptionModal({ dismiss, skipFirstStep = false }: Pr
             !canContinue || (currentPage === SubscriptionStep.ChoosePlanStep && !selectedPackage) || isSubscribing
           }
           title={buttonText}
-          containerStyle={{ margin: 20, marginTop: 0, width: '70%' }}
-          buttonStyle={{ backgroundColor: theme.theme, borderRadius: 12 }}
+          containerStyle={{ margin: 20, marginTop: 12, width: '70%' }}
+          buttonStyle={{ backgroundColor: theme.theme, paddingVertical: 12, borderRadius: 12 }}
         />
       </View>
     </ModalLayout>

@@ -48,12 +48,12 @@ export default function ImpersonateUserModal({ dismiss }: ImpersonateUserModalPr
 
   return (
     <ModalLayout
+      title={t('settings.impersonateUser.title')}
       dismiss={() => {
         setEmail('');
         setUserIdentities([]);
         dismiss();
       }}
-      title={t('settings.impersonateUser.title')}
     >
       <View className="flex-1">
         <TextInput
