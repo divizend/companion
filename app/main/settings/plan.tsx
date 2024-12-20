@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 import { Icon } from '@rneui/base';
-import { Linking, View } from 'react-native';
+import { Linking, Platform, View } from 'react-native';
 import Purchases from 'react-native-purchases';
 
 import { apiDelete } from '@/common/api';
@@ -47,7 +47,7 @@ export default function CurrentPlan() {
     : undefined;
 
   return (
-    <View className="flex-1">
+    <View className={clsx('flex-1')}>
       <ScrollScreen style={{ flex: 1 }}>
         <View
           className={clsx(
@@ -184,7 +184,12 @@ export default function CurrentPlan() {
           </View>
         )}
       </ScrollScreen>
-      <View className="absolute bottom-0 left-0 right-0 flex gap-2 p-5 pb-8 pt-0 bg-primary-light dark:bg-primary-dark">
+      <View
+        className={clsx(
+          'flex gap-2 p-5 pb-8 pt-0 bg-primary-light dark:bg-primary-dark',
+          Platform.OS === 'ios' && 'pb-10',
+        )}
+      >
         {!activeSubscription && (
           <Button
             title={

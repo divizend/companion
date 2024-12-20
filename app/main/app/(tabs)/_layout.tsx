@@ -1,18 +1,41 @@
+import React from 'react';
+
+import { useSignals } from '@preact/signals-react/runtime';
+import { BottomTabBar } from '@react-navigation/bottom-tabs';
 import { Icon } from '@rneui/themed';
 import { BlurView } from 'expo-blur';
 import { Tabs } from 'expo-router';
 import { StyleSheet, useColorScheme } from 'nativewind';
+import { View } from 'react-native';
 
 import BlurredHeader from '@/components/global/BlurredHeader';
+import { PaywallBottomTab } from '@/components/global/Paywall';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { t } from '@/i18n';
+import { isPaywallVisible } from '@/signals/app.signal';
 
 export default function TabLayout() {
   const theme = useThemeColor();
   const { colorScheme } = useColorScheme();
+  useSignals();
 
   return (
     <Tabs
+      tabBar={props => {
+        return (
+          <View
+            style={{
+              position: 'absolute',
+              bottom: 0,
+              left: 0,
+              right: 0,
+            }}
+          >
+            {isPaywallVisible.value && <PaywallBottomTab />}
+            <BottomTabBar {...props} />
+          </View>
+        );
+      }}
       screenOptions={({ route }) => ({
         tabBarIcon: ({ color, size }) => {
           let iconName;
@@ -42,7 +65,7 @@ export default function TabLayout() {
           />
         ),
         tabBarStyle: {
-          position: 'absolute',
+          // position: 'absolute',
           backgroundColor: 'transparent',
           borderTopColor: theme.backgroundPrimary,
           borderTopWidth: 0,

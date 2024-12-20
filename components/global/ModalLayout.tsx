@@ -1,10 +1,11 @@
 import React from 'react';
 
 import { Header, Icon } from '@rneui/themed';
-import { View } from 'react-native';
+import { Platform, View } from 'react-native';
 import { TouchableOpacity } from 'react-native';
 import { ScrollView } from 'react-native';
 
+import { clsx } from '@/common/clsx';
 import { useThemeColor } from '@/hooks/useThemeColor';
 
 import { Text } from '../base';
@@ -14,7 +15,7 @@ type Props = { dismiss: () => void; children: React.ReactNode; title: string; no
 export default function ModalLayout({ dismiss, children, title, noScrollView = false }: Props) {
   const theme = useThemeColor();
   return (
-    <View className="flex-1 dark:bg-primary-dark bg-primary-light">
+    <View className={clsx('flex-1 dark:bg-primary-dark bg-primary-light', Platform.OS === 'ios' && 'pb-5')}>
       <Header
         backgroundColor={theme.backgroundPrimary}
         centerComponent={

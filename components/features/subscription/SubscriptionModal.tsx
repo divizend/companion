@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-import { Dimensions, NativeScrollEvent, NativeSyntheticEvent, ScrollView, View } from 'react-native';
+import { Dimensions, NativeScrollEvent, NativeSyntheticEvent, Platform, ScrollView, View } from 'react-native';
 import Purchases, { PurchasesPackage } from 'react-native-purchases';
 
 import { apiDelete, apiGet, apiPatch, apiPost } from '@/common/api';
@@ -38,7 +38,7 @@ enum SubscriptionStep {
 const { width: screenWidth } = Dimensions.get('window');
 
 export default function SubscriptionModal({ dismiss, skipFirstStep = false }: Props) {
-  const { loading, purchasePackages, setCustomerInfo, refreshCustomerInfo } = usePurchases();
+  const { loading, purchasePackages, setCustomerInfo, refreshCustomerInfo, customerInfo } = usePurchases();
   const { showSnackbar } = useSnackbar();
 
   const theme = useThemeColor();
@@ -102,11 +102,22 @@ export default function SubscriptionModal({ dismiss, skipFirstStep = false }: Pr
   };
 
   const handleSubscribe = async (product: PurchasesPackage) => {
-    await Purchases.purchasePackage(product)
-      .then(makePurchaseResult => {
+    await Purchases.purchasePackage(
+      product,
+      null,
+      Platform.OS === 'android' && customerInfo?.entitlements.active['divizend-membership']
+        ? {
+            oldProductIdentifier:
+              customerInfo.entitlements.active['divizend-membership'].productIdentifier +
+              ':' +
+              customerInfo.entitlements.active['divizend-membership'].productPlanIdentifier,
+          }
+        : null,
+    )
+      .then(async makePurchaseResult => {
         if (makePurchaseResult.customerInfo.entitlements.all['divizend-membership']?.store === 'PROMOTIONAL')
           // If a trial exists, revoke it so the user gets the right package displayed instead of the trial after purchase.
-          apiDelete('/revoke-trial').then(refreshCustomerInfo);
+          await apiDelete('/revoke-trial').then(refreshCustomerInfo);
         else setCustomerInfo(makePurchaseResult.customerInfo);
         refetch();
         setHasSubscribed(true);
@@ -238,8 +249,8 @@ export default function SubscriptionModal({ dismiss, skipFirstStep = false }: Pr
             !canContinue || (currentPage === SubscriptionStep.ChoosePlanStep && !selectedPackage) || isSubscribing
           }
           title={buttonText}
-          containerStyle={{ margin: 20, marginTop: 0, width: '70%' }}
-          buttonStyle={{ backgroundColor: theme.theme, borderRadius: 12 }}
+          containerStyle={{ margin: 20, marginTop: 12, width: '70%' }}
+          buttonStyle={{ backgroundColor: theme.theme, paddingVertical: 12, borderRadius: 12 }}
         />
       </View>
     </ModalLayout>
