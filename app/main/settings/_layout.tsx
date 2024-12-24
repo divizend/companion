@@ -5,7 +5,7 @@ import { Slot, router, useSegments } from 'expo-router';
 import { TouchableOpacity, View } from 'react-native';
 
 import { clsx } from '@/common/clsx';
-import { Text } from '@/components/base';
+import { SafeAreaView, Text } from '@/components/base';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { t } from '@/i18n';
 
@@ -15,7 +15,7 @@ export default function Layout() {
   const segments = useSegments();
 
   return (
-    <View className="flex-1 dark:bg-primary-dark bg-primary-light">
+    <SafeAreaView className="flex-1 dark:bg-primary-dark bg-primary-light">
       <View
         className="flex-row justify-between items-center"
         style={{ backgroundColor: theme.backgroundPrimary, padding: 10, paddingTop: 15 }}
@@ -47,6 +47,6 @@ export default function Layout() {
       <View className="flex-1">
         <Slot screenOptions={{ headerShown: false }} />
       </View>
-    </View>
+    </SafeAreaView>
   );
 }
