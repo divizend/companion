@@ -21,7 +21,7 @@ export default function AnalyzeScreen() {
   const [depotData, setDepotData] = useState({});
   const [mptData, setMPTData] = useState({});
 
-  const [targetReturn, setTargetReturn] = useState(0.07);
+  const [targetReturn, setTargetReturn] = useState(0.27);
   const [returnRange, setReturnRange] = useState<number[]>([0.01, 1]);
 
   const [explainText, setExplainText] = useState('');

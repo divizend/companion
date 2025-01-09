@@ -3,14 +3,18 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
 const transformDepotDataForChart = depotData => {
-  const { weights, security_isins, security_names } = depotData;
+  if (Object.keys(depotData).length === 0) {
+    return [];
+  } else {
+    const { weights, security_isins, security_names } = depotData;
 
-  // Map the weights object to an array, matching each ISIN with its name
-  return Object.keys(weights).map((isin, index) => {
-    const label = security_names[security_isins.indexOf(isin)] || isin; // Match ISIN to name, or use ISIN if name is unavailable
-    const value = parseFloat(weights[isin].toFixed(2));
-    return { label, value };
-  });
+    // Map the weights object to an array, matching each ISIN with its name
+    return Object.keys(weights).map((isin, index) => {
+      const label = security_names[security_isins.indexOf(isin)] || isin; // Match ISIN to name, or use ISIN if name is unavailable
+      const value = parseFloat(weights[isin].toFixed(2));
+      return { label, value };
+    });
+  }
 };
 
 export default function PortfolioBarChart({ depotData }) {

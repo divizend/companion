@@ -56,10 +56,10 @@ export default function MPTButtons({
     setExplainTextLength(2);
     fetchExplainText(setExplainText, pageNumber, depotData, mptData, 2);
     if (pageNumber == 2) {
-      fetchDepot(depotID, setDepotData, setPortfolioID, targetReturn);
+      fetchDepot(depotID, targetReturn, setDepotData, setPortfolioID);
     }
     if (pageNumber == 3) {
-      fetchMPT(portfolioID, setMPTData, targetReturn, setTargetReturn, setReturnRange);
+      fetchMPT(portfolioID, targetReturn, setMPTData, setTargetReturn, setReturnRange);
     }
   };
 
