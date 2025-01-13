@@ -107,10 +107,7 @@ export default function SubscriptionModal({ dismiss, skipFirstStep = false }: Pr
       null,
       Platform.OS === 'android' && customerInfo?.entitlements.active['divizend-membership']
         ? {
-            oldProductIdentifier:
-              customerInfo.entitlements.active['divizend-membership'].productIdentifier +
-              ':' +
-              customerInfo.entitlements.active['divizend-membership'].productPlanIdentifier,
+            oldProductIdentifier: customerInfo.entitlements.active['divizend-membership'].productIdentifier,
           }
         : null,
     )

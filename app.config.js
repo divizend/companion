@@ -38,7 +38,7 @@ export default ({ config }) => {
     ...config,
     name: 'Companion',
     slug: 'companion',
-    version: '1.0.0',
+    version: '1.0.1',
     owner: 'divizend',
     orientation: 'portrait',
     icon: './assets/images/icon.png',
@@ -52,6 +52,10 @@ export default ({ config }) => {
     ios: {
       supportsTablet: true,
       bundleIdentifier: 'com.divizend.companion',
+      infoPlist: {
+        CFBundleDisplayName: 'Divizend Companion',
+        CFBundleName: 'Divizend Companion',
+      },
     },
     android: {
       adaptiveIcon: {
@@ -59,7 +63,7 @@ export default ({ config }) => {
         backgroundColor: '#00008f',
       },
       package: 'com.divizend.companion',
-      versionCode: 1,
+      versionCode: 2,
     },
     web: {
       bundler: 'metro',
