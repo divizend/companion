@@ -278,12 +278,17 @@
       "active": "Active",
       "inactive": "Inactive",
       "membership": "Divizend membership",
+      "privilegedAccess": "Privileged access",
       "noActiveSubscription": "No active membership",
       "table": {
         "price": "Price per month",
         "expiresAt": "Expires at",
         "renewsAt": "Renews at",
         "cancelledAt": "Cancelled at"
+      },
+      "unlimitedAccess": {
+        "title": "You have free privileged access to the Companion membership",
+        "subtitle": "This access was granted by administrators"
       },
       "freeTrial": {
         "ends": "Your free trial will end on {{date,dayLongAndTime}}",

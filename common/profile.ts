@@ -68,6 +68,7 @@ export type UserProfile = {
     canModifyOwnInternalFlags?: boolean;
     allowedCompanionAI?: boolean;
     usedCompanionTrial?: boolean;
+    canAccessCompanionFeaturesWithoutSubscription?: boolean;
   };
   impersonation?: {
     fromEmail: string;

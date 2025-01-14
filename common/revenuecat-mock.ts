@@ -1,4 +1,4 @@
-import Purchases, { PERIOD_UNIT, PRODUCT_TYPE, PurchasesStoreProduct } from 'react-native-purchases';
+import Purchases, { CustomerInfo, PERIOD_UNIT, PRODUCT_TYPE, PurchasesStoreProduct } from 'react-native-purchases';
 
 export const productsMock: PurchasesStoreProduct[] = [
   {
@@ -84,3 +84,83 @@ export const productsMock: PurchasesStoreProduct[] = [
     subscriptionOptions: null,
   },
 ];
+
+export const adminCustomerInfo: any = {
+  nonSubscriptionTransactions: [],
+  originalPurchaseDate: null,
+  allPurchaseDatesMillis: {
+    'companion_basic_0:admin_membership': 1730904858000,
+  },
+  managementURL: 'https://play.google.com/store/account/subscriptions',
+  allPurchaseDates: {
+    'companion_basic_0:admin_membership': '2024-11-06T14:54:18.000Z',
+  },
+  originalAppUserId: '65d604e5f38a586135e224a5',
+  allExpirationDates: {
+    'companion_basic_0:admin_membership': '2024-11-06T14:57:16.000Z',
+  },
+  firstSeen: '2024-10-25T11:44:12.000Z',
+  originalPurchaseDateMillis: null,
+  allExpirationDatesMillis: {
+    'companion_basic_0:admin_membership': 1730905036000,
+  },
+  requestDateMillis: 1730904863712,
+  latestExpirationDate: '2024-11-06T14:57:16.000Z',
+  firstSeenMillis: 1729856652000,
+  allPurchasedProductIdentifiers: ['companion_basic_0:admin_membership'],
+  requestDate: '2024-11-06T14:54:23.712Z',
+  latestExpirationDateMillis: 1730905036000,
+  originalApplicationVersion: null,
+  activeSubscriptions: ['companion_basic_0:admin_membership'],
+  entitlements: {
+    active: {
+      'divizend-membership': {
+        billingIssueDetectedAtMillis: null,
+        billingIssueDetectedAt: null,
+        unsubscribeDetectedAtMillis: null,
+        productIdentifier: 'companion_basic_0',
+        unsubscribeDetectedAt: null,
+        productPlanIdentifier: 'admin_membership',
+        identifier: 'divizend-membership',
+        isActive: true,
+        periodType: 'TRIAL',
+        store: 'PLAY_STORE',
+        expirationDateMillis: 1730905036000,
+        originalPurchaseDateMillis: 1730904858000,
+        ownershipType: 'UNKNOWN',
+        willRenew: true,
+        latestPurchaseDate: '2024-11-06T14:54:18.000Z',
+        expirationDate: '2024-11-06T14:57:16.000Z',
+        verification: 'NOT_REQUESTED',
+        originalPurchaseDate: '2024-11-06T14:54:18.000Z',
+        isSandbox: true,
+        latestPurchaseDateMillis: 1730904858000,
+      },
+    },
+    verification: 'NOT_REQUESTED',
+    all: {
+      'divizend-membership': {
+        billingIssueDetectedAtMillis: null,
+        billingIssueDetectedAt: null,
+        unsubscribeDetectedAtMillis: null,
+        productIdentifier: 'companion_basic_0',
+        unsubscribeDetectedAt: null,
+        productPlanIdentifier: 'admin_membership',
+        identifier: 'divizend-membership',
+        isActive: true,
+        periodType: 'TRIAL',
+        store: 'PLAY_STORE',
+        expirationDateMillis: 1730905036000,
+        originalPurchaseDateMillis: 1730904858000,
+        ownershipType: 'UNKNOWN',
+        willRenew: true,
+        latestPurchaseDate: '2024-11-06T14:54:18.000Z',
+        expirationDate: '2024-11-06T14:57:16.000Z',
+        verification: 'NOT_REQUESTED',
+        originalPurchaseDate: '2024-11-06T14:54:18.000Z',
+        isSandbox: true,
+        latestPurchaseDateMillis: 1730904858000,
+      },
+    },
+  },
+};

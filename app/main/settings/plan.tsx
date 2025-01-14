@@ -6,6 +6,7 @@ import Purchases from 'react-native-purchases';
 
 import { apiDelete } from '@/common/api';
 import { clsx } from '@/common/clsx';
+import { useUserProfile } from '@/common/profile';
 import FullScreenActivityIndicator from '@/components/FullScreenActivityIndicator';
 import { Button, ScrollScreen, Text } from '@/components/base';
 import SubscriptionModal from '@/components/features/subscription/SubscriptionModal';
@@ -23,12 +24,14 @@ const showSubscriptionModal = () => ModalManager.showModal(SubscriptionModal);
 
 export default function CurrentPlan() {
   const theme = useThemeColor();
+  const { profile } = useUserProfile();
   const { purchasePackages, loading, customerInfo, refreshCustomerInfo, setCustomerInfo } = usePurchases();
   const { data, isLoading, refetch } = useWaitlistStatus();
   const [isSubscribing, setIsSubscribing] = useState(false);
   const { showSnackbar } = useSnackbar();
 
-  if (loading || !customerInfo || !purchasePackages || isLoading || !data) return <FullScreenActivityIndicator />;
+  if (loading || !customerInfo || !purchasePackages || isLoading || !data || !profile)
+    return <FullScreenActivityIndicator />;
 
   const entitlement = customerInfo.entitlements.active['divizend-membership'];
 
@@ -52,11 +55,11 @@ export default function CurrentPlan() {
         <View
           className={clsx(
             'rounded-full bg-secondary-light mb-8 self-center p-8 shadow-lg',
-            !!activeSubscription ? 'shadow-theme' : 'shadow-muted',
+            !!entitlement ? 'shadow-theme' : 'shadow-muted',
           )}
         >
           <Icon
-            color={!!activeSubscription ? theme.theme : theme.muted}
+            color={!!entitlement ? theme.theme : theme.muted}
             name="crown-outline"
             type="material-community"
             size={80}
@@ -76,9 +79,26 @@ export default function CurrentPlan() {
         </View>
         <Text h1 className="text-center mb-8 font-semibold">
           {!!entitlement
-            ? t('subscription.currentPlan.membership')
+            ? !!profile.flags.canAccessCompanionFeaturesWithoutSubscription
+              ? t('subscription.currentPlan.privilegedAccess')
+              : t('subscription.currentPlan.membership')
             : t('subscription.currentPlan.noActiveSubscription')}
         </Text>
+
+        {/* Priviliged access notice */}
+        {!!profile.flags.canAccessCompanionFeaturesWithoutSubscription && (
+          <View className="flex items-center bg-secondary-light dark:bg-secondary-dark px-2 py-5 rounded-xl gap-3 mb-8 shadow-lg">
+            <View className="bg-primary-light dark:bg-primary-dark rounded-3xl p-2">
+              <Icon name="info" type="material" size={20} color={theme.text} />
+            </View>
+            <Text h4 className="max-w-[85%] font-bold text-center">
+              {t('subscription.currentPlan.unlimitedAccess.title')}
+            </Text>
+            <Text type="muted" className="max-w-[95%] text-center">
+              {t('subscription.currentPlan.unlimitedAccess.subtitle')}
+            </Text>
+          </View>
+        )}
 
         {/* Free tiral notice */}
         {!!entitlement && entitlement.store === 'PROMOTIONAL' && (
@@ -184,63 +204,65 @@ export default function CurrentPlan() {
           </View>
         )}
       </ScrollScreen>
-      <View
-        className={clsx(
-          'flex gap-2 p-5 pb-8 pt-0 bg-primary-light dark:bg-primary-dark',
-          Platform.OS === 'ios' && 'pb-10',
-        )}
-      >
-        {!activeSubscription && (
-          <Button
-            title={
-              <Text
-                style={{
-                  textAlign: 'center',
-                  color: theme.allColors.dark.text,
-                  fontSize: 18,
-                  fontWeight: 'bold',
-                }}
-              >
-                {t('subscription.actions.subscribe')}
-              </Text>
-            }
-            onPress={showSubscriptionModal}
-            buttonStyle={{ backgroundColor: theme.theme, borderRadius: 12, paddingVertical: 15 }}
-          />
-        )}
-        {!!activeSubscription && (
-          <Button
-            onPress={() =>
-              showAlert({
-                title: t('subscription.actions.managePlan.title'),
-                actions: [
-                  {
-                    title: t('subscription.actions.managePlan.change'),
-                    onPress: () => ModalManager.showModal(SubscriptionModal, { skipFirstStep: true }),
-                  },
-                  {
-                    title: t('subscription.actions.managePlan.cancelOrPause'),
-                    onPress: () => customerInfo.managementURL && Linking.openURL(customerInfo.managementURL),
-                  },
-                ],
-              })
-            }
-            title={
-              <Text
-                style={{
-                  textAlign: 'center',
-                  color: theme.text,
-                  fontSize: 18,
-                  fontWeight: 'bold',
-                }}
-              >
-                {t('subscription.actions.managePlan.title')}
-              </Text>
-            }
-            buttonStyle={{ borderRadius: 12, backgroundColor: theme.backgroundSecondary, paddingVertical: 15 }}
-          />
-        )}
-      </View>
+      {!profile.flags.canAccessCompanionFeaturesWithoutSubscription && (
+        <View
+          className={clsx(
+            'flex gap-2 p-5 pb-8 pt-0 bg-primary-light dark:bg-primary-dark',
+            Platform.OS === 'ios' && 'pb-10',
+          )}
+        >
+          {!activeSubscription && (
+            <Button
+              title={
+                <Text
+                  style={{
+                    textAlign: 'center',
+                    color: theme.allColors.dark.text,
+                    fontSize: 18,
+                    fontWeight: 'bold',
+                  }}
+                >
+                  {t('subscription.actions.subscribe')}
+                </Text>
+              }
+              onPress={showSubscriptionModal}
+              buttonStyle={{ backgroundColor: theme.theme, borderRadius: 12, paddingVertical: 15 }}
+            />
+          )}
+          {!!activeSubscription && (
+            <Button
+              onPress={() =>
+                showAlert({
+                  title: t('subscription.actions.managePlan.title'),
+                  actions: [
+                    {
+                      title: t('subscription.actions.managePlan.change'),
+                      onPress: () => ModalManager.showModal(SubscriptionModal, { skipFirstStep: true }),
+                    },
+                    {
+                      title: t('subscription.actions.managePlan.cancelOrPause'),
+                      onPress: () => customerInfo.managementURL && Linking.openURL(customerInfo.managementURL),
+                    },
+                  ],
+                })
+              }
+              title={
+                <Text
+                  style={{
+                    textAlign: 'center',
+                    color: theme.text,
+                    fontSize: 18,
+                    fontWeight: 'bold',
+                  }}
+                >
+                  {t('subscription.actions.managePlan.title')}
+                </Text>
+              }
+              buttonStyle={{ borderRadius: 12, backgroundColor: theme.backgroundSecondary, paddingVertical: 15 }}
+            />
+          )}
+        </View>
+      )}
     </View>
   );
 }
