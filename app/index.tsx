@@ -90,7 +90,7 @@ export default function Index() {
   }
 
   return (
-    <View style={styles.container}>
+    <View className="flex-1 justify-center items-center gap-5 bg-[#f5f5f5]">
       <Image source={require('../assets/images/logo.png')} style={styles.logo} resizeMode="contain" />
       <Button title={t('common.login')} disabled={!request} loading={handleLoginInProgress} onPress={handleLogin} />
     </View>
