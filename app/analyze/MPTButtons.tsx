@@ -6,7 +6,7 @@ import { Text } from '@/components/base';
 
 import { fetchExplainText } from './ExplainLogic';
 import { mainButtonTitle, secondButtonTitle, thirdButtonTitle } from './MPTButtonsTitles';
-import { fetchDepot, fetchMPT, updateMPT } from './PortfolioRequests';
+import { fetchData, updateMPT } from './PortfolioRequests';
 import CustomSlider from './Slider';
 import StyledButton from './StyledButton';
 
@@ -18,6 +18,8 @@ interface MPTButtonsProps {
   setDepotData: (depotData: {}) => void;
   mptData: {};
   setMPTData: (mptData: {}) => void;
+  performanceData: {};
+  setPerformanceData: (performanceData: {}) => void;
   targetReturn: number;
   setTargetReturn: (targetReturn: number) => void;
   returnRange: number[];
@@ -37,6 +39,8 @@ export default function MPTButtons({
   setDepotData,
   mptData,
   setMPTData,
+  performanceData,
+  setPerformanceData,
   targetReturn,
   setTargetReturn,
   returnRange,
@@ -55,11 +59,17 @@ export default function MPTButtons({
   const handleNextPage = async (pageNumber: number) => {
     setExplainTextLength(2);
     fetchExplainText(setExplainText, pageNumber, depotData, mptData, 2);
-    if (pageNumber == 2) {
-      fetchDepot(depotID, targetReturn, setDepotData, setPortfolioID);
-    }
-    if (pageNumber == 3) {
-      fetchMPT(portfolioID, targetReturn, setMPTData, setTargetReturn, setReturnRange);
+    if (pageNumber == 1) {
+      fetchData(
+        depotID,
+        targetReturn,
+        setPortfolioID,
+        setTargetReturn,
+        setReturnRange,
+        setDepotData,
+        setMPTData,
+        setPerformanceData,
+      );
     }
   };
 

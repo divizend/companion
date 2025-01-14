@@ -24,6 +24,8 @@ const transformMPTDataForChart = (mptData: {}, depotData: {}) => {
       const value = parseFloat(weights[isin].toFixed(2));
       return { label, value };
     });
+  } else {
+    return [];
   }
 };
 

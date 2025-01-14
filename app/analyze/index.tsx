@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { LogBox } from 'react-native';
 
 import { SafeAreaView } from '@/components/base/SafeAreaView';
 
 import ExplainView from './Explain';
 import MPTButtons from './MPTButtons';
+import PerformanceTable from './PerformanceTable';
 import PlotsView from './Plots';
 
 LogBox.ignoreLogs(['Image source "null" doesn\'t exist']);
@@ -20,6 +21,7 @@ export default function AnalyzeScreen() {
 
   const [depotData, setDepotData] = useState({});
   const [mptData, setMPTData] = useState({});
+  const [performanceData, setPerformanceData] = useState({});
 
   const [targetReturn, setTargetReturn] = useState(0.27);
   const [returnRange, setReturnRange] = useState<number[]>([0.01, 1]);
@@ -39,6 +41,8 @@ export default function AnalyzeScreen() {
         setDepotData={setDepotData}
         mptData={mptData}
         setMPTData={setMPTData}
+        performanceData={performanceData}
+        setPerformanceData={setPerformanceData}
         targetReturn={targetReturn}
         setTargetReturn={setTargetReturn}
         returnRange={returnRange}
@@ -50,7 +54,11 @@ export default function AnalyzeScreen() {
         setPageNumber={setPageNumber}
       />
       <PlotsView depotData={depotData} mptData={mptData} pageNumber={pageNumber} />
-      <ExplainView explainText={explainText} />
+      {pageNumber === 1 || pageNumber === 2 || pageNumber === 3 ? (
+        <ExplainView explainText={explainText} />
+      ) : (
+        <PerformanceTable depotData={depotData} mptData={mptData} performanceData={performanceData}></PerformanceTable>
+      )}
     </SafeAreaView>
   );
 }
