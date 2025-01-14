@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
   },
   bar: {
     width: 12,
-    borderRadius: 5,
+    borderRadius: 2,
   },
   spacer: {
     width: 2,

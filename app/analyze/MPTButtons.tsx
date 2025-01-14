@@ -111,11 +111,17 @@ export default function MPTButtons({
     <View style={styles.buttonscontainer}>
       <Text style={styles.title}>Chose one of the following options:</Text>
       <StyledButton title={mainButtonTitle(pageNumber)} onPress={handleMainButtonPress} />
-      <StyledButton title={secondButtonTitle(pageNumber)} onPress={handleSecondButtonPress} />
+      {pageNumber !== 4 ? (
+        <StyledButton title={secondButtonTitle(pageNumber)} onPress={handleSecondButtonPress} />
+      ) : null}
       {pageNumber === 1 || pageNumber === 4 ? (
         pageNumber === 4 ? (
           <View>
-            <Text style={styles.sliderText}>Target Return: {targetReturn.toFixed(2)}</Text>
+            <View style={styles.textRow}>
+              <Text style={styles.sliderText}>Low Risk</Text>
+              <Text style={styles.sliderText}>Target Return: {targetReturn.toFixed(2)}</Text>
+              <Text style={styles.sliderText}>High Risk</Text>
+            </View>
             <CustomSlider
               value={targetReturn}
               onSlidingComplete={handleSliderChange}
@@ -147,8 +153,15 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginBottom: 2,
   },
+  textRow: {
+    margin: 0,
+    marginTop: 20,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
   sliderText: {
-    fontSize: 12,
+    fontSize: 11,
     textAlign: 'center',
   },
   thumb: {
