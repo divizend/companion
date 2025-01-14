@@ -13,7 +13,7 @@ export type SectionListProps = {
     key?: string;
     title: string | React.ReactNode;
     onPress?: () => void;
-    rightElement?: string;
+    rightElement?: string | React.ReactNode;
     leftIcon?:
       | string
       | {
@@ -74,10 +74,12 @@ export default function SectionList({
                   <ListItem.Title>
                     <Text style={[styles.listItemTitle, item.disabled && styles.disabledTitle]}>{item.title}</Text>
                   </ListItem.Title>
-                  {item.rightElement && (
+                  {typeof item.rightElement === 'string' ? (
                     <Text className="text-muted text-sm text-right shrink ml-3" numberOfLines={1} ellipsizeMode="tail">
                       {item.rightElement}
                     </Text>
+                  ) : (
+                    item.rightElement
                   )}
                 </ListItem.Content>
                 {item.onRemove && (
@@ -85,7 +87,7 @@ export default function SectionList({
                     <Icon name="minus" type="material-community" size={14} color="white" />
                   </TouchableOpacity>
                 )}
-                {item.onPress && !item.onRemove && <ListItem.Chevron />}
+                {item.onPress && !item.onRemove && !item.rightElement && <ListItem.Chevron />}
               </ListItem>
             </TouchableOpacity>
             {item.additional}

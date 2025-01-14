@@ -80,7 +80,7 @@ export const RevenueCatProvider: React.FC<RevenueCatProviderProps> = ({ children
     };
 
     if (profile.id) configureRevenueCat();
-  }, [profile.id, showSnackbar]);
+  }, [profile.id, showSnackbar, profile.flags?.canAccessCompanionFeaturesWithoutSubscription]);
 
   return (
     <RevenueCatContext.Provider
