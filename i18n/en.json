@@ -44,7 +44,8 @@
       "title": "Privileged actions",
       "impersonateUser": "Impersonate user",
       "endImpersonation": "End impersonation",
-      "currentImpersonation": "Currently impersonated by {{email}}"
+      "currentImpersonation": "Currently impersonated by {{email}}",
+      "privilegedMembershipAccess": "Privileged membership access"
     },
     "impersonateUser": {
       "title": "Impersonate user",
