@@ -35,11 +35,10 @@ enum SubscriptionStep {
   FinalStep = 3,
 }
 
-const { width: screenWidth } = Dimensions.get('window');
-
 export default function SubscriptionModal({ dismiss, skipFirstStep = false }: Props) {
   const { loading, purchasePackages, setCustomerInfo, refreshCustomerInfo, customerInfo } = usePurchases();
   const { showSnackbar } = useSnackbar();
+  const [modalWidth, setModalWidth] = useState(0);
 
   const theme = useThemeColor();
 
@@ -54,17 +53,17 @@ export default function SubscriptionModal({ dismiss, skipFirstStep = false }: Pr
   const scrollViewRef = useRef<ScrollView>(null);
 
   useEffect(() => {
-    if (skipFirstStep && currentPage === SubscriptionStep.ExplainerStep) {
+    if (skipFirstStep && currentPage === SubscriptionStep.ExplainerStep && !!modalWidth) {
       setCanContinue(true);
       goToPage(SubscriptionStep.ChoosePlanStep);
     }
-  }, []);
+  }, [modalWidth]);
 
   const goToPage = (step: SubscriptionStep) =>
     setTimeout(
       () =>
         scrollViewRef.current?.scrollTo({
-          x: screenWidth * step,
+          x: modalWidth * step,
           animated: true,
         }),
       200,
@@ -73,7 +72,7 @@ export default function SubscriptionModal({ dismiss, skipFirstStep = false }: Pr
   const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     if (!canContinue) return;
     const contentOffsetX = event.nativeEvent.contentOffset.x;
-    const page = Math.round(contentOffsetX / screenWidth);
+    const page = modalWidth ? Math.round(contentOffsetX / modalWidth) : 1;
     setCurrentPage(page as SubscriptionStep);
   };
 
@@ -215,40 +214,44 @@ export default function SubscriptionModal({ dismiss, skipFirstStep = false }: Pr
 
   return (
     <ModalLayout noScrollView title={t('subscription.choosePlan.title')} dismiss={dismiss}>
-      <View className="flex-1 justify-center items-center">
-        <ScrollView
-          scrollEnabled={false}
-          ref={scrollViewRef}
-          showsHorizontalScrollIndicator={false}
-          horizontal
-          pagingEnabled
-          onScroll={handleScroll}
-        >
-          <View style={{ width: screenWidth }}>
-            <ExplainerStep setCanContinue={setCanContinue} canContinue={canContinue} />
-          </View>
-          <View style={{ width: screenWidth }}>
-            <SubscriptionOptions
-              selectedPackage={selectedPackage}
-              setSelectedPackage={setSelectedPackage}
-              awaitedPackage={awaitedPackage}
+      <View onLayout={e => setModalWidth(e.nativeEvent.layout.width)} className="flex-1 justify-center items-center">
+        {!!modalWidth && (
+          <>
+            <ScrollView
+              scrollEnabled={false}
+              ref={scrollViewRef}
+              showsHorizontalScrollIndicator={false}
+              horizontal
+              pagingEnabled
+              onScroll={handleScroll}
+            >
+              <View style={{ width: modalWidth }}>
+                <ExplainerStep setCanContinue={setCanContinue} canContinue={canContinue} />
+              </View>
+              <View style={{ width: modalWidth }}>
+                <SubscriptionOptions
+                  selectedPackage={selectedPackage}
+                  setSelectedPackage={setSelectedPackage}
+                  awaitedPackage={awaitedPackage}
+                />
+              </View>
+              <View style={{ width: modalWidth }}>
+                <SolidarityDisclaimerStep canContinue={canContinue} setCanContinue={setCanContinue} />
+              </View>
+              <View style={{ width: modalWidth }}>{hasSubscribed ? <ConfirmationStep /> : <JoinedWaitlistStep />}</View>
+            </ScrollView>
+            <Button
+              loading={isSubscribing}
+              onPress={handleNextStep}
+              disabled={
+                !canContinue || (currentPage === SubscriptionStep.ChoosePlanStep && !selectedPackage) || isSubscribing
+              }
+              title={buttonText}
+              containerStyle={{ margin: 20, marginTop: 12, width: '70%' }}
+              buttonStyle={{ backgroundColor: theme.theme, paddingVertical: 12, borderRadius: 12 }}
             />
-          </View>
-          <View style={{ width: screenWidth }}>
-            <SolidarityDisclaimerStep canContinue={canContinue} setCanContinue={setCanContinue} />
-          </View>
-          <View style={{ width: screenWidth }}>{hasSubscribed ? <ConfirmationStep /> : <JoinedWaitlistStep />}</View>
-        </ScrollView>
-        <Button
-          loading={isSubscribing}
-          onPress={handleNextStep}
-          disabled={
-            !canContinue || (currentPage === SubscriptionStep.ChoosePlanStep && !selectedPackage) || isSubscribing
-          }
-          title={buttonText}
-          containerStyle={{ margin: 20, marginTop: 12, width: '70%' }}
-          buttonStyle={{ backgroundColor: theme.theme, paddingVertical: 12, borderRadius: 12 }}
-        />
+          </>
+        )}
       </View>
     </ModalLayout>
   );
