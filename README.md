@@ -54,6 +54,12 @@ Normal development:
 npx expo run:ios
 ```
 
+Alternatively, just start the Expo server and choose the device or simulator using Shift+I to run at afterwards:
+
+```
+npx expo start -c
+```
+
 Preview build (internal distribution):
 
 ```
@@ -72,4 +78,10 @@ Register a new device and build for internal distribution (https://docs.expo.dev
 ```
 eas device:create
 eas build --profile preview --platform ios
+```
+
+Terminate the Companion running in the iOS simulator:
+
+```
+xcrun simctl terminate booted com.divizend.companion
 ```
