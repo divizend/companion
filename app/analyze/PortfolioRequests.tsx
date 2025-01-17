@@ -1,3 +1,5 @@
+import { get } from 'lodash';
+
 import { apiGet, apiPost } from '@/common/api';
 
 async function pollRequest<T>(
@@ -45,8 +47,8 @@ const getPortfolioData = async (portfolioID: string): Promise<any> => {
   const depotData = pollRequest(
     () => apiGet(urlWithParams),
     data => data.status === 'done',
+    50,
     100,
-    20,
   );
   return depotData;
 };
@@ -63,8 +65,8 @@ const getMPTData = async (portfolioID: string): Promise<any> => {
   const mptData = pollRequest(
     () => apiGet(urlWithParams),
     data => data.status === 'done',
+    50,
     100,
-    20,
   );
   return mptData;
 };
@@ -81,8 +83,8 @@ const getEFData = async (portfolioID: string): Promise<any> => {
   const efData = pollRequest(
     () => apiGet(efUrlWithParams),
     data => data.status === 'done',
-    500,
-    50,
+    100,
+    100,
   );
   return efData;
 };
@@ -99,10 +101,46 @@ const getPerformanceData = async (portfolioID: string): Promise<any> => {
   const performanceData = pollRequest(
     () => apiGet(performanceUrlWithParams),
     data => data.status === 'done',
+    50,
     100,
-    20,
   );
   return performanceData;
+};
+
+const createCorrelationMatrix = async (portfolioID: string): Promise<void> => {
+  const postbody = { portfolio_id: portfolioID };
+  const cmPostAnswer = await apiPost(`/companion/cm`, postbody);
+  return cmPostAnswer;
+};
+
+const getCorrelationMatrix = async (portfolioID: string): Promise<any> => {
+  const queryParams = new URLSearchParams({ portfolio_id: portfolioID }).toString();
+  const cmUrlWithParams = `/companion/cm?${queryParams}`;
+  const cmData = pollRequest(
+    () => apiGet(cmUrlWithParams),
+    data => data.status === 'done',
+    50,
+    100,
+  );
+  return cmData;
+};
+
+const createHRP = async (portfolioID: string, total_liquidity: number): Promise<void> => {
+  const postbody = { portfolio_id: portfolioID, total_liquidity: total_liquidity };
+  const hrpPostAnswer = await apiPost(`/companion/hrp`, postbody);
+  return hrpPostAnswer;
+};
+
+const getHRP = async (portfolioID: string): Promise<any> => {
+  const queryParams = new URLSearchParams({ portfolio_id: portfolioID }).toString();
+  const hrpUrlWithParams = `/companion/hrp?${queryParams}`;
+  const hrpData = pollRequest(
+    () => apiGet(hrpUrlWithParams),
+    data => data.status === 'done',
+    50,
+    20,
+  );
+  return hrpData;
 };
 
 export const fetchData = async (
@@ -117,12 +155,17 @@ export const fetchData = async (
 ) => {
   const portfolioID = await createPortfolio(depotID);
   setPortfolioID(portfolioID);
+  console.log('portfolio created, start data loading process');
   const portfolioData = await getPortfolioData(portfolioID);
   setDepotData(portfolioData);
 
-  await createMPT(portfolioID, targetReturn);
-  const mptData = await getMPTData(portfolioID);
-  setMPTData(mptData);
+  const cmAnswer = await createCorrelationMatrix(portfolioID);
+  const cmData = await getCorrelationMatrix(portfolioID);
+
+  // const hrpAnswer = await createHRP(portfolioID, 100)
+  // console.log(hrpAnswer)
+  // const hrpData = await getHRP(portfolioID)
+  // console.log(hrpData)
 
   await createEF(portfolioID, targetReturn);
   const efData = await getEFData(portfolioID);
@@ -133,9 +176,15 @@ export const fetchData = async (
   setReturnRange(return_range);
   setTargetReturn(sharpe_return);
 
+  await createMPT(portfolioID, sharpe_return);
+  const mptData = await getMPTData(portfolioID);
+  setMPTData(mptData);
+
   await createPerformance(portfolioID);
   const performanceData = await getPerformanceData(portfolioID);
   setPerformanceData(performanceData);
+
+  console.log('finished data loading process');
 };
 
 export const updateMPT = async (portfolioID: string, setMPTData: (mptData: {}) => void, targetReturn: number) => {
