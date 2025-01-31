@@ -237,7 +237,10 @@ export default function CurrentPlan() {
                   actions: [
                     {
                       title: t('subscription.actions.managePlan.change'),
-                      onPress: () => ModalManager.showModal(SubscriptionModal, { skipFirstStep: true }),
+                      // This is a temporary solution that fixes the problem where the modal is rendered while the
+                      // Prompt is still rendered and is doing close animation.
+                      onPress: () =>
+                        setTimeout(() => ModalManager.showModal(SubscriptionModal, { skipFirstStep: true })),
                     },
                     {
                       title: t('subscription.actions.managePlan.cancelOrPause'),
