@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Icon } from '@rneui/themed';
 import { Slot, router, useSegments } from 'expo-router';
-import { TouchableOpacity, View } from 'react-native';
+import { Platform, TouchableOpacity, View } from 'react-native';
 
 import { clsx } from '@/common/clsx';
 import { SafeAreaView, Text } from '@/components/base';
@@ -14,8 +14,10 @@ export default function Layout() {
 
   const segments = useSegments();
 
+  const ParentView = Platform.OS === 'ios' ? View : SafeAreaView;
+
   return (
-    <SafeAreaView className="flex-1 dark:bg-primary-dark bg-primary-light">
+    <ParentView className="flex-1 dark:bg-primary-dark bg-primary-light">
       <View
         className="flex-row justify-between items-center"
         style={{ backgroundColor: theme.backgroundPrimary, padding: 10, paddingTop: 15 }}
@@ -47,6 +49,6 @@ export default function Layout() {
       <View className="flex-1">
         <Slot screenOptions={{ headerShown: false }} />
       </View>
-    </SafeAreaView>
+    </ParentView>
   );
 }
