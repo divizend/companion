@@ -16,6 +16,7 @@ export default ({ config }) => {
             url: 'https://api.divizend.com',
             versionCode: 'v1',
           },
+          secapiImportUrl: 'https://secapi.divizend.com',
         }
       : {
           auth: {
@@ -27,6 +28,7 @@ export default ({ config }) => {
             url: `http://${localIp}:3001`,
             versionCode: 'v1',
           },
+          secapiImportUrl: `http://${localIp}:3003`,
         }),
     revenueCat: {
       playStore: 'goog_cfpJuVihNJVjRmkmxMlRhqoQyQr',
