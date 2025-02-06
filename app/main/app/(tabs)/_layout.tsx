@@ -32,7 +32,7 @@ export default function TabLayout() {
             }}
           >
             {isPaywallVisible.value && <PaywallBottomTab />}
-            {/* <BottomTabBar {...props} /> */}
+            <BottomTabBar {...props} />
           </View>
         );
       }}
