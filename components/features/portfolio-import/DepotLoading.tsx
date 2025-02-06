@@ -1,5 +1,5 @@
-import { Button, StyleSheet, Text, View } from 'react-native';
-import * as Progress from 'react-native-progress';
+import { StyleSheet, Text, View } from 'react-native';
+import { Circle } from 'react-native-progress';
 
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { t } from '@/i18n';
@@ -10,41 +10,20 @@ export function DepotLoading() {
 
   const progress = portfolioConnect.value.secapiImport.progress;
 
-  // Define custom green shades
-  const greenShades = {
-    green30: 'rgb(117, 202, 200)',
-    green50: 'rgb(60, 157, 155)',
-  };
-
-  // Change color based on progress level
-  const progressColor = progress < 0.5 ? greenShades.green30 : greenShades.green50;
-
   return (
     <View style={styles.container}>
       <View style={styles.innerContainer}>
-        <Progress.Circle
+        <Circle
           progress={progress}
           size={200}
           thickness={6}
-          color={useThemeColor().icon}
+          color={theme.icon}
           showsText={true}
           textStyle={styles.progressText}
         />
-        <Text style={styles.text}>
+        <Text style={[styles.text, { color: theme.text }]}>
           {progress < 1.0 ? t('portfolioConnect.loadingDepot') : t('portfolioConnect.loadingDepotSuccess')}
         </Text>
-        <Button
-          title="Simulate Progress"
-          onPress={() => {
-            portfolioConnect.value = {
-              ...portfolioConnect.value,
-              secapiImport: {
-                ...portfolioConnect.value.secapiImport,
-                progress: Math.min(portfolioConnect.value.secapiImport.progress + 0.1, 1.0),
-              },
-            };
-          }}
-        />
       </View>
     </View>
   );
@@ -65,7 +44,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   text: {
-    marginTop: 20,
+    marginTop: 40,
     fontSize: 26,
     fontWeight: 'bold',
     textAlign: 'center',

@@ -1,8 +1,8 @@
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 
-import { View } from 'react-native';
 import WebView from 'react-native-webview';
 
+import { useThemeColor } from '@/hooks/useThemeColor';
 import { BankParent, BankType, ConnectionFlags } from '@/types/secapi.types';
 
 export interface SecAPIMessage {
@@ -77,7 +77,7 @@ export function SecAPIImport(props: {
   width: number | string;
   height: number | string;
   user?: string;
-  applyMultiAccountFilter?: boolean;
+  applyMultiAccountFilter?: string;
   skipToManualImport?: (message: SecAPISkipToManualImportMessage) => void;
   onAuthenticationSuccessful?: (message: SecAPIAuthenticationSuccessfulMessage) => void;
   onExternalAuthentication?: (message: SecAPIExternalAuthenticationMessage) => void;
@@ -88,6 +88,8 @@ export function SecAPIImport(props: {
   onAllowBackground?: () => void;
 }) {
   const webViewRef = useRef<WebView>(null);
+  const theme = useThemeColor();
+
   function onMessage(event: any) {
     try {
       const rawData = event.nativeEvent.data;
@@ -99,7 +101,6 @@ export function SecAPIImport(props: {
       const messageString = rawData.substring(9);
       const message = JSON.parse(messageString) as SecAPIMessage;
 
-      console.log('Parsed message:', message);
       switch (message.type) {
         case SecAPIMessageType.SKIP_TO_MANUAL_IMPORT: {
           props.skipToManualImport?.(message as SecAPISkipToManualImportMessage);
@@ -164,13 +165,15 @@ export function SecAPIImport(props: {
   if (props.applyMultiAccountFilter) {
     queryString.set('multiAccount', '' + props.applyMultiAccountFilter);
   }
+  if (theme.style === 'light') queryString.set('theme', theme.backgroundPrimary);
+
   return (
     <WebView
       ref={webViewRef}
       source={{ uri: `${props.host}/connection/authenticate?${queryString.toString()}` }}
       domStorageEnabled
       javaScriptEnabled
-      style={{ marginBottom: 45 }}
+      style={{ marginBottom: 5 }}
       scrollEnabled={false}
       onMessage={onMessage}
     />

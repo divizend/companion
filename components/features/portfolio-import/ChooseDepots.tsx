@@ -1,24 +1,22 @@
-import React from 'react';
-
 import CheckBox from '@react-native-community/checkbox';
 import { t } from 'i18next';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
-import { Button } from '@/components/base';
+import { Button, Text } from '@/components/base';
+import { useThemeColor } from '@/hooks/useThemeColor';
 import { portfolioConnect } from '@/signals/portfolioConnect';
-import { chooseDepot, chooseDepotsSubmit, restartImport } from '@/signals/portfolioConnectActions';
-
-const chosenDepotIds = ['1', '2', '3']; // Mocking a selected depot for testing
-
-const accounts = [
-  { id: '1', description: 'customer 1', depotNumber: '12345' },
-  { id: '1', depotNumber: '67890' },
-  { id: '2', description: 'customer 2', depotNumber: '67890' },
-];
+import {
+  chooseDepot,
+  chooseDepotsSubmit,
+  resetPortfolioConnect,
+  restartImport,
+} from '@/signals/portfolioConnectActions';
 
 export function ChooseDepots() {
+  const theme = useThemeColor();
+
   const chosenDepotIds = portfolioConnect.value.importDepots.chosenDepotIds;
-  const accounts = portfolioConnect.value.portfolioContents.accounts;
+  const accounts = portfolioConnect.value.portfolioContents.accounts!;
 
   const handleSelectAll = (checked: boolean) => {
     const depotIds = accounts.map(acc => acc.id);
@@ -71,9 +69,14 @@ export function ChooseDepots() {
       </View>
 
       <View style={styles.buttonContainer}>
-        <Button title={t('portfolioConnect.restartImport')} onPress={restartImport} />
+        <Button
+          title={t('portfolioConnect.restartImport')}
+          style={{ borderRadius: 0 }}
+          onPress={resetPortfolioConnect}
+        />
         <Button
           title={t('portfolioConnect.chooseDepots.callToAction')}
+          style={{ borderRadius: 0 }}
           onPress={chooseDepotsSubmit}
           disabled={chosenDepotIds.length === 0}
         />
@@ -87,12 +90,13 @@ const styles = StyleSheet.create({
     width: '100%',
     paddingHorizontal: 45,
     paddingVertical: 20,
+    marginTop: 40,
     display: 'flex',
     flexDirection: 'column',
   },
   description: {
-    fontSize: 16,
-    fontWeight: '600',
+    fontSize: 20,
+    fontWeight: '800',
     marginBottom: 32,
   },
   checkboxContainer: {
@@ -106,9 +110,11 @@ const styles = StyleSheet.create({
   },
   selectAllText: {
     marginLeft: 8,
+    fontSize: 16,
   },
   boldText: {
     fontWeight: 'bold',
+    fontSize: 18,
   },
   scrollView: {
     maxHeight: '60%',
@@ -121,10 +127,12 @@ const styles = StyleSheet.create({
   checkboxText: {
     fontWeight: 'bold',
     marginLeft: 8,
+    fontSize: 18,
   },
   depotNumberText: {
     marginTop: 0,
     marginLeft: 8,
+    fontSize: 16,
   },
   buttonContainer: {
     width: '100%',
