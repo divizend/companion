@@ -59,6 +59,10 @@ export const apiGet = (endpoint: string, queryParams?: Record<string, string>) =
   return apiFetch(endpoint + (queryParams ? '?' + new URLSearchParams(queryParams).toString() : ''), { method: 'GET' });
 };
 
+export const apiPostJson = <T = any>(endpoint: string, body?: any) => {
+  return apiPost<T>(endpoint, JSON.stringify(body));
+};
+
 export const apiPost = <T = any>(endpoint: string, body: any) => {
   return apiFetch(endpoint, {
     method: 'POST',
