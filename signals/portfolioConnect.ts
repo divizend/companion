@@ -1,5 +1,7 @@
 import { signal } from '@preact/signals-react';
 
+import { SecAPIAuthenticationSuccessfulMessage } from '@/components/features/portfolio-import/SecapiImport';
+
 export const Step = {
   SecapiImportFrame: 0,
   BankDetails: 1,
@@ -11,70 +13,60 @@ export const Step = {
 };
 
 type PortfolioConnect = {
-  restartImport: boolean;
-  currentStep: (typeof Step)[keyof typeof Step] | null;
-  manualImport?: {
+  restartImport?: boolean;
+  currentStep: (typeof Step)[keyof typeof Step];
+  manualImport: {
     chosen: boolean;
-    bank: { parent: string; name: string };
-    depotNumber: string;
+    bank: { parent?: string; name?: string };
+    depotNumber: string | null;
   };
-  bank?: {
-    parent: string;
-    name: string;
-    bic: string;
+  bank: {
+    parent?: string;
+    name?: string;
+    bic?: string;
   };
-  portfolioContents: { accounts: any[] };
+  portfolioContents: { accounts?: any[]; keys?: string[] };
   secapiImport: {
-    id: null | string;
-    successMessage: string;
-    error: string;
+    successMessage?: SecAPIAuthenticationSuccessfulMessage | null;
+    id?: string | null;
+    progressRequestTimestamp?: number | null;
+    error?: string | null;
     progress: number;
-    progressRequestTimestamp: number | null;
-    loading: boolean;
+    loading?: boolean;
     accounts: any[];
   };
   importDepots: { chosenDepotIds: string[]; loading: boolean };
   importedSomething: boolean;
   importedDepotDone?: boolean;
   importedDepotEmpty?: boolean;
-  depotImportSessionId: null | string;
+  depotImportSessionId?: string | null;
   secapiAuthenticationFailedMessage?: string;
-  depotNumberToSync?: null | string;
+  depotNumberToSync?: string;
   importedSuccessData?: any;
 };
 
 export const portfolioConnect = signal<PortfolioConnect>({
-  restartImport: false,
-  currentStep: Step.SecapiImportFrame,
   manualImport: {
     chosen: false,
-    bank: {
-      parent: '',
-      name: '',
-    },
-    depotNumber: '',
+    bank: {},
+    depotNumber: null,
   },
-  bank: {
-    parent: '',
-    name: '',
-    bic: '',
-  },
-  portfolioContents: {
-    accounts: [
-      { id: '1', description: 'Customer 1', depotNumber: '12345' },
-      { id: '2', description: 'Customer 2', depotNumber: '67890' },
-    ],
-  },
+  bank: {},
+  portfolioContents: {},
   secapiImport: {
+    successMessage: null,
     id: null,
-    successMessage: '',
-    error: '',
-    progress: 0,
     progressRequestTimestamp: null,
-    loading: false,
+    progress: 0.0,
+    error: null,
     accounts: [],
   },
-  importDepots: { chosenDepotIds: [], loading: false },
+  importDepots: {
+    loading: false,
+    chosenDepotIds: [],
+  },
   importedSomething: false,
+  currentStep: Step.SecapiImportFrame,
+  restartImport: false,
   depotImportSessionId: null,
 });
