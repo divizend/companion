@@ -1,3 +1,5 @@
+import { generateTransientId } from '@/utils/common';
+
 import { Step, portfolioConnect } from './portfolioConnect';
 
 const getInitialState = () => ({
@@ -318,4 +320,28 @@ export const finalizeImport = ({ done, empty, data }: any) => {
 
 export const importedSomething = () => {
   portfolioConnect.value = { ...portfolioConnect.value, importedSomething: true };
+};
+
+export const bankDepotDetailsSubmit = () => {
+  portfolioConnect.value = {
+    ...portfolioConnect.value,
+    bank: portfolioConnect.value.manualImport.bank,
+    secapiImport: {
+      ...portfolioConnect.value.secapiImport,
+      accounts: [
+        ...(portfolioConnect.value.secapiImport.accounts || []),
+        {
+          id: generateTransientId(),
+          depotNumber: portfolioConnect.value.manualImport.depotNumber,
+          securities: {},
+          profile: {},
+        },
+      ],
+    },
+    importDepots: {
+      ...portfolioConnect.value.importDepots,
+      chosenDepotIds: [generateTransientId()],
+    },
+    currentStep: Step.PortfolioContents,
+  };
 };

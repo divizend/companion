@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { useTranslation } from 'react-i18next';
 import { Modal, View } from 'react-native';
@@ -25,6 +25,7 @@ import { BankParent, DepotImportStep } from '@/types/secapi.types';
 
 import AutoImportPortfolioContents from './AutoImportPortfolioContents';
 import { BackgroundModal } from './BackgroundModal';
+import BankDepotDetails from './BankDepotDetails';
 import { ChooseDepots } from './ChooseDepots';
 import { DepotLoading } from './DepotLoading';
 import Finalize from './Finalize';
@@ -180,9 +181,7 @@ function PortfolioConnectDialog(props: PortfolioConnectDialogProps) {
           onAllowBackground={() => setAllowBackground(true)}
         />
       ) : portfolioConnect.currentStep === Step.BankDetails ? (
-        <View>
-          <Text>Random Text {portfolioConnect.currentStep}</Text>
-        </View>
+        <BankDepotDetails />
       ) : portfolioConnect.currentStep === Step.ChooseDepotToSync ? (
         <View>
           <Text>Random Text {portfolioConnect.currentStep}</Text>
