@@ -50,6 +50,7 @@ export default function OnboardingModal() {
   const [birthday, setBirthday] = useState<Date | null>(
     principalLegalEntity?.data.info.birthday ? new Date(principalLegalEntity.data.info.birthday) : null,
   );
+  const [skippedBirthday, setSkippedBirthday] = useState(false);
 
   const { refreshCustomerInfo } = usePurchases();
 
@@ -81,7 +82,7 @@ export default function OnboardingModal() {
   let availablePages = 3;
   if (principalLegalEntity?.data.info.nationality) {
     availablePages = 4;
-    if (principalLegalEntity?.data.info.birthday) {
+    if (principalLegalEntity?.data.info.birthday || skippedBirthday) {
       availablePages = 5;
       if (!profile.flags.usedCompanionTrial) {
         availablePages = 6;
@@ -163,7 +164,8 @@ export default function OnboardingModal() {
             )}
           </View>
           <TouchableOpacity
-            onPress={() =>
+            onPress={() => {
+              setSkippedBirthday(true);
               setTimeout(
                 () =>
                   scrollViewRef.current?.scrollTo({
@@ -171,8 +173,8 @@ export default function OnboardingModal() {
                     animated: true,
                   }),
                 200,
-              )
-            }
+              );
+            }}
           >
             <Text className="mt-4 text-muted">{t('onboarding.birthday.skip')}</Text>
           </TouchableOpacity>
