@@ -162,6 +162,20 @@ export default function OnboardingModal() {
               />
             )}
           </View>
+          <TouchableOpacity
+            onPress={() =>
+              setTimeout(
+                () =>
+                  scrollViewRef.current?.scrollTo({
+                    x: screenWidth * 4,
+                    animated: true,
+                  }),
+                200,
+              )
+            }
+          >
+            <Text className="mt-4 text-muted">{t('onboarding.birthday.skip')}</Text>
+          </TouchableOpacity>
         </View>
         {!profile.flags.usedCompanionTrial && (
           <View style={styles.page}>
