@@ -16,7 +16,7 @@ export default function ExplainView({ explainText }: ExplainViewProps) {
 
 const styles = StyleSheet.create({
   explaincontainer: {
-    flex: 2,
+    flex: 4,
     marginTop: 0,
     marginHorizontal: 20,
     marginBottom: 45,

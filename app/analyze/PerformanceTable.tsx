@@ -47,7 +47,7 @@ export default function PerformanceTable({ depotData, mptData, performanceData }
 // Add some basic styling
 const styles = StyleSheet.create({
   container: {
-    flex: 2,
+    flex: 3,
     padding: 10,
   },
   scrollContainer: {

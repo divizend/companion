@@ -9,6 +9,9 @@ export const mainButtonTitle = (page_number: number) => {
     return 'Optimize my Portfolio';
   }
   if (page_number == 4) {
+    return 'Use this Portfolio';
+  }
+  if (page_number == 5) {
     return 'Start from the beginning';
   }
 };
@@ -24,6 +27,9 @@ export const secondButtonTitle = (page_number: number) => {
     return 'Show my Portfolio in more detail';
   }
   if (page_number == 4) {
+    return 'Explain portfolio optimization in more detail';
+  }
+  if (page_number == 5) {
     return 'Explain portfolio optimization in more detail';
   }
 };

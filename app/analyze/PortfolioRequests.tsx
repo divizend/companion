@@ -159,8 +159,8 @@ export const fetchData = async (
   const portfolioData = await getPortfolioData(portfolioID);
   setDepotData(portfolioData);
 
-  const cmAnswer = await createCorrelationMatrix(portfolioID);
-  const cmData = await getCorrelationMatrix(portfolioID);
+  // const cmAnswer = await createCorrelationMatrix(portfolioID);
+  // const cmData = await getCorrelationMatrix(portfolioID);
 
   // const hrpAnswer = await createHRP(portfolioID, 100)
   // console.log(hrpAnswer)

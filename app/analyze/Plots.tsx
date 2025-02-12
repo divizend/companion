@@ -17,7 +17,7 @@ export default function PlotsView({ depotData, mptData, pageNumber }: PlotsViewP
   } else if (pageNumber == 3 && depotData !== null && depotData !== undefined) {
     return <View style={styles.plotcontainer}>{depotData ? <PortfolioBarChart depotData={depotData} /> : null}</View>;
   } else if (
-    pageNumber == 4 &&
+    pageNumber > 3 &&
     depotData !== null &&
     depotData !== undefined &&
     mptData !== null &&
@@ -35,7 +35,7 @@ export default function PlotsView({ depotData, mptData, pageNumber }: PlotsViewP
 
 const styles = StyleSheet.create({
   plotcontainer: {
-    flex: 2,
+    flex: 3,
     margin: 0,
     padding: 0,
     justifyContent: 'center',

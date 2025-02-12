@@ -52,7 +52,7 @@ export default function MPTButtons({
   setPageNumber,
 }: MPTButtonsProps) {
   const nextPage = async (): Promise<void> => {
-    pageNumber = pageNumber < 4 ? pageNumber + 1 : 1;
+    pageNumber = pageNumber < 5 ? pageNumber + 1 : 1;
     setPageNumber(pageNumber);
   };
 
@@ -111,9 +111,7 @@ export default function MPTButtons({
     <View style={styles.buttonscontainer}>
       <Text style={styles.title}>Chose one of the following options:</Text>
       <StyledButton title={mainButtonTitle(pageNumber)} onPress={handleMainButtonPress} />
-      {pageNumber !== 4 ? (
-        <StyledButton title={secondButtonTitle(pageNumber)} onPress={handleSecondButtonPress} />
-      ) : null}
+      {pageNumber < 4 ? <StyledButton title={secondButtonTitle(pageNumber)} onPress={handleSecondButtonPress} /> : null}
       {pageNumber === 1 || pageNumber === 4 ? (
         pageNumber === 4 ? (
           <View>
