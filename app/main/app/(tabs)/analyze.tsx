@@ -1,7 +1,7 @@
 import { useSignals } from '@preact/signals-react/runtime';
 
 import { SafeAreaView } from '@/components/base';
-import PortfolioConnectDialog from '@/components/features/portfolio-import/PortfolioConnectDialog';
+import PortfolioConnectDialog from '@/components/features/portfolio-import/PortfolioConnect';
 
 export default function Analyze() {
   useSignals();

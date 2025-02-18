@@ -4,9 +4,9 @@ import {
   sendDepotImportEvent as _sendDepotImportEvent,
   createDepotImportSession,
   setDepotImportSessionReplayId,
-} from '@/common/portfolioConnect';
-import { portfolioConnect as portfolioConnectSignal } from '@/signals/portfolioConnect';
-import { resetDepotImportSessionId } from '@/signals/portfolioConnectActions';
+} from '@/signals/actions/portfolio-connect.actions';
+import { resetDepotImportSessionId } from '@/signals/actions/portfolio-connect.actions';
+import { portfolioConnect as portfolioConnectSignal } from '@/signals/portfolio-connect';
 import { DepotImportEventType, DepotImportStep } from '@/types/secapi.types';
 
 type ModalStep = {

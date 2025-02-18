@@ -1,30 +1,29 @@
 import React, { useEffect, useState } from 'react';
 
 import { useTranslation } from 'react-i18next';
-import { Modal, View } from 'react-native';
+import { View } from 'react-native';
 
 import { usedConfig } from '@/common/config';
-import { getSecapiImportProgress, watchImportProgress } from '@/common/portfolioConnect';
 import { useUserProfile } from '@/common/profile';
 import { Text } from '@/components/base';
 import { useSnackbar } from '@/components/global/Snackbar';
 import useDepotImportEvents from '@/hooks/useDepotImportEvents';
 import { useInterval } from '@/hooks/useInterval';
-import { Step, portfolioConnect as portfolioConnectSignal } from '@/signals/portfolioConnect';
 import {
   chooseManualImport,
   createDepotImportSessionSuccess,
-  reset,
+  getSecapiImportProgress,
   resetPortfolioConnect,
   setPortfolioContents,
   setSecapiAuthenticationFailedMessage,
   setSecapiImportSuccessMessage,
   startSecapiImportSuccess,
-} from '@/signals/portfolioConnectActions';
+  watchImportProgress,
+} from '@/signals/actions/portfolio-connect.actions';
+import { Step, portfolioConnect as portfolioConnectSignal } from '@/signals/portfolio-connect';
 import { BankParent, DepotImportStep } from '@/types/secapi.types';
 
 import AutoImportPortfolioContents from './AutoImportPortfolioContents';
-import { BackgroundModal } from './BackgroundModal';
 import BankDepotDetails from './BankDepotDetails';
 import { ChooseDepots } from './ChooseDepots';
 import { DepotLoading } from './DepotLoading';
@@ -52,7 +51,6 @@ function PortfolioConnectDialog(props: PortfolioConnectDialogProps) {
   const { profile } = useUserProfile();
   const { showSnackbar } = useSnackbar();
   const portfolioConnect = portfolioConnectSignal.value;
-  const [confirmCancelOpen, setConfirmCancelOpen] = useState(false);
   const userFlags = profile.flags;
   const secapiImportUrl = userFlags?.useLocalSecapi ? SECAPI_LOCAL_HOST : usedConfig.secapiImportUrl;
   const [secapiUrl, setSecapiUrl] = useState(secapiImportUrl);
@@ -65,8 +63,6 @@ function PortfolioConnectDialog(props: PortfolioConnectDialogProps) {
   }>();
   const [flags, setFlags] = useState();
   const [type, setType] = useState<SecAPIMessageType>();
-  const [allowBackground, setAllowBackground] = useState(false);
-  const [minimizeToBackground, setMinimizeToBackground] = useState(false);
   useDepotImportEvents({
     secapiStep,
     replayId,
@@ -89,7 +85,7 @@ function PortfolioConnectDialog(props: PortfolioConnectDialogProps) {
 
   useEffect(() => {
     if (portfolioConnect.restartImport) {
-      setConfirmCancelOpen(true);
+      resetPortfolioConnect();
     }
   }, [portfolioConnect.restartImport]);
 
@@ -108,10 +104,6 @@ function PortfolioConnectDialog(props: PortfolioConnectDialogProps) {
   );
 
   useEffect(() => {
-    if (allowBackground) setMinimizeToBackground(true);
-  }, [allowBackground]);
-
-  useEffect(() => {
     // waiting for two seconds after accounts were loaded successfully to show 100% in the progress bar to user
     if (portfolioConnect.secapiImport.accounts.length && true) {
       setTimeout(() => {
@@ -119,16 +111,6 @@ function PortfolioConnectDialog(props: PortfolioConnectDialogProps) {
       }, 1500);
     }
   }, [portfolioConnect.secapiImport.accounts]);
-
-  // useEffect(() => {
-  //   if (true) {
-  //   } else {
-  //     setSecapiUrl('');
-  //     resetPortfolioConnect();
-  //     setAllowBackground(false);
-  //     setMinimizeToBackground(false);
-  //   }
-  // }, []);
 
   useEffect(() => {
     // This is used to reload the SecAPI frame when the dialog is closed and reopened
@@ -139,11 +121,16 @@ function PortfolioConnectDialog(props: PortfolioConnectDialogProps) {
     }
   }, []);
 
+  // TODO: Support background import
+  // useEffect(() => {
+  //   if (allowBackground) setMinimizeToBackground(true);
+  // }, [allowBackground]);
+
   return (
     <>
       {props.useSecapiImportId &&
       !props.secapiImportId &&
-      portfolioConnect.currentStep === Step.SecapiImportFrame ? null : portfolioConnect.currentStep === //   <SelectSecapiImportId />
+      portfolioConnect.currentStep === Step.SecapiImportFrame ? null : portfolioConnect.currentStep ===
         Step.SecapiImportFrame ? (
         <SecAPIImport
           host={secapiUrl}
@@ -156,14 +143,13 @@ function PortfolioConnectDialog(props: PortfolioConnectDialogProps) {
           user={profile?.email}
           applyMultiAccountFilter={props.applyMultiAccountFilter}
           skipToManualImport={message => {
-            // continue to manual import
             chooseManualImport(message);
           }}
           onExternalAuthentication={message => {
-            window.open(message.url, '_blank');
+            // window.open(message.url, '_blank');
+            console.log('External authentication message: NOT IMPLEMENTED');
           }}
           onAuthenticationSuccessful={message => {
-            // get account information with token
             setSecapiImportSuccessMessage(message);
             watchImportProgress(props.depotNumberToSync);
           }}
@@ -178,13 +164,12 @@ function PortfolioConnectDialog(props: PortfolioConnectDialogProps) {
             setFlags((message as any).flags);
             setType(message.type);
           }}
-          onAllowBackground={() => setAllowBackground(true)}
         />
       ) : portfolioConnect.currentStep === Step.BankDetails ? (
         <BankDepotDetails />
       ) : portfolioConnect.currentStep === Step.ChooseDepotToSync ? (
         <View>
-          <Text>Random Text {portfolioConnect.currentStep}</Text>
+          <Text>Not yet implemented!</Text>
         </View>
       ) : portfolioConnect.currentStep === Step.DepotLoading ? (
         <DepotLoading />
@@ -199,25 +184,6 @@ function PortfolioConnectDialog(props: PortfolioConnectDialogProps) {
           applyMultiAccountFilter={props.applyMultiAccountFilter}
         />
       )}
-      <Modal
-        visible={confirmCancelOpen}
-        onRequestClose={() => setConfirmCancelOpen(false)}
-        onDismiss={() => {
-          //   if (!portfolioConnect.restartImport) {
-          //     onClose();
-          //   }
-          reset();
-          setConfirmCancelOpen(false);
-        }}
-        // style={{ width: '30rem' }}.
-      >
-        <Text>{t('portfolioConnect.confirmCancel.title')}</Text>
-        <Text>{t('portfolioConnect.confirmCancel.description')}</Text>
-      </Modal>
-      {/* <BackgroundModal
-        visible={minimizeToBackground && portfolioConnect.currentStep === Step.SecapiImportFrame}
-        setMinimizeToBackground={setMinimizeToBackground}
-      /> */}
     </>
   );
 }

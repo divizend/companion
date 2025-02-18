@@ -7,8 +7,8 @@ import { StyleSheet, View } from 'react-native';
 
 import { Button, Text } from '@/components/base';
 import { useThemeColor } from '@/hooks/useThemeColor';
-import { portfolioConnect } from '@/signals/portfolioConnect';
-import { importedSomething, resetPortfolioConnect } from '@/signals/portfolioConnectActions';
+import { importedSomething, resetPortfolioConnect } from '@/signals/actions/portfolio-connect.actions';
+import { portfolioConnect } from '@/signals/portfolio-connect';
 
 interface FinalizeProps {
   applyMultiAccountFilter?: string;
@@ -53,15 +53,6 @@ export default function Finalize({ applyMultiAccountFilter, finalizeOnSuccess, o
       ) : (
         <Text style={styles.subheading}>{t('portfolioConnect.finalize.multiAccountFilter')}</Text>
       )}
-
-      {/* <Button
-        title={t(done ? 'portfolioConnect.finalize.backToDashboard' : 'portfolioConnect.finalize.editPortfolio')}
-        containerStyle={{ marginTop: 10 }}
-        onPress={() => {
-          resetPortfolioConnect();
-          if (onFinalizeImports) onFinalizeImports(null, !done);
-        }}
-      /> */}
     </View>
   );
 }

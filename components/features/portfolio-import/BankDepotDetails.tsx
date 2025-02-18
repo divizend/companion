@@ -7,8 +7,12 @@ import * as Yup from 'yup';
 import { Button, TextInput } from '@/components/base';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { t } from '@/i18n';
-import { portfolioConnect } from '@/signals/portfolioConnect';
-import { bankDepotDetailsSetField, bankDepotDetailsSubmit, restartImport } from '@/signals/portfolioConnectActions';
+import {
+  bankDepotDetailsSetField,
+  bankDepotDetailsSubmit,
+  restartImport,
+} from '@/signals/actions/portfolio-connect.actions';
+import { portfolioConnect } from '@/signals/portfolio-connect';
 import { BankParent } from '@/types/secapi.types';
 import { validateValues } from '@/utils/validation';
 
@@ -21,7 +25,6 @@ function getBankDepotProps() {
   };
 }
 
-console.log('getBankDepotProps', getBankDepotProps());
 const bankDepotPropsSchema = Yup.object().shape({
   parent: Yup.string()
     .required()

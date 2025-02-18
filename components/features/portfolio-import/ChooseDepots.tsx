@@ -4,13 +4,8 @@ import { StyleSheet, View } from 'react-native';
 
 import { Button, Text } from '@/components/base';
 import { useThemeColor } from '@/hooks/useThemeColor';
-import { portfolioConnect } from '@/signals/portfolioConnect';
-import {
-  chooseDepot,
-  chooseDepotsSubmit,
-  resetPortfolioConnect,
-  restartImport,
-} from '@/signals/portfolioConnectActions';
+import { chooseDepot, chooseDepotsSubmit, resetPortfolioConnect } from '@/signals/actions/portfolio-connect.actions';
+import { portfolioConnect } from '@/signals/portfolio-connect';
 
 export function ChooseDepots() {
   const theme = useThemeColor();
