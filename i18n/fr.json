@@ -2,7 +2,7 @@
   "common": {
     "cancel": "Cancel",
     "error": "Error",
-    "loading": "Loading...",
+    "loading": "Chargement...",
     "login": "Login",
     "logout": "Logout",
     "logoutConfirmation": "Are you sure you want to log out?",
