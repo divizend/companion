@@ -2,6 +2,8 @@ import { useQueryClient } from '@tanstack/react-query';
 import { produce } from 'immer';
 import RNRestart from 'react-native-restart';
 
+import { UserProfileDepot } from '@/types/depot.types';
+
 import { apiGet } from './api';
 import { useUserProfileQuery } from './queries';
 import { setSessionToken } from './sessionToken';
@@ -81,6 +83,7 @@ export type UserProfile = {
     };
   };
   companionProfile: CompanionProfile;
+  depots: UserProfileDepot[];
   // actually also many other properties, but those are not relevant for now
 };
 
