@@ -83,8 +83,13 @@ export const apiDelete = (endpoint: string) => {
   });
 };
 
-export const useFetch = <T = any>(key: string, endpoint?: string) => {
+export const useFetch = <T = any>(
+  key: string,
+  endpoint?: string,
+  extraParams?: Omit<Parameters<typeof useQuery<T, ApiError>>[0], 'queryKey' | 'queryFn'>,
+) => {
   return useQuery<T, ApiError>({
+    ...extraParams,
     queryKey: [key],
     queryFn: endpoint ? () => apiFetch(endpoint) : undefined,
   });
