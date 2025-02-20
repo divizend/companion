@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 
 import { Feather } from '@expo/vector-icons';
-import { ThemeConsumer } from '@rneui/themed';
 import { t } from 'i18next';
 import { StyleSheet, View } from 'react-native';
 
@@ -30,7 +29,7 @@ export default function Finalize({ applyMultiAccountFilter, finalizeOnSuccess, o
 
   return (
     <View style={styles.container}>
-      <Feather name="check-circle" size={128} color={theme.icon} style={styles.icon} />
+      <Feather name="check-circle" size={128} color={theme.theme} className="shadow-theme" style={styles.icon} />
 
       <Text style={styles.heading}>
         {applyMultiAccountFilter
@@ -63,6 +62,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 20,
+    gap: 7,
   },
   icon: {
     marginBottom: 20,
