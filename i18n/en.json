@@ -63,6 +63,7 @@
   "tabs": {
     "learn": "Visionary",
     "analyze": "Analyze",
+    "portfolios": "Portfolios",
     "track": "Track",
     "decide": "Decide",
     "discover": "Discover"
@@ -1018,5 +1019,19 @@
     "selectSecapiImportIdPlaceholder": "SecAPI import ID",
     "selectSecapiImportId": "Select the SecAPI import ID to import its content!",
     "continue": "Continue"
-  }
+  },
+  "portfolioOverview": {
+    "title": "Your Portfolios",
+    "labels": {
+      "description": "Description",
+      "owner": "Owner",
+      "portfolioNumber": "Portfolio number",
+      "importedAt": "Imported at",
+      "syncedAt": "Synchronized at"
+    }
+  },
+  "dateTime": {
+    "dayLongAndTime": "{{date, dayLongAndTime}}"
+  },
+  "percent": "{{value}} %"
 }
