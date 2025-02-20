@@ -1,14 +1,17 @@
-import { useSignals } from '@preact/signals-react/runtime';
-
-import { SafeAreaView } from '@/components/base';
-import PortfolioConnectDialog from '@/components/features/portfolio-import/PortfolioConnect';
+import { Button, SafeAreaView } from '@/components/base';
+import PortfolioConnectModal from '@/components/features/portfolio-import/PortfolioConnectModal';
+import { ModalManager } from '@/components/global/modal';
 
 export default function Analyze() {
-  useSignals();
-
   return (
-    <SafeAreaView>
-      <PortfolioConnectDialog open onClose={() => console.log('onClose')} />
+    <SafeAreaView
+      style={{
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
+      <Button onPress={() => ModalManager.showModal(PortfolioConnectModal)}>Open PortfolioConnectModal</Button>
     </SafeAreaView>
   );
 }
