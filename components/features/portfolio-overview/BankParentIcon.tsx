@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 
-import { Image, StyleSheet } from 'react-native';
+import { SvgUri } from 'react-native-svg';
 
 interface BankParentIconProps {
   bankParent?: string;
@@ -10,22 +10,26 @@ interface BankParentIconProps {
 export function BankParentIcon({ bankParent, size = 44 }: BankParentIconProps) {
   const [icon, setIcon] = useState<string>(bankParent?.endsWith('_UNKNOWN') ? 'UNKNOWN' : bankParent || 'UNKNOWN');
 
+  const iconUri = useMemo(() => {
+    return 'https://divizend.com' + iconPath(icon);
+  }, [icon]);
+
   return (
-    <Image
-      source={{ uri: `${iconPath(icon)}` }}
-      style={[styles.icon, { width: size, height: size }]}
-      onError={() => setIcon('UNKNOWN')}
+    <SvgUri
+      width={size}
+      height={size}
+      uri={iconUri}
+      style={{
+        borderRadius: 8,
+        overflow: 'hidden',
+      }}
+      onError={() => {
+        setIcon('UNKNOWN');
+      }}
     />
   );
 }
 
 const iconPath = (icon: string) => {
-  return `static/bank/${icon}.svg`;
+  return `/bank/${icon}.svg`;
 };
-
-const styles = StyleSheet.create({
-  icon: {
-    borderRadius: 4,
-    marginHorizontal: 8,
-  },
-});

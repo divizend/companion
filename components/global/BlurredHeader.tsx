@@ -1,10 +1,10 @@
 import { useSignalEffect } from '@preact/signals-react';
 import { BottomTabHeaderProps } from '@react-navigation/bottom-tabs';
-import { Avatar } from '@rneui/themed';
+import { Avatar, Icon } from '@rneui/themed';
 import { BlurView } from 'expo-blur';
 import { router } from 'expo-router';
 import { useColorScheme } from 'nativewind';
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import Animated, {
   Easing,
   useAnimatedProps,
@@ -18,6 +18,8 @@ import { useThemeColor } from '@/hooks/useThemeColor';
 import { isHeaderVisible } from '@/signals/app.signal';
 
 import { Text } from '../base';
+import PortfolioConnectModal from '../features/portfolio-import/PortfolioConnectModal';
+import { ModalManager } from './modal';
 
 type BlurredHeaderProps = BottomTabHeaderProps & { title: string };
 
@@ -70,20 +72,30 @@ export default function BlurredHeader(props: BlurredHeaderProps) {
       <Text h3 animated style={style}>
         {props.title}
       </Text>
-      <TouchableOpacity
-        style={{ position: 'absolute', right: 15, bottom: 10 }}
-        onPress={() => router.navigate('/main/settings')}
-      >
-        <Avatar
-          // Added empty source to remove Image source not found warning (which is a bug from rneui)
-          // Look here for more info https://github.com/react-native-elements/react-native-elements/issues/3742#issuecomment-1978783981
-          source={{ uri: 'data:image/png' }}
-          rounded
-          title={profile.email[0].toUpperCase()}
-          containerStyle={{ backgroundColor: theme.theme }}
-          placeholderStyle={{ backgroundColor: 'transparent' }}
-        />
-      </TouchableOpacity>
+
+      <View style={{ position: 'absolute', right: 15, bottom: 10 }} className="flex flex-row gap-3 items-center">
+        <TouchableOpacity onPress={() => ModalManager.showModal(PortfolioConnectModal)}>
+          <Icon
+            size={32}
+            name="add"
+            type="material"
+            className="rounded-full"
+            style={{ borderColor: theme.theme }}
+            color={theme.theme}
+          />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => router.navigate('/main/settings')}>
+          <Avatar
+            // Added empty source to remove Image source not found warning (which is a bug from rneui)
+            // Look here for more info https://github.com/react-native-elements/react-native-elements/issues/3742#issuecomment-1978783981
+            source={{ uri: 'data:image/png' }}
+            rounded
+            title={profile.email[0].toUpperCase()}
+            containerStyle={{ backgroundColor: theme.theme }}
+            placeholderStyle={{ backgroundColor: 'transparent' }}
+          />
+        </TouchableOpacity>
+      </View>
     </>
   );
 

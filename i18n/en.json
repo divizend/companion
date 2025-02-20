@@ -950,6 +950,7 @@
     "XX_DEMO": "Demo"
   },
   "portfolioConnect": {
+    "title": "Portfolio connect",
     "cta": "Import now!",
     "importViaSecapiImportId": "Import via SecAPI import ID",
     "confirmCancel": {
@@ -1097,6 +1098,7 @@
       "headingMultiple": "Imports successful!",
       "subheadingNotDone": "However, some details about your securities and dividends are still missing. Please click on \"Edit portfolio\" to fix this.",
       "importAnother": "Import another portfolio",
+      "goToPortfolios": "Check out your portfolios",
       "backToDashboard": "Go to the Maximizer dashboard",
       "editPortfolio": "Edit portfolio",
       "multiAccountFilter": "Please click on \"OK\" below now to assign all imported portfolios to the respective customers of your organization."
@@ -1110,7 +1112,8 @@
     "continue": "Continue"
   },
   "portfolioOverview": {
-    "title": "Your Portfolios",
+    "title": "Your portfolios",
+    "noPortfolios": "No portfolios imported.",
     "labels": {
       "description": "Description",
       "owner": "Owner",

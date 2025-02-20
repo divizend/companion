@@ -1,33 +1,39 @@
 import React from 'react';
 
 import { ListItem } from '@rneui/base';
-import { StyleSheet, Text, View } from 'react-native';
+import { capitalize } from 'lodash';
+import { StyleSheet, View } from 'react-native';
 
+import { Text } from '@/components/base';
+import { useThemeColor } from '@/hooks/useThemeColor';
 import { t } from '@/i18n';
 import { UserProfileDepot } from '@/types/depot.types';
 
 import { BankParentIcon } from './BankParentIcon';
 
-export const DepotCard = ({ depot }: { depot: UserProfileDepot }) => {
+export const PortfolioCard = ({ depot }: { depot: UserProfileDepot }) => {
+  const theme = useThemeColor();
   return (
-    <ListItem containerStyle={styles.card}>
+    <ListItem
+      containerStyle={[
+        styles.card,
+        {
+          backgroundColor: theme.backgroundSecondary,
+        },
+      ]}
+    >
       <ListItem.Content>
-        <View style={styles.bankContainer}>
+        <View className="flex flex-row items-center justify-between w-full gap-3">
+          <Text h3 className="font-extrabold" style={{ flexShrink: 1 }}>
+            {capitalize(depot.bankName)}
+          </Text>
           <BankParentIcon bankParent={depot.bankType} />
-          <Text style={styles.bank}>{depot.bankName}</Text>
         </View>
-        <View>
+        <View className="mt-1">
           <View style={styles.detailRow}>
-            <Text style={styles.label}>{t('portfolioOverview.labels.description')}:</Text>
+            <Text>{t('portfolioOverview.labels.description')}:</Text>
             <Text style={styles.value}>{depot.description || 'No description'}</Text>
           </View>
-
-          {/* <View style={styles.detailRow}>
-            <Text style={styles.label}>{t('portfolioOverview.labels.owner')}:</Text>
-            <Text>
-              <DepotOwners depotId={depot.id} />
-            </Text>
-          </View> */}
 
           <View style={styles.detailRow}>
             <Text style={styles.label}>{t('portfolioOverview.labels.portfolioNumber')}:</Text>
@@ -54,12 +60,6 @@ export const DepotCard = ({ depot }: { depot: UserProfileDepot }) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    marginHorizontal: 20,
-    marginBottom: 40,
-    marginTop: 90,
-  },
   title: {
     fontSize: 22,
     fontWeight: 'bold',
@@ -67,21 +67,9 @@ const styles = StyleSheet.create({
   },
   card: {
     padding: 15,
-    marginVertical: 10,
+    marginVertical: 5,
     borderRadius: 10,
   },
-  bankContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    overflow: 'hidden',
-  },
-  bank: {
-    fontSize: 18,
-    fontWeight: '900',
-    marginBottom: 8,
-    flexShrink: 1,
-  },
-
   detailRow: {
     flexDirection: 'row',
     alignItems: 'flex-start',

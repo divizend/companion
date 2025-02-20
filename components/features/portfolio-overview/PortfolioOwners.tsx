@@ -21,7 +21,7 @@ const mapDepotOwnersToStrings = ({ depot, profile }: { depot: UserProfileDepot; 
   );
 };
 
-const DepotOwners = ({ depotId }: { depotId: string }) => {
+const PortfolioOwners = ({ depotId }: { depotId: string }) => {
   const { profile } = useUserProfile();
   if (!profile) return null;
 
@@ -31,7 +31,7 @@ const DepotOwners = ({ depotId }: { depotId: string }) => {
   return <Text style={{ fontWeight: '700' }}>{mapDepotOwnersToStrings({ depot, profile }).join(', ')}</Text>;
 };
 
-export const useDepotOwners = (depotId: string): string[] | null => {
+export const usePortfolioOwners = (depotId: string): string[] | null => {
   const { profile } = useUserProfile();
   if (!profile) return null;
 
@@ -41,4 +41,4 @@ export const useDepotOwners = (depotId: string): string[] | null => {
   return mapDepotOwnersToStrings({ depot, profile });
 };
 
-export default DepotOwners;
+export default PortfolioOwners;

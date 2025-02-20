@@ -26,7 +26,13 @@ const PortfolioConnectModal: React.FC<PortfolioConnectModalProps> = ({ dismiss, 
       title={t('portfolioConnect.title')}
       noScrollView
     >
-      <PortfolioConnect {...props} />
+      <PortfolioConnect
+        {...props}
+        onClose={() => {
+          resetPortfolioConnect();
+          dismiss();
+        }}
+      />
     </ModalLayout>
   );
 };
