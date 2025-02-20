@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 
 import { CheckBox } from '@rneui/themed';
 import { router } from 'expo-router';
+import i18next from 'i18next';
 import { StyleSheet, View } from 'react-native';
 import RNRestart from 'react-native-restart';
 
@@ -12,8 +13,24 @@ import ImpersonateUserModal from '@/components/ImpersonateUserModal';
 import SectionList from '@/components/SectionList';
 import { useSnackbar } from '@/components/global/Snackbar';
 import { ModalManager } from '@/components/global/modal';
+import { showAlert } from '@/components/global/prompt';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { t } from '@/i18n';
+
+const supportedLanguages = [
+  'de-DE',
+  'en-US',
+  'fr-FR',
+  'it-IT',
+  'es-ES',
+  'sv-SE',
+  'pt-PT',
+  'nl-NL',
+  'fi-FI',
+  'no-NO',
+  'da-DK',
+  'is-IS',
+];
 
 export default function SettingsView() {
   const { showSnackbar } = useSnackbar();
@@ -21,6 +38,7 @@ export default function SettingsView() {
   const { profile, isPrivileged, updateProfile } = useUserProfile();
   const [resettingProfileLoading, setResettingProfileLoading] = useState(false);
   const [togglingPrivilegeLoading, setTogglingPrivilegeLoading] = useState(false);
+  const [changeLanguageToggleLoading, setChangeLanguageToggleLoading] = useState(false);
 
   if (!profile) {
     return null;
@@ -66,6 +84,25 @@ export default function SettingsView() {
     }
   };
 
+  const handleChangeLanguage = async (newLanguage: string) => {
+    if (changeLanguageToggleLoading === true) return;
+    setChangeLanguageToggleLoading(true);
+    try {
+      // request: () => Rest.postProtected('/users/language', { language }),
+      await apiPost('/users/language', {
+        language: newLanguage,
+      });
+      updateProfile(p => {
+        p.flags.language = newLanguage;
+      });
+      return newLanguage;
+    } catch (error: any) {
+      showSnackbar(error.message, { type: 'error' });
+    } finally {
+      setChangeLanguageToggleLoading(false);
+    }
+  };
+
   return (
     <View className="flex-1 p-5">
       <SectionList
@@ -93,6 +130,27 @@ export default function SettingsView() {
             },
             onPress: () => router.navigate('/main/settings/plan'),
             disabled: resettingProfileLoading,
+          },
+          {
+            title: 'Change language',
+            leftIcon: {
+              name: 'star-outline',
+              type: 'material',
+            },
+            onPress: () => {
+              showAlert({
+                title: t('settings.accountSection.language'),
+                actions: supportedLanguages.map(language => ({
+                  title: t(`language.${language.split('-')[0]}`),
+                  onPress: () =>
+                    handleChangeLanguage(language).then(newLanguage =>
+                      i18next.changeLanguage(newLanguage?.split('-')[1]),
+                    ),
+                })),
+              });
+            },
+            disabled: !!changeLanguageToggleLoading,
+            rightElement: t(`language.${profile.flags.language.split('-')[0] || 'en'}`),
           },
         ]}
         bottomText={t('settings.accountSection.bottomText')}

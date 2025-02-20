@@ -1,4 +1,5 @@
 import { useQueryClient } from '@tanstack/react-query';
+import i18next from 'i18next';
 import { produce } from 'immer';
 import RNRestart from 'react-native-restart';
 
@@ -67,6 +68,7 @@ export type UserProfile = {
   email: string;
   legalEntities: LegalEntity[];
   flags: {
+    language: string;
     canImpersonateUsers?: boolean;
     canModifyOwnInternalFlags?: boolean;
     allowedCompanionAI?: boolean;
@@ -100,6 +102,7 @@ export function useUserProfile() {
   const queryClient = useQueryClient();
   const profileRaw = useUserProfileQuery();
   const profile = profileRaw.data!;
+  if (profile.flags.language.split('-')[0]) i18next.changeLanguage(profile.flags.language.split('-')[0]);
 
   const updateProfile = (fn: (draft: UserProfile) => void) => {
     const newProfile = produce(profile, fn);

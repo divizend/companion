@@ -33,7 +33,8 @@
     "accountSection": {
       "title": "Account",
       "email": "Email",
-      "bottomText": "To modify your email address and for other profile settings, please visit app.divizend.com."
+      "bottomText": "To modify your email address and for other profile settings, please visit app.divizend.com.",
+      "language": "Choose language"
     },
     "logoutConfirmation": "Are you sure you want to log out?",
     "resetProfile": {
@@ -84,7 +85,8 @@
     "birthday": {
       "title": "When were you born?",
       "message": "Please enter your date of birth.",
-      "openDatepicker": "Select date of birth"
+      "openDatepicker": "Select date of birth",
+      "skip": "Skip this step"
     },
     "freeTrial": {
       "title": "Start your journey with a free trial",
@@ -736,6 +738,93 @@
     "zm": "Zambia",
     "zw": "Zimbabwe"
   },
+  "language": {
+    "en": "English",
+    "fr": "French",
+    "es": "Spanish",
+    "de": "German",
+    "ja": "Japanese",
+    "zh": "Chinese",
+    "ar": "Arabic",
+    "ru": "Russian",
+    "pt": "Portuguese",
+    "it": "Italian",
+    "nl": "Dutch",
+    "ko": "Korean",
+    "tr": "Turkish",
+    "sv": "Swedish",
+    "pl": "Polish",
+    "fi": "Finnish",
+    "da": "Danish",
+    "no": "Norwegian",
+    "hu": "Hungarian",
+    "cs": "Czech",
+    "ro": "Romanian",
+    "uk": "Ukrainian",
+    "el": "Greek",
+    "he": "Hebrew",
+    "th": "Thai",
+    "id": "Indonesian",
+    "ms": "Malay",
+    "vi": "Vietnamese",
+    "hi": "Hindi",
+    "bn": "Bengali",
+    "ta": "Tamil",
+    "te": "Telugu",
+    "mr": "Marathi",
+    "gu": "Gujarati",
+    "kn": "Kannada",
+    "pa": "Punjabi",
+    "sr": "Serbian",
+    "hr": "Croatian",
+    "bg": "Bulgarian",
+    "sk": "Slovak",
+    "sl": "Slovenian",
+    "et": "Estonian",
+    "lv": "Latvian",
+    "lt": "Lithuanian",
+    "sq": "Albanian",
+    "mk": "Macedonian",
+    "fa": "Persian",
+    "ur": "Urdu",
+    "hy": "Armenian",
+    "ka": "Georgian",
+    "az": "Azerbaijani",
+    "uz": "Uzbek",
+    "kk": "Kazakh",
+    "ky": "Kyrgyz",
+    "tk": "Turkmen",
+    "mn": "Mongolian",
+    "ne": "Nepali",
+    "si": "Sinhala",
+    "my": "Burmese",
+    "km": "Khmer",
+    "lo": "Lao",
+    "eu": "Basque",
+    "ca": "Catalan",
+    "af": "Afrikaans",
+    "ha": "Hausa",
+    "so": "Somali",
+    "rw": "Kinyarwanda",
+    "sn": "Shona",
+    "lb": "Luxembourgish",
+    "ga": "Irish",
+    "cy": "Welsh",
+    "ku": "Kurdish",
+    "dv": "Divehi",
+    "ks": "Kashmiri",
+    "bs": "Bosnian",
+    "mt": "Maltese",
+    "is": "Icelandic",
+    "fo": "Faroese",
+    "sm": "Samoan",
+    "to": "Tongan",
+    "fj": "Fijian",
+    "kl": "Greenlandic",
+    "eo": "Esperanto",
+    "tl": "Filipino",
+    "ny": "Chichewa"
+  },
   "bank": {
     "AT_ERSTE_BANK": "Erste Bank",
     "AT_RAIFFEISENBANK": "Raiffeisen",
@@ -747,7 +836,6 @@
     "AT_DADAT": "Dadat",
     "AT_SCALABLE_CAPITAL": "Scalable Capital",
     "AT_EASYBANK": "Easybank",
-
     "CH_BEKB": "Berner Kantonalbank",
     "CH_BLKB": "Basellandschaftliche Kantonalbank",
     "CH_BSKB": "Basler Kantonalbank",
@@ -765,7 +853,6 @@
     "CH_ZGKB": "Zuger Kantonalbank",
     "CH_ZKB": "Zürcher Kantonalbank",
     "CH_INTERACTIVE_BROKERS": "Interactive Brokers",
-
     "DE_1822DIREKT": "1822direkt",
     "DE_SCALABLE_CAPITAL": "Scalable Capital",
     "DE_BUX": "BUX",
@@ -795,7 +882,6 @@
     "DE_VBANK": "V-Bank",
     "DE_VOLKSBANK_RAIFFEISENBANK": "Volksbank Raiffeisenbank",
     "DE_UBS": "DE_UBS",
-
     "ES_ABANCA": "ABANCA",
     "ES_ACTIVOBANK": "ActivoBank",
     "ES_ANDBANK": "Andbank",
@@ -825,39 +911,27 @@
     "LU_TRADE_REPUBLIC": "Trade Republic",
     "LU_INTERACTIVE_BROKERS": "Interactive Brokers",
     "LU_SWISSQUOTE": "Swissquote",
-
     "FR_SCALABLE_CAPITAL": "Scalable Capital",
     "FR_TRADE_REPUBLIC": "Trade Republic",
     "FR_INTERACTIVE_BROKERS": "Interactive Brokers",
-
     "PT_TRADE_REPUBLIC": "Trade Republic",
     "PT_INTERACTIVE_BROKERS": "Interactive Brokers",
-
     "BE_TRADE_REPUBLIC": "Trade Republic",
     "BE_SWISSQUOTE": "Swissquote",
     "BE_INTERACTIVE_BROKERS": "Interactive Brokers",
-
     "CY_INTERACTIVE_BROKERS": "Interactive Brokers",
-
     "NL_SCALABLE_CAPITAL": "Scalable Capital",
     "NL_TRADE_REPUBLIC": "Trade Republic",
     "NL_INTERACTIVE_BROKERS": "Interactive Brokers",
-
     "IT_SCALABLE_CAPITAL": "Scalable Capital",
     "IT_TRADE_REPUBLIC": "Trade Republic",
     "IT_INTERACTIVE_BROKERS": "Interactive Brokers",
-
     "SG_INTERACTIVE_BROKERS": "Interactive Brokers",
     "SG_SAP": "SAP",
-
     "DK_INTERACTIVE_BROKERS": "Interactive Brokers",
-
     "US_INTERACTIVE_BROKERS": "Interactive Brokers",
-
     "WW_EQUATEX": "Equatex",
-
     "WW_INTERACTIVE_BROKERS": "Interactive Brokers",
-
     "XX_DEMO": "Demo"
   },
   "portfolioConnect": {
