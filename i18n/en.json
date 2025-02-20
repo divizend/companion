@@ -83,7 +83,8 @@
     "birthday": {
       "title": "When were you born?",
       "message": "Please enter your date of birth.",
-      "openDatepicker": "Select date of birth"
+      "openDatepicker": "Select date of birth",
+      "skip": "Skip this step"
     },
     "freeTrial": {
       "title": "Start your journey with a free trial",
