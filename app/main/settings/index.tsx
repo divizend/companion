@@ -88,7 +88,6 @@ export default function SettingsView() {
     if (changeLanguageToggleLoading === true) return;
     setChangeLanguageToggleLoading(true);
     try {
-      // request: () => Rest.postProtected('/users/language', { language }),
       await apiPost('/users/language', {
         language: newLanguage,
       });
@@ -130,27 +129,6 @@ export default function SettingsView() {
             },
             onPress: () => router.navigate('/main/settings/plan'),
             disabled: resettingProfileLoading,
-          },
-          {
-            title: 'Change language',
-            leftIcon: {
-              name: 'star-outline',
-              type: 'material',
-            },
-            onPress: () => {
-              showAlert({
-                title: t('settings.accountSection.language'),
-                actions: supportedLanguages.map(language => ({
-                  title: t(`language.${language.split('-')[0]}`),
-                  onPress: () =>
-                    handleChangeLanguage(language).then(newLanguage =>
-                      i18next.changeLanguage(newLanguage?.split('-')[1]),
-                    ),
-                })),
-              });
-            },
-            disabled: !!changeLanguageToggleLoading,
-            rightElement: t(`language.${profile.flags.language.split('-')[0] || 'en'}`),
           },
         ]}
         bottomText={t('settings.accountSection.bottomText')}
@@ -213,14 +191,35 @@ export default function SettingsView() {
       <SectionList
         items={[
           {
+            title: t('settings.theme'),
+            leftIcon: { name: 'dark-mode', type: 'material' },
+            onPress: toggleTheme,
+          },
+          {
             title: t('common.logout'),
             leftIcon: { name: 'logout', type: 'material' },
             onPress: handleLogout,
           },
           {
-            title: t('settings.theme'),
-            leftIcon: { name: 'dark-mode', type: 'material' },
-            onPress: toggleTheme,
+            title: t('settings.accountSection.language'),
+            leftIcon: {
+              name: 'language',
+              type: 'material',
+            },
+            onPress: () => {
+              showAlert({
+                title: t('settings.accountSection.language'),
+                actions: supportedLanguages.map(language => ({
+                  title: t(`language.${language.split('-')[0]}`),
+                  onPress: () =>
+                    handleChangeLanguage(language).then(newLanguage =>
+                      i18next.changeLanguage(newLanguage?.split('-')[1]),
+                    ),
+                })),
+              });
+            },
+            disabled: !!changeLanguageToggleLoading,
+            rightElement: t(`language.${profile.flags.language.split('-')[0] || 'en'}`),
           },
         ]}
       />
