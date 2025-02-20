@@ -1,3 +1,5 @@
+import { useEffect } from 'react';
+
 import { useQueryClient } from '@tanstack/react-query';
 import i18next from 'i18next';
 import { produce } from 'immer';
@@ -102,7 +104,10 @@ export function useUserProfile() {
   const queryClient = useQueryClient();
   const profileRaw = useUserProfileQuery();
   const profile = profileRaw.data!;
-  if (profile.flags.language.split('-')[0]) i18next.changeLanguage(profile.flags.language.split('-')[0]);
+
+  useEffect(() => {
+    if (profile.flags.language?.split('-')?.[0]) i18next.changeLanguage(profile.flags.language.split('-')[0]);
+  }, [profile.flags.language?.split('-')?.[0]]);
 
   const updateProfile = (fn: (draft: UserProfile) => void) => {
     const newProfile = produce(profile, fn);
