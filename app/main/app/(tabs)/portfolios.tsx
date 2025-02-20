@@ -1,37 +1,49 @@
 import React from 'react';
 
-import { FlatList, StyleSheet, Text, View } from 'react-native';
+import { Icon } from '@rneui/themed';
+import { FlatList, StyleSheet, View } from 'react-native';
 
 import { useUserProfile } from '@/common/profile';
-import { DepotCard } from '@/components/features/portfolio-overview/DepotCard';
+import { Button, SafeAreaView, Text } from '@/components/base';
+import PortfolioConnectModal from '@/components/features/portfolio-import/PortfolioConnectModal';
+import { PortfolioCard } from '@/components/features/portfolio-overview/PortfolioCard';
+import { ModalManager } from '@/components/global/modal';
+import { useThemeColor } from '@/hooks/useThemeColor';
 import { t } from '@/i18n';
 
 export default function Portfolios() {
   const { profile } = useUserProfile();
-  const depots = profile.depots;
-  const filteredDepots = depots.filter(d => !d.isClone);
+  const theme = useThemeColor();
+
+  const filteredPortfolios = profile.depots.filter(d => !d.isClone);
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>{t('portfolioOverview.title')}</Text>
-      <FlatList
-        data={filteredDepots}
-        keyExtractor={item => item.id}
-        renderItem={({ item }) => <DepotCard depot={item} />}
-      />
-    </View>
+    <SafeAreaView style={styles.container}>
+      <Text className="text-3xl font-bold mb-5">
+        {t('portfolioOverview.title')} {filteredPortfolios.length ? '(' + filteredPortfolios.length + ')' : undefined}
+      </Text>
+      {!filteredPortfolios.length ? (
+        <View className="flex-1 flex gap-5 justify-center items-center">
+          <Icon name="block" type="material" size={64} color={theme.muted} />
+          <Text h3>{t('portfolioOverview.noPortfolios')}</Text>
+          <Button onPress={() => ModalManager.showModal(PortfolioConnectModal)}>
+            {t('portfolioConnect.bankLogin.title')}
+          </Button>
+        </View>
+      ) : (
+        <FlatList
+          data={filteredPortfolios}
+          keyExtractor={item => item.id}
+          renderItem={({ item }) => <PortfolioCard depot={item} />}
+        />
+      )}
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    marginHorizontal: 20,
-    marginBottom: 40,
-    marginTop: 90,
-  },
-  title: {
-    fontSize: 22,
-    fontWeight: '700',
-    marginBottom: 10,
+    paddingHorizontal: 20,
+    paddingTop: 40,
   },
 });
