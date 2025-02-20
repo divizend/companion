@@ -10,6 +10,7 @@ export type Config = {
     url: string;
     versionCode: string;
   };
+  secapiImportUrl: string;
   revenueCat: {
     playStore: string;
     appStore: string;

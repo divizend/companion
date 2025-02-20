@@ -50,6 +50,7 @@ export type CompanionProfile = {
 export type LegalEntity = {
   id: string;
   isPrincipal: boolean;
+  isActive: boolean;
   data: {
     info: {
       givenName: string;
@@ -71,6 +72,8 @@ export type UserProfile = {
     allowedCompanionAI?: boolean;
     usedCompanionTrial?: boolean;
     canAccessCompanionFeaturesWithoutSubscription?: boolean;
+    canAccessDemoBanks?: boolean;
+    useLocalSecapi?: boolean;
   };
   impersonation?: {
     fromEmail: string;

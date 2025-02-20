@@ -835,6 +835,7 @@
     "AT_DADAT": "Dadat",
     "AT_SCALABLE_CAPITAL": "Scalable Capital",
     "AT_EASYBANK": "Easybank",
+
     "CH_BEKB": "Berner Kantonalbank",
     "CH_BLKB": "Basellandschaftliche Kantonalbank",
     "CH_BSKB": "Basler Kantonalbank",
@@ -852,6 +853,7 @@
     "CH_ZGKB": "Zuger Kantonalbank",
     "CH_ZKB": "Zürcher Kantonalbank",
     "CH_INTERACTIVE_BROKERS": "Interactive Brokers",
+
     "DE_1822DIREKT": "1822direkt",
     "DE_SCALABLE_CAPITAL": "Scalable Capital",
     "DE_BUX": "BUX",
@@ -881,6 +883,7 @@
     "DE_VBANK": "V-Bank",
     "DE_VOLKSBANK_RAIFFEISENBANK": "Volksbank Raiffeisenbank",
     "DE_UBS": "DE_UBS",
+
     "ES_ABANCA": "ABANCA",
     "ES_ACTIVOBANK": "ActivoBank",
     "ES_ANDBANK": "Andbank",
@@ -910,27 +913,39 @@
     "LU_TRADE_REPUBLIC": "Trade Republic",
     "LU_INTERACTIVE_BROKERS": "Interactive Brokers",
     "LU_SWISSQUOTE": "Swissquote",
+
     "FR_SCALABLE_CAPITAL": "Scalable Capital",
     "FR_TRADE_REPUBLIC": "Trade Republic",
     "FR_INTERACTIVE_BROKERS": "Interactive Brokers",
+
     "PT_TRADE_REPUBLIC": "Trade Republic",
     "PT_INTERACTIVE_BROKERS": "Interactive Brokers",
+
     "BE_TRADE_REPUBLIC": "Trade Republic",
     "BE_SWISSQUOTE": "Swissquote",
     "BE_INTERACTIVE_BROKERS": "Interactive Brokers",
+
     "CY_INTERACTIVE_BROKERS": "Interactive Brokers",
+
     "NL_SCALABLE_CAPITAL": "Scalable Capital",
     "NL_TRADE_REPUBLIC": "Trade Republic",
     "NL_INTERACTIVE_BROKERS": "Interactive Brokers",
+
     "IT_SCALABLE_CAPITAL": "Scalable Capital",
     "IT_TRADE_REPUBLIC": "Trade Republic",
     "IT_INTERACTIVE_BROKERS": "Interactive Brokers",
+
     "SG_INTERACTIVE_BROKERS": "Interactive Brokers",
     "SG_SAP": "SAP",
+
     "DK_INTERACTIVE_BROKERS": "Interactive Brokers",
+
     "US_INTERACTIVE_BROKERS": "Interactive Brokers",
+
     "WW_EQUATEX": "Equatex",
+
     "WW_INTERACTIVE_BROKERS": "Interactive Brokers",
+
     "XX_DEMO": "Demo"
   },
   "portfolioConnect": {
