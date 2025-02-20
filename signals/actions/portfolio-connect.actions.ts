@@ -1,7 +1,9 @@
-import { generateTransientId } from '@/utils/common';
+import { apiGet, apiPatch, apiPostJson } from '@/common/api';
+import { generateTransientId } from '@/utils/uuid';
 
-import { Step, portfolioConnect } from './portfolioConnect';
+import { Step, portfolioConnect } from '../portfolio-connect';
 
+// Initial State
 const getInitialState = () => ({
   manualImport: {
     chosen: false,
@@ -28,49 +30,38 @@ const getInitialState = () => ({
   depotImportSessionId: null,
 });
 
-export const reset = () => {
+// Reset Functions
+export const resetPortfolioConnect = () => {
   portfolioConnect.value = getInitialState();
 };
 
-export const resetPortfolioConnect = () => {
+export const resetDepotImportSessionId = () => {
   portfolioConnect.value = {
-    manualImport: {
-      chosen: false,
-      bank: {},
-      depotNumber: null,
-    },
-    bank: {},
-    portfolioContents: {},
-    secapiImport: {
-      successMessage: null,
-      id: null,
-      progressRequestTimestamp: null,
-      progress: 0.0,
-      error: null,
-      accounts: [],
-    },
-    importDepots: {
-      loading: false,
-      chosenDepotIds: [],
-    },
-    importedSomething: false,
-    currentStep: Step.SecapiImportFrame,
-    restartImport: false,
+    ...portfolioConnect.value,
     depotImportSessionId: null,
   };
 };
 
+// Step Management
 export const setCurrentStep = (step: any) => {
   portfolioConnect.value = { ...portfolioConnect.value, currentStep: step };
 };
 
+export const restartImport = () => {
+  portfolioConnect.value = {
+    ...portfolioConnect.value,
+    restartImport: true,
+  };
+};
+
+// Manual Import
 export const chooseManualImport = (message: any) => {
   portfolioConnect.value = {
     ...portfolioConnect.value,
     manualImport: {
       chosen: true,
       bank: { ...message.bank, parent: message.bank.parent === 'XX_UNKNOWN' ? '' : message.bank.parent },
-      depotNumber: message.depotNumber || '', // Default to an empty string or whatever you want
+      depotNumber: message.depotNumber || '',
     },
     currentStep: Step.BankDetails,
   };
@@ -84,25 +75,35 @@ export const bankDepotDetailsSetField = (fieldName: any, value: any) => {
   portfolioConnect.value = updatedState;
 };
 
-export const chooseDepotsSubmit = () => {
+export const bankDepotDetailsSubmit = () => {
   portfolioConnect.value = {
     ...portfolioConnect.value,
+    bank: portfolioConnect.value.manualImport.bank,
+    secapiImport: {
+      ...portfolioConnect.value.secapiImport,
+      accounts: [
+        ...(portfolioConnect.value.secapiImport.accounts || []),
+        {
+          id: generateTransientId(),
+          depotNumber: portfolioConnect.value.manualImport.depotNumber,
+          securities: {},
+          profile: {},
+        },
+      ],
+    },
+    importDepots: {
+      ...portfolioConnect.value.importDepots,
+      chosenDepotIds: [generateTransientId()],
+    },
     currentStep: Step.PortfolioContents,
   };
 };
 
-export const restartImport = () => {
-  portfolioConnect.value = {
-    ...portfolioConnect.value,
-    restartImport: true,
-  };
-};
-
+// Depot Selection
 export const chooseDepot = ({ depotId, checked, oneOnly }: { depotId: string; checked: boolean; oneOnly: boolean }) => {
   const chosenDepots = portfolioConnect.value.importDepots.chosenDepotIds;
 
   if (oneOnly) {
-    // If only one depot can be selected, replace the chosen depots with the current depotId
     portfolioConnect.value = {
       ...portfolioConnect.value,
       importDepots: {
@@ -113,7 +114,6 @@ export const chooseDepot = ({ depotId, checked, oneOnly }: { depotId: string; ch
     return;
   }
 
-  // If checked is true and the depotId is not already in the list, add it to chosenDepotIds
   if (checked && !chosenDepots.includes(depotId)) {
     portfolioConnect.value = {
       ...portfolioConnect.value,
@@ -123,7 +123,6 @@ export const chooseDepot = ({ depotId, checked, oneOnly }: { depotId: string; ch
       },
     };
   } else if (!checked) {
-    // If unchecked, remove depotId from the list of chosen depots
     portfolioConnect.value = {
       ...portfolioConnect.value,
       importDepots: {
@@ -134,20 +133,14 @@ export const chooseDepot = ({ depotId, checked, oneOnly }: { depotId: string; ch
   }
 };
 
-export const createDepotImportSessionSuccess = (sessionId: string) => {
+export const chooseDepotsSubmit = () => {
   portfolioConnect.value = {
     ...portfolioConnect.value,
-    depotImportSessionId: sessionId,
+    currentStep: Step.PortfolioContents,
   };
 };
 
-export const resetDepotImportSessionId = () => {
-  portfolioConnect.value = {
-    ...portfolioConnect.value,
-    depotImportSessionId: null,
-  };
-};
-
+// Secapi Import
 export const setSecapiImportProgressRequestTimestamp = (date: number) => {
   portfolioConnect.value = {
     ...portfolioConnect.value,
@@ -238,6 +231,21 @@ export const setSecapiImportSuccessMessage = (message: any) => {
   };
 };
 
+export const setSecapiAuthenticationFailedMessage = (message: any) => {
+  portfolioConnect.value = {
+    ...portfolioConnect.value,
+    secapiAuthenticationFailedMessage: message ?? 'An error has occured.',
+  };
+};
+
+export const createDepotImportSessionSuccess = (sessionId: string) => {
+  portfolioConnect.value = {
+    ...portfolioConnect.value,
+    depotImportSessionId: sessionId,
+  };
+};
+
+// Portfolio Contents
 export const setPortfolioContents = () => {
   const accounts = portfolioConnect.value.secapiImport.accounts;
   portfolioConnect.value = {
@@ -290,13 +298,6 @@ export const setPortfolioContents = () => {
   }
 };
 
-export const setSecapiAuthenticationFailedMessage = (message: any) => {
-  portfolioConnect.value = {
-    ...portfolioConnect.value,
-    secapiAuthenticationFailedMessage: message ?? 'An error has occured.',
-  };
-};
-
 export const portfolioContentsImportDepotsSetLoading = (loading: boolean) => {
   portfolioConnect.value = {
     ...portfolioConnect.value,
@@ -322,26 +323,116 @@ export const importedSomething = () => {
   portfolioConnect.value = { ...portfolioConnect.value, importedSomething: true };
 };
 
-export const bankDepotDetailsSubmit = () => {
-  portfolioConnect.value = {
-    ...portfolioConnect.value,
-    bank: portfolioConnect.value.manualImport.bank,
-    secapiImport: {
-      ...portfolioConnect.value.secapiImport,
-      accounts: [
-        ...(portfolioConnect.value.secapiImport.accounts || []),
-        {
-          id: generateTransientId(),
-          depotNumber: portfolioConnect.value.manualImport.depotNumber,
-          securities: {},
-          profile: {},
-        },
-      ],
-    },
-    importDepots: {
-      ...portfolioConnect.value.importDepots,
-      chosenDepotIds: [generateTransientId()],
-    },
-    currentStep: Step.PortfolioContents,
+// Requests
+export async function portfolioContentsImportConnectDepots({
+  multiAccountImport,
+  ownerEntityId,
+}: {
+  multiAccountImport?: string;
+  ownerEntityId: string;
+}) {
+  const chosenAccountIds = portfolioConnect.value.importDepots.chosenDepotIds;
+
+  const accounts = JSON.parse(
+    JSON.stringify(
+      portfolioConnect.value.portfolioContents.accounts!.filter(acc => chosenAccountIds?.includes(acc.id)),
+    ),
+  );
+
+  const secapiImportId = portfolioConnect.value.secapiImport.id;
+
+  const payload = {
+    ...(secapiImportId ? { secapiImportId } : {}),
+    bankInfo: portfolioConnect.value.bank,
+    ownerEntityId,
+    accounts: accounts.map((acc: any) => {
+      return {
+        ...acc,
+        depotNumber: portfolioConnect.value.depotNumberToSync ?? acc.depotNumber,
+        newDepotNumber: acc.depotNumber,
+      };
+    }),
+    unassignedOrganization: multiAccountImport,
   };
+
+  portfolioContentsImportDepotsSetLoading(true);
+
+  return apiPostJson('/depots/import', payload)
+    .then((data: any) => {
+      const securities = portfolioConnect.value.portfolioContents?.accounts?.[0]?.securities;
+      finalizeImport({
+        done: true,
+        empty: !securities || Object.keys(securities).length === 0,
+        data,
+      });
+    })
+    .catch((error: any) => {
+      resetPortfolioConnect();
+      throw error;
+    })
+    .finally(() => {
+      portfolioContentsImportDepotsSetLoading(false);
+    });
+}
+
+export function sendDepotImportEvent(sessionId: string, data: any) {
+  return apiPostJson(`/depot-import/${sessionId}/event`, data);
+}
+
+export const createDepotImportSession = async ({ depotNumberToSync }: { depotNumberToSync?: string } = {}) => {
+  return apiPostJson('/depot-import/session', { depotNumberToSync }).then(createDepotImportSessionSuccess);
+};
+
+export const setDepotImportSessionReplayId = (sessionId: string, replayId: string) => {
+  return apiPatch(`/depot-import/${sessionId}/replay/${replayId}`, {});
+};
+
+export const getSecapiImportProgress = () => {
+  const portfolioConnectValue = portfolioConnect.value;
+  if (!portfolioConnectValue.secapiImport.id) return;
+  if (portfolioConnectValue.portfolioContents?.keys) return;
+  if (portfolioConnectValue.secapiImport.loading) return;
+
+  const requestTimestamp = +new Date();
+  setSecapiImportProgressRequestTimestamp(requestTimestamp);
+
+  getSecapiImportProgressLoading(true);
+
+  return apiGet('/secapiImport', { secapiImportId: portfolioConnectValue.secapiImport.id })
+    .then(res => {
+      getSecapiImportProgressSuccess({ res, requestTimestamp });
+    })
+    .catch(error => {
+      getSecapiImportProgressFailure({ error, requestTimestamp });
+    })
+    .finally(() => {
+      getSecapiImportProgressLoading(false);
+    });
+};
+
+export const watchImportProgress = async (depotNumberToSync?: string) => {
+  const portfolioConnectValue = portfolioConnect.value;
+  if (portfolioConnectValue.portfolioContents?.keys) return;
+  if (portfolioConnectValue.secapiImport?.id) return;
+
+  const message = portfolioConnectValue.secapiImport?.successMessage!;
+  await new Promise(r => setTimeout(r, 1000));
+  const payload = {
+    token: message.token,
+    interfaceType: message.interface.type,
+    interfaceId: message.interface.id,
+    bankId: message.bank.id,
+    flags: message.flags,
+    depotNumberToSync,
+  };
+  return apiPostJson('/secapiImport', payload)
+    .then(res => {
+      startSecapiImportSuccess({
+        ...res,
+        depotNumberToSync,
+      });
+    })
+    .catch(error => {
+      startSecapiImportFailure(error);
+    });
 };

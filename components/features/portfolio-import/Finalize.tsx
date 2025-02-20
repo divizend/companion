@@ -1,14 +1,13 @@
 import React, { useEffect } from 'react';
 
 import { Feather } from '@expo/vector-icons';
-import { ThemeConsumer } from '@rneui/themed';
 import { t } from 'i18next';
 import { StyleSheet, View } from 'react-native';
 
 import { Button, Text } from '@/components/base';
 import { useThemeColor } from '@/hooks/useThemeColor';
-import { portfolioConnect } from '@/signals/portfolioConnect';
-import { importedSomething, resetPortfolioConnect } from '@/signals/portfolioConnectActions';
+import { importedSomething, resetPortfolioConnect } from '@/signals/actions/portfolio-connect.actions';
+import { portfolioConnect } from '@/signals/portfolio-connect';
 
 interface FinalizeProps {
   applyMultiAccountFilter?: string;
@@ -30,7 +29,7 @@ export default function Finalize({ applyMultiAccountFilter, finalizeOnSuccess, o
 
   return (
     <View style={styles.container}>
-      <Feather name="check-circle" size={128} color={theme.icon} style={styles.icon} />
+      <Feather name="check-circle" size={128} color={theme.theme} className="shadow-theme" style={styles.icon} />
 
       <Text style={styles.heading}>
         {applyMultiAccountFilter
@@ -53,15 +52,6 @@ export default function Finalize({ applyMultiAccountFilter, finalizeOnSuccess, o
       ) : (
         <Text style={styles.subheading}>{t('portfolioConnect.finalize.multiAccountFilter')}</Text>
       )}
-
-      {/* <Button
-        title={t(done ? 'portfolioConnect.finalize.backToDashboard' : 'portfolioConnect.finalize.editPortfolio')}
-        containerStyle={{ marginTop: 10 }}
-        onPress={() => {
-          resetPortfolioConnect();
-          if (onFinalizeImports) onFinalizeImports(null, !done);
-        }}
-      /> */}
     </View>
   );
 }
@@ -72,6 +62,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 20,
+    gap: 7,
   },
   icon: {
     marginBottom: 20,

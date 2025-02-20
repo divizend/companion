@@ -3,7 +3,7 @@ import { Circle } from 'react-native-progress';
 
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { t } from '@/i18n';
-import { portfolioConnect } from '@/signals/portfolioConnect';
+import { portfolioConnect } from '@/signals/portfolio-connect';
 
 export function DepotLoading() {
   const theme = useThemeColor();

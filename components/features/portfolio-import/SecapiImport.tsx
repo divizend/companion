@@ -167,13 +167,15 @@ export function SecAPIImport(props: {
   }
   if (theme.style === 'light') queryString.set('theme', theme.backgroundPrimary);
 
+  queryString.set('hideManual', 'true');
+
   return (
     <WebView
       ref={webViewRef}
       source={{ uri: `${props.host}/connection/authenticate?${queryString.toString()}` }}
       domStorageEnabled
       javaScriptEnabled
-      style={{ marginBottom: 5 }}
+      className="flex-1"
       scrollEnabled={false}
       onMessage={onMessage}
     />
