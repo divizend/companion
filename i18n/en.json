@@ -860,6 +860,7 @@
     "XX_DEMO": "Demo"
   },
   "portfolioConnect": {
+    "title": "Portfolio Connector",
     "cta": "Import now!",
     "importViaSecapiImportId": "Import via SecAPI import ID",
     "confirmCancel": {
