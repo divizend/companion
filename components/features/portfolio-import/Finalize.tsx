@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 
 import { Feather } from '@expo/vector-icons';
+import { router } from 'expo-router';
 import { t } from 'i18next';
 import { StyleSheet, View } from 'react-native';
 
@@ -13,9 +14,15 @@ interface FinalizeProps {
   applyMultiAccountFilter?: string;
   finalizeOnSuccess?: boolean;
   onFinalizeImports?: (arg1: any, arg2?: boolean) => void;
+  onClose?: () => void;
 }
 
-export default function Finalize({ applyMultiAccountFilter, finalizeOnSuccess, onFinalizeImports }: FinalizeProps) {
+export default function Finalize({
+  applyMultiAccountFilter,
+  finalizeOnSuccess,
+  onFinalizeImports,
+  onClose,
+}: FinalizeProps) {
   const empty = portfolioConnect.value.importedDepotEmpty;
   const done = portfolioConnect.value.importedDepotDone || applyMultiAccountFilter;
   const theme = useThemeColor();
@@ -42,13 +49,23 @@ export default function Finalize({ applyMultiAccountFilter, finalizeOnSuccess, o
       {!done && <Text style={styles.subheading}>{t('portfolioConnect.finalize.subheadingNotDone')}</Text>}
 
       {!applyMultiAccountFilter ? (
-        <Button
-          title={t('portfolioConnect.finalize.importAnother')}
-          onPress={() => {
-            resetPortfolioConnect();
-            importedSomething();
-          }}
-        />
+        <>
+          <Button
+            title={t('portfolioConnect.finalize.goToPortfolios')}
+            onPress={() => {
+              router.navigate('/main/app/(tabs)/portfolios');
+              onClose?.();
+            }}
+          />
+          <Button
+            variant="secondary"
+            title={t('portfolioConnect.finalize.importAnother')}
+            onPress={() => {
+              resetPortfolioConnect();
+              importedSomething();
+            }}
+          />
+        </>
       ) : (
         <Text style={styles.subheading}>{t('portfolioConnect.finalize.multiAccountFilter')}</Text>
       )}

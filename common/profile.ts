@@ -1,7 +1,11 @@
+import { useEffect } from 'react';
+
 import { useQueryClient } from '@tanstack/react-query';
 import i18next from 'i18next';
 import { produce } from 'immer';
 import RNRestart from 'react-native-restart';
+
+import { UserProfileDepot } from '@/types/depot.types';
 
 import { apiGet } from './api';
 import { useUserProfileQuery } from './queries';
@@ -83,6 +87,7 @@ export type UserProfile = {
     };
   };
   companionProfile: CompanionProfile;
+  depots: UserProfileDepot[];
   // actually also many other properties, but those are not relevant for now
 };
 
@@ -99,7 +104,10 @@ export function useUserProfile() {
   const queryClient = useQueryClient();
   const profileRaw = useUserProfileQuery();
   const profile = profileRaw.data!;
-  if (profile.flags.language.split('-')[0]) i18next.changeLanguage(profile.flags.language.split('-')[0]);
+
+  useEffect(() => {
+    if (profile.flags.language?.split('-')?.[0]) i18next.changeLanguage(profile.flags.language.split('-')[0]);
+  }, [profile.flags.language?.split('-')?.[0]]);
 
   const updateProfile = (fn: (draft: UserProfile) => void) => {
     const newProfile = produce(profile, fn);

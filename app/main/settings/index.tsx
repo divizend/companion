@@ -210,7 +210,7 @@ export default function SettingsView() {
               showAlert({
                 title: t('settings.accountSection.language'),
                 actions: supportedLanguages.map(language => ({
-                  title: t(`language.${language.split('-')[0]}`),
+                  title: t(`language.${language?.split('-')?.[0]}`),
                   onPress: () =>
                     handleChangeLanguage(language).then(newLanguage =>
                       i18next.changeLanguage(newLanguage?.split('-')[1]),
@@ -219,7 +219,7 @@ export default function SettingsView() {
               });
             },
             disabled: !!changeLanguageToggleLoading,
-            rightElement: t(`language.${profile.flags.language.split('-')[0] || 'en'}`),
+            rightElement: t(`language.${profile.flags.language?.split('-')?.[0] || 'en'}`),
           },
         ]}
       />

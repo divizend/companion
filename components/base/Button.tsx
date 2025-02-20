@@ -10,7 +10,15 @@ export interface StyledButtonProps extends ButtonProps {
   variant?: 'primary' | 'secondary';
 }
 
-export const Button: React.FC<StyledButtonProps> = ({ loading, onPress, variant = 'primary', ...rest }) => {
+export const Button: React.FC<StyledButtonProps> = ({
+  loading,
+  onPress,
+  variant = 'primary',
+  disabledStyle,
+  containerStyle,
+  disabledTitleStyle,
+  ...rest
+}) => {
   const { theme } = useThemeColor();
 
   const buttonStyle = [
@@ -36,10 +44,10 @@ export const Button: React.FC<StyledButtonProps> = ({ loading, onPress, variant 
 
   return (
     <NativeButton
-      disabledStyle={[styles.disabledButton, rest.disabledStyle]}
-      disabledTitleStyle={[styles.disabledText, rest.disabledTitleStyle]}
+      disabledStyle={[styles.disabledButton, disabledStyle]}
+      disabledTitleStyle={[styles.disabledText, disabledTitleStyle]}
       buttonStyle={buttonStyle}
-      containerStyle={[styles.buttonContainer, rest.containerStyle]}
+      containerStyle={[styles.buttonContainer, containerStyle]}
       titleStyle={titleStyle}
       loading={loading}
       onPress={loading ? undefined : onPress}

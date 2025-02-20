@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
+import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
@@ -40,6 +41,7 @@ type PortfolioConnectDialogProps = {
   onFinalizeImports?: (redirectUrl: string) => void;
   useSecapiImportId?: boolean;
   secapiImportId?: string;
+  onClose?: () => void;
 };
 
 const SECAPI_LOCAL_HOST = 'https://secapi-local.divizend.com';
@@ -180,6 +182,7 @@ function PortfolioConnectDialog(props: PortfolioConnectDialogProps) {
           finalizeOnSuccess={props.finalizeOnSuccess}
           onFinalizeImports={props.onFinalizeImports}
           applyMultiAccountFilter={props.applyMultiAccountFilter}
+          onClose={props.onClose}
         />
       )}
     </>
