@@ -915,6 +915,38 @@
     "LU_INTERACTIVE_BROKERS": "Interactive Brokers",
     "LU_SWISSQUOTE": "Swissquote",
 
+    "FR_SCALABLE_CAPITAL": "Scalable Capital",
+    "FR_TRADE_REPUBLIC": "Trade Republic",
+    "FR_INTERACTIVE_BROKERS": "Interactive Brokers",
+
+    "PT_TRADE_REPUBLIC": "Trade Republic",
+    "PT_INTERACTIVE_BROKERS": "Interactive Brokers",
+
+    "BE_TRADE_REPUBLIC": "Trade Republic",
+    "BE_SWISSQUOTE": "Swissquote",
+    "BE_INTERACTIVE_BROKERS": "Interactive Brokers",
+
+    "CY_INTERACTIVE_BROKERS": "Interactive Brokers",
+
+    "NL_SCALABLE_CAPITAL": "Scalable Capital",
+    "NL_TRADE_REPUBLIC": "Trade Republic",
+    "NL_INTERACTIVE_BROKERS": "Interactive Brokers",
+
+    "IT_SCALABLE_CAPITAL": "Scalable Capital",
+    "IT_TRADE_REPUBLIC": "Trade Republic",
+    "IT_INTERACTIVE_BROKERS": "Interactive Brokers",
+
+    "SG_INTERACTIVE_BROKERS": "Interactive Brokers",
+    "SG_SAP": "SAP",
+
+    "DK_INTERACTIVE_BROKERS": "Interactive Brokers",
+
+    "US_INTERACTIVE_BROKERS": "Interactive Brokers",
+
+    "WW_EQUATEX": "Equatex",
+
+    "WW_INTERACTIVE_BROKERS": "Interactive Brokers",
+
     "XX_DEMO": "Demo"
   },
   "portfolioConnect": {
