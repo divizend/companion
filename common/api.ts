@@ -59,6 +59,10 @@ export const apiGet = (endpoint: string, queryParams?: Record<string, string>) =
   return apiFetch(endpoint + (queryParams ? '?' + new URLSearchParams(queryParams).toString() : ''), { method: 'GET' });
 };
 
+export const apiPostJson = <T = any>(endpoint: string, body?: any) => {
+  return apiPost<T>(endpoint, JSON.stringify(body));
+};
+
 export const apiPost = <T = any>(endpoint: string, body: any) => {
   return apiFetch(endpoint, {
     method: 'POST',
@@ -79,8 +83,13 @@ export const apiDelete = (endpoint: string) => {
   });
 };
 
-export const useFetch = <T = any>(key: string, endpoint?: string) => {
+export const useFetch = <T = any>(
+  key: string,
+  endpoint?: string,
+  extraParams?: Omit<Parameters<typeof useQuery<T, ApiError>>[0], 'queryKey' | 'queryFn'>,
+) => {
   return useQuery<T, ApiError>({
+    ...extraParams,
     queryKey: [key],
     queryFn: endpoint ? () => apiFetch(endpoint) : undefined,
   });

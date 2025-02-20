@@ -8,7 +8,7 @@ import { Text } from '@/components/base';
 import { useThemeColor } from '@/hooks/useThemeColor';
 
 export type SectionListProps = {
-  title?: string;
+  title?: string | React.ReactNode;
   items: {
     key?: string;
     title: string | React.ReactNode;
@@ -43,8 +43,10 @@ export default function SectionList({
 
   return (
     <View className="mb-5" style={containerStyle}>
-      {title && (
+      {typeof title === 'string' ? (
         <Text className="text-xs mb-1.5 mx-5 uppercase text-gray-600 dark:text-gray-300">{title.toUpperCase()}</Text>
+      ) : (
+        title
       )}
       <View className="rounded-xl overflow-hidden">
         {items.map((item, index) => (

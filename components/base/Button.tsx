@@ -4,17 +4,43 @@ import { ButtonProps, Button as NativeButton } from '@rneui/themed';
 import { StyleSheet } from 'react-native';
 
 import '@/global.css';
+import { useThemeColor } from '@/hooks/useThemeColor';
 
-export interface StyledButtonProps extends ButtonProps {}
+export interface StyledButtonProps extends ButtonProps {
+  variant?: 'primary' | 'secondary';
+}
 
-export const Button: React.FC<StyledButtonProps> = ({ loading, onPress, ...rest }) => {
+export const Button: React.FC<StyledButtonProps> = ({ loading, onPress, variant = 'primary', ...rest }) => {
+  const { theme } = useThemeColor();
+
+  const buttonStyle = [
+    styles.button,
+    variant === 'secondary' && styles.secondaryButton,
+    variant === 'primary'
+      ? {
+          backgroundColor: theme,
+        }
+      : {
+          borderColor: theme,
+        },
+    rest.buttonStyle,
+  ];
+
+  const titleStyle = [
+    styles.buttonText,
+    variant === 'secondary' && {
+      color: theme,
+    },
+    rest.titleStyle,
+  ];
+
   return (
     <NativeButton
       disabledStyle={[styles.disabledButton, rest.disabledStyle]}
       disabledTitleStyle={[styles.disabledText, rest.disabledTitleStyle]}
-      buttonStyle={[styles.button, rest.buttonStyle]}
+      buttonStyle={buttonStyle}
       containerStyle={[styles.buttonContainer, rest.containerStyle]}
-      titleStyle={[styles.buttonText, rest.titleStyle]}
+      titleStyle={titleStyle}
       loading={loading}
       onPress={loading ? undefined : onPress}
       {...rest}
@@ -24,14 +50,19 @@ export const Button: React.FC<StyledButtonProps> = ({ loading, onPress, ...rest 
 
 const styles = StyleSheet.create({
   buttonContainer: {
-    borderRadius: 100,
+    borderRadius: 12,
     overflow: 'hidden',
   },
   button: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#00008f',
     paddingVertical: 12,
     paddingHorizontal: 20,
-    borderRadius: 100,
+  },
+  secondaryButton: {
+    backgroundColor: 'transparent',
+    borderWidth: 1,
+    borderRadius: 12,
+    borderColor: '#00008f',
   },
   disabledButton: {
     backgroundColor: '#A0A0A0',
