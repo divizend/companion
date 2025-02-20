@@ -31,7 +31,6 @@ import Finalize from './Finalize';
 import { SecAPIImport, SecAPIMessageType } from './SecapiImport';
 
 type PortfolioConnectDialogProps = {
-  open?: boolean;
   bankId?: string;
   bankInterface?: string;
   depotNumberToSync?: string;
@@ -39,7 +38,6 @@ type PortfolioConnectDialogProps = {
   sessionId?: string;
   finalizeOnSuccess?: boolean;
   onFinalizeImports?: (redirectUrl: string) => void;
-  onClose: () => void;
   useSecapiImportId?: boolean;
   secapiImportId?: string;
 };
