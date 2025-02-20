@@ -175,7 +175,7 @@ export function SecAPIImport(props: {
       source={{ uri: `${props.host}/connection/authenticate?${queryString.toString()}` }}
       domStorageEnabled
       javaScriptEnabled
-      style={{ marginBottom: 5 }}
+      className="flex-1"
       scrollEnabled={false}
       onMessage={onMessage}
     />
