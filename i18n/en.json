@@ -1112,7 +1112,7 @@
     "continue": "Continue"
   },
   "portfolioOverview": {
-    "title": "Your portfolios",
+    "title": "Portfolios",
     "noPortfolios": "No portfolios imported.",
     "labels": {
       "description": "Description",
@@ -1120,7 +1120,21 @@
       "portfolioNumber": "Portfolio number",
       "importedAt": "Imported at",
       "syncedAt": "Synchronized at"
-    }
+    },
+    "onBoarding": [
+      {
+        "title": "Manage Multiple Portfolios",
+        "description": "View and add portfolios for free, regardless of your bank."
+      },
+      {
+        "title": "Seamless Integration",
+        "description": "Enjoy high-quality service with automatic coverage for most banks."
+      },
+      {
+        "title": "Secure & Private",
+        "description": "Login safely with no data stored for your privacy."
+      }
+    ]
   },
   "dateTime": {
     "dayLongAndTime": "{{date, dayLongAndTime}}"
