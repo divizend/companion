@@ -967,78 +967,6 @@
       "manualInput": "Input manually",
       "bankListLoading": "Loading list of supported banks..."
     },
-    "searchBankBranch": {
-      "title": "Choose bank branch",
-      "query": {
-        "labels": {
-          "bank": "Search for $t(bank:{{bank}}) branch",
-          "other": "Search for bank"
-        },
-        "helper": "You can search for the bank code, BIC or the name of your bank."
-      },
-      "noResults": "No results. Please modify your search query.",
-      "numbers": {
-        "blz": "BLZ",
-        "bic": "BIC"
-      }
-    },
-    "chooseInterface": {
-      "title": "Choose interface",
-      "recommended": "Recommended",
-      "failed": "Failed",
-      "interfaceType": {
-        "DEMO": {
-          "title": "Demo Interface",
-          "description": "The demo interface demonstrates the functionality of Divizend.",
-          "duration": "< 1 min"
-        },
-        "NATIVE": {
-          "title": "Native Interface",
-          "description": "Using the native Open Banking interface of your bank, you can connect your securities account to Divizend within moments.\nThe access data to your securities account are transmitted to your bank for authentication using an encrypted protocol. Divizend has no access to your access data at any time.",
-          "duration": "< 1 min"
-        },
-        "FINAPI": {
-          "title": "finAPI",
-          "description": "finAPI is a german financial services provider licensed by BaFin that offers interfaces for accessing payment and securities accounts. By authenticating over finAPI, you can connect your securities account to Divizend within moments.\nThe access data to your securities account are transmitted by finAPI to your bank for authentication using an encrypted protocol. Divizend has no access to your access data at any time.",
-          "duration": "< 1 min"
-        },
-        "DOCAPI": {
-          "title": "PDF import",
-          "description": "With PDF import, you first upload portfolio overview documents and purchase receipts, which you can download as PDFs from your broker account mailbox, then Divizend automatically reads your current shareholdings and possibly your transaction history.",
-          "duration": "> 2 min"
-        },
-        "FINTS": {
-          "title": "FinTS",
-          "description": "FinTS is a german standard for accessing payment and securities accounts. We have specifically optimized our interface to determine your current securities account statement. By authenticating over FinTS, you can connect your securities account to Divizend within moments.\nThe access data to your securities account are transmitted to your bank exclusively and once for authentication using an encrypted protocol, they are not stored.",
-          "duration": "< 1 min"
-        },
-        "POCAPI": {
-          "title": "PDF Import",
-          "description": "The PDF import allows you to connect your securities account to Divizend even without using a banking interface. To do so, you can upload the relevant documents from your mailbox.\nThe documents are only read once to determine the current securities account statement and the transaction history, they are not stored.",
-          "duration": "> 2 min"
-        },
-        "SCRAPER": {
-          "title": "Screen Analyzer",
-          "description": "Using the Screen Analyzer, you can connect your securities account to Divizend using the graphical user interface within moments.\nThe access data to your securities account are transmitted to your bank exclusively and once for authentication using an encrypted protocol, they are not stored.",
-          "duration": "< 1 min"
-        },
-        "ESTA": {
-          "title": "eSteuerauszug",
-          "description": "Using this method, you can use an eSteuerauszug (electronic tax statement) to automatically import your securities account at Divizend. eSteuerauszüge can be found at many Swiss banks in your online banking as PDF documents.",
-          "duration": "< 1 min"
-        },
-        "FLANKS": {
-          "title": "Flanks",
-          "description": "Flanks is a licensed account information services provider that offers interfaces for open access to payment and securities accounts. Authentication via Flanks allows you to connect your securities account to Divizend within moments.",
-          "duration": "< 1 min"
-        },
-        "MANUAL": {
-          "title": "Manual Input",
-          "description": "Manual input allows you to connect your securities account to Divizend without any automated interfaces or documents. For this purpose, you enter your current shareholdings as well as your transaction history, if applicable, via our graphical interface.",
-          "duration": "> 3 min"
-        }
-      }
-    },
     "bankLogin": {
       "title": "Connect portfolio",
       "error": "Connecting portfolio failed: {{error, error}}",
@@ -1114,6 +1042,10 @@
   "portfolioOverview": {
     "title": "Portfolios",
     "noPortfolios": "No portfolios imported.",
+    "deletePortfolio": {
+      "title": "Delete portfolio",
+      "description": "Are you sure you want to delete this portfolio?"
+    },
     "labels": {
       "description": "Description",
       "owner": "Owner",

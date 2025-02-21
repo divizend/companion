@@ -3,6 +3,7 @@ import React from 'react';
 import { useSignals } from '@preact/signals-react/runtime';
 import { Icon } from '@rneui/themed';
 import { LinearGradient } from 'expo-linear-gradient';
+import { capitalize } from 'lodash';
 import { useColorScheme } from 'nativewind';
 import { useTranslation } from 'react-i18next';
 import { Dimensions, ImageBackground, Pressable, StyleSheet, View } from 'react-native';
@@ -10,11 +11,14 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { useSharedValue } from 'react-native-reanimated';
 import Carousel, { ICarouselInstance, Pagination } from 'react-native-reanimated-carousel';
 
+import { apiDelete } from '@/common/api';
+import { showConfirmationDialog } from '@/common/inputDialog';
 import { useUserProfile } from '@/common/profile';
 import SectionList from '@/components/SectionList';
 import { Button, SafeAreaView, Text } from '@/components/base';
 import PortfolioConnectModal from '@/components/features/portfolio-import/PortfolioConnectModal';
 import { BankParentIcon } from '@/components/features/portfolio-overview/BankParentIcon';
+import { useSnackbar } from '@/components/global/Snackbar';
 import { ModalManager } from '@/components/global/modal';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { isPortfolioConnectOnboardingVisible, setIsPortfolioConnectOnboardingVisible } from '@/signals/app.signal';
@@ -139,12 +143,31 @@ function PortfolioOnboarding() {
 
 export default function Portfolios() {
   const { t } = useTranslation();
-  const { profile } = useUserProfile();
+  const { profile, refetch } = useUserProfile();
   const theme = useThemeColor();
+  const { showSnackbar } = useSnackbar();
+  const [deleteLoadingById, setDeleteLoadingById] = React.useState<Record<string, boolean>>({});
 
   useSignals();
 
   const filteredPortfolios = profile.depots.filter(d => !d.isClone);
+
+  const handleDeletePortfolio = async (portfolioId: string) => {
+    setDeleteLoadingById(prev => ({ ...prev, [portfolioId]: true }));
+    const confirmed = await showConfirmationDialog(
+      t('portfolioOverview.deletePortfolio.title'),
+      t('portfolioOverview.deletePortfolio.description'),
+    );
+    if (confirmed) {
+      await apiDelete(`/depots/${portfolioId}`)
+        .then(refetch)
+        .catch(e => {
+          showSnackbar(e.message, { type: 'error' });
+          setDeleteLoadingById(prev => ({ ...prev, [portfolioId]: false }));
+        });
+    }
+    setDeleteLoadingById(prev => ({ ...prev, [portfolioId]: false }));
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -174,17 +197,32 @@ export default function Portfolios() {
         <>
           <ScrollView contentContainerStyle={{ paddingBottom: 20 }}>
             <SectionList
-              items={filteredPortfolios.map(portfolio => ({
-                leftIcon: <BankParentIcon bankParent={portfolio.bankType} size={25} />,
-                title: (
-                  <View>
-                    <Text h4 className="font-bold line-clamp-1">
-                      {portfolio.bankName}
-                    </Text>
-                    <Text className="line-clamp-1">{portfolio.description || portfolio.number}</Text>
-                  </View>
-                ),
-              }))}
+              items={[
+                ...filteredPortfolios.map(portfolio => ({
+                  key: portfolio.id,
+                  leftIcon: <BankParentIcon bankParent={portfolio.bankType} size={25} />,
+                  title: (
+                    <View>
+                      <Text h4 className="font-bold line-clamp-1">
+                        {capitalize(portfolio.bankName)}
+                      </Text>
+                      <Text className="line-clamp-1">{portfolio.description || portfolio.number}</Text>
+                    </View>
+                  ),
+                  onRemove: () => handleDeletePortfolio(portfolio.id),
+                  containerStyle: {
+                    opacity: deleteLoadingById[portfolio.id] ? 0.5 : 1,
+                  },
+                })),
+                {
+                  title: t('portfolioConnect.bankLogin.title'),
+                  onPress: () => ModalManager.showModal(PortfolioConnectModal),
+                  leftIcon: {
+                    name: 'add',
+                    type: 'material',
+                  },
+                },
+              ]}
             />
           </ScrollView>
         </>

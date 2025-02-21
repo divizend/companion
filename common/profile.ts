@@ -152,6 +152,7 @@ export function useUserProfile() {
     updateCompanionProfile,
     updatePrincipalLegalEntity,
     isPrivileged,
+    refetch: profileRaw.refetch,
   };
 }
 

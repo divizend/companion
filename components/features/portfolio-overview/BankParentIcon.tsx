@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from 'react';
 
+import { Icon } from '@rneui/themed';
 import { View } from 'react-native';
 import { SvgUri } from 'react-native-svg';
 
@@ -19,15 +20,30 @@ export function BankParentIcon({ bankParent, size = 44 }: BankParentIconProps) {
   }, [icon]);
 
   return (
-    <View style={{ width: size, height: size, backgroundColor: theme.theme, borderRadius: 8, overflow: 'hidden' }}>
-      <SvgUri
-        width={size}
-        height={size}
-        uri={iconUri}
-        onError={() => {
-          setIcon('UNKNOWN');
-        }}
-      />
+    <View
+      style={{
+        width: size,
+        height: size,
+        backgroundColor: theme.theme,
+        borderRadius: 8,
+        overflow: 'hidden',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
+    >
+      {icon === 'UNKNOWN' ? (
+        <Icon name="account-balance" type="material" size={size - 4} color="white" />
+      ) : (
+        <SvgUri
+          width={size}
+          height={size}
+          uri={iconUri}
+          onError={() => {
+            setIcon('UNKNOWN');
+          }}
+        />
+      )}
     </View>
   );
 }
