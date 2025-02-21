@@ -195,7 +195,7 @@ export default function Portfolios() {
         </View>
       ) : (
         <>
-          <ScrollView contentContainerStyle={{ paddingBottom: 20 }}>
+          <ScrollView contentContainerStyle={{ paddingBottom: 30 }}>
             <SectionList
               items={[
                 ...filteredPortfolios.map(portfolio => ({
