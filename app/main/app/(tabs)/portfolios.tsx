@@ -5,17 +5,19 @@ import { Icon } from '@rneui/themed';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useColorScheme } from 'nativewind';
 import { useTranslation } from 'react-i18next';
-import { Dimensions, FlatList, ImageBackground, Pressable, StyleSheet, View } from 'react-native';
+import { Dimensions, ImageBackground, Pressable, StyleSheet, View } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
 import { useSharedValue } from 'react-native-reanimated';
 import Carousel, { ICarouselInstance, Pagination } from 'react-native-reanimated-carousel';
 
 import { useUserProfile } from '@/common/profile';
+import SectionList from '@/components/SectionList';
 import { Button, SafeAreaView, Text } from '@/components/base';
 import PortfolioConnectModal from '@/components/features/portfolio-import/PortfolioConnectModal';
-import { PortfolioCard } from '@/components/features/portfolio-overview/PortfolioCard';
+import { BankParentIcon } from '@/components/features/portfolio-overview/BankParentIcon';
 import { ModalManager } from '@/components/global/modal';
 import { useThemeColor } from '@/hooks/useThemeColor';
-import { isPortfolioConnectOnboardingVisible } from '@/signals/app.signal';
+import { isPortfolioConnectOnboardingVisible, setIsPortfolioConnectOnboardingVisible } from '@/signals/app.signal';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -49,7 +51,7 @@ function PortfolioOnboarding() {
           containerStyle={{ marginTop: 'auto' }}
           onPress={() => {
             ModalManager.showModal(PortfolioConnectModal);
-            isPortfolioConnectOnboardingVisible.value = false;
+            setIsPortfolioConnectOnboardingVisible(false);
           }}
         >
           {t('portfolioConnect.cta')}
@@ -80,7 +82,7 @@ function PortfolioOnboarding() {
             <Pressable
               className="rounded-full p-1 mb-3"
               style={{ backgroundColor: theme.backgroundPrimary, marginLeft: 'auto' }}
-              onPress={() => (isPortfolioConnectOnboardingVisible.value = false)}
+              onPress={() => setIsPortfolioConnectOnboardingVisible(false)}
             >
               <Icon name="close" type="material" size={20} color={theme.text} />
             </Pressable>
@@ -169,11 +171,23 @@ export default function Portfolios() {
           </Button>
         </View>
       ) : (
-        <FlatList
-          data={filteredPortfolios}
-          keyExtractor={item => item.id}
-          renderItem={({ item }) => <PortfolioCard depot={item} />}
-        />
+        <>
+          <ScrollView contentContainerStyle={{ paddingBottom: 20 }}>
+            <SectionList
+              items={filteredPortfolios.map(portfolio => ({
+                leftIcon: <BankParentIcon bankParent={portfolio.bankType} size={25} />,
+                title: (
+                  <View>
+                    <Text h4 className="font-bold line-clamp-1">
+                      {portfolio.bankName}
+                    </Text>
+                    <Text className="line-clamp-1">{portfolio.description || portfolio.number}</Text>
+                  </View>
+                ),
+              }))}
+            />
+          </ScrollView>
+        </>
       )}
     </SafeAreaView>
   );

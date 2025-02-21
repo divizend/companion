@@ -1,6 +1,9 @@
 import React, { useMemo, useState } from 'react';
 
+import { View } from 'react-native';
 import { SvgUri } from 'react-native-svg';
+
+import { useThemeColor } from '@/hooks/useThemeColor';
 
 interface BankParentIconProps {
   bankParent?: string;
@@ -9,24 +12,23 @@ interface BankParentIconProps {
 
 export function BankParentIcon({ bankParent, size = 44 }: BankParentIconProps) {
   const [icon, setIcon] = useState<string>(bankParent?.endsWith('_UNKNOWN') ? 'UNKNOWN' : bankParent || 'UNKNOWN');
+  const theme = useThemeColor();
 
   const iconUri = useMemo(() => {
     return 'https://divizend.com' + iconPath(icon);
   }, [icon]);
 
   return (
-    <SvgUri
-      width={size}
-      height={size}
-      uri={iconUri}
-      style={{
-        borderRadius: 8,
-        overflow: 'hidden',
-      }}
-      onError={() => {
-        setIcon('UNKNOWN');
-      }}
-    />
+    <View style={{ width: size, height: size, backgroundColor: theme.theme, borderRadius: 8, overflow: 'hidden' }}>
+      <SvgUri
+        width={size}
+        height={size}
+        uri={iconUri}
+        onError={() => {
+          setIcon('UNKNOWN');
+        }}
+      />
+    </View>
   );
 }
 

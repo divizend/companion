@@ -20,7 +20,8 @@ export type SectionListProps = {
           name: string;
           type?: string;
           color?: string;
-        };
+        }
+      | React.ReactNode;
     containerStyle?: ViewStyle | ViewStyle[];
     itemStyle?: ViewStyle | ViewStyle[];
     onRemove?: () => void;
@@ -62,14 +63,22 @@ export default function SectionList({
                 {item.leftIcon ? (
                   typeof item.leftIcon === 'string' ? (
                     <Text className={clsx(item.disabled && 'text-gray-500 dark:text-gray-200')}>{item.leftIcon}</Text>
-                  ) : (
+                  ) : (item.leftIcon as any)?.name ? (
                     <Icon
-                      name={item.leftIcon.name}
-                      type={item.leftIcon.type || 'material'}
-                      color={item.leftIcon.color || item.disabled ? 'grey' : theme.style === 'dark' ? 'white' : 'black'}
+                      name={(item.leftIcon as any).name}
+                      type={(item.leftIcon as any).type || 'material'}
+                      color={
+                        (item.leftIcon as any).color || item.disabled
+                          ? 'grey'
+                          : theme.style === 'dark'
+                            ? 'white'
+                            : 'black'
+                      }
                       size={20}
                       containerStyle={styles.iconContainer}
                     />
+                  ) : (
+                    React.isValidElement(item.leftIcon) && item.leftIcon
                   )
                 ) : null}
                 <ListItem.Content style={styles.listItemContent}>
