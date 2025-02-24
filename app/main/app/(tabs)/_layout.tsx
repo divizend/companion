@@ -46,6 +46,7 @@ export default function TabLayout() {
             track: 'trending-up',
             decide: 'lightbulb',
             discover: 'explore',
+            profile: 'person',
           };
           iconName = iconMap[route.name];
           return <Icon name={iconName!} type="material" size={size} color={color} />;
@@ -83,6 +84,7 @@ export default function TabLayout() {
         name="analyze"
         options={{
           title: t('tabs.analyze'),
+          href: null,
         }}
       />
       <Tabs.Screen
@@ -95,18 +97,27 @@ export default function TabLayout() {
         name="track"
         options={{
           title: t('tabs.track'),
+          href: null,
         }}
       />
       <Tabs.Screen
         name="decide"
         options={{
           title: t('tabs.decide'),
+          href: null,
         }}
       />
       <Tabs.Screen
         name="discover"
         options={{
           title: t('tabs.discover'),
+          href: null,
+        }}
+      />
+      <Tabs.Screen
+        name="profile"
+        options={{
+          title: t('tabs.profile'),
         }}
       />
     </Tabs>

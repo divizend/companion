@@ -2,7 +2,7 @@ import { useSignalEffect } from '@preact/signals-react';
 import { BottomTabHeaderProps } from '@react-navigation/bottom-tabs';
 import { Avatar, Icon } from '@rneui/themed';
 import { BlurView } from 'expo-blur';
-import { router } from 'expo-router';
+import { router, useSegments } from 'expo-router';
 import { useColorScheme } from 'nativewind';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import Animated, {
@@ -32,6 +32,7 @@ export default function BlurredHeader(props: BlurredHeaderProps) {
   const opacity = useSharedValue(0);
   const intensity = useSharedValue(0);
   const color = useSharedValue(theme.style === 'light' ? 'rgba(255, 255, 255, 1)' : 'rgba(0, 0, 0, 1)');
+  const segments = useSegments();
 
   const shouldBlur = true;
 
@@ -84,17 +85,20 @@ export default function BlurredHeader(props: BlurredHeaderProps) {
             color={theme.theme}
           />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => router.navigate('/main/settings')}>
-          <Avatar
-            // Added empty source to remove Image source not found warning (which is a bug from rneui)
-            // Look here for more info https://github.com/react-native-elements/react-native-elements/issues/3742#issuecomment-1978783981
-            source={{ uri: 'data:image/png' }}
-            rounded
-            title={profile.email[0].toUpperCase()}
-            containerStyle={{ backgroundColor: theme.theme }}
-            placeholderStyle={{ backgroundColor: 'transparent' }}
-          />
-        </TouchableOpacity>
+        {/* Do not show profile icon when profile is already open (following temporary solution to add profile in bottom tabs) */}
+        {(segments.at(-1) as string) !== 'profile' && (
+          <TouchableOpacity onPress={() => router.navigate('/main/settings')}>
+            <Avatar
+              // Added empty source to remove Image source not found warning (which is a bug from rneui)
+              // Look here for more info https://github.com/react-native-elements/react-native-elements/issues/3742#issuecomment-1978783981
+              source={{ uri: 'data:image/png' }}
+              rounded
+              title={profile.email[0].toUpperCase()}
+              containerStyle={{ backgroundColor: theme.theme }}
+              placeholderStyle={{ backgroundColor: 'transparent' }}
+            />
+          </TouchableOpacity>
+        )}
       </View>
     </>
   );

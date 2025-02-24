@@ -39,7 +39,7 @@ export default function Layout() {
           </Text>
         </View>
         <View>
-          <TouchableOpacity onPress={() => router.navigate('/main/app')}>
+          <TouchableOpacity onPress={() => router.navigate('/main/app/learn')}>
             <View className="dark:bg-[#232223] bg-[#e0e0e0] rounded-2xl p-1 m-[5px]">
               <Icon name="close" size={16} color="#666" />
             </View>
