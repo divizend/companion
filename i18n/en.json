@@ -956,6 +956,21 @@
       "manualInput": "Input manually",
       "bankListLoading": "Loading list of supported banks..."
     },
+    "searchBankBranch": {
+      "title": "Choose bank branch",
+      "query": {
+        "labels": {
+          "bank": "Search for $t(bank:{{bank}}) branch",
+          "other": "Search for bank"
+        },
+        "helper": "You can search for the bank code, BIC or the name of your bank."
+      },
+      "noResults": "No results. Please modify your search query.",
+      "numbers": {
+        "blz": "BLZ",
+        "bic": "BIC"
+      }
+    },
     "bankLogin": {
       "title": "Connect portfolio",
       "error": "Connecting portfolio failed: {{error, error}}",

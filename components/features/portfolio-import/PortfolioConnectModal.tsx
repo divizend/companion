@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 
 import { useSignals } from '@preact/signals-react/runtime';
 import { useTranslation } from 'react-i18next';
 
+import { useUserProfile } from '@/common/profile';
 import ModalLayout from '@/components/global/ModalLayout';
 import { resetPortfolioConnect } from '@/signals/actions/portfolio-connect.actions';
 
@@ -14,25 +15,19 @@ type PortfolioConnectModalProps = {
 
 const PortfolioConnectModal: React.FC<PortfolioConnectModalProps> = ({ dismiss, ...props }) => {
   const { t } = useTranslation();
+  const { refetch } = useUserProfile();
 
   useSignals();
 
+  const onClose = useCallback(() => {
+    refetch();
+    resetPortfolioConnect();
+    dismiss();
+  }, [refetch, dismiss]);
+
   return (
-    <ModalLayout
-      dismiss={() => {
-        resetPortfolioConnect();
-        dismiss();
-      }}
-      title={t('portfolioConnect.title')}
-      noScrollView
-    >
-      <PortfolioConnect
-        {...props}
-        onClose={() => {
-          resetPortfolioConnect();
-          dismiss();
-        }}
-      />
+    <ModalLayout dismiss={onClose} title={t('portfolioConnect.title')} noScrollView>
+      <PortfolioConnect {...props} onClose={onClose} />
     </ModalLayout>
   );
 };
