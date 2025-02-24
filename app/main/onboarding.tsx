@@ -30,15 +30,18 @@ import { usePurchases } from '@/hooks/usePurchases';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { t } from '@/i18n';
 
+import { supportedLanguages } from './settings';
+
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
 enum OnboardingPage {
   INTRO = 0,
-  AI_DISCLAIMER = 1,
-  TAX_RESIDENCY = 2,
-  BIRTHDAY = 3,
-  FREE_TRIAL = 4,
-  ALL_SET = 5,
+  LANGUAGE_SELECT = 1,
+  AI_DISCLAIMER = 2,
+  TAX_RESIDENCY = 3,
+  BIRTHDAY = 4,
+  FREE_TRIAL = 5,
+  ALL_SET = 6,
 }
 
 export default function OnboardingModal() {
@@ -46,6 +49,7 @@ export default function OnboardingModal() {
   const { updateProfile, updatePrincipalLegalEntity, profile } = useUserProfile();
   const principalLegalEntity = usePrincipalLegalEntity();
   const [currentPage, setCurrentPage] = useState<OnboardingPage>(OnboardingPage.INTRO);
+  const [selectedLanguage, setSelectedLanguage] = useState(profile.flags?.language || 'en-US');
   const [selectedCountry, setSelectedCountry] = useState(principalLegalEntity?.data.info.nationality ?? '');
   const [birthday, setBirthday] = useState<Date | null>(
     principalLegalEntity?.data.info.birthday ? new Date(principalLegalEntity.data.info.birthday) : null,
@@ -79,13 +83,13 @@ export default function OnboardingModal() {
     setCurrentPage(page as OnboardingPage);
   };
 
-  let availablePages = 3;
+  let availablePages = 4;
   if (principalLegalEntity?.data.info.nationality) {
-    availablePages = 4;
+    availablePages = 5;
     if (principalLegalEntity?.data.info.birthday || skippedBirthday) {
-      availablePages = 5;
+      availablePages = 6;
       if (!profile.flags.usedCompanionTrial) {
-        availablePages = 6;
+        availablePages = 7;
       }
     }
   }
@@ -110,12 +114,27 @@ export default function OnboardingModal() {
         pagingEnabled
         showsHorizontalScrollIndicator={false}
         onScroll={handleScroll}
-        scrollEnabled={false}
+        scrollEnabled={true}
         scrollEventThrottle={16}
       >
         <View style={styles.page}>
           <Text style={styles.modalTitle}>{t('onboarding.intro.title')}</Text>
           <Text style={styles.modalText}>{t('onboarding.intro.message')}</Text>
+        </View>
+        <View style={styles.page}>
+          <Text style={styles.modalTitle}>{t('onboarding.languageSelect.title')}</Text>
+          <Text style={styles.modalText}>{t('onboarding.languageSelect.message')}</Text>
+          <View style={styles.pickerContainer}>
+            <Picker
+              selectedValue={selectedLanguage}
+              onValueChange={newLang => setSelectedLanguage(newLang)}
+              style={styles.picker}
+            >
+              {supportedLanguages.map(lang => (
+                <Picker.Item key={lang} label={t(`language.${lang.split('-')[0]}`)} value={lang} />
+              ))}
+            </Picker>
+          </View>
         </View>
         <View style={styles.page}>
           <Text style={styles.modalTitle}>{t('onboarding.aiDisclaimer.title')}</Text>
@@ -169,7 +188,7 @@ export default function OnboardingModal() {
               setTimeout(
                 () =>
                   scrollViewRef.current?.scrollTo({
-                    x: screenWidth * 4,
+                    x: screenWidth * (currentPage + 1),
                     animated: true,
                   }),
                 200,
@@ -232,6 +251,29 @@ export default function OnboardingModal() {
                   x: screenWidth * (currentPage + 1),
                   animated: true,
                 });
+              } else if (currentPage === OnboardingPage.LANGUAGE_SELECT) {
+                if (selectedLanguage === profile.flags?.language)
+                  return scrollViewRef.current?.scrollTo({
+                    x: screenWidth * (currentPage + 1),
+                    animated: true,
+                  });
+                setIsLoading(true);
+                try {
+                  await apiPost('/users/language', {
+                    language: selectedLanguage,
+                  });
+                  updateProfile(p => {
+                    p.flags.language = selectedLanguage;
+                  });
+                  scrollViewRef.current?.scrollTo({
+                    x: screenWidth * (currentPage + 1),
+                    animated: true,
+                  });
+                } catch (error: any) {
+                  showSnackbar(error.message, { type: 'error' });
+                } finally {
+                  setIsLoading(false);
+                }
               } else if (currentPage === OnboardingPage.TAX_RESIDENCY) {
                 setIsLoading(true);
                 try {
@@ -244,7 +286,7 @@ export default function OnboardingModal() {
                   setTimeout(
                     () =>
                       scrollViewRef.current?.scrollTo({
-                        x: screenWidth * 3,
+                        x: screenWidth * OnboardingPage.BIRTHDAY,
                         animated: true,
                       }),
                     200,
@@ -265,7 +307,7 @@ export default function OnboardingModal() {
                   setTimeout(
                     () =>
                       scrollViewRef.current?.scrollTo({
-                        x: screenWidth * 4,
+                        x: screenWidth * (currentPage + 1),
                         animated: true,
                       }),
                     200,
@@ -282,7 +324,7 @@ export default function OnboardingModal() {
                   setTimeout(
                     () =>
                       scrollViewRef.current?.scrollTo({
-                        x: screenWidth * 5,
+                        x: screenWidth * (currentPage + 1),
                         animated: true,
                       }),
                     200,

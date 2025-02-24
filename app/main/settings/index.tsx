@@ -17,7 +17,7 @@ import { showAlert } from '@/components/global/prompt';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { t } from '@/i18n';
 
-const supportedLanguages = [
+export const supportedLanguages = [
   'de-DE',
   'en-US',
   'fr-FR',
