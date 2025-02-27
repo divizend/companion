@@ -17,7 +17,7 @@ export default function PortfolioOnboarding() {
   const { t, i18n } = useTranslation();
 
   const data = React.useMemo(() => {
-    const result = t('portfolioOverview.onBoarding', { returnObjects: true }) as {
+    const result = t('portfolio.onBoarding', { returnObjects: true }) as {
       title: string;
       description: string;
     }[];

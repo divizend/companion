@@ -69,7 +69,7 @@ export default function BankDepotDetails() {
       .filter(p => !p.startsWith('XX_'))
       .map(p => ({
         label: p.endsWith('_UNKNOWN')
-          ? `${t('portfolioConnect.bankDepotDetails.unknownBank')} (${t('country.' + p.slice(0, 2).toLowerCase())})`
+          ? `${t('portfolioConnect.bankDepotDetails.unknownBank')} (${t('common.country.' + p.slice(0, 2).toLowerCase())})`
           : t('bank.' + p),
         value: p,
         parentCategory: p.slice(0, 2).toUpperCase(),
@@ -141,7 +141,7 @@ export default function BankDepotDetails() {
         />
 
         <Button
-          title={t('portfolioConnect.continue')}
+          title={t('common.continue')}
           disabled={!valid}
           onPress={() => {
             bankDepotDetailsSubmit();

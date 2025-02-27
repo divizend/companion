@@ -51,7 +51,7 @@ export default function Finalize({
       {!applyMultiAccountFilter ? (
         <>
           <Button
-            title={t('portfolioConnect.finalize.goToPortfolios')}
+            title={t('portfolio.goToPortfolios')}
             onPress={() => {
               router.navigate('/main/app/(tabs)/portfolios');
               onClose?.();

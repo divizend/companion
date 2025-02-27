@@ -77,47 +77,47 @@ export default function TabLayout() {
       <Tabs.Screen
         name="learn"
         options={{
-          title: t('tabs.learn'),
+          title: t('common.tabs.learn'),
         }}
       />
       <Tabs.Screen
         name="analyze"
         options={{
-          title: t('tabs.analyze'),
+          title: t('common.tabs.analyze'),
           href: null,
         }}
       />
       <Tabs.Screen
         name="portfolios"
         options={{
-          title: t('tabs.portfolios'),
+          title: t('common.tabs.portfolios'),
         }}
       />
       <Tabs.Screen
         name="track"
         options={{
-          title: t('tabs.track'),
+          title: t('common.tabs.track'),
           href: null,
         }}
       />
       <Tabs.Screen
         name="decide"
         options={{
-          title: t('tabs.decide'),
+          title: t('common.tabs.decide'),
           href: null,
         }}
       />
       <Tabs.Screen
         name="discover"
         options={{
-          title: t('tabs.discover'),
+          title: t('common.tabs.discover'),
           href: null,
         }}
       />
       <Tabs.Screen
         name="profile"
         options={{
-          title: t('tabs.profile'),
+          title: t('common.tabs.profile'),
         }}
       />
     </Tabs>

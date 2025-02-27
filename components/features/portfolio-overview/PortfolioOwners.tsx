@@ -17,7 +17,7 @@ const mapDepotOwnersToStrings = ({ depot, profile }: { depot: UserProfileDepot; 
           const name = getEntityName(sEntity);
           return name;
         })
-        .join(' + ')} (${t('percent', { value: `${l.shareOwned * 100}` })})`,
+        .join(' + ')} (${t('common.percent', { value: `${l.shareOwned * 100}` })})`,
   );
 };
 

@@ -1,0 +1,159 @@
+{
+  "background": {
+    "description": "The import is running in the background, so you are free to close this import dialog.",
+    "stay": "Stay",
+    "title": "You can now close this dialog now"
+  },
+  "bankDepotDetails": {
+    "description": "Please enter the following information about your bank and securities account.",
+    "fields": {
+      "bankName": "Bankaheiti",
+      "bic": "BIC",
+      "depotNumber": "Your portfolio number",
+      "parent": "Bankategund"
+    },
+    "title": "Banka- og geymsluupplýsingar",
+    "unknownBank": "Annar banki"
+  },
+  "bankLogin": {
+    "chooseOtherMethod": "Veldu annan innflutningsaðferð fyrir verðbréfasafn",
+    "clickToOpen": "Ef þetta gildir ekki, vinsamlegast smelltu hér.",
+    "error": "Mistókst að tengja verðbréfasafn: {{error, error}}",
+    "errorPlain": "Mistókst að tengja verðbréfasafnið: {{error}}",
+    "newTabInfo": "Ný vafragluggi ætti að hafa opnast þar sem þú getur tengt bankann þinn við Divizend.",
+    "title": "Tengja verðbréfasafn",
+    "waitingForAggregation": "Þú hefur með árangri tengt verðbréfasafnið þitt og það er núna skannað. Vinsamlegast bíddu augnablik."
+  },
+  "chooseBank": {
+    "bankListLoading": "Hleð inn lista yfir studda banka...",
+    "choose": "Veldu",
+    "demoBanks": "Sýndarbankar",
+    "internationalBanks": "Alþjóðlegir bankar",
+    "manualInput": "Slá inn handvirkt",
+    "otherBanks": "Fleiri þjóðlegir bankar",
+    "otherBanksInternational": "Fleiri bankar",
+    "title": "Veldu banka"
+  },
+  "chooseDepotToSync": {
+    "description": "Please select the portfolio you want to use for the synchronization:",
+    "infoNote": "We noticed a mismatch between your current portfolio number and the one(s) you are trying to use for synchronization.",
+    "title": "Choose portfolio to synchronize"
+  },
+  "chooseDepots": {
+    "callToAction": "Næsta skref",
+    "depotNumber": "Portfolio number: {{number}}",
+    "description": "Please select the portfolios you want to import to Divizend:",
+    "selectAll": "Select all",
+    "selected": "Selected {{count}} portfolios out of {{total}}.",
+    "title": "Choose portfolios"
+  },
+  "chooseInterface": {
+    "failed": "Mistókst",
+    "interfaceType": {
+      "DEMO": {
+        "description": "Sýndarviðmótið sýnir virkni Divizend.",
+        "duration": "< 1 mín",
+        "title": "Sýndarviðmót"
+      },
+      "DOCAPI": {
+        "description": "Með PDF innflutningi hleður þú fyrst upp skjölum yfir verðbréfasafn og kaupkvittunum, sem þú getur niðurhalað sem PDF-skjölum úr tölvupóstkassa meklaraþjóns þíns. Síðan les Divizend sjálfkrafa núverandi hlutabréfaeign þinni og hugsanlega sögulegar viðskiptayfirlitið þitt.",
+        "duration": "> 2 mín",
+        "title": "PDF innflutningur"
+      },
+      "ESTA": {
+        "description": "Með þessari aðferð getur þú notað eSteuerauszug (rafræn skattayfirlýsing) til sjálfkrafa að flytja inn verðbréfareikninginn þinn í Divizend. eSteuerauszüge er að finna hjá mörgum Svissneskum bönkum í netbankanum þínum sem PDF skjöl.",
+        "duration": "< 1 mín",
+        "title": "eSteuerauszug"
+      },
+      "FINAPI": {
+        "description": "finAPI er þýskur fjármálaþjónustuveitandi sem hefur leyfi frá BaFin og býður upp á viðmót til að ná aðgangi að greiðslu- og verðbréfareikningum. Með því að auðkenna þig í gegnum finAPI getur þú tengt verðbréfareikninginn þinn við Divizend í einu og öllu. \nAðgangsgögnin að verðbréfareikninginum þínum eru send af finAPI til bankans þíns til auðkenningar með dulkóðaðri leið. Divizend hefur aldrei aðgang að aðgangsgögnunum þínum.",
+        "duration": "< 1 mín",
+        "title": "finAPI"
+      },
+      "FINTS": {
+        "description": "FinTS er þýskur staðall fyrir aðgang að greiðslu- og verðbréfareikningum. Við höfum sérstaklega bætt viðmótið okkar til að ákvarða núverandi yfirlit yfir verðbréfareikninginn þinn. Með því að auðkenna þig í gegnum FinTS getur þú tengt verðbréfareikninginn þinn við Divizend í einu og öllu. \nAðgangsgögnin að verðbréfareikninginum þínum eru send beint og einu sinni til bankans þíns til auðkenningar með dulkóðaðri leið, þau eru ekki geymd.",
+        "duration": "< 1 mín",
+        "title": "FinTS"
+      },
+      "FLANKS": {
+        "description": "Flanks er leyfður þjónustuveitandi upplýsinga um reikninga sem býður upp á viðmót fyrir opinn aðgang að greiðslu- og verðbréfareikningum. Með því að auðkenna þig í gegnum Flanks getur þú tengt verðbréfareikninginn þinn við Divizend í einu og öllu.",
+        "duration": "< 1 mín",
+        "title": "Flanks"
+      },
+      "MANUAL": {
+        "description": "Handaður innsláttur gerir þér kleift að tengja verðbréfareikninginn þinn við Divizend án sjálfvirkra viðmóta eða skjala. Í þágu þess skráir þú núverandi hlutabréfaeign þinni og viðskiptasögulega ef við á, í gegnum myndrænt viðmót okkar.",
+        "duration": "> 3 mín",
+        "title": "Handaður innsláttur"
+      },
+      "NATIVE": {
+        "description": "Með því að nota innfædda Open Banking viðmótið hjá bankanum þínum, getur þú tengt verðbréfareikninginn þinn við Divizend í einu og öllu. \nAðgangsgögnin að verðbréfareikninginum þínum eru send til bankans þíns til auðkenningar með dulkóðaðri leið. Divizend hefur aldrei aðgang að aðgangsgögnunum þínum.",
+        "duration": "< 1 mín",
+        "title": "Innfætt viðmót"
+      },
+      "POCAPI": {
+        "description": "PDF innflutningurinn gerir þér kleift að tengja verðbréfareikninginn þinn við Divizend án þess að nota bankaviðmót. Til að gera það getur þú hlaðið upp viðeigandi skjölum úr tölvupóstkassa þínum. \nSkjölin eru einungis lesin einu sinni til að ákvarða núverandi yfirlit yfir verðbréfareikninginn og viðskiptasöguna, þau eru ekki geymd.",
+        "duration": "> 2 mín",
+        "title": "PDF Innflutningur"
+      },
+      "SCRAPER": {
+        "description": "Með því að nota Screen Analyzer getur þú tengt verðbréfareikninginn þinn við Divizend með því að nota myndrænt notandaviðmót í einu og öllu. \nAðgangsgögnin að verðbréfareikninginum þínum eru send beint og einu sinni til bankans þíns til auðkenningar með dulkóðaðri leið, þau eru ekki geymd.",
+        "duration": "< 1 mín",
+        "title": "Screen Analyzer"
+      }
+    },
+    "recommended": "Mælt með",
+    "title": "Veldu viðmót"
+  },
+  "confirmCancel": {
+    "description": "If you close this dialog, but have already chosen your bank and entered all required credentials, this portfolio import will continue running in the background and you can view its progress and finalize it in the settings. Otherwise your progress will be reset. It is recommended to leave this dialog open until the import is finished. Click on 'OK' if you still want to close this dialog.",
+    "title": "Confirm closing portfolio import dialog?"
+  },
+  "cta": "Flytja inn núna!",
+  "finalize": {
+    "backToDashboard": "Fara á Maximizer mælaborðið",
+    "editPortfolio": "Edit portfolio",
+    "heading": "Innflutningur tókst! Hvernig áttum við að halda áfram?",
+    "headingMultiple": "Imports successful!",
+    "headingNotDone": "Your portfolio was imported successfully!",
+    "importAnother": "Flytja inn annað verðbréfasafn",
+    "multiAccountFilter": "Please click on \"OK\" below now to assign all imported portfolios to the respective customers of your organization.",
+    "subheadingNotDone": "However, some details about your securities and dividends are still missing. Please click on \"Edit portfolio\" to fix this.",
+    "title": "Halda áfram"
+  },
+  "importViaSecapiImportId": "Import via SecAPI import ID",
+  "importingDepot": "Importing your portfolio(s)...",
+  "loadingDepot": "Loading your portfolio(s)...",
+  "loadingDepotSuccess": "Búið!",
+  "portfolioContents": {
+    "callToAction": "Flytja inn núna",
+    "confirmIncompleteImport": {
+      "description": "Sum verðbréf í verðbréfasafninu þínu þurfa enn frekari upplýsingar svo hægt sé að flytja þau inn. Ef þú vilt samt halda áfram, þá verða eftirfarandi áherslumerktu ófullkomnu verðbréf <b>ekki flutt inn</b>:",
+      "descriptionCompleteWhenRemovingTx": "Eftirfarandi hlutabréf hafa aðeins ófullkomna eða ósamkvæma viðskiptasögu. Ef þú vilt halda áfram, verða aðeins viðskiptin með þeim fjarlægð, en allar aðrar upplýsingar um þessi hlutabréf verða fluttar inn eins og venjulega:",
+      "title": "Staðfesta ófullkominn innflutning"
+    },
+    "importBlocked": {
+      "noSecuritiesComplete": "Vinsamlegast ljúktu við gögn hluta sem eru áherslumerktir á vinstri hlið.",
+      "noSecuritiesExist": "Vinsamlegast bættu hlutum við þetta verðbréfasafn með + tákninu á vinstri hlið."
+    },
+    "importError": "Innflutningur mistókst: {{error, error}}",
+    "title": "Innihald verðbréfasafns"
+  },
+  "restartImport": "Restart import",
+  "searchBankBranch": {
+    "noResults": "Engar niðurstöður. Vinsamlegast breyttu leitarbeiðninni þinni.",
+    "numbers": {
+      "bic": "BIC",
+      "blz": "BLZ"
+    },
+    "query": {
+      "helper": "Þú getur leitað eftir bankanúmeri, BIC eða nafni bankans þíns.",
+      "labels": {
+        "bank": "Leita að $t(bank:{{bank}}) útibú",
+        "other": "Leita að banka"
+      }
+    },
+    "title": "Veldu bankaútibú"
+  },
+  "selectSecapiImportId": "Select the SecAPI import ID to import its content!",
+  "selectSecapiImportIdPlaceholder": "SecAPI import ID"
+}

@@ -1,0 +1,28 @@
+{
+  "error": "{{error, error}}",
+  "currency": "{{amount, currency}}",
+  "percent": "{{value, percent}}",
+  "number": "{{value, number}}",
+  "country": "{{country, country}}",
+  "dateTime": {
+    "weekDayAndTime": "{{date, weekDayAndTime}}",
+    "weekDayAndHour": "{{date, weekDayAndHour}}",
+    "day": "{{date, day}}",
+    "dayShort": "{{date, dayShort}}",
+    "dayUTC": "{{date, dayUTC}}",
+    "dayLongUTC": "{{date, dayLongUTC}}",
+    "dayLongAndTime": "{{date, dayLongAndTime}}",
+    "daysUTC": "{{min, dayUTC}} – {{max, dayUTC}}",
+    "weekDayShort": "{{date, weekDayShort}}",
+    "monthUTC": "{{date, monthUTC}}",
+    "monthShort": "{{date, monthShort}}",
+    "monthLong": "{{date, monthLong}}",
+    "monthLongUTC": "{{date, monthLongUTC}}",
+    "monthShortUTC": "{{date, monthShortUTC}}",
+    "monthsUTC": "{{min, monthUTC}} – {{max, monthUTC}}",
+    "yearUTC": "{{date, yearUTC}}",
+    "yearsUTC": "{{min, yearUTC}} – {{max, yearUTC}}",
+    "monthShortYear2DigitUTC": "{{date, monthShortYear2DigitUTC}}",
+    "year2DigitUTC": "{{date, year2DigitUTC}}"
+  }
+}

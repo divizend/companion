@@ -234,7 +234,7 @@ export default function ChatModal({ chatId: givenChatId, systemPrompt, initialUs
   }, [isLoading, initialUserMessage]);
 
   return (
-    <ModalLayout noScrollView dismiss={dismiss} title={t('chat.title')}>
+    <ModalLayout noScrollView dismiss={dismiss} title={t('common.chat.title')}>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         className="flex-1"
@@ -270,7 +270,7 @@ export default function ChatModal({ chatId: givenChatId, systemPrompt, initialUs
             className="flex-1 mr-2"
             value={inputText}
             onChangeText={setInputText}
-            placeholder={t('chat.inputPlaceholder')}
+            placeholder={t('common.chat.inputPlaceholder')}
             onSubmitEditing={handleSendMessage}
             multiline
             numberOfLines={1}

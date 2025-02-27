@@ -33,8 +33,8 @@ export default function Portfolios() {
 
   const handleDeletePortfolio = async (portfolioId: string) => {
     const confirmed = await showConfirmationDialog(
-      t('portfolioOverview.deletePortfolio.title'),
-      t('portfolioOverview.deletePortfolio.description'),
+      t('portfolio.deletePortfolio.title'),
+      t('portfolio.deletePortfolio.description'),
     );
     if (confirmed) {
       setDeleteLoadingById(prev => ({ ...prev, [portfolioId]: true }));
@@ -50,7 +50,7 @@ export default function Portfolios() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text className="text-3xl font-bold mb-5">{t('portfolioOverview.title')}</Text>
+      <Text className="text-3xl font-bold mb-5">{t('portfolio.title')}</Text>
 
       {/* <Button
         disabled={isPortfolioConnectOnboardingVisible.value}
@@ -65,7 +65,7 @@ export default function Portfolios() {
       ) : !filteredPortfolios.length ? (
         <View className="flex-1 flex gap-5 justify-center items-center">
           <Icon name="block" type="material" size={64} color={theme.muted} />
-          <Text h3>{t('portfolioOverview.noPortfolios')}</Text>
+          <Text h3>{t('portfolio.noPortfolios')}</Text>
           <Button onPress={() => ModalManager.showModal(PortfolioConnectModal)}>
             {t('portfolioConnect.bankLogin.title')}
           </Button>

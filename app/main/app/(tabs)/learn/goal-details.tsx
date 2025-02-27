@@ -132,7 +132,7 @@ export default function GoalDetails() {
 
   const handleModifyEmoji = async () => {
     const emojiDesire = await showPrompt({
-      title: t('askEmoji'),
+      title: t('common.askEmoji'),
     });
     if (!emojiDesire) return;
     try {

@@ -31,26 +31,26 @@ export const PortfolioCard = ({ depot }: { depot: UserProfileDepot }) => {
         </View>
         <View className="mt-1">
           <View style={styles.detailRow}>
-            <Text>{t('portfolioOverview.labels.description')}:</Text>
+            <Text>{t('portfolio.labels.description')}:</Text>
             <Text style={styles.value}>{depot.description || 'No description'}</Text>
           </View>
 
           <View style={styles.detailRow}>
-            <Text style={styles.label}>{t('portfolioOverview.labels.portfolioNumber')}:</Text>
+            <Text style={styles.label}>{t('portfolio.labels.portfolioNumber')}:</Text>
             <Text style={styles.value}>{depot.number || 'N/A'}</Text>
           </View>
 
           <View style={styles.detailRow}>
-            <Text style={styles.label}>{t('portfolioOverview.labels.importedAt')}:</Text>
+            <Text style={styles.label}>{t('portfolio.labels.importedAt')}:</Text>
             <Text style={styles.value}>
-              {depot.createdAt ? t('dateTime.dayLongAndTime', { date: depot.createdAt }) : 'N/A'}
+              {depot.createdAt ? t('format.dateTime.dayLongAndTime', { date: depot.createdAt }) : 'N/A'}
             </Text>
           </View>
 
           <View style={styles.detailRow}>
-            <Text style={styles.label}>{t('portfolioOverview.labels.syncedAt')}:</Text>
+            <Text style={styles.label}>{t('portfolio.labels.syncedAt')}:</Text>
             <Text style={styles.value}>
-              {depot.syncedAt ? t('dateTime.dayLongAndTime', { date: depot.syncedAt }) : 'N/A'}
+              {depot.syncedAt ? t('format.dateTime.dayLongAndTime', { date: depot.syncedAt }) : 'N/A'}
             </Text>
           </View>
         </View>
