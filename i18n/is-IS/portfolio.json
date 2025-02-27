@@ -1,0 +1,14 @@
+{
+  "title": "Portfolio contents",
+  "callToAction": "Import now",
+  "importError": "Importing failed: {{error, error}}",
+  "confirmIncompleteImport": {
+    "title": "Confirm incomplete import",
+    "description": "Some of your portfolio's securities still need further information so that they can be imported. If you would still like to proceed, the following highlighted incomplete securities <b>will not be imported</b>:",
+    "descriptionCompleteWhenRemovingTx": "The following stocks have only an incomplete or inconsistent transaction history. If you want to proceed, only their transactions will be removed, but all other information about these stocks will be imported as usual:"
+  },
+  "importBlocked": {
+    "noSecuritiesExist": "Please add shares to this securities account with the + symbol on the left hand side.",
+    "noSecuritiesComplete": "Please complete the data of the shares highlighted on the left hand side."
+  }
+}

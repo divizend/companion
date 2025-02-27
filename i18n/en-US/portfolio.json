@@ -1,0 +1,31 @@
+{
+  "title": "Portfolios",
+  "importTitle": "Portfolio connect",
+  "noPortfolios": "No portfolios imported.",
+  "deletePortfolio": {
+    "title": "Delete portfolio",
+    "description": "Are you sure you want to delete this portfolio?"
+  },
+  "goToPortfolios": "Check out your portfolios",
+  "labels": {
+    "description": "Description",
+    "owner": "Owner",
+    "portfolioNumber": "Portfolio number",
+    "importedAt": "Imported at",
+    "syncedAt": "Synchronized at"
+  },
+  "onBoarding": [
+    {
+      "title": "Manage Multiple Portfolios",
+      "description": "View and add portfolios for free, regardless of your bank."
+    },
+    {
+      "title": "Seamless Integration",
+      "description": "Enjoy high-quality service with automatic coverage for most banks."
+    },
+    {
+      "title": "Secure & Private",
+      "description": "Login safely with no data stored for your privacy."
+    }
+  ]
+}

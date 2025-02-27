@@ -26,7 +26,7 @@ const PortfolioConnectModal: React.FC<PortfolioConnectModalProps> = ({ dismiss, 
   }, [refetch, dismiss]);
 
   return (
-    <ModalLayout dismiss={onClose} title={t('portfolioConnect.title')} noScrollView>
+    <ModalLayout dismiss={onClose} title={t('portfolio.importTitle')} noScrollView>
       <PortfolioConnect {...props} onClose={onClose} />
     </ModalLayout>
   );

@@ -1,0 +1,159 @@
+{
+  "background": {
+    "description": "The import is running in the background, so you are free to close this import dialog.",
+    "stay": "Stay",
+    "title": "You can now close this dialog now"
+  },
+  "bankDepotDetails": {
+    "description": "Please enter the following information about your bank and securities account.",
+    "fields": {
+      "bankName": "Pankin nimi",
+      "bic": "BIC",
+      "depotNumber": "Your portfolio number",
+      "parent": "Pankkityyppi"
+    },
+    "title": "Pankin ja tilin tiedot",
+    "unknownBank": "Muut pankit"
+  },
+  "bankLogin": {
+    "chooseOtherMethod": "Valitse toinen portfolion tuontimenetelmä",
+    "clickToOpen": "Mikäli näin ei tapahdu automaattisesti, klikkaa tästä.",
+    "error": "Arvopaperisalkun yhdistäminen epäonnistui: {{error, error}}",
+    "errorPlain": "Arvopaperisalkun yhdistäminen epäonnistui: {{error}}",
+    "newTabInfo": "Avaa uusi välilehti ja yhdistä pankkisi Divizendiin.",
+    "title": "Yhdistä arvopaperisalkku",
+    "waitingForAggregation": "Olet onnistuneesti yhdistänyt arvopaperisalkkusi, ja sitä tarkistetaan parhaillaan. Ole hyvä ja odota hetki."
+  },
+  "chooseBank": {
+    "bankListLoading": "Tuettujen pankkien luettelon lataaminen...",
+    "choose": "Valitse",
+    "demoBanks": "Demopankit",
+    "internationalBanks": "Kansainväliset pankit",
+    "manualInput": "Syötä manuaalisesti",
+    "otherBanks": "Lisää kansallisia pankkeja",
+    "otherBanksInternational": "Lisää pankkeja",
+    "title": "Valitse pankki"
+  },
+  "chooseDepotToSync": {
+    "description": "Please select the portfolio you want to use for the synchronization:",
+    "infoNote": "We noticed a mismatch between your current portfolio number and the one(s) you are trying to use for synchronization.",
+    "title": "Choose portfolio to synchronize"
+  },
+  "chooseDepots": {
+    "callToAction": "Seuraava vaihe",
+    "depotNumber": "Portfolio number: {{number}}",
+    "description": "Please select the portfolios you want to import to Divizend:",
+    "selectAll": "Select all",
+    "selected": "Selected {{count}} portfolios out of {{total}}.",
+    "title": "Choose portfolios"
+  },
+  "chooseInterface": {
+    "failed": "Epäonnistunut",
+    "interfaceType": {
+      "DEMO": {
+        "description": "Demokäyttöliittymä esittelee Divizendin toiminnallisuutta.",
+        "duration": "< 1 min",
+        "title": "Demo-käyttöliittymä"
+      },
+      "DOCAPI": {
+        "description": "PDF-tuonnin avulla voit ensin ladata salkkusi yleiskatsausasiakirjat ja ostokuitit PDF-tiedostoina välittäjätilisi postilaatikosta. Tämän jälkeen Divizend lukee automaattisesti nykyiset osakeomistuksesi sekä mahdollisen transaktiohistorian.",
+        "duration": "> 2 min",
+        "title": "PDF-tuonti"
+      },
+      "ESTA": {
+        "description": "Tämän menetelmän avulla voit käyttää eSteuerauszugia (sähköistä veroilmoitusta), joka mahdollistaa arvopaperitilisi automaattisen tuonnin Divizendiin. eSteuerauszugit ovat saatavilla useista sveitsiläisistä pankeista verkkopankissasi PDF-dokumentteina.",
+        "duration": "< 1 min",
+        "title": "eSteuerauszug"
+      },
+      "FINAPI": {
+        "description": "finAPI on saksalainen rahoituspalvelujen tarjoaja, jolla on BaFinin myöntämä toimilupa ja joka tarjoaa rajapintoja maksu- ja arvopaperitilien käyttöön. Tunnistautumalla finAPI:n kautta voit liittää arvopaperitilisi Divizendiin hetkessä.\nTilisi käyttötiedot lähetetään finAPI:n kautta pankkiin todennusta varten salattua protokollaa käyttäen. Divizendillä ei ole missään vaiheessa pääsyä pääsytietoihisi.",
+        "duration": "< 1 min",
+        "title": "finAPI"
+      },
+      "FINTS": {
+        "description": "FinTS on saksalainen standardi, joka mahdollistaa maksu- ja arvopaperitilien käytön. Olemme optimoineet käyttöliittymämme erityisesti arvopaperitilisi tietojen tarkistamiseen. Voit varmentaa FinTS:n avulla arvopaperitilisi Divizendiin välittömästi.\nPaperitilisi tiedot siirretään ainoastaan pankkiin ja ne salataan protokollan avulla varmentamisen ajaksi. Tietoja ei tallenneta.",
+        "duration": "< 1 min",
+        "title": "FinTS"
+      },
+      "FLANKS": {
+        "description": " Flanks on lisensoitu palveluntarjoaja, joka tarjoaa tilitietopalvelujen rajapintoja maksu- ja arvopaperitilien avoimeen käyttöön. Voit liittää arvopaperitilisi Divizendiin välittömästi käyttämällä Flanksin tunnistautumisominaisuutta.",
+        "duration": "< 1 min",
+        "title": "Flanks"
+      },
+      "MANUAL": {
+        "description": "Manuaalisen syötön avulla voit liittää arvopaperitilisi Divizendiin ilman automaattisia rajapintoja tai asiakirjoja. Voit syöttää nykyiset osakeomistuksesi ja tarvittaessa transaktiohistoriasi käyttäen graafista käyttöliittymäämme.",
+        "duration": "> 3 min",
+        "title": "Manuaalinen syöttö"
+      },
+      "NATIVE": {
+        "description": "Voit yhdistää arvopaperitilisi Divizendiin pankkisi Open Banking -käyttöliittymän avulla.\nTilisi käyttötiedot lähetetään pankkiisi todennusta varten salattua protokollaa käyttäen. Divizendillä ei ole missään vaiheessa pääsyä pääsytietoihisi.",
+        "duration": "< 1 min",
+        "title": "Kotimainen käyttöliittymä"
+      },
+      "POCAPI": {
+        "description": "Voit liittää arvopaperitilisi Divizendiin myös ilman pankkiliittymää käyttämällä PDF-tuontia. Voit ladata tarvittavat asiakirjat suoraan postilaatikostasi.\nDokumentteja luetaan vain kerran, jotta nykyinen arvopaperitilin tiliote ja tapahtumahistoria voidaan määrittää. Niitä ei tallenneta.",
+        "duration": "> 2 min",
+        "title": "PDF-tuonti"
+      },
+      "SCRAPER": {
+        "description": "Screen Analyzerin avulla voit liittää arvopaperitilisi Divizendiin käyttäen graafista käyttöliittymää muutamassa sekunnissa.\nPaperitilisi käyttötiedot siirretään ainoastaan pankkiin ja ne salataan protokollaa käyttäen varmentamisen yhteydessä. Tietoja ei tallenneta.",
+        "duration": "< 1 min",
+        "title": "Screen Analyzer"
+      }
+    },
+    "recommended": "Suositeltu",
+    "title": "Valitse käyttöliittymä"
+  },
+  "confirmCancel": {
+    "description": "If you close this dialog, but have already chosen your bank and entered all required credentials, this portfolio import will continue running in the background and you can view its progress and finalize it in the settings. Otherwise your progress will be reset. It is recommended to leave this dialog open until the import is finished. Click on 'OK' if you still want to close this dialog.",
+    "title": "Confirm closing portfolio import dialog?"
+  },
+  "cta": "Tuo nyt!",
+  "finalize": {
+    "backToDashboard": "Siirry Maximizer-kojelautaan",
+    "editPortfolio": "Edit portfolio",
+    "heading": "Tuonti onnistui! Miten jatkamme?",
+    "headingMultiple": "Imports successful!",
+    "headingNotDone": "Your portfolio was imported successfully!",
+    "importAnother": "Tuo toinen portfolio",
+    "multiAccountFilter": "Please click on \"OK\" below now to assign all imported portfolios to the respective customers of your organization.",
+    "subheadingNotDone": "However, some details about your securities and dividends are still missing. Please click on \"Edit portfolio\" to fix this.",
+    "title": "Jatka"
+  },
+  "importViaSecapiImportId": "Import via SecAPI import ID",
+  "importingDepot": "Importing your portfolio(s)...",
+  "loadingDepot": "Loading your portfolio(s)...",
+  "loadingDepotSuccess": "Valmis!",
+  "portfolioContents": {
+    "callToAction": "Tuo nyt",
+    "confirmIncompleteImport": {
+      "description": "Joistakin salkkusi arvopapereista tarvitaan lisätietoja ennen niiden tuontia. Jos haluat jatkaa, seuraavia korostettuja keskeneräisiä arvopapereita <b>ei tuoda</b>:",
+      "descriptionCompleteWhenRemovingTx": "Seuraavilla osakkeilla on vain epätäydellinen tai epäjohdonmukainen transaktiohistoria. Jos haluat jatkaa, vain näiden osakkeiden transaktiot poistetaan, mutta kaikki muut tiedot näistä arvopapereista tuodaan normaalisti:",
+      "title": "Vahvista keskeneräinen tuonti"
+    },
+    "importBlocked": {
+      "noSecuritiesComplete": "Täytä vasemmalla puolella olevien korostettujen osakkeiden tiedot.",
+      "noSecuritiesExist": "Lisää osakkeita tälle arvopaperitilille vasemmalla puolella olevalla +-symbolilla."
+    },
+    "importError": "Tuonti epäonnistui: {{error, error}}",
+    "title": "Portfolion sisältö"
+  },
+  "restartImport": "Restart import",
+  "searchBankBranch": {
+    "noResults": "Ei tuloksia. Ole hyvä ja muokkaa hakuasi.",
+    "numbers": {
+      "bic": "BIC",
+      "blz": "BLZ"
+    },
+    "query": {
+      "helper": "Etsi tunnuskoodia, BIC-koodia tai pankkisi nimeä.",
+      "labels": {
+        "bank": "Etsi $t(bank:{{bank}}) sivukonttori",
+        "other": "Hae pankkia"
+      }
+    },
+    "title": "Valitse pankkikonttori"
+  },
+  "selectSecapiImportId": "Select the SecAPI import ID to import its content!",
+  "selectSecapiImportIdPlaceholder": "SecAPI import ID"
+}

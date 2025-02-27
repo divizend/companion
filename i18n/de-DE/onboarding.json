@@ -1,0 +1,33 @@
+{
+  "intro": {
+    "title": "Welcome to the Divizend Companion!",
+    "message": "Let's get the setup done."
+  },
+  "languageSelect": {
+    "title": "Choose your language",
+    "message": "You can change it anytime in settings."
+  },
+  "aiDisclaimer": {
+    "title": "AI-Native App Disclaimer",
+    "message": "First and foremost: This app is AI-native, which means that all information you enter will be processed using OpenAI APIs. By continuing to use this app, you agree to these terms."
+  },
+  "taxResidency": {
+    "title": "Which country are you from?",
+    "message": "More specifically, your country of tax residency."
+  },
+  "birthday": {
+    "title": "When were you born?",
+    "message": "Please enter your date of birth.",
+    "openDatepicker": "Select date of birth",
+    "skip": "Skip this step"
+  },
+  "freeTrial": {
+    "title": "Start your journey with a free trial",
+    "startTrial": "Start free trial!"
+  },
+  "finalConfirm": "Let's get started!",
+  "allSet": {
+    "title": "You're all set!",
+    "message": "Thank you for completing the setup. You're now ready to start using the Companion!"
+  }
+}

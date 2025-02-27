@@ -2,18 +2,19 @@ import * as Localization from 'expo-localization';
 import i18next from 'i18next';
 import { initReactI18next } from 'react-i18next';
 
-import da from './da.json';
-import de from './de.json';
-import en from './en.json';
-import es from './es.json';
-import fi from './fi.json';
-import fr from './fr.json';
-import is from './is.json';
-import it from './it.json';
-import nl from './nl.json';
-import no from './no.json';
-import pt from './pt.json';
-import sv from './sv.json';
+import da from './da-DK';
+import de from './de-DE';
+import en from './en-US';
+import es from './es-ES';
+import fi from './fi-FI';
+import fr from './fr-FR';
+import global from './global';
+import is from './is-IS';
+import it from './it-IT';
+import nl from './nl-NL';
+import no from './no-NO';
+import pt from './pt-PT';
+import sv from './sv-SE';
 
 i18next.use(initReactI18next).init({
   resources: {
@@ -53,9 +54,12 @@ i18next.use(initReactI18next).init({
     sv: {
       translation: { ...sv },
     },
+    global: {
+      translation: { ...global },
+    },
   },
   compatibilityJSON: 'v3',
-  fallbackLng: 'en',
+  fallbackLng: ['en', 'global'],
   lng: Localization.getLocales()[0].languageCode || 'en',
   interpolation: {
     escapeValue: false,
