@@ -79,7 +79,7 @@ export default function OnBoarding<Datum extends {}>({ data, onClose, render: Re
   };
 
   return (
-    <View style={{ flex: 1, marginHorizontal: -20 }}>
+    <View style={{ marginHorizontal: -20 }}>
       <Carousel
         ref={ref}
         width={width}
