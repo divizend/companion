@@ -40,7 +40,7 @@ export default ({ config }) => {
     ...config,
     name: 'Companion',
     slug: 'companion',
-    version: '1.0.1',
+    version: '1.1.0',
     owner: 'divizend',
     orientation: 'portrait',
     icon: './assets/images/icon.png',
