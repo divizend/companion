@@ -5,7 +5,6 @@ export enum WHTRecoveryClaimantType {
 
 export function getEntityName(e: any) {
   if (!e?.data?.info) {
-    console.log('e', e);
     return;
   }
   if (e.data.info.type === WHTRecoveryClaimantType.NATURAL) return e.data.info.givenName + ' ' + e.data.info.surname;

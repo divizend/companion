@@ -22,6 +22,7 @@ export default ({ config }) => {
             url: 'https://actor-api.divizend.com',
             versionCode: 'v1',
           },
+          actorStaticUrl: 'https://actor-static.divizend.com',
         }
       : {
           auth: {
@@ -39,6 +40,7 @@ export default ({ config }) => {
             url: `http://${localIp}:3004`,
             versionCode: 'v1',
           },
+          actorStaticUrl: 'https://actor-static.divizend.com',
         }),
     revenueCat: {
       playStore: 'goog_cfpJuVihNJVjRmkmxMlRhqoQyQr',

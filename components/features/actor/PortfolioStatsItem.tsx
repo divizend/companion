@@ -19,29 +19,21 @@ export type PortfolioStatsItemProps = {
 export default function PortfolioStatsItem({ title, value, extraInfo }: PortfolioStatsItemProps) {
   const theme = useThemeColor();
   const unit = useUserProfile().profile?.flags.currency;
-  const amount = t('currency', {
-    amount: value ?? {
-      amount: 0,
-      unit,
-    },
-  });
 
   return (
     <View className="mb-2 gap-3 flex flex-1 justify-between">
       <Text style={{ color: theme.muted }}>{title}</Text>
       <View className="flex flex-row justify-between items-end">
         <Text className="text-2xl font-bold">
-          {amount.toString().length >= 12
-            ? t('currency', {
-                amount: {
-                  amount: value?.amount ?? 0,
-                  unit: value?.unit ?? unit,
-                  options: {
-                    notation: 'compact',
-                  },
-                },
-              })
-            : amount.toString()}
+          {t('currency', {
+            amount: {
+              amount: value?.amount ?? 0,
+              unit: value?.unit ?? unit,
+              options: {
+                notation: 'compact',
+              },
+            },
+          })}
         </Text>
         {!!extraInfo && <Text style={{ color: theme.muted, fontSize: 12, marginBottom: 3 }}>{extraInfo}</Text>}
       </View>

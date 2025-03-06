@@ -23,11 +23,9 @@ interface PortfolioStatsItemProps {
 
 const PortfolioStatsRow = ({ items }: { items: PortfolioStatsItemProps[] }) => {
   return (
-    <View className="flex-row justify-between flex-1">
+    <View className="flex-row justify-between mx-5">
       {items.map((item: PortfolioStatsItemProps) => (
-        <View key={item.title} className="flex-1 mx-5">
-          <PortfolioStatsItem title={item.title} value={item.value} extraInfo={item.extraInfo} />
-        </View>
+        <PortfolioStatsItem key={item.title} title={item.title} value={item.value} extraInfo={item.extraInfo} />
       ))}
     </View>
   );

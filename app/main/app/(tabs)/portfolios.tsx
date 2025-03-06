@@ -5,13 +5,12 @@ import { Icon } from '@rneui/themed';
 import { capitalize } from 'lodash';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
 
 import { apiDelete } from '@/common/api';
 import { showConfirmationDialog } from '@/common/inputDialog';
 import { useUserProfile } from '@/common/profile';
 import SectionList from '@/components/SectionList';
-import { Button, SafeAreaView, Text } from '@/components/base';
+import { Button, SafeAreaView, ScrollScreen, Text } from '@/components/base';
 import PortfolioOnboarding from '@/components/features/on-boarding/PortfolioOnboarding';
 import PortfolioConnectModal from '@/components/features/portfolio-import/PortfolioConnectModal';
 import { BankParentIcon } from '@/components/features/portfolio-overview/BankParentIcon';
@@ -49,10 +48,11 @@ export default function Portfolios() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <Text className="text-3xl font-bold mb-5">{t('portfolio.title')}</Text>
+    <SafeAreaView>
+      <ScrollScreen>
+        <Text className="text-3xl font-bold mb-5 mx-1.5">{t('portfolio.title')}</Text>
 
-      {/* <Button
+        {/* <Button
         disabled={isPortfolioConnectOnboardingVisible.value}
         onPress={() => (isPortfolioConnectOnboardingVisible.value = true)}
         containerStyle={{ marginBottom: 10 }}
@@ -60,18 +60,17 @@ export default function Portfolios() {
         Onboarding
       </Button> */}
 
-      {isPortfolioConnectOnboardingVisible.value ? (
-        <PortfolioOnboarding />
-      ) : !filteredPortfolios.length ? (
-        <View className="flex-1 flex gap-5 justify-center items-center">
-          <Icon name="block" type="material" size={64} color={theme.muted} />
-          <Text h3>{t('portfolio.noPortfolios')}</Text>
-          <Button onPress={() => ModalManager.showModal(PortfolioConnectModal)}>
-            {t('portfolioConnect.bankLogin.title')}
-          </Button>
-        </View>
-      ) : (
-        <ScrollView contentContainerStyle={{ paddingBottom: 30 }}>
+        {isPortfolioConnectOnboardingVisible.value ? (
+          <PortfolioOnboarding />
+        ) : !filteredPortfolios.length ? (
+          <View className="flex-1 flex gap-5 justify-center items-center">
+            <Icon name="block" type="material" size={64} color={theme.muted} />
+            <Text h3>{t('portfolio.noPortfolios')}</Text>
+            <Button onPress={() => ModalManager.showModal(PortfolioConnectModal)}>
+              {t('portfolioConnect.bankLogin.title')}
+            </Button>
+          </View>
+        ) : (
           <SectionList
             items={[
               ...filteredPortfolios.map(portfolio => ({
@@ -79,7 +78,7 @@ export default function Portfolios() {
                 leftIcon: <BankParentIcon bankParent={portfolio.bankType} size={25} />,
                 title: (
                   <View>
-                    <Text h4 className="font-bold line-clamp-1">
+                    <Text h4 className="font-bold line-clamp-1 flex-1 flex-wrap">
                       {capitalize(portfolio.bankName)}
                     </Text>
                     <Text className="line-clamp-1">{portfolio.description || portfolio.number}</Text>
@@ -100,8 +99,8 @@ export default function Portfolios() {
               },
             ]}
           />
-        </ScrollView>
-      )}
+        )}
+      </ScrollScreen>
     </SafeAreaView>
   );
 }

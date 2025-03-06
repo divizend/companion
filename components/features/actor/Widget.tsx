@@ -1,17 +1,13 @@
 import React from 'react';
 
-import { ActivityIndicator, StyleProp, View } from 'react-native';
-import { ViewStyle } from 'react-native';
+import { ActivityIndicator, StyleProp, View, ViewStyle } from 'react-native';
 
 import { Text } from '@/components/base';
 import { useThemeColor } from '@/hooks/useThemeColor';
 
-import ComingSoon from './ComingSoon';
-
 type WidgetProps = {
   title: string;
   children?: React.ReactNode;
-  comingSoon?: boolean;
   ready?: boolean;
   settings?: React.ReactNode;
   styles?: {
@@ -20,7 +16,7 @@ type WidgetProps = {
   };
 };
 
-export default function Widget({ title, children, comingSoon, ready, settings, styles }: WidgetProps) {
+export default function Widget({ title, children, ready, settings, styles }: WidgetProps) {
   const theme = useThemeColor();
 
   return (
@@ -39,9 +35,7 @@ export default function Widget({ title, children, comingSoon, ready, settings, s
         </Text>
         {settings}
       </View>
-      <View style={styles?.container}>
-        {!ready ? <ActivityIndicator /> : comingSoon ? <ComingSoon iconName="hourglass-empty" /> : children}
-      </View>
+      <View style={styles?.container}>{!ready ? <ActivityIndicator /> : children}</View>
     </View>
   );
 }
