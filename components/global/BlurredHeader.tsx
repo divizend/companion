@@ -86,7 +86,7 @@ export default function BlurredHeader(props: BlurredHeaderProps) {
           />
         </TouchableOpacity>
         {/* Do not show profile icon when profile is already open (following temporary solution to add profile in bottom tabs) */}
-        {(segments.at(-1) as string) !== 'profile' && (
+        {/* {(segments.at(-1) as string) !== 'profile' && (
           <TouchableOpacity onPress={() => router.navigate('/main/settings')}>
             <Avatar
               // Added empty source to remove Image source not found warning (which is a bug from rneui)
@@ -98,7 +98,7 @@ export default function BlurredHeader(props: BlurredHeaderProps) {
               placeholderStyle={{ backgroundColor: 'transparent' }}
             />
           </TouchableOpacity>
-        )}
+        )} */}
       </View>
     </>
   );
