@@ -12,9 +12,6 @@
     "title": "Coming soon"
   },
   "confirm": "Confirm",
-  "dateTime": {
-    "dayLongAndTime": "{{date, dayLongAndTime}}"
-  },
   "error": "Error",
   "loading": "Loading...",
   "login": "Login",

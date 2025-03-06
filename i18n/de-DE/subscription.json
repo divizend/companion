@@ -1,199 +1,199 @@
 {
-  "currentPlan": {
-    "active": "Active",
-    "inactive": "Inactive",
-    "membership": "Divizend membership",
-    "privilegedAccess": "Privileged access",
-    "noActiveSubscription": "No active membership",
-    "table": {
-      "price": "Price per month",
-      "expiresAt": "Expires at",
-      "renewsAt": "Renews at",
-      "cancelledAt": "Cancelled at"
+  "actions": {
+    "alreadyInWaitlist": "Bereits auf der Warteliste",
+    "getStarted": "Loslegen",
+    "joinWaitlist": "Auf Warteliste setzen",
+    "managePlan": {
+      "cancelOrPause": "Mitgliedschaft kündigen oder pausieren",
+      "change": "Mitgliedschaft ändern",
+      "title": "Mitgliedschaft verwalten"
     },
-    "unlimitedAccess": {
-      "title": "You have free privileged access to the Companion membership",
-      "subtitle": "This access was granted by administrators"
-    },
-    "freeTrial": {
-      "ends": "Your free trial will end on {{date,dayLongAndTime}}",
-      "after": "Your access will be limited afterwards."
-    },
-    "paywallDisclaimer": {
-      "title": "Your membership is inactive",
-      "message": "Please make sure your membership is active to continue using the app.",
-      "options": "See membership options"
-    },
-    "waitlist": {
-      "title": "You are in the waiting list for {{name}}.",
-      "ready": "You can now join to Companion for a reduced price.",
-      "waiting": "You are yet to be selected to get the sponsorship.",
-      "notification": "We will notify you by email when you're ready to purchase a membership."
-    }
+    "spotsReservedSubscribe": "Plätze reserviert. Jetzt Teil werden!",
+    "subscribe": "Mitglied werden"
   },
   "choosePlan": {
-    "title": "Join us",
-    "steps": {
-      "explainer": {
-        "title": "Empower access for everyone",
-        "description": "As Companion shall enable users to pursue financial freedom, Divizend uses a solidarity-based pricing model.",
-        "accordion": {
-          "pricingOptions": {
-            "title": "Why do we have different pricing options?",
-            "content": "We believe in community-driven support. Not everyone can afford the standard membership. By offering higher-factor options, you help subsidize the cost for others who might only pay as little as €0.99."
-          },
-          "factorMeaning": {
-            "title": "What does it mean to choose a different factor option?",
-            "content": {
-              "higherFactor": {
-                "title": "If you choose a higher factor option:",
-                "bullet": "You're directly contributing to the community by subsidizing the cost for others who might not otherwise afford it."
-              },
-              "lowerFactor": {
-                "title": "If you choose a lower factor option:",
-                "bullet": "It means you're part of a community that values inclusion and wants you here, regardless of financial barriers."
-              },
-              "allCases": {
-                "title": "In all cases:",
-                "bullet": "No matter which pricing option you choose, you always get exactly the same features."
-              }
-            }
-          }
-        },
-        "understand": "I understand"
-      },
-      "plans": {
-        "title": "Choose the appropriate membership option for you",
-        "solidarityPrices": "Show solidarity prices",
-        "positionDisclaimer": "Continuing with another membership option might result in abandoning your position in the waiting list.",
-        "reserved": "Reserved",
-        "active": "Active",
-        "crossgrading": {
-          "sponsored": {
-            "title": "You don't have access to sponsored memberships",
-            "description": "You cannot purchase a sponsored option when you already have an active membership."
-          }
-        }
-      },
-      "disclaimer": {
-        "title": "How does it work?",
-        "description": "Whether you're sponsoring others or benefiting from a sponsored membership, here's how the solidarity system works:",
-        "accordion": {
-          "spotsContributions": {
-            "title": "Spots and Contributions",
-            "content": {
-              "sponsors": {
-                "title": "If you choose higher factor options:",
-                "bullet1": "Factor 1.5: Creates 1 spot on the waiting list",
-                "bullet2": "Factor 2: Creates 2 spots on the waiting list",
-                "bullet3": "Each spot allows a user to purchase memberships for €10. Members paying €0.99 require 2 spots."
-              },
-              "sponsored": {
-                "title": "If you're subscribing to a sponsored membership (€10 or €0.99):",
-                "bullet1": "Your membership depends on available spots created by sponsors",
-                "bullet2": "Matching is anonymous and based on a first-come, first-served system"
-              }
-            }
-          },
-          "waitlist": {
-            "title": "Waiting list and Matching",
-            "content": {
-              "bullet1": "If there are spots available, you are able to instantly activate your membership",
-              "bullet2": "If no spots are available, users join a waiting list",
-              "bullet3": "Once a spot is available, you'll receive an email notification and have 1 week to activate your membership. After that, the spot is forfeited"
-            }
-          },
-          "changes": {
-            "title": "Changing or Cancelling Memberships",
-            "content": {
-              "bullet1": "Solidarity Members (€10 or €0.99): If you start subscribing without spots being reserved for you but cancel, your spot is held for 5 minutes",
-              "bullet2": "Sponsors (€30 or €40): If you cancel, the sponsored user keeps their reduced price until they cancel",
-              "note": "Important Note:",
-              "bullet3": "Purchasing any other membership while on the waiting list means you'll lose your spot"
-            }
-          }
-        }
-      },
-      "confirmation": {
-        "title": "Your purchase is confirmed",
-        "thankYou": "Thank you for choosing to be part of our community!",
-        "activationMessage": "Your membership has been successfully activated, and we're excited to have you on board.",
-        "helpSection": {
-          "title": "Need Help or Have Questions?",
-          "message": "We're here for you every step of the way! If you have questions, concerns, or need guidance, don't hesitate to reach out. Our support team is ready to assist you at",
-          "email": "support@divizend.com"
-        }
-      },
-      "waitlist": {
-        "title": "You're on the waiting list",
-        "description": "You have chosen a sponsored membership option. Currently, there are no available spots, but you've been added to our waiting list.",
-        "accordion": {
-          "title": "How the waiting list works",
-          "spotMatching": {
-            "title": "1. Spot matching:",
-            "point1": "As soon as a spot becomes available, we'll reserve it for you.",
-            "point2": "Matching is done anonymously and on a first-come, first-served basis."
-          },
-          "notification": {
-            "title": "2. Notification:",
-            "point1": "You'll receive an email notification when a spot is reserved for you.",
-            "point2": "After receiving the notification, you'll have 7 days to activate your membership."
-          },
-          "forfeiting": {
-            "title": "3. Forfeiting spots:",
-            "point1": "If you don't activate within 7 days, the spot will be forfeited, and you'll remain on the waiting list."
-          }
-        }
-      }
+    "alerts": {
+      "bottomWaitlist": "Wenn du fortfährst, wirst du am Ende der Warteliste platziert",
+      "losePosition": "Wenn du fortfährst, verzichtest du auf deinen Platz auf der Warteliste für die Mitgliedschaft mit dem niedrigeren Preisfaktor",
+      "removed": "Wenn du fortfährst, wirst du von der Warteliste entfernt",
+      "title": "Bist du sicher?"
     },
     "button": {
-      "continue": "Continue",
-      "getStarted": "Get started",
-      "finalize": "Continue to app"
+      "continue": "Fortfahren",
+      "finalize": "Zur App fortfahren",
+      "getStarted": "Beginnen"
     },
-    "alerts": {
-      "title": "Are you sure?",
-      "removed": "If you proceed, you will be removed from the waiting list",
-      "bottomWaitlist": "If you proceed, you will be placed at the bottom of the waiting list",
-      "losePosition": "If you proceed, you will renounce your spot in the waiting list for the lower factor membership"
+    "steps": {
+      "confirmation": {
+        "activationMessage": "Deine Mitgliedschaft wurde erfolgreich aktiviert, und wir freuen uns, dich an Bord zu haben.",
+        "helpSection": {
+          "email": "support@divizend.com",
+          "message": "Wir sind für dich da, bei jedem Schritt des Weges! Wenn du Fragen oder Bedenken hast oder weitere Anleitung benötigst, zögere nicht, uns zu kontaktieren. Unser Support-Team ist bereit, dich zu unterstützen unter",
+          "title": "Brauchst du Hilfe oder hast du Fragen?"
+        },
+        "thankYou": "Vielen Dank, dass du sich entschieden hast, Teil unserer Community zu sein!",
+        "title": "Dein Kauf wurde bestätigt"
+      },
+      "disclaimer": {
+        "accordion": {
+          "changes": {
+            "content": {
+              "bullet1": "Solidaritätsmitglieder (10 € oder 0,99 €): Wenn du ein Abonnement beginnst, ohne dass Plätze für dich reserviert sind, aber kündigen, wird dein Platz für 5 Minuten gehalten.",
+              "bullet2": "Förderer (30 € oder 40 €): Wenn du kündigst, behält der geförderte Nutzer den reduzierten Preis, bis er kündigt",
+              "bullet3": "Wenn du eine andere Mitgliedschaft erwirbst, während du auf der Warteliste stehst, verlierst du deinen Platz.",
+              "note": "Wichtiger Hinweis:"
+            },
+            "title": "Ändern oder Kündigen von Mitgliedschaften"
+          },
+          "spotsContributions": {
+            "content": {
+              "sponsored": {
+                "bullet1": "Deine Mitgliedschaft hängt von den durch Förderer geschaffenen freien Plätzen ab",
+                "bullet2": "Das Matching ist anonym und erfolgt nach dem Prinzip „first-come, first-served“.",
+                "title": "Wenn du eine geförderte Mitgliedschaft abschließt (10 € oder 0,99 €):"
+              },
+              "sponsors": {
+                "bullet1": "Faktor 1,5: Schafft einen Platz auf der Warteliste",
+                "bullet2": "Faktor 2: Schafft 2 Plätze auf der Warteliste",
+                "bullet3": "Jeder Platz ermöglicht es einem Nutzer, Mitgliedschaften für 10 € zu erwerben. Mitglieder, die 0,99 € zahlen, benötigen zwei Plätze.",
+                "title": "Wenn du eine Option mit höherem Faktor wählst:"
+              }
+            },
+            "title": "Plätze und Beiträge"
+          },
+          "waitlist": {
+            "content": {
+              "bullet1": "Wenn es noch freie Plätze gibt, kannst du deine Mitgliedschaft sofort aktivieren",
+              "bullet2": "Wenn keine Plätze verfügbar sind, werden die Nutzer auf eine Warteliste gesetzt.",
+              "bullet3": "Sobald ein Platz frei ist, erhältst du eine E-Mail-Benachrichtigung und hast eine Woche Zeit, um deine Mitgliedschaft zu aktivieren. Danach ist der Platz verwirkt"
+            },
+            "title": "Warteliste und Matching"
+          }
+        },
+        "description": "Egal, ob du andere förderst oder von einer geförderten Mitgliedschaft profitierst, so funktioniert das Solidaritätssystem:",
+        "title": "Wie funktioniert es?"
+      },
+      "explainer": {
+        "accordion": {
+          "factorMeaning": {
+            "content": {
+              "allCases": {
+                "bullet": "Unabhängig davon, welche Preisoption du wählst, erhältst du immer genau die gleichen Features.",
+                "title": "In jedem Fall:"
+              },
+              "higherFactor": {
+                "bullet": "Du leistest einen direkten Beitrag für die Gemeinschaft, indem du die Kosten für andere übernimmst, die es sich sonst nicht leisten könnten.",
+                "title": "Wenn du einen Preis mit einem höheren Faktor wählst:"
+              },
+              "lowerFactor": {
+                "bullet": "Es bedeutet, dass du Teil einer Gemeinschaft bist, die Inklusion schätzt und dich hier haben möchte, unabhängig von finanziellen Barrieren.",
+                "title": "Wenn du einen Preis mit einem niedrigeren Faktor wählst:"
+              }
+            },
+            "title": "Was bedeutet es, einen anderen Preisfaktor zu wählen?"
+          },
+          "pricingOptions": {
+            "content": "Wir glauben an die Unterstützung durch die Gemeinschaft. Nicht jeder kann sich die Standardmitgliedschaft leisten. Indem wir Optionen mit höherem Faktor anbieten, helfen Sie, die Kosten für andere zu übernehmen, die vielleicht nur 0,99 € zahlen können.",
+            "title": "Warum haben wir verschiedene Preisoptionen?"
+          }
+        },
+        "description": "Da der Companion allen Nutzern finanzielle Freiheit ermöglichen soll, verwendet Divizend ein solidarisches Preismodell.",
+        "title": "Zugang für alle ermöglichen",
+        "understand": "Verstanden"
+      },
+      "plans": {
+        "active": "Aktiv",
+        "crossgrading": {
+          "sponsored": {
+            "description": "Du kannst keine Fördermitgliedschaft erwerben, wenn du bereits eine aktive Mitgliedschaft hast.",
+            "title": "Sie haben keinen Zugang zu geförderten Mitgliedschaften"
+          }
+        },
+        "positionDisclaimer": "Wenn du eine andere Mitgliedschaftsoption wählst, kann dies dazu führen, dass deine Position auf der Warteliste verfällt.",
+        "reserved": "Reserviert",
+        "solidarityPrices": "Solidaritätspreise anzeigen",
+        "title": "Wähle die für dich geeignete Mitgliedschaftsoption"
+      },
+      "waitlist": {
+        "accordion": {
+          "forfeiting": {
+            "point1": "Wenn du deine Mitgliedschaft nicht innerhalb von 7 Tagen aktivierst, verfällt der Platz, und du bleibst auf der Warteliste.",
+            "title": "3. Verwirken von Plätzen:"
+          },
+          "notification": {
+            "point1": "Du erhältst eine E-Mail-Benachrichtigung, wenn ein Platz für dich reserviert ist.",
+            "point2": "Nach Erhalt der Benachrichtigung hast du sieben Tage Zeit, um deine Mitgliedschaft zu aktivieren.",
+            "title": "2. Benachrichtigung:"
+          },
+          "spotMatching": {
+            "point1": "Sobald ein Platz frei wird, werden wir ihn für dich reservieren.",
+            "point2": "Das Matching erfolgt anonym und nach dem Prinzip „first-come, first-served“.",
+            "title": "1. Matching für Plätze:"
+          },
+          "title": "Wie die Warteliste funktioniert"
+        },
+        "description": "Du hast dich für eine geförderte Mitgliedschaft entschieden. Derzeit gibt es keine freien Plätze, aber du wurdest auf unsere Warteliste gesetzt.",
+        "title": "Du bist auf der Warteliste"
+      }
+    },
+    "title": "Jetzt teilhaben"
+  },
+  "currentPlan": {
+    "active": "Aktiv",
+    "freeTrial": {
+      "after": "Danach wird dein Zugang beschränkt werden.",
+      "ends": "Deine kostenlose Testversion wird am {{date,dayLongAndTime}} enden"
+    },
+    "inactive": "Inaktiv",
+    "membership": "Divizend-Mitgliedschaft",
+    "noActiveSubscription": "Keine aktive Mitgliedschaft",
+    "paywallDisclaimer": {
+      "message": "Bitte stelle sicher, dass deine Mitgliedschaft aktiv ist, um die App weiterhin zu verwenden.",
+      "options": "Optionen für Mitgliedschaft anzeigen",
+      "title": "Deine Mitgliedschaft ist inaktiv"
+    },
+    "privilegedAccess": "Privilegierter Zugriff",
+    "table": {
+      "cancelledAt": "Gekündigt am",
+      "expiresAt": "Läuft ab am",
+      "price": "Preis pro Monat",
+      "renewsAt": "Erneuert sich am"
+    },
+    "unlimitedAccess": {
+      "subtitle": "Dieser Zugriff wurde dir von den Administratoren gewährt",
+      "title": "Du hast kostenlosen privilegierten Zugang zur Companion-Mitgliedschaft"
+    },
+    "waitlist": {
+      "notification": "Wir werden dich via E-Mail benachrichtigen, wenn du die Mitgliedschaft abonnieren kannst.",
+      "ready": "Du kannst den Companion nun für einen reduzierten Preis abonnieren.",
+      "title": "Du bist in der Warteliste für {{name}}.",
+      "waiting": "Du musst noch dazu ausgewählt werden, ein Sponsoring zu erhalten."
     }
+  },
+  "monthly": "pro Monat",
+  "paywall": {
+    "pressToStart": "Tippe an einer beliebigen Stelle, um deine Mitgliedschaft zu beginnen",
+    "reservedForMembers": "Dieser Abschnitt ist nur für Mitglieder zugänglich"
   },
   "subscriptionPlans": {
     "monthly_factor_0": {
-      "title": "Factor 0"
+      "title": "Faktor 0"
     },
     "monthly_factor_0_5": {
-      "title": "Factor 0.5"
+      "title": "Faktor 0,5"
     },
     "monthly_factor_1": {
-      "title": "Divizend Membership"
+      "title": "Divizend-Mitgliedschaft"
     },
     "monthly_factor_1_5": {
-      "title": "Factor 1.5"
+      "title": "Faktor 1,5"
     },
     "monthly_factor_2": {
-      "title": "Factor 2"
+      "title": "Faktor 2"
     }
   },
   "trialPeriod": {
-    "free": "Get access for one week completely free.",
-    "after": "You will only be charged if you purchase a new membership."
-  },
-  "monthly": "per month",
-  "actions": {
-    "subscribe": "Become a member",
-    "managePlan": {
-      "title": "Manage membership",
-      "cancelOrPause": "Cancel or pause membership",
-      "change": "Change membership"
-    },
-    "getStarted": "Get started",
-    "spotsReservedSubscribe": "Spots reserved. Join now!",
-    "joinWaitlist": "Join waiting list",
-    "alreadyInWaitlist": "Already in waiting list"
-  },
-  "paywall": {
-    "reservedForMembers": "This section is reserved for members",
-    "pressToStart": "Press anywhere to start your membership"
+    "after": "Du zahlst erst, wenn du eine neue Mitgliedschaft abonnierst.",
+    "free": "Erhalte für eine Woche kostenlosen Zugriff."
   }
 }

@@ -1,29 +1,31 @@
 {
   "deletePortfolio": {
-    "description": "Are you sure you want to delete this portfolio?",
-    "title": "Delete portfolio"
+    "description": "Bist du sicher, dass du dieses Depot löschen willst?",
+    "title": "Depot löschen"
   },
+  "goToPortfolios": "Depots anzeigen",
+  "importTitle": "Depotimport",
   "labels": {
-    "description": "Description",
-    "importedAt": "Imported at",
-    "owner": "Owner",
-    "portfolioNumber": "Portfolio number",
-    "syncedAt": "Synchronized at"
+    "description": "Beschreibung",
+    "importedAt": "Importiert am",
+    "owner": "Eigentümer",
+    "portfolioNumber": "Depotnummer",
+    "syncedAt": "Synchronisiert am"
   },
-  "noPortfolios": "No portfolios imported.",
+  "noPortfolios": "Keine Depots importiert.",
   "onBoarding": [
     {
-      "description": "View and add portfolios for free, regardless of your bank.",
-      "title": "Manage Multiple Portfolios"
+      "description": "Füge Depots kostenlos hinzu und lass sie anzeigen, egal von welcher Bank.",
+      "title": "Mehrere Depots verwalten"
     },
     {
-      "description": "Enjoy high-quality service with automatic coverage for most banks.",
-      "title": "Seamless Integration"
+      "description": "Genieße einen hochwertigen Service mit automatischer Abdeckung für die meisten Banken.",
+      "title": "Nahtlose Integration"
     },
     {
-      "description": "Login safely with no data stored for your privacy.",
-      "title": "Secure & Private"
+      "description": "Logge dich sicher ein, ohne dass Zugangsdaten gespeichert werden, um deine Privatsphäre zu schützen.",
+      "title": "Sicher & privat"
     }
   ],
-  "title": "Portfolios"
+  "title": "Depots"
 }

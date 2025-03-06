@@ -3,6 +3,8 @@
     "description": "Are you sure you want to delete this portfolio?",
     "title": "Delete portfolio"
   },
+  "goToPortfolios": "Check out your portfolios",
+  "importTitle": "Portfolio connect",
   "labels": {
     "description": "Description",
     "importedAt": "Imported at",

@@ -1,42 +1,39 @@
 {
-  "add": "Add",
-  "askEmoji": "Which emoji do you want?",
-  "cancel": "Cancel",
+  "add": "Ajouter",
+  "askEmoji": "Quel emoji voulez-vous ?",
+  "cancel": "Annuler",
   "chat": {
-    "inputPlaceholder": "Type a message...",
-    "title": "AI Chat"
+    "inputPlaceholder": "Tapez un message...",
+    "title": "Chat sur l'intelligence artificielle"
   },
-  "close": "Close",
+  "close": "Fermer",
   "comingSoon": {
-    "stayTuned": "Stay tuned for the revolution of financial intelligence with Divizend!",
-    "title": "Coming soon"
+    "stayTuned": "Restez à l'écoute de la révolution de l'intelligence financière avec Divizend !",
+    "title": "Prochainement"
   },
-  "confirm": "Confirm",
-  "dateTime": {
-    "dayLongAndTime": "{{date, dayLongAndTime}}"
-  },
-  "error": "Error",
-  "loading": "Loading...",
-  "login": "Login",
-  "logout": "Logout",
-  "next": "Next",
-  "no": "No",
+  "confirm": "Confirmer",
+  "error": "Erreur",
+  "loading": "Chargement...",
+  "login": "Connexion",
+  "logout": "Déconnexion",
+  "next": "Suivant",
+  "no": "Non",
   "ok": "OK",
   "percent": "{{value}} %",
-  "placeholder": "Type here...",
-  "refining": "Refining...",
-  "remove": "Remove",
-  "removing": "Removing...",
-  "retry": "Retry",
-  "submit": "Submit",
+  "placeholder": "Tapez ici...",
+  "refining": "Raffinage...",
+  "remove": "Retirer",
+  "removing": "Retirer...",
+  "retry": "Réessayer",
+  "submit": "Soumettre",
   "tabs": {
-    "analyze": "Analyze",
-    "decide": "Decide",
-    "discover": "Discover",
-    "learn": "Visionary",
-    "portfolios": "Portfolios",
-    "profile": "Profile",
-    "track": "Track"
+    "analyze": "Analyser",
+    "decide": "Décider",
+    "discover": "Découvrir",
+    "learn": "Visionnaire",
+    "portfolios": "Portefeuilles",
+    "profile": "Profil",
+    "track": "Suivre"
   },
-  "yes": "Yes"
+  "yes": "Oui"
 }

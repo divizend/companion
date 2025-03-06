@@ -1,33 +1,33 @@
 {
-  "pages": {
-    "settings": "Settings",
-    "plan": "Membership"
-  },
-  "title": "Settings",
   "accountSection": {
-    "title": "Account",
-    "email": "Email",
-    "bottomText": "To modify your email address and for other profile settings, please visit app.divizend.com.",
-    "language": "Choose language"
+    "bottomText": "Um deine E-Mail-Adresse und andere Profileinstellungen zu ändern, besuche bitte app.divizend.com.",
+    "email": "E-Mail",
+    "language": "Sprache wählen",
+    "title": "Konto"
   },
-  "logoutConfirmation": "Are you sure you want to log out?",
-  "resetProfile": {
-    "title": "Reset profile",
-    "message": "Are you sure you want to reset your Companion profile? This action cannot be undone."
-  },
-  "privilegedActions": {
-    "title": "Privileged actions",
-    "impersonateUser": "Impersonate user",
-    "endImpersonation": "End impersonation",
-    "currentImpersonation": "Currently impersonated by {{email}}",
-    "privilegedMembershipAccess": "Privileged membership access"
+  "currentPlan": {
+    "title": "Deine Mitgliedschaft"
   },
   "impersonateUser": {
-    "title": "Impersonate user",
-    "emailPlaceholder": "Enter user email"
+    "emailPlaceholder": "E-Mail-Adresse des Nutzers eintragen",
+    "title": "Identität wechseln"
   },
-  "theme": "Toggle theme",
-  "currentPlan": {
-    "title": "Your membership"
-  }
+  "logoutConfirmation": "Bist du sicher, dass du dich ausloggen möchtest?",
+  "pages": {
+    "plan": "Mitgliedschaft",
+    "settings": "Einstellungen"
+  },
+  "privilegedActions": {
+    "currentImpersonation": "Derzeit Identität angenommen von {{email}}",
+    "endImpersonation": "Identitätswechsel beenden",
+    "impersonateUser": "Identität wechseln",
+    "privilegedMembershipAccess": "Privilegierter Mitgliederzugang",
+    "title": "Privilegierte Aktionen"
+  },
+  "resetProfile": {
+    "message": "Bist du sicher, dass du dein Companion-Profil zurücksetzen willst? Diese Aktion kann nicht rückgängig gemacht werden.",
+    "title": "Profil zurücksetzen"
+  },
+  "theme": "Design umschalten",
+  "title": "Einstellungen"
 }
