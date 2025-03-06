@@ -78,6 +78,7 @@ export type UserProfile = {
     canAccessCompanionFeaturesWithoutSubscription?: boolean;
     canAccessDemoBanks?: boolean;
     useLocalSecapi?: boolean;
+    currency?: string;
   };
   impersonation?: {
     fromEmail: string;

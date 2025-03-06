@@ -11,6 +11,12 @@ export type Config = {
     versionCode: string;
   };
   secapiImportUrl: string;
+  actorUrl: string;
+  actorApi: {
+    url: string;
+    versionCode: string;
+  };
+  actorStaticUrl: string;
   revenueCat: {
     playStore: string;
     appStore: string;

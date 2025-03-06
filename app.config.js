@@ -17,6 +17,12 @@ export default ({ config }) => {
             versionCode: 'v1',
           },
           secapiImportUrl: 'https://secapi.divizend.com',
+          actorUrl: 'wss://actor-api.divizend.com/actor',
+          actorApi: {
+            url: 'https://actor-api.divizend.com',
+            versionCode: 'v1',
+          },
+          actorStaticUrl: 'https://actor-static.divizend.com',
         }
       : {
           auth: {
@@ -29,6 +35,12 @@ export default ({ config }) => {
             versionCode: 'v1',
           },
           secapiImportUrl: `http://${localIp}:3003`,
+          actorUrl: `ws://${localIp}:3004/actor`,
+          actorApi: {
+            url: `http://${localIp}:3004`,
+            versionCode: 'v1',
+          },
+          actorStaticUrl: 'https://actor-static.divizend.com',
         }),
     revenueCat: {
       playStore: 'goog_cfpJuVihNJVjRmkmxMlRhqoQyQr',

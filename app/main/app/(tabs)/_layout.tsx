@@ -53,7 +53,7 @@ export default function TabLayout() {
         },
         tabBarActiveTintColor: theme.theme,
         tabBarInactiveTintColor: 'gray',
-        header: props => <BlurredHeader title={t(`${route.name}.title`)} {...props} />,
+        header: props => <BlurredHeader title={t(`common.tabs.${route.name}`)} {...props} />,
         tabBarBackground: () => (
           <BlurView
             experimentalBlurMethod="dimezisBlurView"
@@ -84,7 +84,6 @@ export default function TabLayout() {
         name="analyze"
         options={{
           title: t('common.tabs.analyze'),
-          href: null,
         }}
       />
       <Tabs.Screen

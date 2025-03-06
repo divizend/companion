@@ -1,0 +1,15 @@
+{
+  "title": "Actor",
+  "portfolioStats": {
+    "title": "My portfolio",
+    "totalAssets": "Total assets",
+    "grossDividendThisYear": "Gross dividends this year",
+    "totalRefundableWithholdingTax": "Total refundable withholding tax",
+    "nextDividend": "Next dividend"
+  },
+  "division": {
+    "title": "Division",
+    "totalAssets": "Total Assets",
+    "others": "Others"
+  }
+}
