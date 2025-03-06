@@ -55,7 +55,7 @@ i18next.use(initReactI18next).init({
       translation: { ...sv },
     },
     global: {
-      translation: { ...global },
+      translation: { ...global, ...global.format },
     },
   },
   compatibilityJSON: 'v3',
@@ -79,6 +79,36 @@ i18next.use(initReactI18next).init({
           return i18next.t('error:' + parts[0], { parts: parts.slice(1), rest: value });
         }
         case 'currency': {
+          function customIntl(number = 0, locale = 'en-US', currency = 'USD') {
+            const absNumber = Math.abs(number);
+            const units = ['', 'K', 'M', 'B', 'T'];
+            let unitIndex = 0;
+            let num = absNumber;
+
+            while (num >= 1000 && unitIndex < units.length - 1) {
+              num /= 1000;
+              unitIndex++;
+            }
+
+            const formattedNumber = num.toLocaleString(locale, {
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 2,
+            });
+
+            const formattedCurrency = new Intl.NumberFormat(locale, {
+              style: 'currency',
+              currency: currency,
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 1,
+            }).format(Number(formattedNumber));
+
+            return `${formattedCurrency}${units[unitIndex]}`;
+          }
+
+          if (value?.options?.notation === 'compact') {
+            return customIntl(value.amount, lng, value.unit);
+          }
+
           return value
             ? new Intl.NumberFormat(lng, { style: 'currency', currency: value.unit, ...value.options })
                 .format(value.amount)

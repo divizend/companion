@@ -1,17 +1,21 @@
-import { Button, SafeAreaView } from '@/components/base';
-import PortfolioConnectModal from '@/components/features/portfolio-import/PortfolioConnectModal';
-import { ModalManager } from '@/components/global/modal';
+import { useSignals } from '@preact/signals-react/runtime';
+
+import { SafeAreaView, ScrollScreen, Text } from '@/components/base';
+import PortfolioStatsWidget from '@/components/features/actor/PortfolioStatsWidget';
+import useInitializeActor from '@/hooks/useInitializeActor';
+import { t } from '@/i18n';
 
 export default function Analyze() {
+  useInitializeActor();
+
+  useSignals();
+
   return (
-    <SafeAreaView
-      style={{
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}
-    >
-      <Button onPress={() => ModalManager.showModal(PortfolioConnectModal)}>Open PortfolioConnectModal</Button>
+    <SafeAreaView>
+      <ScrollScreen>
+        <Text className="text-3xl font-bold mb-5 mx-1.5">{t('common.tabs.analyze')}</Text>
+        <PortfolioStatsWidget />
+      </ScrollScreen>
     </SafeAreaView>
   );
 }
