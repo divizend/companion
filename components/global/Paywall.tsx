@@ -53,12 +53,12 @@ export function PaywallBottomTab() {
     <View className="bg-primary-light dark:bg-primary-dark w-full py-3 px-5 shadow-[0_-2px_4px_rgba(0,0,0,0.1)]">
       <View className="flex-row justify-between">
         <Text h4 className="font-semibold">
-          {t('paywall.reservedForMembers')}
+          {t('subscription.paywall.reservedForMembers')}
         </Text>
         <Icon type="material-community" name="lock-outline" color={theme.theme} />
       </View>
       <Text type="muted" className="text-sm">
-        {t('paywall.pressToStart')}
+        {t('subscription.paywall.pressToStart')}
       </Text>
     </View>
   );

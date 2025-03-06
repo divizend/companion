@@ -22,12 +22,14 @@ export default class SocketHandler {
 
   public static async connect() {
     // if everything is alright and we are already connected then no need to reconnect
-    if (SocketHandler._socket !== null && SocketHandler._socket.readyState === WebSocket.OPEN) {
+    if (
+      SocketHandler._socket !== null &&
+      (SocketHandler._socket.readyState === WebSocket.OPEN || SocketHandler._socket.readyState === WebSocket.CONNECTING)
+    ) {
       console.log('Socket already connected');
       return;
     }
     await new Promise((resolve, reject) => {
-      console.log('Actor URL:', ACTOR_URL);
       SocketHandler._socket = new ReconnectingWebSocket(ACTOR_URL, undefined, {
         debug: DEBUG,
       });

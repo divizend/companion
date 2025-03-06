@@ -6,5 +6,10 @@
     "grossDividendThisYear": "Gross dividends this year",
     "totalRefundableWithholdingTax": "Total refundable withholding tax",
     "nextDividend": "Next dividend"
+  },
+  "division": {
+    "title": "Division",
+    "totalAssets": "Total Assets",
+    "others": "Others"
   }
 }

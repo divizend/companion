@@ -1,3 +1,4 @@
+import actor from './actor.json';
 import common from './common.json';
 import country from './country.json';
 import learn from './learn.json';
@@ -16,4 +17,5 @@ export default {
   portfolio,
   portfolioConnect,
   country,
+  actor,
 };
