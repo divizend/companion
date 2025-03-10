@@ -106,7 +106,7 @@ i18next.use(initReactI18next).init({
           }
 
           if (value?.options?.notation === 'compact') {
-            return customIntl(value.amount, lng, value.unit);
+            return customIntl(value.amount, 'en-US', value.unit);
           }
 
           return value
