@@ -1,4 +1,4 @@
-import { DefaultError, useQuery } from '@tanstack/react-query';
+import { DefaultError, QueryKey, useQuery } from '@tanstack/react-query';
 
 import { actor } from '@/signals/actor';
 
@@ -9,7 +9,7 @@ type UseQueryOptions<TQueryFnData = unknown, TError = DefaultError> = Parameters
 type UseQueryOptionsCustom<TQueryFnData = unknown, TError = DefaultError> = Omit<
   UseQueryOptions<TQueryFnData, TError>,
   'queryKey'
-> & { queryKey?: Pick<UseQueryOptions<TQueryFnData, TError>, 'queryKey'> };
+> & { queryKey?: QueryKey };
 
 export default function usePortfolioQuery<TQueryFnData = unknown, TError = DefaultError>(
   options: UseQueryOptionsCustom<TQueryFnData, TError>,
