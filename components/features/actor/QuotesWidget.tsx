@@ -40,7 +40,7 @@ const Info = ({ quote, currentQuote, range }: { quote: Quote | undefined; curren
       <Text className=" text-gray-600 font-bold text-lg">
         {t(!(range === QuoteRange.Y || range === QuoteRange.ALL) ? 'dateTime.dayLongAndTime' : 'dateTime.dayLongUTC', {
           date: new Date((quote?.time ?? 0) * 1000),
-        })}
+        }).replace(/(\d{2}):(\d{2}):\d{2}/g, '$1:$2')}
       </Text>
       <Text h1 className="font-bold">
         {t('currency', {
@@ -54,9 +54,9 @@ const Info = ({ quote, currentQuote, range }: { quote: Quote | undefined; curren
         {arrowIcon}
         <Text
           h4
-          className="mr-3"
           style={{
             color: color,
+            marginRight: 12,
           }}
         >
           {currentQuote.price - (quote?.price ?? 0) === 0 && '±'}
@@ -93,30 +93,16 @@ const Info = ({ quote, currentQuote, range }: { quote: Quote | undefined; curren
   );
 };
 
-const GRADIENT_FILL_COLORS = ['#2E78775D', '#2E787700'];
-
 export default function QuotesWidget() {
   const isPanning = useRef(false);
   const [selectedQuote, setSelectedQuote_] = useState<Quote>();
+  const setSelectedQuote = throttle(setSelectedQuote_, 32);
   const [range, setRange] = useState<QuoteRange>(QuoteRange.Y);
-  const { data: quotes_ = [], isLoading } = usePortfolioQuery({
+  const { data: quotes = [], isLoading } = usePortfolioQuery({
     queryFn: () => ActorService.getPerformanceQuotes(range),
     queryKey: [range],
   });
-  const { data: performance } = usePortfolioQuery({
-    queryFn: ActorService.getPerformance,
-  });
-  const setSelectedQuote = throttle(setSelectedQuote_, 32);
-  const quotes = useMemo(() => {
-    if (!quotes_.length || !performance) return quotes_;
-    return quotes_.concat([
-      {
-        currency: quotes_.at(-1)!.currency,
-        price: performance.totalAmount,
-        time: new Date().getTime() / 1000,
-      },
-    ]);
-  }, [quotes_, performance]);
+
   const currentQuote = quotes.at(-1);
 
   const points = useMemo(() => {
@@ -124,7 +110,7 @@ export default function QuotesWidget() {
       date: new Date(q.time * 1000),
       value: q.price,
     }));
-  }, [quotes, performance]);
+  }, [quotes]);
 
   const rangePoints = useMemo(() => {
     const maxQuote = quotes.reduce((max, quote) => (quote.price > max ? quote.price : max), 0);
@@ -159,7 +145,6 @@ export default function QuotesWidget() {
             indicatorPulsating
             verticalPadding={30}
             panGestureDelay={200}
-            // gradientFillColors={GRADIENT_FILL_COLORS}
             style={{ height: 225, marginBottom: 20, marginHorizontal: -24 }}
             onGestureStart={() => {
               isPanning.current = true;
