@@ -11,5 +11,15 @@
     "title": "Division",
     "totalAssets": "Total Assets",
     "others": "Others"
+  },
+  "quotes": {
+    "title": "Performance overview",
+    "radioButton": {
+      "D": "D",
+      "W": "W",
+      "M": "M",
+      "Y": "Y",
+      "ALL": "All"
+    }
   }
 }
