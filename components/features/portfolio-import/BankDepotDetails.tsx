@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 
+import { useTranslation } from 'react-i18next';
 import { StyleSheet, Text, View } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import * as Yup from 'yup';
 
 import { Button, TextInput } from '@/components/base';
 import { useThemeColor } from '@/hooks/useThemeColor';
-import { t } from '@/i18n';
 import {
   bankDepotDetailsSetField,
   bankDepotDetailsSubmit,
@@ -34,6 +34,7 @@ const bankDepotPropsSchema = Yup.object().shape({
 });
 
 export default function BankDepotDetails() {
+  const { t } = useTranslation();
   const theme = useThemeColor();
   const bankDepotProps = getBankDepotProps();
   const [open, setOpen] = useState(false);

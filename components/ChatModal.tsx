@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Icon } from '@rneui/themed';
 import 'event-target-polyfill';
 import { useColorScheme } from 'nativewind';
+import { useTranslation } from 'react-i18next';
 import {
   ActivityIndicator,
   FlatList,
@@ -26,7 +27,6 @@ import { clsx } from '@/common/clsx';
 import { usedConfig } from '@/common/config';
 import { useSessionToken } from '@/common/sessionToken';
 import { TextInput } from '@/components/base';
-import { t } from '@/i18n';
 
 import ModalLayout from './global/ModalLayout';
 
@@ -101,6 +101,7 @@ interface ChatModalProps {
 }
 
 export default function ChatModal({ chatId: givenChatId, systemPrompt, initialUserMessage, dismiss }: ChatModalProps) {
+  const { t } = useTranslation();
   const [sessionToken] = useSessionToken();
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputText, setInputText] = useState('');

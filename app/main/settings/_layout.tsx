@@ -2,14 +2,15 @@ import React from 'react';
 
 import { Icon } from '@rneui/themed';
 import { Slot, router, useSegments } from 'expo-router';
+import { useTranslation } from 'react-i18next';
 import { Platform, TouchableOpacity, View } from 'react-native';
 
 import { clsx } from '@/common/clsx';
 import { SafeAreaView, Text } from '@/components/base';
 import { useThemeColor } from '@/hooks/useThemeColor';
-import { t } from '@/i18n';
 
 export default function Layout() {
+  const { t } = useTranslation();
   const theme = useThemeColor();
 
   const segments = useSegments();

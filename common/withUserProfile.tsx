@@ -1,11 +1,11 @@
 import { useEffect } from 'react';
 
 import { router } from 'expo-router';
+import { useTranslation } from 'react-i18next';
 import { Alert } from 'react-native';
 
 import { queryClient } from '@/app/_layout';
 import FullScreenActivityIndicator from '@/components/FullScreenActivityIndicator';
-import { t } from '@/i18n';
 
 import { logout } from './api';
 import { useUserProfileQuery } from './queries';
@@ -13,6 +13,7 @@ import { deleteSessionToken, withSessionToken } from './sessionToken';
 
 export const withUserProfile = (Component: React.FC) => {
   return withSessionToken((props: any) => {
+    const { t } = useTranslation();
     const { data, error, isLoading } = useUserProfileQuery();
 
     const doErrorAlert = () =>

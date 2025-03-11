@@ -6,17 +6,18 @@ import { Icon } from '@rneui/themed';
 import { BlurView } from 'expo-blur';
 import { Tabs } from 'expo-router';
 import { StyleSheet, useColorScheme } from 'nativewind';
+import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
 import BlurredHeader from '@/components/global/BlurredHeader';
 import { PaywallBottomTab } from '@/components/global/Paywall';
 import { useThemeColor } from '@/hooks/useThemeColor';
-import { t } from '@/i18n';
 import { isPaywallVisible } from '@/signals/app.signal';
 
 export default function TabLayout() {
-  const theme = useThemeColor();
+  const { t } = useTranslation();
   const { colorScheme } = useColorScheme();
+  const theme = useThemeColor();
   useSignals();
 
   return (

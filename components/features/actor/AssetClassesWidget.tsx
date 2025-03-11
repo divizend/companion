@@ -1,11 +1,11 @@
 import { useMemo } from 'react';
 
+import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
 import { useUserProfile } from '@/common/profile';
 import { Text } from '@/components/base';
 import usePortfolioQuery from '@/hooks/actor/useDepotQuery';
-import { t } from '@/i18n';
 import { ActorService } from '@/services/actor.service';
 import { CurrencyAmount, actor } from '@/signals/actor';
 import { SecurityAccountSecurityType } from '@/types/secapi.types';
@@ -20,6 +20,7 @@ interface PieChartEntry extends PieDataItem {
 }
 
 export default function AssetClassesWidget() {
+  const { t } = useTranslation();
   const { data: performance, isLoading } = usePortfolioQuery({
     queryFn: ActorService.getPerformance,
   });

@@ -6,6 +6,7 @@ import { Button, Icon } from '@rneui/themed';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import i18next from 'i18next';
+import { useTranslation } from 'react-i18next';
 import {
   Alert,
   Dimensions,
@@ -28,7 +29,6 @@ import { SafeAreaView } from '@/components/base';
 import { useSnackbar } from '@/components/global/Snackbar';
 import { usePurchases } from '@/hooks/usePurchases';
 import { useThemeColor } from '@/hooks/useThemeColor';
-import { t } from '@/i18n';
 
 import { supportedLanguages } from './settings';
 
@@ -45,6 +45,7 @@ enum OnboardingPage {
 }
 
 export default function OnboardingModal() {
+  const { t } = useTranslation();
   const theme = useThemeColor();
   const { updateProfile, updatePrincipalLegalEntity, profile } = useUserProfile();
   const principalLegalEntity = usePrincipalLegalEntity();
@@ -151,7 +152,7 @@ export default function OnboardingModal() {
             >
               <Picker.Item label="" value="" />
               {prioritizedCountries.map(country => (
-                <Picker.Item key={country.id} label={country.name} value={country.id} />
+                <Picker.Item key={country.id} label={country.name as string} value={country.id} />
               ))}
             </Picker>
           </View>

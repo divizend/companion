@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 
+import { useTranslation } from 'react-i18next';
 import { Dimensions, NativeScrollEvent, NativeSyntheticEvent, Platform, ScrollView, View } from 'react-native';
 import Purchases, { PurchasesPackage } from 'react-native-purchases';
 
@@ -11,7 +12,6 @@ import { useSnackbar } from '@/components/global/Snackbar';
 import { showConfirm } from '@/components/global/prompt';
 import { usePurchases } from '@/hooks/usePurchases';
 import { useThemeColor } from '@/hooks/useThemeColor';
-import { t } from '@/i18n';
 
 import { useWaitlistStatus } from './queries';
 import ConfirmationStep from './steps/ConfirmationStep';
@@ -36,6 +36,7 @@ enum SubscriptionStep {
 }
 
 export default function SubscriptionModal({ dismiss, skipFirstStep = false }: Props) {
+  const { t } = useTranslation();
   const { loading, purchasePackages, setCustomerInfo, refreshCustomerInfo, customerInfo } = usePurchases();
   const { showSnackbar } = useSnackbar();
   const [modalWidth, setModalWidth] = useState(0);

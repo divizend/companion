@@ -2,17 +2,19 @@ import React from 'react';
 
 import { ListItem } from '@rneui/base';
 import { capitalize } from 'lodash';
+import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 
 import { Text } from '@/components/base';
 import { useThemeColor } from '@/hooks/useThemeColor';
-import { t } from '@/i18n';
 import { UserProfileDepot } from '@/types/depot.types';
 
 import { BankParentIcon } from './BankParentIcon';
 
 export const PortfolioCard = ({ depot }: { depot: UserProfileDepot }) => {
+  const { t } = useTranslation();
   const theme = useThemeColor();
+
   return (
     <ListItem
       containerStyle={[

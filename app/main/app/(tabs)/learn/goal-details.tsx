@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react';
 
 import { useRoute } from '@react-navigation/native';
+import { useTranslation } from 'react-i18next';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 
 import { apiDelete, apiGet, apiPost } from '@/common/api';
@@ -14,9 +15,9 @@ import AssessRealitiesModal from '@/components/features/learn/AssessRealitiesMod
 import GoalsSectionList from '@/components/features/learn/GoalsSectionList';
 import { ModalManager } from '@/components/global/modal';
 import { showPrompt } from '@/components/global/prompt';
-import { t } from '@/i18n';
 
 export default function GoalDetails() {
+  const { t } = useTranslation();
   const route = useRoute();
   const { goalId } = route.params as { goalId: string };
   const { updateCompanionProfile } = useUserProfile();
