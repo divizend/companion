@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
 
 import { router } from 'expo-router';
+import { useTranslation } from 'react-i18next';
 import { TouchableOpacity } from 'react-native';
 
 import { apiPost } from '@/common/api';
 import { ScrollScreen, Text } from '@/components/base';
 import { SafeAreaView } from '@/components/base/SafeAreaView';
 import GoalsManager from '@/components/features/learn/GoalsManager';
-import { t } from '@/i18n';
 
 export default function GenerateGoals() {
+  const { t } = useTranslation();
   const [confirmingGoals, setConfirmingGoals] = useState<boolean>(false);
 
   const handleConfirmGoals = async () => {

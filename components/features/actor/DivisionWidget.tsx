@@ -1,12 +1,12 @@
 import React, { useCallback, useMemo } from 'react';
 
+import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
 import { useUserProfile } from '@/common/profile';
 import SecurityIcon from '@/components/SecurityIcon';
 import { Text } from '@/components/base';
 import usePortfolioQuery from '@/hooks/actor/useDepotQuery';
-import { t } from '@/i18n';
 import { ActorService } from '@/services/actor.service';
 import { CurrencyAmount, actor } from '@/signals/actor';
 import { clampArray } from '@/utils/object';
@@ -21,6 +21,7 @@ interface PieChartEntry extends PieDataItem {
 }
 
 export default function DivisionWidget() {
+  const { t } = useTranslation();
   const depot = actor.value.depot;
 
   const { data: performance, isLoading } = usePortfolioQuery({

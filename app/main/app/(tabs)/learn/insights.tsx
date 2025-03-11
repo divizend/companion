@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 
 import { router } from 'expo-router';
+import { useTranslation } from 'react-i18next';
 import { Animated, StyleSheet, View } from 'react-native';
 import uuid from 'react-native-uuid';
 
@@ -11,9 +12,9 @@ import { Button, SafeAreaView, ScrollScreen, Text } from '@/components/base';
 import UserInsightsSectionList from '@/components/features/learn/UserInsightsSectionList';
 import { showAlert, showPrompt } from '@/components/global/prompt';
 import { useThemeColor } from '@/hooks/useThemeColor';
-import { t } from '@/i18n';
 
 export default function Insights() {
+  const { t } = useTranslation();
   const { profile, updateCompanionProfile } = useUserProfile();
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const [similarQuestionsLoadingQuestionId, setSimilarQuestionsLoadingQuestionId] = useState<string | null>(null);

@@ -3,17 +3,19 @@ import React, { useMemo, useRef, useState } from 'react';
 import { LineGraph } from '@divizend/react-native-graph';
 import { Icon } from '@rneui/themed';
 import { throttle } from 'lodash';
+import { useTranslation } from 'react-i18next';
 import { Pressable, View } from 'react-native';
 
 import { Text } from '@/components/base';
 import usePortfolioQuery from '@/hooks/actor/useDepotQuery';
-import { t } from '@/i18n';
 import { ActorService } from '@/services/actor.service';
 import { Quote, QuoteRange } from '@/types/actor-api.types';
 
 import Widget from './Widget';
 
 const Info = ({ quote, currentQuote, range }: { quote: Quote | undefined; currentQuote: Quote; range: QuoteRange }) => {
+  const { t } = useTranslation();
+
   const color =
     currentQuote.price - (quote?.price ?? 0) > 0
       ? '#3c9d9b'
@@ -94,6 +96,7 @@ const Info = ({ quote, currentQuote, range }: { quote: Quote | undefined; curren
 };
 
 export default function QuotesWidget() {
+  const { t } = useTranslation();
   const isPanning = useRef(false);
   const [selectedQuote, setSelectedQuote_] = useState<Quote>();
   const setSelectedQuote = throttle(setSelectedQuote_, 32);

@@ -1,11 +1,12 @@
+import { useTranslation } from 'react-i18next';
 import { StyleSheet, Text, View } from 'react-native';
 import { Circle } from 'react-native-progress';
 
 import { useThemeColor } from '@/hooks/useThemeColor';
-import { t } from '@/i18n';
 import { portfolioConnect } from '@/signals/portfolio-connect';
 
 export function DepotLoading() {
+  const { t } = useTranslation();
   const theme = useThemeColor();
 
   const progress = portfolioConnect.value.secapiImport.progress;

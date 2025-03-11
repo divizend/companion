@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 
 import { Feather } from '@expo/vector-icons';
 import { router } from 'expo-router';
-import { t } from 'i18next';
+import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 
 import { Button, Text } from '@/components/base';
@@ -23,6 +23,7 @@ export default function Finalize({
   onFinalizeImports,
   onClose,
 }: FinalizeProps) {
+  const { t } = useTranslation();
   const empty = portfolioConnect.value.importedDepotEmpty;
   const done = portfolioConnect.value.importedDepotDone || applyMultiAccountFilter;
   const theme = useThemeColor();

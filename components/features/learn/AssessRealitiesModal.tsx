@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
+import { useTranslation } from 'react-i18next';
 import { Alert, StyleSheet, View } from 'react-native';
 
 import { apiGet, apiPost } from '@/common/api';
@@ -8,7 +9,6 @@ import SectionList from '@/components/SectionList';
 import { Text } from '@/components/base';
 import ModalLayout from '@/components/global/ModalLayout';
 import { showPrompt } from '@/components/global/prompt';
-import { t } from '@/i18n';
 
 interface AssessRealitiesModalProps {
   dismiss: () => void;
@@ -16,6 +16,7 @@ interface AssessRealitiesModalProps {
 }
 
 export default function AssessRealitiesModal({ dismiss, goalId }: AssessRealitiesModalProps) {
+  const { t } = useTranslation();
   const { updateCompanionProfile } = useUserProfile();
   const goal = useGoal(goalId);
   const [isAddingReality, setIsAddingReality] = useState(false);

@@ -1,11 +1,11 @@
 import React from 'react';
 
+import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
 import { useUserProfile } from '@/common/profile';
 import { Text } from '@/components/base';
 import { useThemeColor } from '@/hooks/useThemeColor';
-import { t } from '@/i18n';
 
 export type PortfolioStatsItemProps = {
   title: string;
@@ -17,6 +17,7 @@ export type PortfolioStatsItemProps = {
 };
 
 export default function PortfolioStatsItem({ title, value, extraInfo }: PortfolioStatsItemProps) {
+  const { t } = useTranslation();
   const theme = useThemeColor();
   const unit = useUserProfile().profile?.flags.currency;
 

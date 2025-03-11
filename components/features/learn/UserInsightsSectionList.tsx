@@ -1,18 +1,19 @@
 import React, { useState } from 'react';
 
+import { useTranslation } from 'react-i18next';
 import { Alert, StyleSheet } from 'react-native';
 
 import { apiPost } from '@/common/api';
 import { CompanionProfileUserInsight, useUserProfile } from '@/common/profile';
 import SectionList from '@/components/SectionList';
 import { showPrompt } from '@/components/global/prompt';
-import { t } from '@/i18n';
 
 interface UserInsightsSectionListProps {
   isOnboarding?: boolean;
 }
 
 export default function UserInsightsSectionList({ isOnboarding }: UserInsightsSectionListProps) {
+  const { t } = useTranslation();
   const { profile, updateCompanionProfile } = useUserProfile();
   const [removingInsightId, setRemovingInsightId] = useState<string | null>(null);
   const [addingInsight, setAddingInsight] = useState<boolean>(false);

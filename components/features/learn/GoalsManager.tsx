@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 
+import { useTranslation } from 'react-i18next';
 import { StyleSheet } from 'react-native';
 
 import { apiDelete, apiGet, apiPost } from '@/common/api';
@@ -7,7 +8,6 @@ import { CompanionProfileGoal, useUserProfile } from '@/common/profile';
 import SectionList from '@/components/SectionList';
 import { Button, StyledButtonProps } from '@/components/base';
 import { showAlert, showPrompt } from '@/components/global/prompt';
-import { t } from '@/i18n';
 
 interface GoalsManagerProps {
   confirmButtonProps?: StyledButtonProps;
@@ -16,6 +16,7 @@ interface GoalsManagerProps {
 }
 
 export default function GoalsManager({ confirmButtonProps, allowRedetermine, parentGoalId }: GoalsManagerProps) {
+  const { t } = useTranslation();
   const { profile, updateCompanionProfile } = useUserProfile();
   const [generatingLoading, setGeneratingLoading] = useState<boolean>(false);
   const [addingManualGoal, setAddingManualGoal] = useState<boolean>(false);

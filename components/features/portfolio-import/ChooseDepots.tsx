@@ -1,6 +1,6 @@
 import { CheckBox } from '@rneui/themed';
-import { t } from 'i18next';
 import { capitalize } from 'lodash';
+import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
 import SectionList from '@/components/SectionList';
@@ -33,6 +33,7 @@ const CheckBoxEasy = ({ checked, onPress }: { checked: boolean; onPress: () => v
 };
 
 export function ChooseDepots() {
+  const { t } = useTranslation();
   const chosenDepotIds = portfolioConnect.value.importDepots.chosenDepotIds;
   const accounts = portfolioConnect.value.portfolioContents.accounts!;
 
