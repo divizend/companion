@@ -1,5 +1,3 @@
-import { useEffect } from 'react';
-
 import { useQuery } from '@tanstack/react-query';
 
 import { useUserProfileQuery } from '@/common/queries';
@@ -14,7 +12,7 @@ export default function useInitializeActor() {
   const depotIds = actor.value.depotIds;
 
   useQuery({
-    queryKey: ['depot', ...(Array.isArray(depotIds) ? depotIds : [depotIds])],
+    queryKey: ['depot', currency, ...(Array.isArray(depotIds) ? depotIds : [depotIds, profile?.depots?.length])],
     queryFn: async () => {
       setActorLoadingState(LoadingState.AGGREGATING);
 
@@ -32,12 +30,4 @@ export default function useInitializeActor() {
       return depot;
     },
   });
-
-  useEffect(() => {
-    if (profile?.depots) {
-      const newDepotIds = profile?.depots?.map(({ id }) => id);
-      actor.value.depotIds = newDepotIds;
-      setActorLoadingState(LoadingState.AWAITING);
-    }
-  }, [profile?.depots]);
 }

@@ -1,5 +1,4 @@
 import { apiGet } from '@/common/api';
-import { useUserProfile } from '@/common/profile';
 import { ActorService } from '@/services/actor.service';
 import { SecurityAccount } from '@/types/secapi.types';
 
@@ -44,21 +43,7 @@ export const initializeActor = async (depot: SecurityAccount & { currency?: stri
     if (!res.success) {
       throw new Error('Unable to initialize actor');
     }
+    actor.value = { ...actor.value, lastInitialized: Date.now() };
     return res;
   });
-};
-
-export const easyInitializeActor = () => {
-  const depot = actor.value.depot;
-  const currency = useUserProfile().profile?.flags.currency;
-  if (!depot) return;
-  return initializeActor({ ...depot, currency });
-};
-
-export const handleActorInitializationRequired = (error: string) => {
-  if (error === 'actor-initialization-required') {
-    easyInitializeActor();
-  } else {
-    throw error;
-  }
 };

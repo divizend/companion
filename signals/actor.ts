@@ -29,6 +29,7 @@ export type ActorState = {
   };
   settings?: ActorSettings;
   loadingState: LoadingState;
+  lastInitialized?: number;
 };
 
 export const initialState: ActorState = {
