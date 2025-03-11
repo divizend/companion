@@ -20,7 +20,7 @@
     "preset": "jest-expo"
   },
   "dependencies": {
-    "@divizend/react-native-graph": "git+http://internal-gitlab.default.svc.cluster.local/divizend/react-native/react-native-graph.git",
+    "@divizend/react-native-graph": "git+https://github.com/divizend/react-native-graph.git",
     "@expo/vector-icons": "^14.0.2",
     "@gorhom/bottom-sheet": "^5.0.4",
     "@preact/signals-react": "^2.2.0",
