@@ -17,7 +17,9 @@ export default function Analyze() {
   return (
     <SafeAreaView>
       <ScrollScreen>
-        <Text className="text-3xl font-bold mb-5 mx-1.5">{t('common.tabs.analyze')}</Text>
+        <Text h1 className="mb-5 mx-1.5">
+          {t('common.tabs.analyze')}
+        </Text>
         <QuotesWidget />
         <DivisionWidget />
         <PortfolioStatsWidget />

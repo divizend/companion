@@ -12,13 +12,15 @@ export default function profile() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text className="text-3xl font-bold pl-5">{t('settings.pages.settings')}</Text>
+      <Text h1 className="font-bold" style={{ marginHorizontal: 25 }}>
+        {t('settings.pages.settings')}
+      </Text>
       <SettingsView />
     </SafeAreaView>
   );
 }
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 40,
+    paddingTop: 50,
   },
 });
