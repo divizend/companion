@@ -31,21 +31,38 @@ import { SecurityAccount, SecurityAccountSecurityDividend } from '@/types/secapi
 
 export class ActorService {
   private static actorApi = usedConfig.actorApi;
+  private static initializingHash: string | undefined;
+  private static initializingPromise: Promise<InitializeResponse> | undefined;
 
   private static restApi = axios.create({
     baseURL: this.actorApi?.url + '/api/' + this.actorApi?.versionCode,
   });
 
   public static async initializeRequest(data: SecurityAccount & { currency?: string }) {
-    return SocketHandler.request<InitializeResponse>({
+    const hash = JSON.stringify(data);
+
+    if (this.initializingHash === hash && this.initializingPromise) {
+      console.log('Already initializing actor');
+      return this.initializingPromise;
+    }
+
+    this.initializingHash = hash;
+    this.initializingPromise = SocketHandler.request<InitializeResponse>({
       type: ActorRequestType.INITIALIZE_REQUEST,
       data,
-    }).then(res => {
-      if (!res.success) {
-        throw new Error('Unable to initialize actor');
-      }
-      return res;
-    });
+    })
+      .then(res => {
+        if (!res.success) {
+          throw new Error('Unable to initialize actor');
+        }
+        return res;
+      })
+      .finally(() => {
+        this.initializingHash = undefined;
+        this.initializingPromise = undefined;
+      });
+
+    return this.initializingPromise;
   }
 
   public static async getPerformanceQuotes(range: QuoteRange) {

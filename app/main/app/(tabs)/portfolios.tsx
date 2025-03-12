@@ -50,7 +50,9 @@ export default function Portfolios() {
   return (
     <SafeAreaView>
       <ScrollScreen>
-        <Text className="text-3xl font-bold mb-5 mx-1.5">{t('portfolio.title')}</Text>
+        <Text h1 className="mb-5 mx-1.5">
+          {t('portfolio.title')}
+        </Text>
 
         {/* <Button
         disabled={isPortfolioConnectOnboardingVisible.value}

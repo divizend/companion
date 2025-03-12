@@ -90,10 +90,7 @@ i18next.use(initReactI18next).init({
               unitIndex++;
             }
 
-            const formattedNumber = num.toLocaleString(locale, {
-              minimumFractionDigits: 0,
-              maximumFractionDigits: 2,
-            });
+            const formattedNumber = num.toFixed(2);
 
             const formattedCurrency = new Intl.NumberFormat(locale, {
               style: 'currency',
@@ -106,7 +103,7 @@ i18next.use(initReactI18next).init({
           }
 
           if (value?.options?.notation === 'compact') {
-            return customIntl(value.amount, lng, value.unit);
+            return customIntl(value.amount, 'en-US', value.unit);
           }
 
           return value

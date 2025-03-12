@@ -1,13 +1,13 @@
 import React from 'react';
 
 import { router } from 'expo-router';
+import { useTranslation } from 'react-i18next';
 import { StyleSheet } from 'react-native';
 
 import { useUserProfile } from '@/common/profile';
 import SectionList from '@/components/SectionList';
 import ModalLayout from '@/components/global/ModalLayout';
 import { ModalManager } from '@/components/global/modal';
-import { t } from '@/i18n';
 
 import GoalsManager from './GoalsManager';
 
@@ -18,6 +18,7 @@ interface GoalsSectionListProps {
 }
 
 export default function GoalsSectionList({ parentGoalId, allowRedetermine, style }: GoalsSectionListProps) {
+  const { t } = useTranslation();
   const { profile } = useUserProfile();
 
   const variant = parentGoalId ? 'secondary' : 'primary';

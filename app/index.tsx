@@ -3,17 +3,18 @@ import React, { useEffect, useState } from 'react';
 import { makeRedirectUri, useAuthRequest, useAutoDiscovery } from 'expo-auth-session';
 import { router } from 'expo-router';
 import * as WebBrowser from 'expo-web-browser';
+import { useTranslation } from 'react-i18next';
 import { Alert, Image, StyleSheet, View } from 'react-native';
 
 import { Button } from '@/components/base';
 
 import { usedConfig } from '../common/config';
 import { setSessionToken, useSessionToken } from '../common/sessionToken';
-import { t } from '../i18n';
 
 WebBrowser.maybeCompleteAuthSession();
 
 export default function Index() {
+  const { t } = useTranslation();
   const discovery = useAutoDiscovery(usedConfig.auth.url);
   const [sessionToken, sessionTokenLoading] = useSessionToken();
   const [handleLoginInProgress, setHandleLoginInProgress] = useState(false);

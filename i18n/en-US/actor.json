@@ -1,5 +1,4 @@
 {
-  "title": "Actor",
   "portfolioStats": {
     "title": "My portfolio",
     "totalAssets": "Total assets",
@@ -11,5 +10,31 @@
     "title": "Division",
     "totalAssets": "Total Assets",
     "others": "Others"
+  },
+  "quotes": {
+    "title": "Performance overview",
+    "radioButton": {
+      "D": "D",
+      "W": "W",
+      "M": "M",
+      "Y": "Y",
+      "ALL": "All"
+    }
+  },
+  "assetClasses": {
+    "title": "Asset classes",
+    "secType": {
+      "STOCK": "Stock",
+      "ETF": "ETF (Exchange-Traded Fund)",
+      "FUND": "Fund",
+      "DR": "DR (Depositary Receipt)",
+      "BOND": "Bond",
+      "OPTION": "Option",
+      "CRYPTO": "Crypto Currency",
+      "TRUST": "Trust",
+      "CERTIFICATE": "Certificate",
+      "OTHER": "Other",
+      "undefined": "Unknown (Contain no issues)"
+    }
   }
 }

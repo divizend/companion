@@ -1,10 +1,10 @@
 import React from 'react';
 
 import { Icon } from '@rneui/themed';
+import { useTranslation } from 'react-i18next';
 import { StyleSheet } from 'react-native';
 
 import { useThemeColor } from '@/hooks/useThemeColor';
-import { t } from '@/i18n';
 
 import { Text } from './base';
 import { SafeAreaView } from './base/SafeAreaView';
@@ -14,6 +14,7 @@ interface ComingSoonScreenProps {
 }
 
 export default function ComingSoonScreen({ iconName }: ComingSoonScreenProps) {
+  const { t } = useTranslation();
   const theme = useThemeColor();
 
   return (

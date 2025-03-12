@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 
 import { Icon } from '@rneui/themed';
 import { useFocusEffect } from 'expo-router';
+import { useTranslation } from 'react-i18next';
 import { Pressable, StyleSheet, View } from 'react-native';
 
 import { useThemeColor } from '@/hooks/useThemeColor';
-import { t } from '@/i18n';
 import { isPaywallVisible } from '@/signals/app.signal';
 
 import { Text } from '../base';
@@ -47,6 +47,7 @@ export default function Paywall() {
 }
 
 export function PaywallBottomTab() {
+  const { t } = useTranslation();
   const theme = useThemeColor();
 
   return (

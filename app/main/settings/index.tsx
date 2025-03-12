@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { CheckBox } from '@rneui/themed';
 import { router } from 'expo-router';
 import i18next from 'i18next';
+import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 import RNRestart from 'react-native-restart';
 
@@ -15,7 +16,6 @@ import { useSnackbar } from '@/components/global/Snackbar';
 import { ModalManager } from '@/components/global/modal';
 import { showAlert } from '@/components/global/prompt';
 import { useThemeColor } from '@/hooks/useThemeColor';
-import { t } from '@/i18n';
 
 export const supportedLanguages = [
   'de-DE',
@@ -33,6 +33,7 @@ export const supportedLanguages = [
 ];
 
 export default function SettingsView() {
+  const { t } = useTranslation();
   const { showSnackbar } = useSnackbar();
   const { toggleTheme, theme } = useThemeColor();
   const { profile, isPrivileged, updateProfile } = useUserProfile();

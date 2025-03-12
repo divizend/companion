@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 
 import { Icon } from '@rneui/base';
+import { useTranslation } from 'react-i18next';
 import { Linking, Platform, View } from 'react-native';
 import Purchases from 'react-native-purchases';
 
@@ -18,11 +19,11 @@ import { showAlert } from '@/components/global/prompt';
 import '@/global.css';
 import { usePurchases } from '@/hooks/usePurchases';
 import { useThemeColor } from '@/hooks/useThemeColor';
-import { t } from '@/i18n';
 
 const showSubscriptionModal = () => ModalManager.showModal(SubscriptionModal);
 
 export default function CurrentPlan() {
+  const { t } = useTranslation();
   const theme = useThemeColor();
   const { profile } = useUserProfile();
   const { purchasePackages, loading, customerInfo, refreshCustomerInfo, setCustomerInfo } = usePurchases();
