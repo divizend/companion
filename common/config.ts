@@ -24,3 +24,4 @@ export type Config = {
 };
 
 export const usedConfig = Constants.expoConfig!.extra! as Config;
+export const appVersion = Constants.expoConfig!.version;
