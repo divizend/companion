@@ -2,6 +2,7 @@ import { useSignals } from '@preact/signals-react/runtime';
 
 import { SafeAreaView, ScrollScreen, Text } from '@/components/base';
 import AssetClassesWidget from '@/components/features/actor/AssetClassesWidget';
+import CalendarWidget from '@/components/features/actor/CalendarWidget/CalendarWidget';
 import DivisionWidget from '@/components/features/actor/DivisionWidget';
 import PortfolioStatsWidget from '@/components/features/actor/PortfolioStatsWidget';
 import QuotesWidget from '@/components/features/actor/QuotesWidget';
@@ -21,6 +22,7 @@ export default function Analyze() {
         <DivisionWidget />
         <PortfolioStatsWidget />
         <AssetClassesWidget />
+        <CalendarWidget />
       </ScrollScreen>
     </SafeAreaView>
   );

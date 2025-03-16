@@ -37,5 +37,33 @@
       "OTHER": "Other",
       "undefined": "Unknown (Contain no issues)"
     }
+  },
+  "calendarWidget": {
+    "title": "Calendar",
+    "tooltip": {
+      "eventType": "Event type",
+      "date": "Date",
+      "exDate": "Ex-date",
+      "paymentDate": "Payment date",
+      "dividendPerShare": "Dividend per share",
+      "frequency": "Frequency",
+      "transactionType": "Type",
+      "transactionQuantity": "Quantity",
+      "transactionAmount": "Amount",
+      "splitRatio": "Split ratio",
+      "PURCHASE": "Buy",
+      "SALE": "Sell",
+      "dividendYield": "Dividend yield"
+    },
+    "DIVIDEND": "Dividend",
+    "TRANSACTION": "Transaction",
+    "SPLIT": "Split",
+    "moreItems": "{{count}} more...",
+    "predictionTooltip": "Prediction",
+    "dividendPayout": "{{price}}/share",
+    "transactionPrice": "<strong>{{quantity}}</strong> x {{price}}/share",
+    "totalPayout": "Total {{total}}",
+    "totalGrossDividend": "Total gross dividend: {{quantity}} x {{price}}/share = {{total}}",
+    "noEvents": "No events this day"
   }
 }
