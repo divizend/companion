@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "@divizend/react-native-graph": "git+https://github.com/divizend/react-native-graph.git",
+    "@divizend/react-native-calendars": "git+https://github.com/divizend/react-native-calendars.git",
     "@expo/vector-icons": "^14.0.2",
     "@gorhom/bottom-sheet": "^5.0.4",
     "@preact/signals-react": "^2.2.0",
@@ -106,5 +107,6 @@
     "typescript": "~5.3.3",
     "typescript-eslint": "^8.13.0"
   },
-  "private": true
+  "private": true,
+  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
 }
