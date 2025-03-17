@@ -53,7 +53,7 @@ function SubscriptionCard({
         <View
           key={product.identifier}
           className={clsx(
-            'flex-1 flex flex-row dark:bg-transparent border border-gray-200 rounded-xl justify-between items-start p-5',
+            'flex-1 flex flex-row dark:bg-transparent border-2 border-gray-200 rounded-xl justify-between items-start p-5',
             isSelected && 'border-theme border-2 bg-[#3939ff1a] dark:bg-[#3939ff1a]',
           )}
         >

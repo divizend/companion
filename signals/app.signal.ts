@@ -5,6 +5,8 @@ export const isHeaderVisible = signal(false);
 
 export const isPaywallVisible = signal(false);
 
+export const isPaywallPressed = signal(false);
+
 export const isPortfolioConnectOnboardingVisible = signal(true);
 
 export const setIsPortfolioConnectOnboardingVisible = (value: boolean) => {

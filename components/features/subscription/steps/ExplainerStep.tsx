@@ -66,6 +66,7 @@ export default function ExplainerStep({ setCanContinue, canContinue }: IStepProp
         >
           <Text>{t('understand')}</Text>
           <CheckBox
+            onPress={() => setCanContinue(prev => !prev)}
             wrapperStyle={{ backgroundColor: 'transparent', margin: 0, padding: 0 }}
             iconType="material-community"
             checkedIcon="checkbox-marked"

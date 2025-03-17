@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 
 import { useTranslation } from 'react-i18next';
-import { Dimensions, NativeScrollEvent, NativeSyntheticEvent, Platform, ScrollView, View } from 'react-native';
+import { NativeScrollEvent, NativeSyntheticEvent, Platform, ScrollView, View } from 'react-native';
 import Purchases, { PurchasesPackage } from 'react-native-purchases';
 
 import { apiDelete, apiGet, apiPatch, apiPost } from '@/common/api';
