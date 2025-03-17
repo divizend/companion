@@ -165,17 +165,15 @@ export default function CalendarWidget() {
         hideWeekends
         markedDates={markedDates}
         displayLoadingIndicator={isLoading}
-        initialDate={dayjs()
-          .set('month', currentMonth - 1)
-          .set('year', currentYear)
-          .format('YYYY-MM-DD')}
         onDayPress={async (day: DateData) => {
           const selectedDate = dayjs(day.dateString).startOf('day');
           setSelectedDay(selectedDate);
         }}
         onMonthChange={(date: DateData) => {
-          setCurrentYear(dayjs(date.dateString).year());
-          setCurrentMonth(dayjs(date.dateString).month() + 1);
+          const dateDayjs = dayjs(date.dateString);
+          if (dateDayjs.year() === currentYear && dateDayjs.month() + 1 === currentMonth) return;
+          setCurrentYear(dateDayjs.year());
+          setCurrentMonth(dateDayjs.month() + 1);
           setSelectedDay(null);
         }}
         theme={{
