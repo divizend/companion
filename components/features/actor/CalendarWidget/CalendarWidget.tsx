@@ -85,8 +85,14 @@ const useChangeSyncCalendarLanguage = () => {
 
   useEffect(() => {
     const langShort = i18n.language.split('-')[0];
-    LocaleConfig.locales[langShort] = i18n.t('date', { returnObjects: true });
-    LocaleConfig.defaultLocale = langShort;
+    const dateObj = i18n.t('date', { returnObjects: true });
+    if (Object.keys(dateObj).length > 0) {
+      LocaleConfig.locales[langShort] = dateObj;
+      LocaleConfig.defaultLocale = langShort;
+    } else {
+      LocaleConfig.locales['en'] = LocaleConfig.locales['en'] ?? {};
+      LocaleConfig.defaultLocale = 'en';
+    }
   }, [i18n.language]);
 };
 
