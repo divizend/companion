@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 
 import { CheckBox, Divider, Icon } from '@rneui/themed';
 import { ImageBackground, Pressable, ScrollView, View } from 'react-native';
@@ -187,8 +187,7 @@ export default function SubscriptionOptions({
           </View>
         }
       />
-
-      <View className={clsx('flex gap-2', !!awaitedPackage && 'mb-6')}>
+      <View className={clsx('flex gap-2 mb-6')}>
         {productsRest.map(item => (
           <SubscriptionCard
             isActive={item.identifier === activeSubscription?.identifier}
