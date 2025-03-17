@@ -1,7 +1,8 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 
-import { Calendar, DateData } from '@divizend/react-native-calendars';
+import { Calendar, DateData, LocaleConfig } from '@divizend/react-native-calendars';
 import dayjs, { Dayjs } from 'dayjs';
+import { useTranslation } from 'react-i18next';
 
 import { getDaysInMonthForCalendar } from '@/common/date-helper';
 import usePortfolioQuery from '@/hooks/actor/useDepotQuery';
@@ -79,9 +80,20 @@ function getCalendarEvents(
   });
 }
 
+const useChangeSyncCalendarLanguage = () => {
+  const { i18n } = useTranslation();
+
+  useEffect(() => {
+    const langShort = i18n.language.split('-')[0];
+    LocaleConfig.locales[langShort] = i18n.t('date', { returnObjects: true });
+    LocaleConfig.defaultLocale = langShort;
+  }, [i18n.language]);
+};
+
 export default function CalendarWidget() {
   const theme = useThemeColor();
   const depot = actor.value.depot;
+  useChangeSyncCalendarLanguage();
   const [selectedDay, setSelectedDay] = useState<Dayjs | null>(null);
   const [currentYear, setCurrentYear] = useState(dayjs().year());
   const [currentMonth, setCurrentMonth] = useState(dayjs().month() + 1);
