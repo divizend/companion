@@ -1,0 +1,60 @@
+{
+  "title": "Lernen",
+  "description": "Schritt für Schritt werden wir hier neue Module hinzufügen, alles in Richtung eines neuen, intelligenten, geführten Ansatzes zum Lernen über Finanzen.",
+  "lessons": {
+    "title": "Lektionen",
+    "items": [
+      {
+        "title": "Ein zufälliger Spaziergang durch die Trump-Straße",
+        "firstView": [
+          {
+            "title": "Wirtschaftliches Thema",
+            "content": "Zölle"
+          },
+          {
+            "title": "Verwandte Region",
+            "content": "China"
+          }
+        ],
+        "sections": [
+          {
+            "title": "Strategie und Politik",
+            "questions": [
+              "Was sind die wichtigsten Parameter für Trumps {{input.0}}-Strategie?",
+              "Welche Länder werden von der Trump-Administration am meisten in Bezug auf {{input.0}} ins Visier genommen?",
+              "Wie beeinflussen die Trump-{{input.0}} das weltweite Wirtschaftswachstum?"
+            ]
+          },
+          {
+            "title": "US-{{input.1}}-Beziehungen",
+            "questions": [
+              "Wie wird das Handelsvolumen durch Trumps {{input.0}} zwischen den USA und {{input.1}} beeinflusst?",
+              "Was bedeuten die US-{{input.1}}-{{input.0}} für die Beziehungen ihrer Währungen?",
+              "Wie sieht das Szenario der wichtigsten wirtschaftlichen Indikatoren aus, wenn Trumps {{input.0}}-Strategie mit {{input.1}} stabil bleibt?"
+            ]
+          },
+          {
+            "title": "Unternehmen, Märkte, Sektoren",
+            "questions": [
+              "Welche Sektoren werden von Trumps {{input.0}} profitieren?",
+              "Welche US-Unternehmen haben die höchste Exposition in den US-{{input.1}}-{{input.0}}-Beziehungen?",
+              "Welche an der US-Börse notierten Unternehmen werden am meisten von dem US-{{input.1}}-{{input.0}}-Krieg betroffen sein?",
+              "Welche S&P 500-Unternehmen sind am stärksten von Trumps {{input.0}} betroffen?",
+              "Welche in {{input.1}} ansässigen börsennotierten Unternehmen sind am stärksten von Trumps {{input.0}} betroffen?",
+              "Welche Unternehmen der wichtigsten {{input.1}}-Börsen sind am stärksten von Trumps {{input.0}} betroffen?"
+            ]
+          },
+          {
+            "title": "Auswirkungen für mich",
+            "questions": ["Wie beeinflusst Trumps {{input.0}}-Strategie mein Portfolio?"]
+          }
+        ]
+      }
+    ],
+    "portfolioContentCheckbox": {
+      "text": "Eigene Portfolioinhalte als Kontext verwenden",
+      "note": "Um dies zu aktivieren, importieren Sie bitte ein Portfolio."
+    },
+    "questionWithStocks": "Der Benutzer hat die folgenden Aktien in seinem Portfolio: {{stockNames}}.\n\n{{question}}"
+  }
+}

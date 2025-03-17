@@ -42,6 +42,7 @@ export default function TabLayout() {
           let iconName;
           const iconMap: { [key: string]: string } = {
             learn: 'school',
+            learning: 'cast-for-education',
             portfolios: 'account-balance',
             analyze: 'analytics',
             track: 'trending-up',
@@ -79,6 +80,12 @@ export default function TabLayout() {
         name="learn"
         options={{
           title: t('common.tabs.learn'),
+        }}
+      />
+      <Tabs.Screen
+        name="learning"
+        options={{
+          title: t('common.tabs.learning'),
         }}
       />
       <Tabs.Screen
