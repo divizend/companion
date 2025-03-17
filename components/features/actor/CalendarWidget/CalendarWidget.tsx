@@ -1,7 +1,8 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 
-import { Calendar, DateData } from '@divizend/react-native-calendars';
+import { Calendar, DateData, LocaleConfig } from '@divizend/react-native-calendars';
 import dayjs, { Dayjs } from 'dayjs';
+import { useTranslation } from 'react-i18next';
 
 import { getDaysInMonthForCalendar } from '@/common/date-helper';
 import usePortfolioQuery from '@/hooks/actor/useDepotQuery';
@@ -79,9 +80,26 @@ function getCalendarEvents(
   });
 }
 
+const useChangeSyncCalendarLanguage = () => {
+  const { i18n } = useTranslation();
+
+  useEffect(() => {
+    const langShort = i18n.language.split('-')[0];
+    const dateObj = i18n.t('date', { returnObjects: true });
+    if (Object.keys(dateObj).length > 0) {
+      LocaleConfig.locales[langShort] = dateObj;
+      LocaleConfig.defaultLocale = langShort;
+    } else {
+      LocaleConfig.locales['en'] = LocaleConfig.locales['en'] ?? {};
+      LocaleConfig.defaultLocale = 'en';
+    }
+  }, [i18n.language]);
+};
+
 export default function CalendarWidget() {
   const theme = useThemeColor();
   const depot = actor.value.depot;
+  useChangeSyncCalendarLanguage();
   const [selectedDay, setSelectedDay] = useState<Dayjs | null>(null);
   const [currentYear, setCurrentYear] = useState(dayjs().year());
   const [currentMonth, setCurrentMonth] = useState(dayjs().month() + 1);
@@ -153,17 +171,15 @@ export default function CalendarWidget() {
         hideWeekends
         markedDates={markedDates}
         displayLoadingIndicator={isLoading}
-        initialDate={dayjs()
-          .set('month', currentMonth - 1)
-          .set('year', currentYear)
-          .format('YYYY-MM-DD')}
         onDayPress={async (day: DateData) => {
           const selectedDate = dayjs(day.dateString).startOf('day');
           setSelectedDay(selectedDate);
         }}
         onMonthChange={(date: DateData) => {
-          setCurrentYear(dayjs(date.dateString).year());
-          setCurrentMonth(dayjs(date.dateString).month() + 1);
+          const dateDayjs = dayjs(date.dateString);
+          if (dateDayjs.year() === currentYear && dateDayjs.month() + 1 === currentMonth) return;
+          setCurrentYear(dateDayjs.year());
+          setCurrentMonth(dateDayjs.month() + 1);
           setSelectedDay(null);
         }}
         theme={{
