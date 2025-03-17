@@ -29,5 +29,6 @@
   "theme": "Toggle theme",
   "currentPlan": {
     "title": "Your membership"
-  }
+  },
+  "version": "Version {{version}}"
 }

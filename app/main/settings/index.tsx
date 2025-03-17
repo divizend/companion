@@ -8,10 +8,12 @@ import { StyleSheet, View } from 'react-native';
 import RNRestart from 'react-native-restart';
 
 import { apiDelete, apiPost, logout } from '@/common/api';
+import { appVersion } from '@/common/config';
 import { showConfirmationDialog } from '@/common/inputDialog';
 import { impersonateUser, useUserProfile } from '@/common/profile';
 import ImpersonateUserModal from '@/components/ImpersonateUserModal';
 import SectionList from '@/components/SectionList';
+import { Text } from '@/components/base';
 import { useSnackbar } from '@/components/global/Snackbar';
 import { ModalManager } from '@/components/global/modal';
 import { showAlert } from '@/components/global/prompt';
@@ -35,7 +37,7 @@ export const supportedLanguages = [
 export default function SettingsView() {
   const { t } = useTranslation();
   const { showSnackbar } = useSnackbar();
-  const { toggleTheme, theme } = useThemeColor();
+  const { toggleTheme, theme, ...colorTheme } = useThemeColor();
   const { profile, isPrivileged, updateProfile } = useUserProfile();
   const [resettingProfileLoading, setResettingProfileLoading] = useState(false);
   const [togglingPrivilegeLoading, setTogglingPrivilegeLoading] = useState(false);
@@ -224,6 +226,9 @@ export default function SettingsView() {
           },
         ]}
       />
+      <Text className="mx-auto " style={{ color: colorTheme.muted }}>
+        {t('settings.version', { version: appVersion })}
+      </Text>
     </View>
   );
 }
