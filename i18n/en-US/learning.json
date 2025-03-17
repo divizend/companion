@@ -1,0 +1,60 @@
+{
+  "title": "Learning",
+  "description": "Step by step, we will add new modules here, all towards a new, intelligent, guided approach to learning about finance.",
+  "lessons": {
+    "title": "Lessons",
+    "items": [
+      {
+        "title": "A Random Walk Down Trump Street",
+        "firstView": [
+          {
+            "title": "Economic topic",
+            "content": "Tariffs"
+          },
+          {
+            "title": "Related region",
+            "content": "China"
+          }
+        ],
+        "sections": [
+          {
+            "title": "Strategy and policy",
+            "questions": [
+              "What are the key parameters for Trump’s {{input.0}} strategy?",
+              "Which are the countries targeted most by the Trump administration regarding {{input.0}}?",
+              "How do the Trump {{input.0}} affect the worldwide economic growth?"
+            ]
+          },
+          {
+            "title": "US-{{input.1}} relations",
+            "questions": [
+              "How is trade volume affected by Trump {{input.0}} between the US and {{input.1}}?",
+              "What do the US-{{input.1}} {{input.0}} mean for the relations of their currencies?",
+              "What is the scenario of the most important economic indicators if Trump’s {{input.0}} strategy with {{input.1}} remains steady?"
+            ]
+          },
+          {
+            "title": "Companies, markets, sectors",
+            "questions": [
+              "Which sectors will profit from Trump’s {{input.0}}?",
+              "Which US companies have the highest exposure in the US-{{input.1}} {{input.0}} relations?",
+              "Which US stock-listed companies will be mostly affected by the US-{{input.1}} {{input.0}} war?",
+              "Which S&P 500 companies are most impacted by Trump’s {{input.0}}?",
+              "Which {{input.1}}-based stock-listed companies are most impacted by Trump’s {{input.0}}?",
+              "Which companies from the most important {{input.1}} stock exchanges are most impacted by Trump’s {{input.0}}?"
+            ]
+          },
+          {
+            "title": "Impact for me",
+            "questions": ["How does Trump’s {{input.0}} strategy affect my portfolio?"]
+          }
+        ]
+      }
+    ],
+    "portfolioContentCheckbox": {
+      "text": "Use own portfolio contents as context",
+      "note": "To enable this, please import a portfolio."
+    },
+    "questionWithStocks": "The user has the following stocks in their portfolio: {{stockNames}}.\n\n{{question}}"
+  }
+}

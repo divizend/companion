@@ -2,6 +2,7 @@ import actor from './actor.json';
 import common from './common.json';
 import country from './country.json';
 import learn from './learn.json';
+import learning from './learning.json';
 import onboarding from './onboarding.json';
 import portfolio from './portfolio.json';
 import portfolioConnect from './portfolioConnect.json';
@@ -18,4 +19,5 @@ export default {
   portfolioConnect,
   country,
   actor,
+  learning,
 };
