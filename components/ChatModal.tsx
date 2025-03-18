@@ -230,7 +230,6 @@ export default function ChatModal({ chatId: givenChatId, systemPrompt, initialUs
 
   useEffect(() => {
     if (initialUserMessage && !isLoading) {
-      console.log(initialUserMessage);
       sendMessage(initialUserMessage, true);
     }
   }, [isLoading, initialUserMessage]);
