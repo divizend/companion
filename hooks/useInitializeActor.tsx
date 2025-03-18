@@ -12,7 +12,11 @@ export default function useInitializeActor() {
   const depotIds = actor.value.depotIds;
 
   useQuery({
-    queryKey: ['depot', currency, ...(Array.isArray(depotIds) ? depotIds : [depotIds, profile?.depots?.length])],
+    queryKey: [
+      'actor.initialize',
+      currency,
+      ...(Array.isArray(depotIds) ? depotIds : [depotIds, profile?.depots?.length]),
+    ],
     queryFn: async () => {
       setActorLoadingState(LoadingState.AGGREGATING);
 

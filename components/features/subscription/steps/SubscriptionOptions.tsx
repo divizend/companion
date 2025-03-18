@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 
 import { CheckBox, Divider, Icon } from '@rneui/themed';
 import { ImageBackground, Pressable, ScrollView, View } from 'react-native';
@@ -53,7 +53,7 @@ function SubscriptionCard({
         <View
           key={product.identifier}
           className={clsx(
-            'flex-1 flex flex-row dark:bg-transparent border border-gray-200 rounded-xl justify-between items-start p-5',
+            'flex-1 flex flex-row dark:bg-transparent border-2 border-gray-200 rounded-xl justify-between items-start p-5',
             isSelected && 'border-theme border-2 bg-[#3939ff1a] dark:bg-[#3939ff1a]',
           )}
         >
@@ -187,8 +187,7 @@ export default function SubscriptionOptions({
           </View>
         }
       />
-
-      <View className={clsx('flex gap-2', !!awaitedPackage && 'mb-6')}>
+      <View className={clsx('flex gap-2 mb-6')}>
         {productsRest.map(item => (
           <SubscriptionCard
             isActive={item.identifier === activeSubscription?.identifier}

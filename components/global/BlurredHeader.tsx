@@ -1,8 +1,8 @@
 import { useSignalEffect } from '@preact/signals-react';
 import { BottomTabHeaderProps } from '@react-navigation/bottom-tabs';
-import { Avatar, Icon } from '@rneui/themed';
+import { Icon } from '@rneui/themed';
 import { BlurView } from 'expo-blur';
-import { router, useSegments } from 'expo-router';
+import { useSegments } from 'expo-router';
 import { useColorScheme } from 'nativewind';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import Animated, {

@@ -246,6 +246,9 @@ i18next.use(initReactI18next).init({
   },
 });
 
+/**
+ * @deprecated Use useTranslations directly instead.
+ */
 export function t(key: string, options?: any) {
   return i18next.t(key, options) as string;
 }

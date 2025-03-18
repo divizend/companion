@@ -29,5 +29,6 @@
     "title": "Profil zurücksetzen"
   },
   "theme": "Design umschalten",
-  "title": "Einstellungen"
+  "title": "Einstellungen",
+  "version": "Version {{Version}}"
 }

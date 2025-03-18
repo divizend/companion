@@ -62,10 +62,11 @@ export default function ExplainerStep({ setCanContinue, canContinue }: IStepProp
 
         <Pressable
           onPress={() => setCanContinue(prev => !prev)}
-          className="py-3 px-5 bg-secondary-light dark:bg-secondary-dark flex flex-row items-center justify-between rounded-xl mb-2"
+          className="py-3 px-5 bg-secondary-light dark:bg-secondary-dark flex flex-row items-center justify-between rounded-xl mb-6"
         >
           <Text>{t('understand')}</Text>
           <CheckBox
+            onPress={() => setCanContinue(prev => !prev)}
             wrapperStyle={{ backgroundColor: 'transparent', margin: 0, padding: 0 }}
             iconType="material-community"
             checkedIcon="checkbox-marked"
