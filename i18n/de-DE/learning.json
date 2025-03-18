@@ -55,6 +55,6 @@
       "text": "Eigene Portfolioinhalte als Kontext verwenden",
       "note": "Um dies zu aktivieren, importieren Sie bitte ein Portfolio."
     },
-    "questionWithStocks": "Der Benutzer hat die folgenden Aktien in seinem Portfolio: {{stockNames}}.\n----{{question}}"
+    "questionWithStocks": "Der Benutzer hat die folgenden Aktien in seinem Portfolio: {{stockNames}}."
   }
 }

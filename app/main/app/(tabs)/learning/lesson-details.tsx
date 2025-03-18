@@ -129,7 +129,7 @@ export default function LessonDetails() {
                   `}
                     initialUserMessage={
                       usePortfolioContent && canUseOwnPortfolios
-                        ? t('learning.lessons.questionWithStocks', { stockNames, question })
+                        ? t('learning.lessons.questionWithStocks', { stockNames }) + '----' + question
                         : question
                     }
                   />
