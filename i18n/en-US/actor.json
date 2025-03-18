@@ -60,7 +60,7 @@
     "moreItems": "{{count}} more...",
     "predictionTooltip": "Prediction",
     "dividendPayout": "{{price}}/share",
-    "transactionPrice": "<strong>{{quantity}}</strong> x {{price}}/share",
+    "transactionPrice": "{{quantity}} x {{price}}/share",
     "totalPayout": "Total {{total}}",
     "totalGrossDividend": "Total gross dividend: {{quantity}} x {{price}}/share = {{total}}",
     "noEvents": "No events this day"

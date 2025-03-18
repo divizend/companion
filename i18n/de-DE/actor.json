@@ -36,5 +36,33 @@
       "Y": "J"
     },
     "title": "Wertentwicklung"
+  },
+  "calendarWidget": {
+    "DIVIDEND": "Dividende",
+    "SPLIT": "Teilt",
+    "TRANSACTION": "Transaktion",
+    "dividendPayout": "{{price}}/Share",
+    "moreItems": "{{count}} mehr ...",
+    "noEvents": "Keine Ereignisse an diesem Tag",
+    "predictionTooltip": "Vorhersage",
+    "title": "Kalender",
+    "tooltip": {
+      "PURCHASE": "Kaufen",
+      "SALE": "Verkaufen",
+      "date": "Datum",
+      "dividendPerShare": "Dividende je Aktie",
+      "dividendYield": "Dividendenrendite",
+      "eventType": "Ereignisart",
+      "exDate": "Ex-Date",
+      "frequency": "Frequenz",
+      "paymentDate": "Zahlungsdatum",
+      "splitRatio": "Split -Verhältnis",
+      "transactionAmount": "Menge",
+      "transactionQuantity": "Menge",
+      "transactionType": "Typ"
+    },
+    "totalGrossDividend": "Total Brutto Dividend: {{quantity}} x {{price}}/shary = {{total}}",
+    "totalPayout": "Total {{Total}}",
+    "transactionPrice": "{{quantity}} x {{price}}/Share"
   }
 }
