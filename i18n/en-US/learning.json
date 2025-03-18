@@ -55,6 +55,6 @@
       "text": "Use own portfolio contents as context",
       "note": "To enable this, please import a portfolio."
     },
-    "questionWithStocks": "The user has the following stocks in their portfolio: {{stockNames}}.\n\n{{question}}"
+    "questionWithStocks": "The user has the following stocks in their portfolio: {{stockNames}}.\n----{{question}}"
   }
 }

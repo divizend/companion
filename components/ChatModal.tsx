@@ -149,10 +149,10 @@ export default function ChatModal({ chatId: givenChatId, systemPrompt, initialUs
     setIsAIResponding(false);
   };
 
-  const sendMessage = (messageToSend: string) => {
+  const sendMessage = (messageToSend: string, isInitial: boolean = false) => {
     setMessages(prevMessages => [
       ...prevMessages,
-      { content: messageToSend, role: MessageRole.USER },
+      { content: !isInitial ? messageToSend : messageToSend.split('----').reverse()[0], role: MessageRole.USER },
       { content: '', role: MessageRole.ASSISTANT },
     ]);
     setInputText('');
@@ -230,7 +230,8 @@ export default function ChatModal({ chatId: givenChatId, systemPrompt, initialUs
 
   useEffect(() => {
     if (initialUserMessage && !isLoading) {
-      sendMessage(initialUserMessage);
+      console.log(initialUserMessage);
+      sendMessage(initialUserMessage, true);
     }
   }, [isLoading, initialUserMessage]);
 
