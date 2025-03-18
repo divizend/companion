@@ -21,7 +21,7 @@
     "error": "Verbinden des Portfolios fehlgeschlagen: {{error, error}}",
     "errorPlain": "Verbinden des Portfolios fehlgeschlagen: {{error}}",
     "newTabInfo": "Es sollte sich ein neuer Tab geöffnet haben, in dem Sie Ihre Bank mit Divizend verbinden können.",
-    "title": "Portfolio verbinden",
+    "title": "Depot importieren",
     "waitingForAggregation": "Sie haben Ihr Depot erfolgreich verbunden und nun wird es eingelesen. Bitte haben Sie einen Moment Geduld."
   },
   "chooseBank": {

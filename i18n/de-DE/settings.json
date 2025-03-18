@@ -30,5 +30,5 @@
   },
   "theme": "Design umschalten",
   "title": "Einstellungen",
-  "version": "Version {{Version}}"
+  "version": "Version {{version}}"
 }
