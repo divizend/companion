@@ -65,7 +65,7 @@ export default function LessonDetails() {
           {lesson.title}
         </Text>
 
-        <View className="mb-10">
+        <View style={{ marginBottom: 40 }}>
           {lesson.firstView.map((item, index) => (
             <View key={index} className="mb-5">
               <Text h4 className="mb-2">
@@ -107,9 +107,9 @@ export default function LessonDetails() {
             </TouchableOpacity>
           </View>
           {!canUseOwnPortfolios && (
-            <View className="flex flex-row items-center">
-              <Icon name="info-outline" type="material" size={20} className="mr-2" />
-              <Text className="mt-1">{t('learning.lessons.portfolioContentCheckbox.note')}</Text>
+            <View className="flex flex-row items-center justify-center mt-0.5">
+              <Icon name="info-outline" type="material" size={18} className="mr-1.5 ml-1" color={theme.text} />
+              <Text className="flex-1 flex-wrap text-sm"> {t('learning.lessons.portfolioContentCheckbox.note')} </Text>
             </View>
           )}
         </View>
