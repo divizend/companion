@@ -97,9 +97,11 @@ const useChangeSyncCalendarLanguage = () => {
 };
 
 export default function CalendarWidget() {
+  useChangeSyncCalendarLanguage();
+
+  const { t } = useTranslation();
   const theme = useThemeColor();
   const depot = actor.value.depot;
-  useChangeSyncCalendarLanguage();
   const [selectedDay, setSelectedDay] = useState<Dayjs | null>(null);
   const [currentYear, setCurrentYear] = useState(dayjs().year());
   const [currentMonth, setCurrentMonth] = useState(dayjs().month() + 1);
@@ -166,7 +168,7 @@ export default function CalendarWidget() {
   }, [dailyEvents, selectedDay, selectedCalendarDayDetails]);
 
   return (
-    <Widget title="Calendar" ready>
+    <Widget title={t('actor.calendarWidget.title')} ready>
       <Calendar
         hideWeekends
         markedDates={markedDates}
