@@ -105,7 +105,9 @@ export default function SubscriptionModal({ dismiss, skipFirstStep = false }: Pr
     await Purchases.purchasePackage(
       product,
       null,
-      Platform.OS === 'android' && customerInfo?.entitlements.active['divizend-membership']
+      Platform.OS === 'android' &&
+        customerInfo?.entitlements.active['divizend-membership'] &&
+        customerInfo.entitlements.all['divizend-membership']?.store !== 'PROMOTIONAL'
         ? {
             oldProductIdentifier: customerInfo.entitlements.active['divizend-membership'].productIdentifier,
           }
@@ -164,6 +166,7 @@ export default function SubscriptionModal({ dismiss, skipFirstStep = false }: Pr
         await checkPointsAndPurchase(purchasePackage);
       } else if (pointsRequired === data.waitingForPoints) await checkPointsAndPurchase(purchasePackage);
     } catch (error: any) {
+      console.log(error);
       showSnackbar(error.message, { type: 'error' });
       refetch();
       dismiss();
