@@ -45,8 +45,8 @@ export const ScrollScreen = forwardRef<NativeScrollView, Props>(
           },
           contentContainerStyle,
         ]}
-        onScroll={props => {
-          const y = props.nativeEvent.contentOffset.y;
+        onScroll={event => {
+          const y = event.nativeEvent.contentOffset.y;
           scrollY.current = y;
 
           if (!isFocused.current) return;
@@ -56,6 +56,7 @@ export const ScrollScreen = forwardRef<NativeScrollView, Props>(
           } else {
             isHeaderVisible.value = false;
           }
+          props.onScroll?.(event);
         }}
       >
         {children}
