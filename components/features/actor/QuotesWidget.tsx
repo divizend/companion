@@ -103,7 +103,7 @@ export default function QuotesWidget() {
   const [range, setRange] = useState<QuoteRange>(QuoteRange.Y);
   const { data: quotes = [], isLoading } = usePortfolioQuery({
     queryFn: () => ActorService.getPerformanceQuotes(range),
-    queryKey: [range],
+    queryKey: ['getPerformanceQuotes', range],
   });
 
   const currentQuote = quotes.at(-1);
