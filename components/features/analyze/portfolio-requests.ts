@@ -160,21 +160,12 @@ const getHRP = async (portfolioID: string): Promise<any> => {
   return hrpData;
 };
 
-export const fetchSimulationData = async (
-  depotIDs: string[],
-  setPortfolioID: (portfolioID: string) => void,
-  setDepotData: (depotData: {}) => void,
-  range: number,
-  scenario: string,
-) => {
-  console.log('start simulation data loading process');
+export const fetchSimulationData = async (depotIDs: string[], range: number, scenario: string) => {
   const portfolioID = await createPortfolio(depotIDs);
-  setPortfolioID(portfolioID);
   const portfolioData = await getPortfolioData(portfolioID);
-  setDepotData(portfolioData);
 
   const simulationAnswer = await createSimulation(portfolioID, scenario);
-  return await getSimulation(portfolioID, range);
+  return { simulationData: await getSimulation(portfolioID, range), depotData: portfolioData, simulationAnswer };
 };
 
 export const fetchData = async (
@@ -189,17 +180,8 @@ export const fetchData = async (
 ) => {
   const portfolioID = await createPortfolio(depotIDs);
   setPortfolioID(portfolioID);
-  console.log('portfolio created, start data loading process');
   const portfolioData = await getPortfolioData(portfolioID);
   setDepotData(portfolioData);
-
-  // const cmAnswer = await createCorrelationMatrix(portfolioID);
-  // const cmData = await getCorrelationMatrix(portfolioID);
-
-  // const hrpAnswer = await createHRP(portfolioID, 100)
-  // console.log(hrpAnswer)
-  // const hrpData = await getHRP(portfolioID)
-  // console.log(hrpData)
 
   await createEF(portfolioID, targetReturn);
   const efData = await getEFData(portfolioID);
