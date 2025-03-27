@@ -65,6 +65,7 @@ export default function CalendarEntryModal({ calendarDay, visible, onClose }: Ca
             <FlatList
               data={calendarDay.events}
               keyExtractor={(event, index) => event.isin + index}
+              showsVerticalScrollIndicator={false}
               renderItem={({ item: event, index }) => (
                 <View
                   className={clsx(
