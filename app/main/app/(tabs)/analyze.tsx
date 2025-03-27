@@ -1,8 +1,7 @@
-import React from 'react';
-
 import { useSignals } from '@preact/signals-react/runtime';
 import { useTranslation } from 'react-i18next';
 import { LogBox } from 'react-native';
+import { RefreshControl } from 'react-native-gesture-handler';
 
 import { SafeAreaView, ScrollScreen, Text } from '@/components/base';
 import AssetClassesWidget from '@/components/features/actor/AssetClassesWidget';
@@ -17,12 +16,23 @@ LogBox.ignoreLogs(['Image source "null" doesn\'t exist']);
 
 export default function Analyze() {
   const { t } = useTranslation();
-  useInitializeActor();
+
+  const { isFetching, refetch } = useInitializeActor();
+
   useSignals();
 
   return (
     <SafeAreaView>
-      <ScrollScreen>
+      <ScrollScreen
+        refreshControl={
+          <RefreshControl
+            refreshing={isFetching}
+            onRefresh={() => {
+              refetch();
+            }}
+          />
+        }
+      >
         <Text h1 className="mb-5 mx-1.5">
           {t('common.tabs.analyze')}
         </Text>
