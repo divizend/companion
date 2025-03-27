@@ -21,6 +21,7 @@ export type Config = {
     playStore: string;
     appStore: string;
   };
+  isProduction: boolean;
 };
 
 export const usedConfig = Constants.expoConfig!.extra! as Config;
