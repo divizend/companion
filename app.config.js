@@ -46,6 +46,7 @@ export default ({ config }) => {
       playStore: 'goog_cfpJuVihNJVjRmkmxMlRhqoQyQr',
       appStore: 'appl_jVSpnXdmlvIFqZKxCjepRmyqFQo',
     },
+    isProduction,
   };
 
   return {
