@@ -5,8 +5,7 @@ import { useSignal, useSignals } from '@preact/signals-react/runtime';
 import { CheckBox, Icon } from '@rneui/themed';
 import { throttle } from 'lodash';
 import { useTranslation } from 'react-i18next';
-import { Pressable, Switch, View } from 'react-native';
-import Animated, { useSharedValue } from 'react-native-reanimated';
+import { Pressable, View } from 'react-native';
 
 import { usedConfig } from '@/common/config';
 import { useUserProfile } from '@/common/profile';
@@ -15,6 +14,7 @@ import { Text } from '@/components/base';
 import { fetchSimulationData } from '@/components/features/analyze/portfolio-requests';
 import { useSnackbar } from '@/components/global/Snackbar';
 import { showCustom } from '@/components/global/prompt';
+import usePortfolioQuery from '@/hooks/actor/useDepotQuery';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { Scenarios, SimulationRange } from '@/types/actor-api.types';
 
@@ -83,7 +83,20 @@ const Info = ({ quote, range, percentage }: { quote?: any; range: SimulationRang
           }).replace(/(\d{2}):(\d{2}):\d{2}/g, '$1:$2')}
         </Text>
         <Text h1 className="font-bold">
-          {percentage ? t((quote?.percentage_price ?? 0).toFixed(2)) + '%' : t((quote?.price ?? 0).toFixed(2)) + '€'}
+          {percentage
+            ? t('percent', {
+                value: {
+                  value: (quote?.percentage_price ?? 0) / 100,
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                },
+              })
+            : t('currency', {
+                amount: {
+                  amount: quote?.price ?? 0,
+                  unit: quote?.currency ?? 'EUR',
+                },
+              })}
         </Text>
       </View>
     </View>
@@ -100,23 +113,12 @@ export default function SimulationWidget() {
   const [selectedQuote, setSelectedQuote_] = useState<{ time: number; price: number }>();
   const setSelectedQuote = throttle(setSelectedQuote_, 32);
 
-  const [isLoading, setIsLoading] = useState(true);
-
   const [range, setRange] = useState<SimulationRange>(SimulationRange.Y);
   const [scenario, setScenario] = useState<Scenarios>(Scenarios.INFLATION_2021);
   const percentage = useSignal(true);
 
   const [depotIDs, setDepotIDs] = useState<string[]>([]);
-  const [portfolioID, setPortfolioID] = useState('');
 
-  const [depotData, setDepotData] = useState<any | null>(null);
-  const [simulationData, setSimulationData] = useState<SimulationData>({
-    computed_at: '',
-    duration_months: 0,
-    portfolio_id: '',
-    scenario: '',
-    simulation_data: {},
-  });
   const [simulationPricePoints, setSimulationPricePoints] = useState<{ time: number; price: number }[]>([]);
 
   const profile = useUserProfile();
@@ -127,22 +129,42 @@ export default function SimulationWidget() {
     setDepotIDs(usedConfig.isProduction ? depots.map(depot => depot.id) : ['672a47e0bae468d6209a8bcc']);
   }, [depots]);
 
-  useEffect(() => {
-    if (!depotIDs || depotIDs.length === 0) return;
-    setIsLoading(true);
-    fetchSimulationData(depotIDs, setPortfolioID, setDepotData, range, scenario)
-      .then(setSimulationData)
-      .catch(() => showSnackbar(t('actor.error.simulation'), { type: 'error' }))
-      .finally(() => setIsLoading(false));
-  }, [depotIDs, range, scenario]);
+  const { data: { simulationData, depotData } = {}, isFetching: isLoading } = usePortfolioQuery<{
+    simulationData: SimulationData;
+    depotData?: {
+      securities: Security[];
+    };
+  }>({
+    queryFn: () =>
+      fetchSimulationData(depotIDs, range, scenario).catch(e => {
+        showSnackbar(t('actor.error.simulation'), { type: 'error' });
+        throw e;
+      }),
+    queryKey: ['getSimulationData', depotIDs, range, scenario],
+    enabled: depotIDs?.length > 0,
+    initialData: {
+      simulationData: {
+        computed_at: '',
+        duration_months: 0,
+        portfolio_id: '',
+        scenario: '',
+        simulation_data: {},
+      },
+    },
+  });
 
   useEffect(() => {
-    if (simulationData && simulationData.simulation_data && Object.keys(simulationData.simulation_data).length > 0) {
+    if (
+      simulationData &&
+      depotData &&
+      simulationData.simulation_data &&
+      Object.keys(simulationData.simulation_data).length > 0
+    ) {
       setSimulationPricePoints(convertSimulationData(simulationData, depotData));
     } else {
       setSimulationPricePoints([]);
     }
-  }, [simulationData]);
+  }, [simulationData, depotData]);
 
   const currentQuote = simulationPricePoints.at(-1);
 
@@ -221,7 +243,6 @@ export default function SimulationWidget() {
               );
             })
           }
-          className="mt-1"
         >
           <Icon name="settings" type="material" color="gray" size={24} />
         </Pressable>
