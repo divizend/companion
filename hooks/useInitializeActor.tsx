@@ -11,7 +11,7 @@ export default function useInitializeActor() {
   const currency = profile?.flags.currency;
   const depotIds = actor.value.depotIds;
 
-  useQuery({
+  return useQuery({
     queryKey: [
       'actor.initialize',
       currency,
