@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Icon } from '@rneui/themed';
 import 'event-target-polyfill';
 import { useColorScheme } from 'nativewind';
+import { useTranslation } from 'react-i18next';
 import {
   ActivityIndicator,
   FlatList,
@@ -26,9 +27,8 @@ import { clsx } from '@/common/clsx';
 import { usedConfig } from '@/common/config';
 import { useSessionToken } from '@/common/sessionToken';
 import { TextInput } from '@/components/base';
-import { t } from '@/i18n';
 
-import ModalView from './ModalView';
+import ModalLayout from './global/ModalLayout';
 
 enum MessageRole {
   SYSTEM = 'system',
@@ -94,20 +94,14 @@ const ChatMessage = ({ item }: { item: Message }) => {
 };
 
 interface ChatModalProps {
-  visible: boolean;
-  onClose: () => void;
+  dismiss: () => void;
   chatId?: string;
   systemPrompt?: string; // only relevant for new chats
   initialUserMessage?: string;
 }
 
-export default function ChatModal({
-  visible,
-  onClose,
-  chatId: givenChatId,
-  systemPrompt,
-  initialUserMessage,
-}: ChatModalProps) {
+export default function ChatModal({ chatId: givenChatId, systemPrompt, initialUserMessage, dismiss }: ChatModalProps) {
+  const { t } = useTranslation();
   const [sessionToken] = useSessionToken();
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputText, setInputText] = useState('');
@@ -134,7 +128,7 @@ export default function ChatModal({
         }
       } catch (error) {
         console.error('Failed to initialize chat:', error);
-        onClose();
+        dismiss();
       } finally {
         setIsLoading(false);
       }
@@ -155,10 +149,10 @@ export default function ChatModal({
     setIsAIResponding(false);
   };
 
-  const sendMessage = (messageToSend: string) => {
+  const sendMessage = (messageToSend: string, isInitial: boolean = false) => {
     setMessages(prevMessages => [
       ...prevMessages,
-      { content: messageToSend, role: MessageRole.USER },
+      { content: !isInitial ? messageToSend : messageToSend.split('----').reverse()[0], role: MessageRole.USER },
       { content: '', role: MessageRole.ASSISTANT },
     ]);
     setInputText('');
@@ -236,12 +230,12 @@ export default function ChatModal({
 
   useEffect(() => {
     if (initialUserMessage && !isLoading) {
-      sendMessage(initialUserMessage);
+      sendMessage(initialUserMessage, true);
     }
   }, [isLoading, initialUserMessage]);
 
   return (
-    <ModalView visible={visible} onClose={onClose} title={t('chat.title')} noScrollView>
+    <ModalLayout noScrollView dismiss={dismiss} title={t('common.chat.title')}>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         className="flex-1"
@@ -277,7 +271,7 @@ export default function ChatModal({
             className="flex-1 mr-2"
             value={inputText}
             onChangeText={setInputText}
-            placeholder={t('chat.inputPlaceholder')}
+            placeholder={t('common.chat.inputPlaceholder')}
             onSubmitEditing={handleSendMessage}
             multiline
             numberOfLines={1}
@@ -303,7 +297,7 @@ export default function ChatModal({
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
-    </ModalView>
+    </ModalLayout>
   );
 }
 

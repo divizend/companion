@@ -8,25 +8,26 @@ import { Text } from '@/components/base';
 import { useThemeColor } from '@/hooks/useThemeColor';
 
 export type SectionListProps = {
-  title?: string;
-  items: Array<{
+  title?: string | React.ReactNode;
+  items: {
     key?: string;
     title: string | React.ReactNode;
     onPress?: () => void;
-    rightElement?: string;
+    rightElement?: string | React.ReactNode;
     leftIcon?:
       | string
       | {
           name: string;
           type?: string;
           color?: string;
-        };
+        }
+      | React.ReactNode;
     containerStyle?: ViewStyle | ViewStyle[];
     itemStyle?: ViewStyle | ViewStyle[];
     onRemove?: () => void;
     disabled?: boolean;
     additional?: React.ReactNode;
-  }>;
+  }[];
   bottomText?: string;
   containerStyle?: ViewStyle;
   ItemComponent?: React.ComponentType<any>;
@@ -43,10 +44,12 @@ export default function SectionList({
 
   return (
     <View className="mb-5" style={containerStyle}>
-      {title && (
+      {typeof title === 'string' ? (
         <Text className="text-xs mb-1.5 mx-5 uppercase text-gray-600 dark:text-gray-300">{title.toUpperCase()}</Text>
+      ) : (
+        title
       )}
-      <View className="rounded-xl overflow-hidden ">
+      <View className="rounded-xl overflow-hidden">
         {items.map((item, index) => (
           <ItemComponent key={item.key ?? index} style={item.containerStyle}>
             <TouchableOpacity onPress={item.onPress} disabled={item.disabled || !item.onPress}>
@@ -60,24 +63,34 @@ export default function SectionList({
                 {item.leftIcon ? (
                   typeof item.leftIcon === 'string' ? (
                     <Text className={clsx(item.disabled && 'text-gray-500 dark:text-gray-200')}>{item.leftIcon}</Text>
-                  ) : (
+                  ) : (item.leftIcon as any)?.name ? (
                     <Icon
-                      name={item.leftIcon.name}
-                      type={item.leftIcon.type || 'material'}
-                      color={item.leftIcon.color || item.disabled ? 'grey' : theme.style === 'dark' ? 'white' : 'black'}
+                      name={(item.leftIcon as any).name}
+                      type={(item.leftIcon as any).type || 'material'}
+                      color={
+                        (item.leftIcon as any).color || item.disabled
+                          ? 'grey'
+                          : theme.style === 'dark'
+                            ? 'white'
+                            : 'black'
+                      }
                       size={20}
                       containerStyle={styles.iconContainer}
                     />
+                  ) : (
+                    React.isValidElement(item.leftIcon) && item.leftIcon
                   )
                 ) : null}
                 <ListItem.Content style={styles.listItemContent}>
-                  <ListItem.Title style={[styles.listItemTitle, item.disabled && styles.disabledTitle]}>
-                    <Text>{item.title}</Text>
+                  <ListItem.Title>
+                    <Text style={[styles.listItemTitle, item.disabled && styles.disabledTitle]}>{item.title}</Text>
                   </ListItem.Title>
-                  {item.rightElement && (
+                  {typeof item.rightElement === 'string' ? (
                     <Text className="text-muted text-sm text-right shrink ml-3" numberOfLines={1} ellipsizeMode="tail">
                       {item.rightElement}
                     </Text>
+                  ) : (
+                    item.rightElement
                   )}
                 </ListItem.Content>
                 {item.onRemove && (
@@ -85,7 +98,7 @@ export default function SectionList({
                     <Icon name="minus" type="material-community" size={14} color="white" />
                   </TouchableOpacity>
                 )}
-                {item.onPress && !item.onRemove && <ListItem.Chevron />}
+                {item.onPress && !item.onRemove && !item.rightElement && <ListItem.Chevron />}
               </ListItem>
             </TouchableOpacity>
             {item.additional}
@@ -138,6 +151,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    overflow: 'hidden',
   },
   listItemTitle: {
     fontSize: 16,

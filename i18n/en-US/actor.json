@@ -1,0 +1,96 @@
+{
+  "portfolioStats": {
+    "title": "My portfolio",
+    "totalAssets": "Total assets",
+    "grossDividendThisYear": "Gross dividends this year",
+    "totalRefundableWithholdingTax": "Total refundable withholding tax",
+    "nextDividend": "Next dividend"
+  },
+  "division": {
+    "title": "Division",
+    "totalAssets": "Total Assets",
+    "others": "Others"
+  },
+  "simulation": {
+    "title": "Simulation",
+    "radioButton": {
+      "1M": "1M",
+      "3M": "3M",
+      "6M": "6M",
+      "Y": "Y"
+    },
+    "scenarioButton": {
+      "DOT_COM": "Dot-Com Bubble",
+      "FIN_CRISIS_2007": "Financial Crisis 2007",
+      "COVID": "COVID-19 Crash",
+      "INFLATION_2021": "Inflation 2021",
+      "BREXIT_UNCERTAINTY": "Brexit Uncertainty",
+      "US_EU_STEEL_TARIFFS": "US–EU Steel Tariffs",
+      "US_CHINA_TRADE_WAR": "US–China Trade War",
+      "TRUMP_TARIFFS_2025": "Trump Tariffs 2025"
+    },
+    "settings": {
+      "title": "Settings",
+      "showPercentage": "Show percentage",
+      "options": "Options"
+    }
+  },
+  "quotes": {
+    "title": "Performance overview",
+    "radioButton": {
+      "D": "D",
+      "W": "W",
+      "M": "M",
+      "Y": "Y",
+      "ALL": "All"
+    }
+  },
+  "assetClasses": {
+    "title": "Asset classes",
+    "secType": {
+      "STOCK": "Stock",
+      "ETF": "ETF (Exchange-Traded Fund)",
+      "FUND": "Fund",
+      "DR": "DR (Depositary Receipt)",
+      "BOND": "Bond",
+      "OPTION": "Option",
+      "CRYPTO": "Crypto Currency",
+      "TRUST": "Trust",
+      "CERTIFICATE": "Certificate",
+      "OTHER": "Other",
+      "undefined": "Unknown (Contain no issues)"
+    }
+  },
+  "calendarWidget": {
+    "title": "Calendar",
+    "tooltip": {
+      "eventType": "Event type",
+      "date": "Date",
+      "exDate": "Ex-date",
+      "paymentDate": "Payment date",
+      "dividendPerShare": "Dividend per share",
+      "frequency": "Frequency",
+      "transactionType": "Type",
+      "transactionQuantity": "Quantity",
+      "transactionAmount": "Amount",
+      "splitRatio": "Split ratio",
+      "PURCHASE": "Buy",
+      "SALE": "Sell",
+      "dividendYield": "Dividend yield"
+    },
+    "DIVIDEND": "Dividend",
+    "TRANSACTION": "Transaction",
+    "SPLIT": "Split",
+    "moreItems": "{{count}} more...",
+    "predictionTooltip": "Prediction",
+    "dividendPayout": "{{price}}/share",
+    "transactionPrice": "{{quantity}} x {{price}}/share",
+    "totalPayout": "Total {{total}}",
+    "totalGrossDividend": "Total gross dividend: {{quantity}} x {{price}}/share = {{total}}",
+    "noEvents": "No events this day"
+  },
+  "error": {
+    "simulation": "Failed to fetch simulation. Please try again later.",
+    "insufficientData": "Insufficient Data for this scenario"
+  }
+}

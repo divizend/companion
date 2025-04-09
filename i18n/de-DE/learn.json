@@ -1,0 +1,175 @@
+{
+  "goalDetails": {
+    "learningIntentions": {
+      "add": "Lernziele hinzufügen",
+      "addMore": "Weitere Lernziele hinzufügen",
+      "addPrompt": "Gib dein neues Lernziel ein",
+      "clear": {
+        "message": "Bist du sicher, dass du all diese Lernziele entfernen möchtest? Diese Aktion kann nicht rückgängig gemacht werden.",
+        "title": "Alle Lernziele entfernen"
+      },
+      "explanation": "Dies sind Themen, über die du lernen kannst, um dieses Ziel effektiver zu erreichen. Tippe auf eine der Themen, um die entsprechende Frage in einem Chat zu öffnen.",
+      "removeIntention": "Möchtest du dieses Lernziel entfernen?",
+      "title": "Lernen"
+    },
+    "realities": {
+      "addRealityPrompt": "Was ist an diesem Ziel im Moment wahr? Füge gern auch Gründe, Erklärungen und alles andere hinzu, was du für wichtig hältst.",
+      "addRealityTitle": "Neuen Fakt hinzufügen",
+      "assess": {
+        "addManual": "Neuen Fakt manuell hinzufügen",
+        "cta": "Neuen Fakt hinzufügen",
+        "explanation": "Beantworte eine der folgenden Fragen, um den Status Quo deines Weges zum Erreichen dieses Ziels weiter zu bestimmen. Oder verwende den Button unten, um manuell einen neuen Fakt hinzuzufügen.",
+        "furtherActions": "Weitere Aktionen",
+        "loading": "Fragen werden geladen...",
+        "success": "Fakt erfolgreich hinzugefügt!",
+        "title": "Neuen Fakt hinzufügen",
+        "updateQuestions": "Fragen aktualisieren"
+      },
+      "explanation": "Dies sind Fakten, die mit dem Status Quo deines Weges zu diesem Ziel verbunden sind. Achte darauf, dass diese immer auf dem neuesten Stand und so genau wie möglich sind.",
+      "refineReality": "Was möchtest du über diesen Fakt verändern?",
+      "removeReality": "Möchtest du diesen Fakt entfernen?",
+      "title": "Details, Kontext, Entscheidungen"
+    }
+  },
+  "goals": {
+    "backLink": "Zurück zum Erkenntnis-Setup",
+    "confirmGoals": "Ziele klar? Dann tippe hier, um sie zu verwirklichen!",
+    "explanation": "Basierend auf den Erkenntnissen über dein finanzielles Leben können wir nun konkrete Ziele und Visionen für dich festlegen. Wenn du ein Ziel präzisieren oder korrigieren möchtest, tippe es einfach an.",
+    "title": "Schritt 2: Ziele"
+  },
+  "goalsManager": {
+    "primary": {
+      "furtherActions": {
+        "addManualGoal": {
+          "buttonTitle": "Neues Ziel manuell hinzufügen",
+          "loading": "Ziel wird hinzugefügt...",
+          "placeholder": "Formuliere es so frei, wie du magst.",
+          "title": "Neues Ziel hinzufügen"
+        },
+        "sectionTitle": "Weitere Aktionen"
+      },
+      "generateButton": {
+        "loading": "Ziele werden bestimmt...",
+        "title": "Hier tippen, um Ziele zu verwalten",
+        "titleRecreate": "Hier tippen, um Ziehe neu zu bestimmen"
+      },
+      "listTitle": "Deine Ziele",
+      "refineGoal": {
+        "placeholder": "Was möchtest du an diesem Ziel ändern?"
+      },
+      "removeGoalAlert": {
+        "message": "Bist du sicher, dass du dieses Ziel und alle damit verbundenen Daten entfernen möchtest? Diese Aktion kann nicht rückgängig gemacht werden."
+      },
+      "replaceGoalsAlert": {
+        "message": "Bist du sicher, dass du deine Ziele neu initialisieren möchtest? Wenn du dies bestätigst, werden alle aktuellen Ziele in dieser Ansicht ersetzt.",
+        "title": "Ziele neu bestimmen"
+      },
+      "title": "Ziele verwalten"
+    },
+    "secondary": {
+      "explanation": "Wenn dir dieses Ziel zu groß erscheint oder du nicht weißt, wie du anfangen sollst, kannst du es in kleinere, überschaubare Unterziele unterteilen.",
+      "furtherActions": {
+        "addManualGoal": {
+          "buttonTitle": "Neues Unterziel manuell hinzufügen",
+          "loading": "Unterziel wird hinzugefügt...",
+          "placeholder": "Formuliere es so frei, wie du magst.",
+          "title": "Neues Unterziel hinzufügen"
+        },
+        "sectionTitle": "Weitere Aktionen"
+      },
+      "generateButton": {
+        "loading": "Unterziele werden bestimmt...",
+        "title": "Tippe hier, um das ausgewählte Ziel in Unterziele zu unterteilen",
+        "titleRecreate": "Tippe hier, um die Unterziele neu festzulegen"
+      },
+      "listTitle": "Unterziele",
+      "refineGoal": {
+        "placeholder": "Was möchtest du an diesem Unterziel ändern?"
+      },
+      "removeGoalAlert": {
+        "message": "Bist du sicher, dass du dieses Unterziel und alle damit verbundenen Daten entfernen möchtest? Diese Aktion kann nicht rückgängig gemacht werden."
+      },
+      "replaceGoalsAlert": {
+        "message": "Bist du sicher, dass du die Unterziele für dieses Ziel neu initialisieren möchtest? Wenn du dies bestätigst, werden alle aktuellen Unterziele in dieser Ansicht ersetzt und alle Informationen, die mit den aktuellen Unterzielen verbunden sind, entfernt. Diese Aktion kann nicht rückgängig gemacht werden.",
+        "title": "Unterziele neu bestimmen"
+      },
+      "title": "Unterziele verwalten"
+    }
+  },
+  "insights": {
+    "addInsight": {
+      "message": "Trage deine neue Erkenntnis ein",
+      "title": "Neue Erkenntnis hinzufügen"
+    },
+    "confirmButton": "Zufrieden mit diesen Erkenntnissen? Dann lass uns bestätigen und weitermachen!",
+    "defaultQuestions": [
+      {
+        "category": "Visionen",
+        "question": "Was sind deine finanziellen Ziele, Träume und Bestrebungen?"
+      },
+      {
+        "category": "Realität",
+        "question": "Wie sieht deine derzeitige finanzielle Situation aus?"
+      },
+      {
+        "category": "Motivation",
+        "question": "Warum möchtest du mehr über Finanzen lernen?"
+      },
+      {
+        "category": "Emotionen",
+        "question": "Welche Gefühle erzeugen Finanzthemen bei dir?"
+      },
+      {
+        "category": "Wissen",
+        "question": "Was weißt du bereits über Finanzen?"
+      },
+      {
+        "category": "Werte",
+        "question": "Welche Werte leiten dich bei deinen finanziellen Entscheidungen?"
+      },
+      {
+        "category": "Interessen",
+        "question": "An welchen Finanzthemen bist du interessiert?"
+      },
+      {
+        "category": "Sicherheit",
+        "question": "Was brauchst du, um dich finanziell sicher zu fühlen?"
+      },
+      {
+        "category": "Unabhängigkeit",
+        "question": "In welchen Bereichen deines finanziellen Lebens möchtest du unabhängiger werden?"
+      },
+      {
+        "category": "Gewohnheiten",
+        "question": "Welche finanziellen Gewohnheiten möchtest du kultivieren?"
+      }
+    ],
+    "explanation": "Das gesamte Lernen ist vollständig personalisiert und erfolgt in einem Tempo, das du selbst bestimmst. Um dies zu erreichen, musst du zunächst einige Fragen beantworten, die sich an den folgenden Punkten orientieren. In einem ersten Schritt werden deine Antworten in Erkenntnisse über dein finanzielles Leben umformuliert.",
+    "explanation2": "Wenn du auf eine Frage tippst, kannst du auch neue Fragen auf der Grundlage jener Frage erstellen.",
+    "insights": {
+      "bottomText": "Dies sind die Erkenntnisse über dich, die als Kontext für alle Ziele verwendet werden. Sorge dafür, dass sie immer auf dem neuesten Stand sind.",
+      "title": "Erkenntnisse über dich"
+    },
+    "insightsOnboarding": {
+      "bottomText": "Deine Antworten wurden in klare Aussagen über dein finanzielles Leben umformuliert, die zur Anpassung deiner Lernerfahrung verwendet werden. Natürlich kannst du auch später jederzeit Erkenntnisse hinzufügen oder entfernen.",
+      "title": "Erkenntnisse über dein finanzielles Leben"
+    },
+    "questionOptions": {
+      "answer": "Antwort",
+      "getSimilar": "Ähnliche Fragen erhalten"
+    },
+    "questionsTitle": "Inspiration für Fragen",
+    "removeInsight": {
+      "message": "Bist du sicher, dass du diese Erkenntnis entfernen möchtest? Diese Aktion kann nicht rückgängig gemacht werden."
+    },
+    "title": "Schritt 1: Erkenntnisse"
+  },
+  "realizeGoals": {
+    "actions": "Aktionen",
+    "explanation": "Welches deiner Ziele willst du heute anstreben?",
+    "title": "Willkommen",
+    "yourGoals": "Deine Ziele"
+  },
+  "title": "Visionary",
+  "vision": "Der Visionary ist das Modul des Companion, mit dem Sie lernen können, wie Sie Ihre Wünsche, Ziele, Visionen und Träume in die Realität umsetzen können."
+}

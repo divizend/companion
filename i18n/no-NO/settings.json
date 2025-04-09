@@ -1,0 +1,33 @@
+{
+  "pages": {
+    "settings": "Settings",
+    "plan": "Membership"
+  },
+  "title": "Settings",
+  "accountSection": {
+    "title": "Account",
+    "email": "Email",
+    "bottomText": "To modify your email address and for other profile settings, please visit app.divizend.com.",
+    "language": "Choose language"
+  },
+  "logoutConfirmation": "Are you sure you want to log out?",
+  "resetProfile": {
+    "title": "Reset profile",
+    "message": "Are you sure you want to reset your Companion profile? This action cannot be undone."
+  },
+  "privilegedActions": {
+    "title": "Privileged actions",
+    "impersonateUser": "Impersonate user",
+    "endImpersonation": "End impersonation",
+    "currentImpersonation": "Currently impersonated by {{email}}",
+    "privilegedMembershipAccess": "Privileged membership access"
+  },
+  "impersonateUser": {
+    "title": "Impersonate user",
+    "emailPlaceholder": "Enter user email"
+  },
+  "theme": "Toggle theme",
+  "currentPlan": {
+    "title": "Your membership"
+  }
+}

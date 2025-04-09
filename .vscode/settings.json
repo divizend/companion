@@ -1,0 +1,10 @@
+{
+  "i18n-ally.localesPaths": ["i18n"],
+  "i18n-ally.ignoreFiles": ["global/*"],
+  "i18n-ally.keystyle": "nested",
+  "i18n-ally.annotations": true,
+  "i18n-ally.editor.preferEditor": true,
+  "i18n-ally.extract.autoDetect": true,
+  "i18n-ally.namespace": true,
+  "i18n-ally.displayLanguage": "en-US"
+}

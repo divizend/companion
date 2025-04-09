@@ -1,0 +1,159 @@
+{
+  "background": {
+    "description": "The import is running in the background, so you are free to close this import dialog.",
+    "stay": "Stay",
+    "title": "You can now close this dialog now"
+  },
+  "bankDepotDetails": {
+    "description": "Please enter the following information about your bank and securities account.",
+    "fields": {
+      "bankName": "Bankens navn",
+      "bic": "BIC",
+      "depotNumber": "Your portfolio number",
+      "parent": "Banktype"
+    },
+    "title": "Bank- og depotopplysninger",
+    "unknownBank": "Annen bank"
+  },
+  "bankLogin": {
+    "chooseOtherMethod": "Velg en annen metode for porteføljeimport",
+    "clickToOpen": "Hvis dette ikke er tilfelle, kan du klikke her.",
+    "error": "Tilkobling av portefølje mislyktes: {{error, error}}",
+    "errorPlain": "Tilkobling av portefølje mislyktes: {{error}}",
+    "newTabInfo": "En ny fane skal ha åpnet seg der du kan koble banken din til Divizend.",
+    "title": "Koble til portefølje",
+    "waitingForAggregation": "Du har koblet til porteføljen din, og den blir nå skannet. Vennligst vent et øyeblikk."
+  },
+  "chooseBank": {
+    "bankListLoading": "Laster inn liste over støttede banker...",
+    "choose": "Velg",
+    "demoBanks": "Demobanker",
+    "internationalBanks": "Internasjonale banker",
+    "manualInput": "Legg inn manuelt",
+    "otherBanks": "Flere nasjonale banker",
+    "otherBanksInternational": "Flere banker",
+    "title": "Velg bank"
+  },
+  "chooseDepotToSync": {
+    "description": "Please select the portfolio you want to use for the synchronization:",
+    "infoNote": "We noticed a mismatch between your current portfolio number and the one(s) you are trying to use for synchronization.",
+    "title": "Choose portfolio to synchronize"
+  },
+  "chooseDepots": {
+    "callToAction": "Neste steg",
+    "depotNumber": "Portfolio number: {{number}}",
+    "description": "Please select the portfolios you want to import to Divizend:",
+    "selectAll": "Select all",
+    "selected": "Selected {{count}} portfolios out of {{total}}.",
+    "title": "Choose portfolios"
+  },
+  "chooseInterface": {
+    "failed": "Mislykket",
+    "interfaceType": {
+      "DEMO": {
+        "description": "Demogrensesnittet demonstrerer funksjonaliteten til Divizend.",
+        "duration": "< 1 min",
+        "title": "Demo-grensesnitt"
+      },
+      "DOCAPI": {
+        "description": "Med PDF-import laster du først opp porteføljeoversiktsdokumenter og kjøpskvitteringer, som du kan laste ned som PDF-filer fra postkassen til meglerkontoen din, deretter leser Divizend automatisk dine nåværende aksjebeholdninger og muligens din transaksjonshistorikk.",
+        "duration": "> 2 min",
+        "title": "Import av PDF-filer"
+      },
+      "ESTA": {
+        "description": "Ved å bruke denne metoden, kan du bruke en eSteuerauszug (elektronisk skatteuttalelse) til å automatisk importere verdipapirkontoen din til Divizend. eSteuerauszüge kan finnes hos mange sveitsiske banker i din nettbank som PDF-dokumenter.",
+        "duration": "< 1 min",
+        "title": "eSteuerauszug"
+      },
+      "FINAPI": {
+        "description": "FinAPI er en tysk finanstjenesteleverandør lisensiert av BaFin, som tilbyr grensesnitt for å få tilgang til betalings- og verdipapirkontoer. Ved å autentisere via finAPI, kan du koble verdipapirkontoen din til Divizend på et øyeblikk.\nTilgangsdataene til verdipapirkontoen din overføres av finAPI til banken din for autentisering ved hjelp av en kryptert protokoll. Divizend har aldri tilgang til tilgangsdataene dine.",
+        "duration": "< 1 min",
+        "title": "finAPI"
+      },
+      "FINTS": {
+        "description": " FinTS er en tysk standard for å få tilgang til betalings- og verdipapirkontoer. Vi har spesielt optimalisert grensesnittet vårt for å bestemme din nåværende verdipapirkonto-uttalelse. Ved å autentisere over FinTS, kan du koble verdipapirkontoen din til Divizend på et øyeblikk.\nTilgangsdataene til verdipapirkontoen din overføres eksklusivt og en gang til banken din for autentisering ved hjelp av en kryptert protokoll, de lagres ikke.",
+        "duration": "< 1 min",
+        "title": "FinTS"
+      },
+      "FLANKS": {
+        "description": "Flanks er en lisensiert leverandør av kontoinformasjonstjenester som tilbyr grensesnitt for åpen tilgang til betalings- og verdipapirkontoer. Autentisering via Flanks lar deg koble verdipapirkontoen din til Divizend på et øyeblikk.",
+        "duration": "< 1 min",
+        "title": "Flanks"
+      },
+      "MANUAL": {
+        "description": "Manuell inntasting lar deg koble verdipapirkontoen din til Divizend uten noen automatiserte grensesnitt eller dokumenter. Til dette formålet, legger du inn dine nåværende aksjebeholdninger samt din transaksjonshistorikk, om aktuelt, via vårt grafiske grensesnitt.",
+        "duration": "> 3 min",
+        "title": "Manuell inngang"
+      },
+      "NATIVE": {
+        "description": " Ved å bruke den innfødte Open Banking-grensesnittet til banken din, kan du koble verdipapirkontoen din til Divizend innen øyeblikk.\nTilgangsdataene til verdipapirkontoen din overføres til banken din for autentisering ved hjelp av en kryptert protokoll. Divizend har aldri tilgang til dine tilgangsdata.",
+        "duration": "< 1 min",
+        "title": "Innfødt grensesnitt"
+      },
+      "POCAPI": {
+        "description": "PDF-importen lar deg koble verdipapirkontoen din til Divizend selv uten å bruke et bankgrensesnitt. For å gjøre dette kan du laste opp de relevante dokumentene fra postkassen din.\nDokumentene leses bare en gang for å bestemme den nåværende verdipapirkonto-uttalelsen og transaksjonshistorikken, de lagres ikke.",
+        "duration": "> 2 min",
+        "title": "PDF-import"
+      },
+      "SCRAPER": {
+        "description": "Ved å bruke Screen Analyzer kan du koble verdipapirkontoen din til Divizend ved hjelp av det grafiske brukergrensesnittet innen øyeblikk.\nTilgangsdataene til verdipapirkontoen din overføres eksklusivt og en gang til banken din for autentisering ved hjelp av en kryptert protokoll, de lagres ikke.",
+        "duration": "< 1 min",
+        "title": "Screen Analyzer"
+      }
+    },
+    "recommended": "Anbefalt",
+    "title": "Velg grensesnitt"
+  },
+  "confirmCancel": {
+    "description": "If you close this dialog, but have already chosen your bank and entered all required credentials, this portfolio import will continue running in the background and you can view its progress and finalize it in the settings. Otherwise your progress will be reset. It is recommended to leave this dialog open until the import is finished. Click on 'OK' if you still want to close this dialog.",
+    "title": "Confirm closing portfolio import dialog?"
+  },
+  "cta": "Importer nå!",
+  "finalize": {
+    "backToDashboard": "Gå til Maximizer-dashbordet",
+    "editPortfolio": "Edit portfolio",
+    "heading": "Importen er vellykket! Hvordan går vi videre?",
+    "headingMultiple": "Imports successful!",
+    "headingNotDone": "Your portfolio was imported successfully!",
+    "importAnother": "Importer en annen portefølje",
+    "multiAccountFilter": "Please click on \"OK\" below now to assign all imported portfolios to the respective customers of your organization.",
+    "subheadingNotDone": "However, some details about your securities and dividends are still missing. Please click on \"Edit portfolio\" to fix this.",
+    "title": "Fortsett"
+  },
+  "importViaSecapiImportId": "Import via SecAPI import ID",
+  "importingDepot": "Importing your portfolio(s)...",
+  "loadingDepot": "Loading your portfolio(s)...",
+  "loadingDepotSuccess": "Ferdig!",
+  "portfolioContents": {
+    "callToAction": "Importer nå",
+    "confirmIncompleteImport": {
+      "description": "Noen av verdipapirene i porteføljen din trenger fremdeles ytterligere informasjon slik at de kan bli importert. Hvis du fortsatt ønsker å fortsette, vil følgende markerte ufullstendige verdipapirer <b>ikke bli importert</b>:",
+      "descriptionCompleteWhenRemovingTx": "Følgende aksjer har bare en ufullstendig eller inkonsekvent transaksjonshistorikk. Hvis du vil fortsette, vil bare deres transaksjoner bli fjernet, men all annen informasjon om disse aksjene vil bli importert som vanlig:",
+      "title": "Bekreft ufullstendig import"
+    },
+    "importBlocked": {
+      "noSecuritiesComplete": "Vennligst fyll ut dataene for aksjene som er uthevet på venstre side.",
+      "noSecuritiesExist": "Legg til aksjer på denne verdipapirkontoen med +-symbolet på venstre side."
+    },
+    "importError": "Importen mislyktes: {{error, error}}",
+    "title": "Innhold i porteføljen"
+  },
+  "restartImport": "Restart import",
+  "searchBankBranch": {
+    "noResults": "Ingen resultater. Vennligst endre søket ditt.",
+    "numbers": {
+      "bic": "BIC",
+      "blz": "BLZ"
+    },
+    "query": {
+      "helper": "Du kan søke etter bankkoden, BIC eller navnet på banken din.",
+      "labels": {
+        "bank": "Søk etter filialen $t(bank:{{bank}})",
+        "other": "Søk etter bank"
+      }
+    },
+    "title": "Velg bankkontor"
+  },
+  "selectSecapiImportId": "Select the SecAPI import ID to import its content!",
+  "selectSecapiImportIdPlaceholder": "SecAPI import ID"
+}

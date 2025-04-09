@@ -16,6 +16,8 @@ export const Colors = {
     tabIconDefault: '#687076',
     tabIconSelected: tintColorLight,
     theme: '#00008f', // Divizend Color rgb(60, 157, 155)
+    muted: '#6c757d',
+    disabled: '#d9d9d9',
   },
   dark: {
     text: '#ECEDEE',
@@ -26,5 +28,7 @@ export const Colors = {
     tabIconDefault: '#9BA1A6',
     tabIconSelected: tintColorDark,
     theme: '#3939ff',
+    muted: '#6c757d',
+    disabled: '#4d4d4d',
   },
 };

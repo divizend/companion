@@ -1,0 +1,159 @@
+{
+  "background": {
+    "description": "L'importazione è in corso in background, quindi si può chiudere la finestra di dialogo di importazione.",
+    "stay": "Stare",
+    "title": "Ora è possibile chiudere questa finestra di dialogo"
+  },
+  "bankDepotDetails": {
+    "description": "Inserite le seguenti informazioni sul vostro conto bancario e titoli.",
+    "fields": {
+      "bankName": "Nome della banca",
+      "bic": "BIC",
+      "depotNumber": "Il numero del vostro portafoglio",
+      "parent": "Tipo di banca"
+    },
+    "title": "Coordinate bancarie e di deposito",
+    "unknownBank": "Altra banca"
+  },
+  "bankLogin": {
+    "chooseOtherMethod": "Scegliere un altro metodo di importazione del portafoglio",
+    "clickToOpen": "In caso contrario, fare clic qui.",
+    "error": "La connessione al portfolio è fallita: {{error, error}}",
+    "errorPlain": "La connessione al portafoglio è fallita: {{error}}",
+    "newTabInfo": "Si dovrebbe aprire una nuova scheda in cui è possibile collegare la propria banca a Divizend.",
+    "title": "Collegare il portafoglio",
+    "waitingForAggregation": "Il portafoglio è stato collegato con successo ed è in fase di scansione. Attendere un momento."
+  },
+  "chooseBank": {
+    "bankListLoading": "Caricamento elenco banche supportate...",
+    "choose": "Scegliere",
+    "demoBanks": "Banche demo",
+    "internationalBanks": "Banche internazionali",
+    "manualInput": "Inserimento manuale",
+    "otherBanks": "Più banche nazionali",
+    "otherBanksInternational": "Più banche",
+    "title": "Scegliere la banca"
+  },
+  "chooseDepotToSync": {
+    "description": "Selezionare il portafoglio che si desidera utilizzare per la sincronizzazione:",
+    "infoNote": "Abbiamo notato una mancata corrispondenza tra il numero di portafoglio attuale e quello/i che si sta cercando di utilizzare per la sincronizzazione.",
+    "title": "Scegliere il portafoglio da sincronizzare"
+  },
+  "chooseDepots": {
+    "callToAction": "Passo successivo",
+    "depotNumber": "Numero del portafoglio: {{number}}",
+    "description": "Selezionare i portafogli che si desidera importare in Divizend:",
+    "selectAll": "Seleziona tutti",
+    "selected": "Portafogli selezionati {{count}} su {{total}}.",
+    "title": "Scegliere i portafogli"
+  },
+  "chooseInterface": {
+    "failed": "Fallito",
+    "interfaceType": {
+      "DEMO": {
+        "description": "L'interfaccia demo dimostra la funzionalità di Divizend.",
+        "duration": "< 1 min",
+        "title": "Interfaccia demo"
+      },
+      "DOCAPI": {
+        "description": "Con l'importazione di PDF, si caricano prima i documenti di panoramica del portafoglio e le ricevute di acquisto, che si possono scaricare in formato PDF dalla casella di posta elettronica del proprio conto broker, quindi Divizend legge automaticamente le partecipazioni correnti ed eventualmente la cronologia delle transazioni.",
+        "duration": "> 2 min",
+        "title": "Importazione PDF"
+      },
+      "ESTA": {
+        "description": "Con questo metodo, potete utilizzare un eSteuerauszug (estratto fiscale elettronico) per importare automaticamente il vostro conto titoli presso Divizend. Gli eSteuerauszüge sono disponibili presso molte banche svizzere nel vostro online banking come documenti PDF.",
+        "duration": "< 1 min",
+        "title": "eSteuerauszug"
+      },
+      "FINAPI": {
+        "description": "finAPI è un fornitore di servizi finanziari tedesco autorizzato dalla BaFin che offre interfacce per l'accesso a conti di pagamento e titoli. Autenticandosi tramite finAPI, è possibile collegare il proprio conto titoli a Divizend in pochi istanti.\nI dati di accesso al proprio conto titoli vengono trasmessi da finAPI alla propria banca per l'autenticazione tramite un protocollo criptato. Divizend non ha accesso ai dati di accesso in nessun momento.",
+        "duration": "< 1 min",
+        "title": "finAPI"
+      },
+      "FINTS": {
+        "description": "FinTS è uno standard tedesco per l'accesso ai conti di pagamento e ai conti titoli. Abbiamo ottimizzato in modo specifico la nostra interfaccia per determinare l'estratto conto attuale del vostro conto titoli. Autenticandosi tramite FinTS, è possibile collegare il proprio conto titoli a Divizend in pochi istanti.\nI dati di accesso al conto titoli vengono trasmessi alla propria banca esclusivamente per l'autenticazione tramite un protocollo crittografato e non vengono memorizzati.",
+        "duration": "< 1 min",
+        "title": "FinTS"
+      },
+      "FLANKS": {
+        "description": "Flanks è un fornitore di servizi di informazione sui conti autorizzato che offre interfacce per l'accesso aperto ai conti di pagamento e ai conti titoli. L'autenticazione tramite Flanks consente di collegare il conto titoli a Divizend in pochi istanti.",
+        "duration": "< 1 min",
+        "title": "Flanks"
+      },
+      "MANUAL": {
+        "description": "L'inserimento manuale consente di collegare il proprio conto titoli a Divizend senza interfacce o documenti automatizzati. A tal fine, si inseriscono le partecipazioni attuali e lo storico delle transazioni, se applicabile, tramite la nostra interfaccia grafica.",
+        "duration": "> 3 min",
+        "title": "Manual Input"
+      },
+      "NATIVE": {
+        "description": "Utilizzando l'interfaccia Open Banking nativa della vostra banca, potete collegare il vostro conto titoli a Divizend in pochi istanti.\n I dati di accesso al vostro conto titoli vengono trasmessi alla vostra banca per l'autenticazione utilizzando un protocollo criptato. Divizend non ha accesso ai vostri dati di accesso in nessun momento.",
+        "duration": "< 1 min",
+        "title": "Interfaccia nativa"
+      },
+      "POCAPI": {
+        "description": "L'importazione di PDF consente di collegare il proprio conto titoli a Divizend anche senza utilizzare un'interfaccia bancaria.\nI documenti vengono letti una sola volta per determinare l'estratto conto corrente e la cronologia delle transazioni e non vengono memorizzati.",
+        "duration": "> 2 min",
+        "title": "Importazione PDF"
+      },
+      "SCRAPER": {
+        "description": "Utilizzando lo Screen Analyzer, è possibile collegare il proprio conto titoli a Divizend utilizzando l'interfaccia grafica in pochi istanti.\nI dati di accesso al conto titoli vengono trasmessi alla propria banca esclusivamente e una volta per l'autenticazione tramite un protocollo criptato, e non vengono memorizzati.",
+        "duration": "< 1 min",
+        "title": "Screen Analyzer"
+      }
+    },
+    "recommended": "Consigliato",
+    "title": "Scegliere l'interfaccia"
+  },
+  "confirmCancel": {
+    "description": "Se si chiude questa finestra di dialogo, ma si è già scelta la banca e si sono inserite tutte le credenziali richieste, l'importazione del portafoglio continuerà a essere eseguita in background e sarà possibile visualizzarne l'avanzamento e finalizzarla nelle impostazioni. In caso contrario, i progressi saranno azzerati. Si consiglia di lasciare aperta questa finestra di dialogo fino al termine dell'importazione. Fare clic su “OK” se si desidera chiudere questa finestra di dialogo.",
+    "title": "Confermare la chiusura della finestra di dialogo di importazione del portafoglio?"
+  },
+  "cta": "Importazione ora!",
+  "finalize": {
+    "backToDashboard": "Accedere al cruscotto di Maximizer",
+    "editPortfolio": "Modifica del portafoglio",
+    "heading": "Importazione riuscita! Come proseguire?",
+    "headingMultiple": "Importazioni riuscite!",
+    "headingNotDone": "Il tuo portfolio è stato importato con successo!",
+    "importAnother": "Importare un altro portafoglio",
+    "multiAccountFilter": "Cliccate ora su “OK” per assegnare tutti i portafogli importati ai rispettivi clienti della vostra organizzazione.",
+    "subheadingNotDone": "Tuttavia, mancano ancora alcuni dettagli sui titoli e sui dividendi. Cliccate su “Modifica portafoglio” per risolvere il problema.",
+    "title": "Continua"
+  },
+  "importViaSecapiImportId": "Importazione tramite ID di importazione SecAPI",
+  "importingDepot": "Importare i portafogli...",
+  "loadingDepot": "Caricamento dei portafogli...",
+  "loadingDepotSuccess": "Fatto!",
+  "portfolioContents": {
+    "callToAction": "Importazione ora",
+    "confirmIncompleteImport": {
+      "description": "Some of your portfolio's securities still need further information so that they can be imported. If you would still like to proceed, the following highlighted incomplete securities <b>will not be imported</b>:",
+      "descriptionCompleteWhenRemovingTx": "I seguenti titoli hanno solo una cronologia delle transazioni incompleta o incoerente. Se si desidera procedere, verranno rimosse solo le transazioni, ma tutte le altre informazioni su questi titoli verranno importate come di consueto:",
+      "title": "Confermare l'importazione incompleta"
+    },
+    "importBlocked": {
+      "noSecuritiesComplete": "Compilare i dati delle azioni evidenziate a sinistra.",
+      "noSecuritiesExist": "Aggiungete le azioni a questo conto titoli con il simbolo + sul lato sinistro."
+    },
+    "importError": "Importazione fallita: {{error, error}}",
+    "title": "Contenuti del portafoglio"
+  },
+  "restartImport": "Riavviare l'importazione",
+  "searchBankBranch": {
+    "noResults": "Nessun risultato. Modificare la ricerca.",
+    "numbers": {
+      "bic": "BIC",
+      "blz": "BLZ"
+    },
+    "query": {
+      "helper": "Potete cercare il codice bancario, il BIC o il nome della vostra banca.",
+      "labels": {
+        "bank": "Cerca la filiale $t(bank:{{bank}})",
+        "other": "Ricerca della banca"
+      }
+    },
+    "title": "Scegliere la filiale della banca"
+  },
+  "selectSecapiImportId": "Selezionare l'ID di importazione SecAPI per importare il suo contenuto!",
+  "selectSecapiImportIdPlaceholder": "ID di importazione SecAPI"
+}

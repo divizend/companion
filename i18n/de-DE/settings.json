@@ -1,0 +1,34 @@
+{
+  "accountSection": {
+    "bottomText": "Um deine E-Mail-Adresse und andere Profileinstellungen zu ändern, besuche bitte app.divizend.com.",
+    "email": "E-Mail",
+    "language": "Sprache wählen",
+    "title": "Konto"
+  },
+  "currentPlan": {
+    "title": "Deine Mitgliedschaft"
+  },
+  "impersonateUser": {
+    "emailPlaceholder": "E-Mail-Adresse des Nutzers eintragen",
+    "title": "Identität wechseln"
+  },
+  "logoutConfirmation": "Bist du sicher, dass du dich ausloggen möchtest?",
+  "pages": {
+    "plan": "Mitgliedschaft",
+    "settings": "Einstellungen"
+  },
+  "privilegedActions": {
+    "currentImpersonation": "Derzeit Identität angenommen von {{email}}",
+    "endImpersonation": "Identitätswechsel beenden",
+    "impersonateUser": "Identität wechseln",
+    "privilegedMembershipAccess": "Privilegierter Mitgliederzugang",
+    "title": "Privilegierte Aktionen"
+  },
+  "resetProfile": {
+    "message": "Bist du sicher, dass du dein Companion-Profil zurücksetzen willst? Diese Aktion kann nicht rückgängig gemacht werden.",
+    "title": "Profil zurücksetzen"
+  },
+  "theme": "Design umschalten",
+  "title": "Einstellungen",
+  "version": "Version {{version}}"
+}

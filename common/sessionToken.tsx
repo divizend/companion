@@ -36,7 +36,7 @@ export function useSessionToken(): [string | null, boolean] {
   return [sessionToken, loading];
 }
 
-export const withSessionToken = (Component: React.FC) => {
+export function withSessionToken(Component: React.FC) {
   return (props: any) => {
     const [sessionToken, sessionTokenLoading] = useSessionToken();
 
@@ -49,4 +49,4 @@ export const withSessionToken = (Component: React.FC) => {
 
     return <Component {...props} />;
   };
-};
+}

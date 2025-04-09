@@ -1,8 +1,14 @@
+import { useEffect } from 'react';
+
 import { useQueryClient } from '@tanstack/react-query';
+import i18next from 'i18next';
 import { produce } from 'immer';
 import RNRestart from 'react-native-restart';
-import { useFetch, apiGet, apiPost } from './api';
-import { t } from '@/i18n';
+
+import { UserProfileDepot } from '@/types/depot.types';
+
+import { apiGet } from './api';
+import { useUserProfileQuery } from './queries';
 import { setSessionToken } from './sessionToken';
 
 export type CompanionProfileLearnQuestion = {
@@ -48,6 +54,7 @@ export type CompanionProfile = {
 export type LegalEntity = {
   id: string;
   isPrincipal: boolean;
+  isActive: boolean;
   data: {
     info: {
       givenName: string;
@@ -59,12 +66,19 @@ export type LegalEntity = {
 };
 
 export type UserProfile = {
+  id: string;
   email: string;
   legalEntities: LegalEntity[];
   flags: {
+    language: string;
     canImpersonateUsers?: boolean;
     canModifyOwnInternalFlags?: boolean;
     allowedCompanionAI?: boolean;
+    usedCompanionTrial?: boolean;
+    canAccessCompanionFeaturesWithoutSubscription?: boolean;
+    canAccessDemoBanks?: boolean;
+    useLocalSecapi?: boolean;
+    currency?: string;
   };
   impersonation?: {
     fromEmail: string;
@@ -74,6 +88,7 @@ export type UserProfile = {
     };
   };
   companionProfile: CompanionProfile;
+  depots: UserProfileDepot[];
   // actually also many other properties, but those are not relevant for now
 };
 
@@ -88,8 +103,12 @@ export function getEmptyCompanionProfile(): CompanionProfile {
 
 export function useUserProfile() {
   const queryClient = useQueryClient();
-  const profileRaw = useFetch('userProfile');
-  const profile = profileRaw.data as UserProfile;
+  const profileRaw = useUserProfileQuery();
+  const profile = profileRaw.data!;
+
+  useEffect(() => {
+    if (profile.flags.language?.split('-')?.[0]) i18next.changeLanguage(profile.flags.language.split('-')[0]);
+  }, [profile.flags.language?.split('-')?.[0]]);
 
   const updateProfile = (fn: (draft: UserProfile) => void) => {
     const newProfile = produce(profile, fn);
@@ -134,6 +153,7 @@ export function useUserProfile() {
     updateCompanionProfile,
     updatePrincipalLegalEntity,
     isPrivileged,
+    refetch: profileRaw.refetch,
   };
 }
 

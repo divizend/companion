@@ -1,0 +1,33 @@
+{
+  "aiDisclaimer": {
+    "message": "Zuallererst: Diese App ist KI-nativ, was bedeutet, dass alle von dir eingegebenen Informationen mit OpenAI-APIs verarbeitet werden. Wenn du diese App weiter nutzt, stimmst du diesen Bedingungen zu.",
+    "title": "Hinweis für KI-native Funktionen"
+  },
+  "allSet": {
+    "message": "Vielen Dank, dass du die Einrichtung abgeschlossen hast. Jetzt kannst du den Companion verwenden!",
+    "title": "Du bist bereit!"
+  },
+  "birthday": {
+    "message": "Bitte trage dein Geburtsdatum ein.",
+    "openDatepicker": "Geburtsdatum wählen",
+    "skip": "Diesen Schritt überspringen",
+    "title": "Wann wurdest du geboren?"
+  },
+  "finalConfirm": "Lass uns loslegen!",
+  "freeTrial": {
+    "startTrial": "Kostenlos beginnen!",
+    "title": "Beginne deine Reise mit einer kostenlosen Testversion"
+  },
+  "intro": {
+    "message": "Lass uns mit der Einrichtung beginnen.",
+    "title": "Willkommen beim Divizend Companion!"
+  },
+  "languageSelect": {
+    "message": "Du kannst sie jederzeit in den Einstellungen verändern.",
+    "title": "Wähle deine Sprache"
+  },
+  "taxResidency": {
+    "message": "Genauer gesagt, das Land, in dem du steuerlich ansässig bist.",
+    "title": "Aus welchem Land kommst du?"
+  }
+}

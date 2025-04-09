@@ -19,6 +19,10 @@ module.exports = {
         'secondary-dark': Colors.dark.backgroundSecondary,
         'secondary-light': Colors.light.backgroundSecondary,
       },
+      colors: {
+        theme: '#3939ff',
+        muted: '#6c757d',
+      },
     },
   },
   plugins: [

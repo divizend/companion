@@ -1,0 +1,159 @@
+{
+  "background": {
+    "description": "The import is running in the background, so you are free to close this import dialog.",
+    "stay": "Stay",
+    "title": "You can now close this dialog now"
+  },
+  "bankDepotDetails": {
+    "description": "Vul de volgende gegevens in over uw bank- en effectenrekening.",
+    "fields": {
+      "bankName": "Banknaam",
+      "bic": "BIC",
+      "depotNumber": "Uw portefeuillenummer",
+      "parent": "Bank type"
+    },
+    "title": "Bank- en depotgegevens",
+    "unknownBank": "Andere bank"
+  },
+  "bankLogin": {
+    "chooseOtherMethod": "Kies een andere portfolio-importmethode",
+    "clickToOpen": "Mocht dit niet het geval zijn, klik dan hier.",
+    "error": "Koppelen van portfolio mislukt: {{error, error}}",
+    "errorPlain": "Koppelen van portfolio mislukt: {{error}}",
+    "newTabInfo": "Er zou een nieuw tabblad moeten zijn geopend waar u uw bank kunt koppelen aan Divizend.",
+    "title": "Portefeuille koppelen",
+    "waitingForAggregation": "Je hebt je portfolio succesvol gekoppeld en het wordt nu gescand. Een moment alstublieft."
+  },
+  "chooseBank": {
+    "bankListLoading": "Lijst met ondersteunde banken wordt geladen...",
+    "choose": "Kiezen",
+    "demoBanks": "Demo banken",
+    "internationalBanks": "Internationale banken",
+    "manualInput": "Handmatig invoeren",
+    "otherBanks": "Meer nationale banken",
+    "otherBanksInternational": "Meer banken",
+    "title": "Kies bank"
+  },
+  "chooseDepotToSync": {
+    "description": "Please select the portfolio you want to use for the synchronization:",
+    "infoNote": "We noticed a mismatch between your current portfolio number and the one(s) you are trying to use for synchronization.",
+    "title": "Choose portfolio to synchronize"
+  },
+  "chooseDepots": {
+    "callToAction": "Volgende stap",
+    "depotNumber": "Depotnummer: {{number}}",
+    "description": "Selecteer de portefeuilles die u wilt importeren naar Divizend:",
+    "selectAll": "Select all",
+    "selected": "Selected {{count}} portfolios out of {{total}}.",
+    "title": "Kies portefeuilles"
+  },
+  "chooseInterface": {
+    "failed": "Mislukt",
+    "interfaceType": {
+      "DEMO": {
+        "description": "De demo-interface demonstreert de functionaliteit van Divizend.",
+        "duration": "< 1 min",
+        "title": "Demo Interface"
+      },
+      "DOCAPI": {
+        "description": "Bij PDF-import upload je eerst portfolio-overzichtsdocumenten en aankoopbewijzen, die je als pdf kunt downloaden vanuit de mailbox van je brokeraccount, waarna Divizend automatisch je huidige aandelenbezit en eventueel je transactiegeschiedenis leest.",
+        "duration": "> 2 min",
+        "title": "PDF import"
+      },
+      "ESTA": {
+        "description": "Op deze manier kunt u met een eSteuerauszug (elektronische belastingaangifte) uw effectenrekening bij Divizend automatisch importeren. eSteuerauszüge is bij veel Zwitserse banken te vinden in uw online bankieren als PDF-documenten.",
+        "duration": "< 1 min",
+        "title": "eSteuerauszug"
+      },
+      "FINAPI": {
+        "description": "finAPI is een Duitse financiële dienstverlener onder licentie van BaFin die interfaces biedt voor toegang tot betalings- en effectenrekeningen. Door authenticatie via finAPI koppelt u uw effectenrekening binnen enkele ogenblikken aan Divizend.\nDe toegangsgegevens tot uw effectenrekening worden door finAPI naar uw bank verzonden voor authenticatie met behulp van een gecodeerd protocol. Divizend heeft op geen enkel moment toegang tot uw toegangsgegevens.",
+        "duration": "< 1 min",
+        "title": "finAPI"
+      },
+      "FINTS": {
+        "description": "FinTS is een Duitse standaard voor toegang tot betaal- en effectenrekeningen. We hebben onze interface specifiek geoptimaliseerd om uw huidige effectenrekeningafschrift te bepalen. Door te authenticeren via FinTS koppelt u uw effectenrekening binnen enkele ogenblikken aan Divizend.\nDe toegangsgegevens tot uw effectenrekening worden uitsluitend naar uw bank verzonden en eenmalig ter authenticatie via een versleuteld protocol, ze worden niet opgeslagen.",
+        "duration": "< 1 min",
+        "title": "FinTS"
+      },
+      "FLANKS": {
+        "description": "Flanks is een erkende rekeninginformatiedienstverlener die interfaces biedt voor open toegang tot betaal- en effectenrekeningen. Met authenticatie via Flanks koppelt u uw effectenrekening binnen enkele ogenblikken aan Divizend.",
+        "duration": "< 1 min",
+        "title": "Flanks"
+      },
+      "MANUAL": {
+        "description": "Met handmatige invoer koppelt u uw effectenrekening aan Divizend zonder geautomatiseerde interfaces of documenten. Hiervoor voert u via onze grafische interface uw huidige aandelenbezit en eventueel uw transactiegeschiedenis in.",
+        "duration": "> 3 min",
+        "title": "Handmatige invoer"
+      },
+      "NATIVE": {
+        "description": "Via de native Open Banking-interface van uw bank koppelt u uw effectenrekening binnen enkele ogenblikken aan Divizend.\nDe toegangsgegevens tot uw effectenrekening worden via een versleuteld protocol ter authenticatie naar uw bank verzonden. Divizend heeft op geen enkel moment toegang tot uw toegangsgegevens.",
+        "duration": "< 1 min",
+        "title": "Oorspronkelijke interface"
+      },
+      "POCAPI": {
+        "description": "Met de PDF-import kunt u uw effectenrekening ook zonder bankinterface aan Divizend koppelen. Hiervoor kunt u de relevante documenten vanuit uw mailbox uploaden.\nDe documenten worden slechts één keer gelezen om het actuele effectenrekeningoverzicht en de transactiehistorie te bepalen, ze worden niet opgeslagen.",
+        "duration": "> 2 min",
+        "title": "PDF Import"
+      },
+      "SCRAPER": {
+        "description": "Met behulp van de Screen Analyzer koppelt u uw effectenrekening binnen enkele ogenblikken aan Divizend via de grafische gebruikersinterface.\nDe toegangsgegevens tot uw effectenrekening worden uitsluitend en eenmalig ter authenticatie doorgestuurd naar uw bank via een versleuteld protocol, ze worden niet opgeslagen.",
+        "duration": "< 1 min",
+        "title": "Schermanalysator"
+      }
+    },
+    "recommended": "Aanbevolen",
+    "title": "Kies interface"
+  },
+  "confirmCancel": {
+    "description": "If you close this dialog, but have already chosen your bank and entered all required credentials, this portfolio import will continue running in the background and you can view its progress and finalize it in the settings. Otherwise your progress will be reset. It is recommended to leave this dialog open until the import is finished. Click on 'OK' if you still want to close this dialog.",
+    "title": "Confirm closing portfolio import dialog?"
+  },
+  "cta": "Importeer nu!",
+  "finalize": {
+    "backToDashboard": "Ga naar het Maximizer-dashboard",
+    "editPortfolio": "Portfolio bewerken",
+    "heading": "Importeren gelukt! Hoe gaan we verder?",
+    "headingMultiple": "Imports successful!",
+    "headingNotDone": "Your portfolio was imported successfully!",
+    "importAnother": "Importeer nog een portfolio",
+    "multiAccountFilter": "Please click on \"OK\" below now to assign all imported portfolios to the respective customers of your organization.",
+    "subheadingNotDone": "However, some details about your securities and dividends are still missing. Please click on \"Edit portfolio\" to fix this.",
+    "title": "Doorgaan"
+  },
+  "importViaSecapiImportId": "Import via SecAPI import ID",
+  "importingDepot": "Importing your portfolio(s)...",
+  "loadingDepot": "Loading your portfolio(s)...",
+  "loadingDepotSuccess": "Klaar!",
+  "portfolioContents": {
+    "callToAction": "Importeer nu",
+    "confirmIncompleteImport": {
+      "description": "Sommige effecten van uw portefeuille hebben nog verdere informatie nodig, zodat ze kunnen worden geïmporteerd. Als u toch wilt doorgaan, worden de volgende gemarkeerde onvolledige effecten <b>niet geïmporteerd</b>:",
+      "descriptionCompleteWhenRemovingTx": "De volgende aandelen hebben slechts een onvolledige of inconsistente transactiegeschiedenis. Als u verder wilt gaan, worden alleen hun transacties verwijderd, maar alle andere informatie over deze aandelen wordt zoals gewoonlijk geïmporteerd:",
+      "title": "Bevestig onvolledige import"
+    },
+    "importBlocked": {
+      "noSecuritiesComplete": "Please complete the data of the shares highlighted on the left hand side.",
+      "noSecuritiesExist": "Voeg aandelen toe aan deze effectenrekening met het + symbool aan de linkerkant."
+    },
+    "importError": "Importeren mislukt: {{error, error}}",
+    "title": "Portefeuille inhoud"
+  },
+  "restartImport": "Start het importeren opnieuw",
+  "searchBankBranch": {
+    "noResults": "Geen resultaten. Pas uw zoekopdracht aan.",
+    "numbers": {
+      "bic": "BIC",
+      "blz": "BLZ"
+    },
+    "query": {
+      "helper": "U kunt zoeken op de bankcode, BIC of de naam van uw bank.",
+      "labels": {
+        "bank": "Zoek naar $t(bank:{{bank}}) filiaal",
+        "other": "Zoek naar bank"
+      }
+    },
+    "title": "Kies bankfiliaal"
+  },
+  "selectSecapiImportId": "Select the SecAPI import ID to import its content!",
+  "selectSecapiImportIdPlaceholder": "SecAPI import ID"
+}

@@ -1,0 +1,159 @@
+{
+  "background": {
+    "description": "Der Import läuft im Hintergrund, somit steht es steht Ihnen frei, den Importdialog zu schließen.",
+    "stay": "Bleiben",
+    "title": "Sie können diesen Dialog nun schließen"
+  },
+  "bankDepotDetails": {
+    "description": "Bitte geben Sie die folgenden Informationen zu Ihrem Bank- und Wertpapierkonto an.",
+    "fields": {
+      "bankName": "Name der Bank",
+      "bic": "BIC",
+      "depotNumber": "Ihre Depotnummer",
+      "parent": "Banktyp"
+    },
+    "title": "Bank- und Depotdetails",
+    "unknownBank": "Andere Bank"
+  },
+  "bankLogin": {
+    "chooseOtherMethod": "Andere Methode zum Depotimport wählen",
+    "clickToOpen": "Falls das hier nicht der Fall ist, klicken Sie bitte hier.",
+    "error": "Verbinden des Portfolios fehlgeschlagen: {{error, error}}",
+    "errorPlain": "Verbinden des Portfolios fehlgeschlagen: {{error}}",
+    "newTabInfo": "Es sollte sich ein neuer Tab geöffnet haben, in dem Sie Ihre Bank mit Divizend verbinden können.",
+    "title": "Depot importieren",
+    "waitingForAggregation": "Sie haben Ihr Depot erfolgreich verbunden und nun wird es eingelesen. Bitte haben Sie einen Moment Geduld."
+  },
+  "chooseBank": {
+    "bankListLoading": "Liste der unterstützten Banken wird geladen...",
+    "choose": "Wählen",
+    "demoBanks": "Demobanken",
+    "internationalBanks": "Internationale<br/>Banken",
+    "manualInput": "Manuelle Eingabe",
+    "otherBanks": "Weitere nationale<br/>Banken",
+    "otherBanksInternational": "Weitere Banken",
+    "title": "Bank wählen"
+  },
+  "chooseDepotToSync": {
+    "description": "Bitte wählen Sie das Depot, das Sie für die Synchronisierung verwenden möchten:",
+    "infoNote": "Wir haben eine Diskrepanz festgestellt zwischen Ihrer aktuellen Depotnummer und der/den Depotnummer(n), die Sie für die Synchronisierung verwenden möchten.",
+    "title": "Depot zum Synchronisieren wählen"
+  },
+  "chooseDepots": {
+    "callToAction": "Weiter",
+    "depotNumber": "Depotnummer: {{number}}",
+    "description": "Bitte wählen Sie nun die Depots aus, die Sie in Divizend übertragen möchten:",
+    "selectAll": "Alle auswählen",
+    "selected": "{{count}} von insgesamt {{total}} Depots gewählt",
+    "title": "Depots wählen"
+  },
+  "chooseInterface": {
+    "failed": "Fehlgeschlagen",
+    "interfaceType": {
+      "DEMO": {
+        "description": "Durch die Demo-Schnittstelle wird die Funktionalität von Divizend veranschaulicht.",
+        "duration": "< 1 min",
+        "title": "Demo-Schnittstelle"
+      },
+      "DOCAPI": {
+        "description": "DOCAPI",
+        "duration": "> 2 min",
+        "title": "DOCAPI"
+      },
+      "ESTA": {
+        "description": "Mittels dieser Methode können Sie einen eSteuerauszug verwenden, um Ihr Depot automatisch bei Divizend zu importieren. eSteuerauszüge finden Sie bei vielen Schweizer Banken in Ihrem Online-Banking als PDF-Dokumente.",
+        "duration": "< 1 min",
+        "title": "eSteuerauszug"
+      },
+      "FINAPI": {
+        "description": "finAPI ist ein von der BaFin lizensierter deutscher Finanzdienstleister, der Schnittstellen für den offenen Zugriff auf Zahlungs- und Wertpapierkonten anbietet. Durch die Authentifizierung über finAPI können Sie Ihr Depot innerhalb weniger Augenblicke mit Divizend verbinden.\nDie Zugangsdaten zu Ihrem Depot werden von finAPI zur Authentifizierung über ein verschlüsseltes Protokoll an Ihre Bank übermittelt. Divizend hat zu keinem Zeitpunkt Zugriff auf Ihre Zugangsdaten.",
+        "duration": "< 1 min",
+        "title": "finAPI"
+      },
+      "FINTS": {
+        "description": "FinTS ist ein deutscher Standard für den offenen Zugriff auf Bankinformationen. Wir haben unsere Anbindungen an diese Schnittstelle speziell auf die Ermittlung Ihrer aktuellen Depot-Aufstellung optimiert. Durch die Authentifizierung über FinTS können Sie Ihr Depot innerhalb weniger Augenblicke mit Divizend verbinden.\nDie Zugangsdaten zu Ihrem Depot werden ausschließlich und einmalig zur Authentifizierung über ein verschlüsseltes Protokoll an Ihre Bank übermittelt und werden nicht gespeichert.",
+        "duration": "< 1 min",
+        "title": "FinTS"
+      },
+      "FLANKS": {
+        "description": "Flanks ist ein lizensierter Anbieter von Kontoinformationsdiensten, der Schnittstellen für den offenen Zugriff auf Zahlungs- und Wertpapierkonten anbietet. Durch die Authentifizierung über Flanks können Sie Ihr Depot innerhalb weniger Augenblicke mit Divizend verbinden.",
+        "duration": "< 1 min",
+        "title": "Flanks"
+      },
+      "MANUAL": {
+        "description": "Durch die manuelle Eingabe können Sie Ihr Depot ohne jegliche automatisierte Schnittstellen oder Dokumente mit Divizend verbinden. Sie können dafür Ihre aktuelle Depot-Aufstellung sowie gegebenenfalls Ihre Transaktionshistorie über unsere grafische Oberfläche eintragen.",
+        "duration": "> 3 min",
+        "title": "Manuelle Eingabe"
+      },
+      "NATIVE": {
+        "description": "Durch die native Open-Banking-Schnittstelle Ihrer Bank können Sie Ihr Depot innerhalb weniger Augenblicke mit Divizend verbinden.\nDie Zugangsdaten zu Ihrem Depot werden zur Authentifizierung über ein verschlüsseltes Protokoll an Ihre Bank übermittelt. Divizend hat zu keinem Zeitpunkt Zugriff auf Ihre Zugangsdaten.",
+        "duration": "< 1 min",
+        "title": "Native Schnittstelle"
+      },
+      "POCAPI": {
+        "description": "Durch den PDF-Import können Sie Ihr Depot auch ohne die Verwendung einer Schnittstelle mit Divizend verbinden. Sie können dafür die relevanten Dokumente aus Ihrer Postbox hochladen.\nDie Dokumente werden ausschließlich und einmalig zur Ermittlung der aktuellen Depot-Aufstellung und der Transaktionshistorie ausgelesen und werden nicht gespeichert.",
+        "duration": "> 2 min",
+        "title": "PDF-Import"
+      },
+      "SCRAPER": {
+        "description": "Durch den Screen Analyzer können Sie Ihr Depot über die grafische Nutzeroberfläche innerhalb weniger Augenblicke mit Divizend verbinden.\nDie Zugangsdaten zu Ihrem Depot werden ausschließlich und einmalig zur Authentifizierung über ein verschlüsseltes Protokoll an Ihre Bank übermittelt und werden nicht gespeichert.",
+        "duration": "< 1 min",
+        "title": "Screen Analyzer"
+      }
+    },
+    "recommended": "Empfohlen",
+    "title": "Schnittstelle wählen"
+  },
+  "confirmCancel": {
+    "description": "Wenn Sie diesen Dialog schließen, aber bereits Ihre Bank ausgewählt und alle erforderlichen Zugangsdaten eingegeben haben, läuft der Depotimport im Hintergrund weiter, und Sie können den Fortschritt in den Einstellungen anzeigen sowie den Import dort abschließen. Andernfalls wird Ihr Fortschritt zurückgesetzt. Es wird empfohlen, diesen Dialog offen zu lassen, bis der Import abgeschlossen ist. Klicken Sie auf \"OK\", wenn Sie diesen Dialog dennoch schließen möchten.",
+    "title": "Dialog zum Depotimport wirklich schließen?"
+  },
+  "cta": "Jetzt importieren!",
+  "finalize": {
+    "backToDashboard": "Zum Maximizer-Dashboard",
+    "editPortfolio": "Depot bearbeiten",
+    "heading": "Import erfolgreich! Wie soll es weitergehen?",
+    "headingMultiple": "Importe erfolgreich!",
+    "headingNotDone": "Ihr Depot wurde erfolgreich importiert!",
+    "importAnother": "Ein weiteres Portfolio importieren",
+    "multiAccountFilter": "Bitte klicken Sie nun unten auf \"OK\", um alle importierten Depots den jeweiligen Kunden Ihrer Organisation zuzuordnen.",
+    "subheadingNotDone": "Es fehlen jedoch noch einige Angaben zu Ihren Wertpapieren und Dividenden. Bitte klicken Sie auf \"Depot bearbeiten\", um dies zu beheben.",
+    "title": "Fortfahren"
+  },
+  "importViaSecapiImportId": "Import mittels SecAPI-Import-ID",
+  "importingDepot": "Ihr Depot wird importiert...",
+  "loadingDepot": "Ihr Depot wird geladen...",
+  "loadingDepotSuccess": "Erledigt!",
+  "portfolioContents": {
+    "callToAction": "Jetzt importieren",
+    "confirmIncompleteImport": {
+      "description": "Einige Ihrer zu importierenden Aktien benötigen noch weitere Informationen, damit sie bei uns hinterlegt werden können. Falls Sie dennoch fortfahren möchten, werden die folgenden hervorgehobenen, unvollständigen Aktien <b>nicht importiert</b>:",
+      "descriptionCompleteWhenRemovingTx": "Folgende Aktien besitzen lediglich eine unvollständige oder inkonsistente Transaktionshistorie. Falls Sie fortfahren möchten, werden nur die hinterlegten Transaktionen entfernt, alle anderen Informationen zu diesen Aktien werden aber wie gewöhnlich importiert:",
+      "title": "Unvollständigen Import bestätigen"
+    },
+    "importBlocked": {
+      "noSecuritiesComplete": "Bitte ergänzen Sie die Daten der links hervorgehobenen Aktien.",
+      "noSecuritiesExist": "Bitte fügen Sie mit dem +-Symbol links Aktien zu diesem Depot hinzu."
+    },
+    "importError": "Importieren fehlgeschlagen: {{error, error}}",
+    "title": "Portfolioinhalte"
+  },
+  "restartImport": "Import neu starten",
+  "searchBankBranch": {
+    "noResults": "Keine Ergebnisse. Bitte ändern Sie Ihre Suchanfrage.",
+    "numbers": {
+      "bic": "BIC",
+      "blz": "BLZ"
+    },
+    "query": {
+      "helper": "Sie können nach der Bankleitzahl, BIC oder dem Namen Ihrer Bank suchen.",
+      "labels": {
+        "bank": "Nach $t(bank:{{bank}})-Filiale suchen",
+        "other": "Nach Bank suchen"
+      }
+    },
+    "title": "Filiale wählen"
+  },
+  "selectSecapiImportId": "Wählen Sie die SecAPI-Import-ID aus, um ihren Inhalt zu importieren!",
+  "selectSecapiImportIdPlaceholder": "SecAPI-Import-ID"
+}

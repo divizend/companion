@@ -1,0 +1,40 @@
+{
+  "add": "Hinzufügen",
+  "askEmoji": "Welches Emoji möchtest du?",
+  "cancel": "Abbrechen",
+  "chat": {
+    "inputPlaceholder": "Nachricht eingeben...",
+    "title": "KI-Chat"
+  },
+  "close": "Schließen",
+  "comingSoon": {
+    "stayTuned": "Bleiben Sie dran für die Revolution der finanziellen Intelligenz mit Divizend!",
+    "title": "Bald verfügbar"
+  },
+  "confirm": "Bestätigen",
+  "error": "Fehler",
+  "loading": "Laden...",
+  "login": "Einloggen",
+  "logout": "Ausloggen",
+  "next": "Weiter",
+  "no": "Nein",
+  "ok": "OK",
+  "percent": "{{value}} %",
+  "placeholder": "Hier tippen...",
+  "refining": "Verfeinern...",
+  "remove": "Löschen",
+  "removing": "Löschen...",
+  "retry": "Wiederholen",
+  "submit": "Bestätigen",
+  "tabs": {
+    "analyze": "Analysieren",
+    "decide": "Entscheiden",
+    "discover": "Entdecken",
+    "learn": "Visionary",
+    "portfolios": "Depots",
+    "profile": "Profil",
+    "track": "Tracken",
+    "learning": "Lernen"
+  },
+  "yes": "Ja"
+}

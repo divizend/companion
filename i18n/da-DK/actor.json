@@ -1,0 +1,40 @@
+{
+  "assetClasses": {
+    "secType": {
+      "BOND": "Bond",
+      "CERTIFICATE": "Certificate",
+      "CRYPTO": "Crypto Currency",
+      "DR": "DR (Depositary Receipt)",
+      "ETF": "ETF (Exchange-Traded Fund)",
+      "FUND": "Fund",
+      "OPTION": "Option",
+      "OTHER": "Other",
+      "STOCK": "Stock",
+      "TRUST": "Trust",
+      "undefined": "Unknown (Contain no issues)"
+    },
+    "title": "Asset classes"
+  },
+  "division": {
+    "others": "Others",
+    "title": "Division",
+    "totalAssets": "Total Assets"
+  },
+  "portfolioStats": {
+    "grossDividendThisYear": "Gross dividends this year",
+    "nextDividend": "Next dividend",
+    "title": "My portfolio",
+    "totalAssets": "Total assets",
+    "totalRefundableWithholdingTax": "Total refundable withholding tax"
+  },
+  "quotes": {
+    "radioButton": {
+      "ALL": "All",
+      "D": "D",
+      "M": "M",
+      "W": "W",
+      "Y": "Y"
+    },
+    "title": "Performance overview"
+  }
+}

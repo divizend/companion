@@ -1,0 +1,31 @@
+{
+  "deletePortfolio": {
+    "description": "Bist du sicher, dass du dieses Depot löschen willst?",
+    "title": "Depot löschen"
+  },
+  "goToPortfolios": "Depots anzeigen",
+  "importTitle": "Depotimport",
+  "labels": {
+    "description": "Beschreibung",
+    "importedAt": "Importiert am",
+    "owner": "Eigentümer",
+    "portfolioNumber": "Depotnummer",
+    "syncedAt": "Synchronisiert am"
+  },
+  "noPortfolios": "Keine Depots importiert.",
+  "onBoarding": [
+    {
+      "description": "Füge Depots kostenlos hinzu und lass sie anzeigen, egal von welcher Bank.",
+      "title": "Mehrere Depots verwalten"
+    },
+    {
+      "description": "Genieße einen hochwertigen Service mit automatischer Abdeckung für die meisten Banken.",
+      "title": "Nahtlose Integration"
+    },
+    {
+      "description": "Logge dich sicher ein, ohne dass Zugangsdaten gespeichert werden, um deine Privatsphäre zu schützen.",
+      "title": "Sicher & privat"
+    }
+  ],
+  "title": "Depots"
+}

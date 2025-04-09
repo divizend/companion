@@ -1,18 +1,18 @@
 import React, { useCallback, useState } from 'react';
 
 import { debounce } from 'lodash';
+import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
 import { apiGet } from '@/common/api';
 import { impersonateUser } from '@/common/profile';
-import ModalView from '@/components/ModalView';
 import SectionList from '@/components/SectionList';
 import { TextInput } from '@/components/base';
-import { t } from '@/i18n';
+
+import ModalLayout from './global/ModalLayout';
 
 interface ImpersonateUserModalProps {
-  visible: boolean;
-  onClose: () => void;
+  dismiss: () => void;
 }
 
 interface UserIdentity {
@@ -20,7 +20,8 @@ interface UserIdentity {
   text: string;
 }
 
-export default function ImpersonateUserModal({ visible, onClose }: ImpersonateUserModalProps) {
+export default function ImpersonateUserModal({ dismiss }: ImpersonateUserModalProps) {
+  const { t } = useTranslation();
   const [email, setEmail] = useState('');
   const [userIdentities, setUserIdentities] = useState<UserIdentity[]>([]);
 
@@ -47,14 +48,13 @@ export default function ImpersonateUserModal({ visible, onClose }: ImpersonateUs
   };
 
   return (
-    <ModalView
-      visible={visible}
-      onClose={() => {
+    <ModalLayout
+      title={t('settings.impersonateUser.title')}
+      dismiss={() => {
         setEmail('');
         setUserIdentities([]);
-        onClose();
+        dismiss();
       }}
-      title={t('settings.impersonateUser.title')}
     >
       <View className="flex-1">
         <TextInput
@@ -74,6 +74,6 @@ export default function ImpersonateUserModal({ visible, onClose }: ImpersonateUs
           />
         ) : null}
       </View>
-    </ModalView>
+    </ModalLayout>
   );
 }

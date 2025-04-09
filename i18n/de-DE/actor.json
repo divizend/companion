@@ -1,0 +1,68 @@
+{
+  "assetClasses": {
+    "secType": {
+      "BOND": "Anleihe",
+      "CERTIFICATE": "Zertifikat",
+      "CRYPTO": "Kryptowährung",
+      "DR": "DR (Depositary Receipt)",
+      "ETF": "ETF (Exchange-Traded Fund)",
+      "FUND": "Fonds",
+      "OPTION": "Option",
+      "OTHER": "Anderes",
+      "STOCK": "Aktie",
+      "TRUST": "Trust",
+      "undefined": "Unbekannt (enthält keine Fehler)"
+    },
+    "title": "Wertpapierarten"
+  },
+  "division": {
+    "others": "Weitere",
+    "title": "Aufteilung",
+    "totalAssets": "Gesamtvermögen"
+  },
+  "portfolioStats": {
+    "grossDividendThisYear": "Bruttodividenden dieses Jahr",
+    "nextDividend": "Nächste Dividende",
+    "title": "Mein Depot",
+    "totalAssets": "Gesamtvermögen",
+    "totalRefundableWithholdingTax": "Insgesamt rückerstattbare Quellensteuer"
+  },
+  "quotes": {
+    "radioButton": {
+      "ALL": "Gesamt",
+      "D": "T",
+      "M": "M",
+      "W": "W",
+      "Y": "J"
+    },
+    "title": "Wertentwicklung"
+  },
+  "calendarWidget": {
+    "DIVIDEND": "Dividende",
+    "SPLIT": "Teilt",
+    "TRANSACTION": "Transaktion",
+    "dividendPayout": "{{price}}/Share",
+    "moreItems": "{{count}} mehr ...",
+    "noEvents": "Keine Ereignisse an diesem Tag",
+    "predictionTooltip": "Vorhersage",
+    "title": "Kalender",
+    "tooltip": {
+      "PURCHASE": "Kaufen",
+      "SALE": "Verkaufen",
+      "date": "Datum",
+      "dividendPerShare": "Dividende je Aktie",
+      "dividendYield": "Dividendenrendite",
+      "eventType": "Ereignisart",
+      "exDate": "Ex-Date",
+      "frequency": "Frequenz",
+      "paymentDate": "Zahlungsdatum",
+      "splitRatio": "Split -Verhältnis",
+      "transactionAmount": "Menge",
+      "transactionQuantity": "Menge",
+      "transactionType": "Typ"
+    },
+    "totalGrossDividend": "Total Brutto Dividend: {{quantity}} x {{price}}/shary = {{total}}",
+    "totalPayout": "Total {{Total}}",
+    "transactionPrice": "{{quantity}} x {{price}}/Share"
+  }
+}

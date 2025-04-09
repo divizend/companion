@@ -1,0 +1,175 @@
+{
+  "goalDetails": {
+    "learningIntentions": {
+      "add": "Add learning goals",
+      "addMore": "Add more learning goals",
+      "addPrompt": "Enter your new learning goal",
+      "clear": {
+        "message": "Are you sure you want to remove all these learning goals? This action cannot be undone.",
+        "title": "Clear all learning goals"
+      },
+      "explanation": "These are topics you can learn about to achieve this goal more effectively. Tap on any of them to open the corresponding question in a chat.",
+      "removeIntention": "Do you want to remove this learning goal?",
+      "title": "Learning"
+    },
+    "realities": {
+      "addRealityPrompt": "What is true about this goal right now? Feel free to also add reasons, explanations and every else you deem relevant.",
+      "addRealityTitle": "Add new fact",
+      "assess": {
+        "addManual": "Add a new fact manually",
+        "cta": "Add a new fact",
+        "explanation": "Answer any of the following questions to continue assessing the status quo of your path towards achieving this goal. Or use the button at the bottom to add a new fact manually.",
+        "furtherActions": "Further actions",
+        "loading": "Loading questions...",
+        "success": "Fact added successfully!",
+        "title": "Add a new fact",
+        "updateQuestions": "Update questions"
+      },
+      "explanation": "These are facts associated with the status quo of your path towards achieving this goal. Make sure to always keep these updated and as accurate as possible.",
+      "refineReality": "What do you want to change about this fact?",
+      "removeReality": "Do you want to remove this fact?",
+      "title": "Details, context, decisions"
+    }
+  },
+  "goals": {
+    "backLink": "Go back to insights setup",
+    "confirmGoals": "Goals clear? Then tap here to start realizing them!",
+    "explanation": "Based on the insights about your financial life, let's now determine concrete goals and visions for you. If you want to make a goal more precise or correct it, simply tap on it.",
+    "title": "Step 2: Goals"
+  },
+  "goalsManager": {
+    "primary": {
+      "furtherActions": {
+        "addManualGoal": {
+          "buttonTitle": "Add a new goal manually",
+          "loading": "Adding goal...",
+          "placeholder": "Formulate it as freely as you like.",
+          "title": "Add a new goal"
+        },
+        "sectionTitle": "Further actions"
+      },
+      "generateButton": {
+        "loading": "Determining goals...",
+        "title": "Tap here to determine goals",
+        "titleRecreate": "Tap here to redetermine goals"
+      },
+      "listTitle": "Your goals",
+      "refineGoal": {
+        "placeholder": "What do you want to change about this goal?"
+      },
+      "removeGoalAlert": {
+        "message": "Are you sure you want to remove this goal and all associated data? This action cannot be undone."
+      },
+      "replaceGoalsAlert": {
+        "message": "Are you sure you want to reinitialize your goals? If you confirm, all current goals within this view will be replaced.",
+        "title": "Redetermine goals"
+      },
+      "title": "Manage goals"
+    },
+    "secondary": {
+      "explanation": "If this goal feels too large for you or you don't know how to start, you can divide it into smaller, manageable subgoals.",
+      "furtherActions": {
+        "addManualGoal": {
+          "buttonTitle": "Add a new subgoal manually",
+          "loading": "Adding subgoal...",
+          "placeholder": "Formulate it as freely as you like.",
+          "title": "Add a new subgoal"
+        },
+        "sectionTitle": "Further actions"
+      },
+      "generateButton": {
+        "loading": "Determining subgoals...",
+        "title": "Tap here to divide the selected goal into subgoals",
+        "titleRecreate": "Tap here to redetermine subgoals"
+      },
+      "listTitle": "Subgoals",
+      "refineGoal": {
+        "placeholder": "What do you want to change about this subgoal?"
+      },
+      "removeGoalAlert": {
+        "message": "Are you sure you want to remove this subgoal and all associated data? This action cannot be undone."
+      },
+      "replaceGoalsAlert": {
+        "message": "Are you sure you want to reinitialize the subgoals for this goal? If you confirm, all current subgoals within this view will be replaced and all information associated with the current subgoals will be removed. This action cannot be undone.",
+        "title": "Redetermine subgoals"
+      },
+      "title": "Manage subgoals"
+    }
+  },
+  "insights": {
+    "addInsight": {
+      "message": "Enter your new insight",
+      "title": "Add a new insight"
+    },
+    "confirmButton": "Happy with these insights? Then let's confirm and continue!",
+    "defaultQuestions": [
+      {
+        "category": "Visions",
+        "question": "What are your financial goals, dreams and aspirations?"
+      },
+      {
+        "category": "Reality",
+        "question": "What is your current financial situation?"
+      },
+      {
+        "category": "Motivation",
+        "question": "Why do you want to learn more about finance?"
+      },
+      {
+        "category": "Emotions",
+        "question": "How do financial topics currently make you feel?"
+      },
+      {
+        "category": "Knowledge",
+        "question": "What do you already know about finance?"
+      },
+      {
+        "category": "Values",
+        "question": "Which values guide your financial decision-making?"
+      },
+      {
+        "category": "Interests",
+        "question": "Which financial topics are you interested in?"
+      },
+      {
+        "category": "Security",
+        "question": "What do you need to feel financially secure?"
+      },
+      {
+        "category": "Independence",
+        "question": "In which areas of your financial life do you want to be more independent?"
+      },
+      {
+        "category": "Habits",
+        "question": "Which financial habits do you want to cultivate?"
+      }
+    ],
+    "explanation": "All this learning is fully personalized and happens at a pace that you choose yourself. To achieve this, you need to answer a few questions first, guided by the following. As a first step, your answers will be reformulated into insights about your financial life.",
+    "explanation2": "When you tap on a question, you can also generate new questions based on it.",
+    "insights": {
+      "bottomText": "These are the insights about you that will be used as context for all goals. Make sure to always keep them up to date.",
+      "title": "Insights about you"
+    },
+    "insightsOnboarding": {
+      "bottomText": "Your answers have been reformulated into clear statements about your financial life, which will be used to customize your learning experience. Of course you can also always add and remove insights later.",
+      "title": "Insights about your financial life"
+    },
+    "questionOptions": {
+      "answer": "Answer",
+      "getSimilar": "Get similar questions"
+    },
+    "questionsTitle": "Inspiration for questions",
+    "removeInsight": {
+      "message": "Are you sure you want to remove this insight? This action cannot be undone."
+    },
+    "title": "Step 1: Insights"
+  },
+  "realizeGoals": {
+    "actions": "Actions",
+    "explanation": "Which of your goals do you want to strive for today?",
+    "title": "Welcome",
+    "yourGoals": "Your goals"
+  },
+  "title": "Visionnaire",
+  "vision": "The Visionary is the module of the Companion which wants to make you learn how to turn your desires, goals, visions and dreams into reality."
+}

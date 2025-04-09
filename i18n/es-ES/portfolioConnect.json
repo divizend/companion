@@ -1,0 +1,159 @@
+{
+  "background": {
+    "description": "La importación se ejecuta en segundo plano, por lo que puede cerrar el cuadro de diálogo de importación.",
+    "stay": "Espere",
+    "title": "Ahora puede cerrar este cuadro de diálogo"
+  },
+  "bankDepotDetails": {
+    "description": "Ingrese la siguiente información sobre su cuenta bancaria y de valores.",
+    "fields": {
+      "bankName": "Nombre del banco",
+      "bic": "BIC",
+      "depotNumber": "Su número de cartera",
+      "parent": "Tipo de banco"
+    },
+    "title": "Datos bancarios y de depósito",
+    "unknownBank": "Otro banco"
+  },
+  "bankLogin": {
+    "chooseOtherMethod": "Elija otro método de importación de cartera",
+    "clickToOpen": "Si no es el caso, haga clic aquí.",
+    "error": "Fallo en la conexión de la cartera: {{error, error}}",
+    "errorPlain": "Fallo en la conexión de la cartera: {{error}}",
+    "newTabInfo": "Debería haberse abierto una nueva pestaña donde puede conectar su banco a Divizend.",
+    "title": "Conectar cartera",
+    "waitingForAggregation": "Ha conectado correctamente su cartera y ahora se está escaneando. Por favor, espere un momento."
+  },
+  "chooseBank": {
+    "bankListLoading": "Cargando lista de bancos compatibles...",
+    "choose": "Elija",
+    "demoBanks": "Bancos de demostración",
+    "internationalBanks": "Bancos internacionales",
+    "manualInput": "Entrada manual",
+    "otherBanks": "Más bancos nacionales",
+    "otherBanksInternational": "Más bancos ",
+    "title": "Elegir banco"
+  },
+  "chooseDepotToSync": {
+    "description": "Seleccione la cartera que desea utilizar para la sincronización:",
+    "infoNote": "Hemos detectado una discrepancia entre su número de cartera actual y el que está intentando utilizar para la sincronización.",
+    "title": "Elija la cartera que desea sincronizar"
+  },
+  "chooseDepots": {
+    "callToAction": "Siguiente paso",
+    "depotNumber": "Número de cartera: {{number}}",
+    "description": "Seleccione las carteras que desea importar a Divizend:",
+    "selectAll": "Seleccionar todo",
+    "selected": "Seleccionadas {{count}} carteras de {{total}}.",
+    "title": "Elija las carteras"
+  },
+  "chooseInterface": {
+    "failed": "Fallido",
+    "interfaceType": {
+      "DEMO": {
+        "description": "La interfaz de demostración muestra la funcionalidad de Divizend.",
+        "duration": "< 1 minuto",
+        "title": "Interfaz de demostración"
+      },
+      "DOCAPI": {
+        "description": "Con la importación de PDF, primero carga los documentos de resumen de la cartera y los recibos de compra, que puede descargar como PDF desde el buzón de su cuenta de agente de bolsa, y luego Divizend lee automáticamente sus participaciones actuales y, posiblemente, su historial de transacciones.",
+        "duration": "> 2 minutos",
+        "title": "Importación de PDF"
+      },
+      "ESTA": {
+        "description": "Mediante este método, puede utilizar una Declaración eTax (declaración fiscal electrónica) para importar automáticamente su cuenta de valores en Divizend. Las declaraciones eTax se pueden encontrar en muchos bancos suizos en su banca en línea como documentos PDF.",
+        "duration": "< 1 minuto",
+        "title": "Declaración eTax"
+      },
+      "FINAPI": {
+        "description": "finAPI es un proveedor alemán de servicios financieros autorizado por BaFin que ofrece interfaces para acceder a cuentas de pago y de valores. Mediante la autenticación a través de finAPI, puede conectar su cuenta de valores a Divizend en cuestión de instantes. \nLos datos de acceso a su cuenta de valores son transmitidos por finAPI a su banco para su autentificación mediante un protocolo encriptado. Divizend no tiene acceso a sus datos de acceso en ningún momento.",
+        "duration": "< 1 minuto ",
+        "title": "finAPI"
+      },
+      "FINTS": {
+        "description": "FinTS es un estándar alemán para acceder a cuentas de pago y cuentas de valores. Hemos optimizado específicamente nuestra interfaz para determinar el estado actual de su cuenta de valores. Mediante la autenticación a través de FinTS, puede conectar su cuenta de valores a Divizend en cuestión de momentos.\nLos datos de acceso a su cuenta de valores se transmiten a su banco exclusivamente y una vez para la autenticación mediante un protocolo cifrado, no se almacenan.",
+        "duration": "< 1 minuto",
+        "title": "FinTS"
+      },
+      "FLANKS": {
+        "description": "Flanks es un proveedor autorizado de servicios de información de cuentas que ofrece interfaces para el acceso abierto a cuentas de pago y de valores. La autenticación a través de Flanks le permite conectar su cuenta de valores a Divizend en cuestión de instantes.",
+        "duration": "< 1 minuto",
+        "title": "Flanks"
+      },
+      "MANUAL": {
+        "description": "La introducción manual le permite conectar su cuenta de valores a Divizend sin interfaces ni documentos automatizados. Para ello, introduzca sus participaciones actuales, así como su historial de transacciones, si procede, a través de nuestra interfaz gráfica.",
+        "duration": "> 3 minutos",
+        "title": "Entrada manual"
+      },
+      "NATIVE": {
+        "description": "Utilizando la interfaz nativa de Banca Abierta de su banco, puede conectar su cuenta de valores a Divizend en unos instantes.\n Los datos de acceso a su cuenta de valores se transmiten a su banco para su autenticación mediante un protocolo cifrado. Divizend no tiene acceso a sus datos de acceso en ningún momento.",
+        "duration": "< 1 minuto",
+        "title": "Interfaz nativa"
+      },
+      "POCAPI": {
+        "description": "La importación de PDF le permite conectar su cuenta de valores a Divizend incluso sin utilizar una interfaz bancaria. Para ello, puede cargar los documentos pertinentes desde su buzón de correo.\nLos documentos sólo se leen una vez para determinar el estado actual de la cuenta de valores y el historial de transacciones, no se almacenan.",
+        "duration": "> 2 minutos",
+        "title": "Importación de PDF"
+      },
+      "SCRAPER": {
+        "description": "Utilizando el Analizador de pantalla, puede conectar su cuenta de valores a Divizend utilizando la interfaz gráfica de usuario en unos momentos.\nLos datos de acceso a su cuenta de valores se transmiten a su banco exclusivamente y una vez para la autenticación utilizando un protocolo encriptado, no se almacenan.",
+        "duration": "< 1 minuto",
+        "title": "Analizador de pantalla"
+      }
+    },
+    "recommended": "Recomendado",
+    "title": "Elegir interfaz"
+  },
+  "confirmCancel": {
+    "description": "Si cierra este cuadro de diálogo, pero ya ha elegido su banco e introducido todas las credenciales necesarias, esta importación de cartera seguirá ejecutándose en segundo plano y podrá ver su progreso y finalizarla en los ajustes. De lo contrario, su progreso se reiniciará. Se recomienda dejar este cuadro de diálogo abierto hasta que finalice la importación. Haga clic en \"Aceptar\" si desea cerrar este cuadro de diálogo.",
+    "title": "¿Confirmar el cierre del diálogo de importación de cartera?"
+  },
+  "cta": "Importar ahora!",
+  "finalize": {
+    "backToDashboard": "Ir al panel de Maximizer",
+    "editPortfolio": "Editar cartera",
+    "heading": "¡Importación realizada! ¿Cómo seguimos?",
+    "headingMultiple": "¡Éxito de las importaciones!",
+    "headingNotDone": "Su cartera se ha importado correctamente.",
+    "importAnother": "Importar otra cartera",
+    "multiAccountFilter": "Haga clic en \"Aceptar\" a continuación para asignar todas las carteras importadas a los respectivos clientes de su organización.",
+    "subheadingNotDone": "Sin embargo, todavía faltan algunos detalles sobre sus valores y dividendos. Haga clic en \"Editar cartera\" para solucionarlo.",
+    "title": "Continuar"
+  },
+  "importViaSecapiImportId": "Importación a través de SecAPI ID de importación",
+  "importingDepot": "Importando su(s) cartera(s)...",
+  "loadingDepot": "Cargando tu(s) cartera(s)...",
+  "loadingDepotSuccess": "Hecho!",
+  "portfolioContents": {
+    "callToAction": "Importar ahora",
+    "confirmIncompleteImport": {
+      "description": "Algunos de los valores de su cartera aún necesitan más información para poder ser importados. Si aún así desea continuar, los siguientes valores incompletos resaltados <b>no se importarán</b>:",
+      "descriptionCompleteWhenRemovingTx": "Los siguientes valores sólo tienen un historial de transacciones incompleto o incoherente. Si desea continuar, sólo se eliminarán sus transacciones, pero el resto de la información sobre estos valores se importará como de costumbre:",
+      "title": "Confirmar importación incompleta"
+    },
+    "importBlocked": {
+      "noSecuritiesComplete": "Rellene los datos de las acciones resaltadas a la izquierda.",
+      "noSecuritiesExist": "Por favor, añada acciones a esta cuenta de valores con el símbolo + a la izquierda."
+    },
+    "importError": "Importación fallida: {{error, error}}",
+    "title": "Contenido de la cartera"
+  },
+  "restartImport": "Volver a importar",
+  "searchBankBranch": {
+    "noResults": "No hay resultados. Por favor, modifique su búsqueda.",
+    "numbers": {
+      "bic": "Número BIC",
+      "blz": "Código bancario"
+    },
+    "query": {
+      "helper": "Puede buscar el código bancario, el BIC o el nombre de su banco.",
+      "labels": {
+        "bank": "Buscar $t(bank:{{bank}}) sucursal",
+        "other": "Buscar banco"
+      }
+    },
+    "title": "Elija sucursal bancaria"
+  },
+  "selectSecapiImportId": "¡Seleccione el ID de importación SecAPI para importar su contenido!",
+  "selectSecapiImportIdPlaceholder": "ID de importación SecAPI"
+}

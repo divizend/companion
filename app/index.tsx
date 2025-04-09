@@ -1,18 +1,20 @@
 import React, { useEffect, useState } from 'react';
 
-import { useAuthRequest, useAutoDiscovery } from 'expo-auth-session';
+import { makeRedirectUri, useAuthRequest, useAutoDiscovery } from 'expo-auth-session';
 import { router } from 'expo-router';
 import * as WebBrowser from 'expo-web-browser';
+import { useTranslation } from 'react-i18next';
 import { Alert, Image, StyleSheet, View } from 'react-native';
+
+import { Button } from '@/components/base';
 
 import { usedConfig } from '../common/config';
 import { setSessionToken, useSessionToken } from '../common/sessionToken';
-import StyledButton from '../components/StyledButton';
-import { t } from '../i18n';
 
 WebBrowser.maybeCompleteAuthSession();
 
 export default function Index() {
+  const { t } = useTranslation();
   const discovery = useAutoDiscovery(usedConfig.auth.url);
   const [sessionToken, sessionTokenLoading] = useSessionToken();
   const [handleLoginInProgress, setHandleLoginInProgress] = useState(false);
@@ -23,10 +25,15 @@ export default function Index() {
     }
   }, [sessionToken, sessionTokenLoading]);
 
+  const redirectUri = makeRedirectUri({
+    scheme: 'divizend',
+    path: 'authcallback',
+  });
+
   const [request, _, promptAsync] = useAuthRequest(
     {
       clientId: usedConfig.auth.clientId,
-      redirectUri: 'divizend://authcallback',
+      redirectUri,
       scopes: ['offline_access'],
       responseType: 'code',
       extraParams: {
@@ -84,14 +91,9 @@ export default function Index() {
   }
 
   return (
-    <View style={styles.container}>
+    <View className="flex-1 justify-center items-center gap-5 bg-[#f5f5f5]">
       <Image source={require('../assets/images/logo.png')} style={styles.logo} resizeMode="contain" />
-      <StyledButton
-        title={t('common.login')}
-        disabled={!request}
-        loading={handleLoginInProgress}
-        onPress={handleLogin}
-      />
+      <Button title={t('common.login')} disabled={!request} loading={handleLoginInProgress} onPress={handleLogin} />
     </View>
   );
 }

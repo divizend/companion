@@ -1,0 +1,40 @@
+{
+  "error": "Error",
+  "cancel": "Cancel",
+  "login": "Login",
+  "logout": "Logout",
+  "yes": "Yes",
+  "no": "No",
+  "retry": "Retry",
+  "close": "Close",
+  "ok": "OK",
+  "next": "Next",
+  "remove": "Remove",
+  "submit": "Submit",
+  "add": "Add",
+  "loading": "Loading...",
+  "refining": "Refining...",
+  "removing": "Removing...",
+  "placeholder": "Type here...",
+  "confirm": "Confirm",
+  "percent": "{{value}} %",
+  "comingSoon": {
+    "title": "Coming soon",
+    "stayTuned": "Stay tuned for the revolution of financial intelligence with Divizend!"
+  },
+  "askEmoji": "Which emoji do you want?",
+  "tabs": {
+    "learn": "Visionary",
+    "learning": "Learning",
+    "analyze": "Analyze",
+    "portfolios": "Portfolios",
+    "track": "Track",
+    "decide": "Decide",
+    "discover": "Discover",
+    "profile": "Profile"
+  },
+  "chat": {
+    "title": "AI Chat",
+    "inputPlaceholder": "Type a message..."
+  }
+}

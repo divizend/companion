@@ -1,0 +1,39 @@
+{
+  "add": "Ajouter",
+  "askEmoji": "Quel emoji voulez-vous ?",
+  "cancel": "Annuler",
+  "chat": {
+    "inputPlaceholder": "Tapez un message...",
+    "title": "Chat sur l'intelligence artificielle"
+  },
+  "close": "Fermer",
+  "comingSoon": {
+    "stayTuned": "Restez à l'écoute de la révolution de l'intelligence financière avec Divizend !",
+    "title": "Prochainement"
+  },
+  "confirm": "Confirmer",
+  "error": "Erreur",
+  "loading": "Chargement...",
+  "login": "Connexion",
+  "logout": "Déconnexion",
+  "next": "Suivant",
+  "no": "Non",
+  "ok": "OK",
+  "percent": "{{value}} %",
+  "placeholder": "Tapez ici...",
+  "refining": "Raffinage...",
+  "remove": "Retirer",
+  "removing": "Retirer...",
+  "retry": "Réessayer",
+  "submit": "Soumettre",
+  "tabs": {
+    "analyze": "Analyser",
+    "decide": "Décider",
+    "discover": "Découvrir",
+    "learn": "Visionnaire",
+    "portfolios": "Portefeuilles",
+    "profile": "Profil",
+    "track": "Suivre"
+  },
+  "yes": "Oui"
+}

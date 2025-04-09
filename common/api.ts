@@ -1,4 +1,5 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
+import { makeRedirectUri } from 'expo-auth-session';
 import { router } from 'expo-router';
 import * as WebBrowser from 'expo-web-browser';
 
@@ -54,15 +55,29 @@ export const apiFetch = async (endpoint: string, options: any = {}) => {
   return json;
 };
 
-export const apiGet = (endpoint: string, queryParams?: Record<string, string>) => {
-  return apiFetch(endpoint + (queryParams ? '?' + new URLSearchParams(queryParams).toString() : ''), { method: 'GET' });
+export const apiGet = (endpoint: string, queryParams?: Record<string, string>, options?: any) => {
+  return apiFetch(endpoint + (queryParams ? '?' + new URLSearchParams(queryParams).toString() : ''), {
+    method: 'GET',
+    ...options,
+  });
 };
 
-export const apiPost = (endpoint: string, body: any) => {
+export const apiPostJson = <T = any>(endpoint: string, body?: any) => {
+  return apiPost<T>(endpoint, JSON.stringify(body));
+};
+
+export const apiPost = <T = any>(endpoint: string, body: any) => {
   return apiFetch(endpoint, {
     method: 'POST',
     body,
-  });
+  }) as Promise<T>;
+};
+
+export const apiPatch = <T = any>(endpoint: string, body: any) => {
+  return apiFetch(endpoint, {
+    method: 'PATCH',
+    body,
+  }) as Promise<T>;
 };
 
 export const apiDelete = (endpoint: string) => {
@@ -71,8 +86,13 @@ export const apiDelete = (endpoint: string) => {
   });
 };
 
-export const useFetch = (key: string, endpoint?: string) => {
-  return useQuery<any, ApiError>({
+export const useFetch = <T = any>(
+  key: string,
+  endpoint?: string,
+  extraParams?: Omit<Parameters<typeof useQuery<T, ApiError>>[0], 'queryKey' | 'queryFn'>,
+) => {
+  return useQuery<T, ApiError>({
+    ...extraParams,
     queryKey: [key],
     queryFn: endpoint ? () => apiFetch(endpoint) : undefined,
   });
@@ -94,13 +114,13 @@ export async function logout(throwOnError?: boolean) {
   const resp = await WebBrowser.openAuthSessionAsync(
     `${usedConfig.api.url}/${usedConfig.api.versionCode}/auth/logout/${sessionToken}?` +
       new URLSearchParams({
-        postLogoutRedirectUri: 'divizend://authcallback',
-        authServerUrl: usedConfig.auth.url + '/oauth2',
+        postLogoutRedirectUri: makeRedirectUri({ scheme: 'divizend', path: 'authcallback' }),
       }).toString(),
+    makeRedirectUri({ scheme: 'divizend', path: 'authcallback' }),
   );
 
-  await deleteSessionToken();
   if (resp.type === 'success') {
+    await deleteSessionToken();
     queryClient.clear();
     router.replace('/');
   } else if (throwOnError) {

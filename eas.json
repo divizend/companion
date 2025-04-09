@@ -5,6 +5,9 @@
       "distribution": "internal",
       "env": {
         "APP_ENV": "development"
+      },
+      "android": {
+        "buildType": "app-bundle"
       }
     },
     "preview": {
@@ -14,9 +17,23 @@
       }
     },
     "production": {
+      "autoIncrement": true,
       "env": {
         "APP_ENV": "production"
       }
     }
+  },
+  "submit": {
+    "production": {
+      "ios": {
+        "ascAppId": "6670220715",
+        "sku": "com.divizend.companion",
+        "appName": "Divizend Companion",
+        "bundleIdentifier": "com.divizend.companion"
+      }
+    }
+  },
+  "cli": {
+    "appVersionSource": "remote"
   }
 }
