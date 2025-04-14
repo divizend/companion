@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 
-import { LineGraph } from '@divizend/react-native-graph';
 import { useSignal, useSignals } from '@preact/signals-react/runtime';
 import { CheckBox, Icon } from '@rneui/themed';
 import { throttle } from 'lodash';
@@ -9,16 +8,41 @@ import { Pressable, View } from 'react-native';
 
 import { usedConfig } from '@/common/config';
 import { useUserProfile } from '@/common/profile';
+import ChatModal from '@/components/ChatModal';
 import SectionList from '@/components/SectionList';
 import { Text } from '@/components/base';
 import { fetchSimulationData } from '@/components/features/analyze/portfolio-requests';
 import { useSnackbar } from '@/components/global/Snackbar';
+import { ModalManager } from '@/components/global/modal';
 import { showCustom } from '@/components/global/prompt';
 import usePortfolioQuery from '@/hooks/actor/useDepotQuery';
 import { useThemeColor } from '@/hooks/useThemeColor';
+import { LineGraph } from '@/packages/react-native-graph/src';
 import { Scenarios, SimulationRange } from '@/types/actor-api.types';
 
+import { SelectionDot } from './CustomDot';
 import Widget from './Widget';
+
+// What is expected from Nico, is that given a timestamp, a flag should be correctly positioned
+// on the graph. The flag should be clickable and open a modal with the event description.
+const dotComEvents = [
+  {
+    date: new Date('2000-03-26'),
+    description: 'Nasdaq hits all-time high before crashing',
+  },
+  {
+    date: new Date('2000-07-04'),
+    description: 'Nasdaq hits all-time high before crashing',
+  },
+  {
+    date: new Date('2000-11-15'),
+    description: 'Mass layoffs in tech industry begin',
+  },
+  {
+    date: new Date('2000-12-10'),
+    description: 'Dot-com bubble bursts',
+  },
+];
 
 interface Security {
   _id: string | null;
@@ -112,6 +136,8 @@ export default function SimulationWidget() {
   const theme = useThemeColor();
   const [selectedQuote, setSelectedQuote_] = useState<{ time: number; price: number }>();
   const setSelectedQuote = throttle(setSelectedQuote_, 32);
+
+  const [selectedEvent, setSelectedEvent] = useState<{ id: number; date: Date; description: string } | null>(null);
 
   const [range, setRange] = useState<SimulationRange>(SimulationRange.Y);
   const [scenario, setScenario] = useState<Scenarios>(Scenarios.INFLATION_2021);
@@ -257,34 +283,52 @@ export default function SimulationWidget() {
           <>
             <Info quote={selectedQuote ?? currentQuote} range={range} percentage={percentage.value} />
 
-            <LineGraph
-              range={rangePoints}
-              points={points}
-              animated
-              color="#2E7877"
-              enablePanGesture
-              enableFadeInMask
-              enableIndicator
-              indicatorPulsating
-              verticalPadding={30}
-              panGestureDelay={200}
-              style={{ height: 225, marginBottom: 20, marginHorizontal: -24 }}
-              onGestureStart={() => {
-                isPanning.current = true;
-              }}
-              onGestureEnd={() => {
-                isPanning.current = false;
-                setSelectedQuote(undefined);
-              }}
-              onPointSelected={point => {
-                if (!isPanning.current) return;
-                const newQuote =
-                  simulationPricePoints.find(q => Math.abs(q.time - (point?.date.getTime() ?? 0) / 1000) < 1e-5) ??
-                  currentQuote;
+            <View className="relative">
+              <LineGraph
+                range={rangePoints}
+                points={points}
+                animated
+                color="#2E7877"
+                enablePanGesture
+                enableFadeInMask
+                enableIndicator
+                indicatorPulsating
+                customElements={dotComEvents
+                  .map((event, index) => {
+                    return {
+                      component: (props: any) => (
+                        <SelectionDot
+                          {...props}
+                          index={index}
+                          onPress={() => setSelectedEvent({ id: index, ...event })}
+                          selectedEvent={selectedEvent?.id === index ? selectedEvent : undefined}
+                          setSelectedEvent={setSelectedEvent}
+                        />
+                      ),
+                      date: event.date,
+                    };
+                  })
+                  .filter(Boolean)}
+                verticalPadding={30}
+                panGestureDelay={200}
+                style={{ height: 225, marginBottom: 20, marginHorizontal: -24 }}
+                onGestureStart={() => {
+                  isPanning.current = true;
+                }}
+                onGestureEnd={() => {
+                  isPanning.current = false;
+                  setSelectedQuote(undefined);
+                }}
+                onPointSelected={point => {
+                  if (!isPanning.current) return;
+                  const newQuote =
+                    simulationPricePoints.find(q => Math.abs(q.time - (point?.date.getTime() ?? 0) / 1000) < 1e-5) ??
+                    currentQuote;
 
-                setSelectedQuote(newQuote);
-              }}
-            />
+                  setSelectedQuote(newQuote);
+                }}
+              />
+            </View>
           </>
         ))}
       <View className="flex-row justify-center" style={{ marginVertical: 10 }}>
