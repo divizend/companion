@@ -20,10 +20,11 @@
     "preset": "jest-expo"
   },
   "dependencies": {
-    "@divizend/react-native-graph": "git+https://github.com/divizend/react-native-graph.git",
     "@divizend/react-native-calendars": "git+https://github.com/divizend/react-native-calendars.git",
+    "@divizend/react-native-graph": "git+https://github.com/divizend/react-native-graph.git",
     "@expo/vector-icons": "^14.0.2",
     "@gorhom/bottom-sheet": "^5.0.4",
+    "@graphql-tools/schema": "^10.0.23",
     "@preact/signals-react": "^2.2.0",
     "@react-native-community/datetimepicker": "8.0.1",
     "@react-native-picker/picker": "2.7.5",
@@ -54,6 +55,7 @@
     "expo-system-ui": "~3.0.7",
     "expo-web-browser": "~13.0.3",
     "formik": "^2.4.6",
+    "graphql": "^15.8.0",
     "i18next": "^23.16.4",
     "immer": "^10.1.1",
     "lodash": "^4.17.21",

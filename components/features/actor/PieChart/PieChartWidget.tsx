@@ -10,7 +10,7 @@ interface PieChartWidgetProps<Datum> {
   ready: boolean;
   renderCenterLabel: () => JSX.Element;
   renderSelectedSegment?: (entry: Datum) => JSX.Element;
-  renderLegend: (entry: Datum) => JSX.Element;
+  renderLegend?: (entry: Datum) => JSX.Element;
   legendEntries?: Datum[];
 }
 
@@ -42,10 +42,12 @@ export default function PieChartWidget<Datum extends PieDataItem>({
         setSelectedSegment={setSelectedSegment}
         centerLabelComponent={renderCenterLabel}
       />
-      <PieChartLegend
-        renderLegend={selectedSegment ? (renderSelectedSegment ?? renderLegend) : renderLegend}
-        entries={selectedSegment ? [selectedSegment] : (legendEntries ?? data).slice(0, 6)}
-      />
+      {renderLegend && (
+        <PieChartLegend
+          renderLegend={selectedSegment ? (renderSelectedSegment ?? renderLegend) : renderLegend}
+          entries={selectedSegment ? [selectedSegment] : (legendEntries ?? data).slice(0, 6)}
+        />
+      )}
     </Widget>
   );
 }
