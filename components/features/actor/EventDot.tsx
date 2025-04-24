@@ -33,7 +33,7 @@ type ExtraProps = {
   eventStyle?: EventStyle;
 };
 
-export function SelectionDot({
+export function EventDot({
   color,
   coords,
   index,
@@ -42,7 +42,7 @@ export function SelectionDot({
   onPress,
   selectedEvent,
   setSelectedEvent,
-  eventStyle = 'triangle',
+  eventStyle = 'circle',
 }: ExtraProps): React.ReactElement {
   const baseSize = useSharedValue(15);
   const x = useDerivedValue(() => coords?.value?.[index]?.cx ?? 0);
