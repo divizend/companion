@@ -19,11 +19,11 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
-          cache: 'yarn'
+          node-version: '20.x'
+          cache: 'npm'
 
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: npm ci
 
       # Using OWASP Dependency Check as a free alternative to Snyk
       - name: OWASP Dependency Check
@@ -45,5 +45,5 @@ jobs:
           audit-ci --moderate
 
       - name: Run npm audit
-        run: yarn npm audit --audit-level=high
+        run: npm audit --audit-level=high
         continue-on-error: true
