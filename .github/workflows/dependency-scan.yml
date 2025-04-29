@@ -1,0 +1,49 @@
+name: Dependency Security Scan
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+  schedule:
+    - cron: '0 0 * * 0' # Run weekly on Sunday at midnight
+
+jobs:
+  security-scan:
+    name: Check for vulnerable dependencies
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'yarn'
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      # Using OWASP Dependency Check as a free alternative to Snyk
+      - name: OWASP Dependency Check
+        uses: dependency-check/Dependency-Check_Action@main
+        with:
+          project: 'divizend-companion'
+          path: '.'
+          format: 'HTML'
+          out: 'reports'
+          args: >
+            --suppression suppression.xml
+            --failOnCVSS 7
+            --enableRetired
+
+      # Free alternative using GitHub built-in Dependabot vulnerability detection
+      - name: Check for vulnerable dependencies with Audit-CI
+        run: |
+          npm install -g audit-ci
+          audit-ci --moderate
+
+      - name: Run npm audit
+        run: yarn npm audit --audit-level=high
+        continue-on-error: true

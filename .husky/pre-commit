@@ -1,1 +1,2 @@
+# Run lint-staged for formatting and basic checks
 npx lint-staged
