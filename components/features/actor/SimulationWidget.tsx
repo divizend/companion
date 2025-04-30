@@ -18,7 +18,31 @@ import usePortfolioQuery from '@/hooks/actor/useDepotQuery';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { Scenarios, SimulationRange } from '@/types/actor-api.types';
 
+import { EventDot } from './EventDot';
 import Widget from './Widget';
+
+// What is expected from Nico, is that given a timestamp, a flag should be correctly positioned
+// on the graph. The flag should be clickable and open a modal with the event description.
+const mockEvents: Array<{ date: Date; description: string }> = [
+  {
+    date: new Date('2000-03-26'),
+    description: 'Nasdaq hits all-time high before crashing',
+  },
+  {
+    date: new Date('2000-07-04'),
+    description: 'Nasdaq hits all-time high before crashing',
+  },
+  {
+    date: new Date('2000-11-15'),
+    description: 'Mass layoffs in tech industry begin',
+  },
+  {
+    date: new Date('2000-12-10'),
+    description: 'Dot-com bubble bursts',
+  },
+];
+// Uncomment this to see the mock events
+mockEvents.length = 0; // Clear the mock events for now
 
 interface Security {
   _id: string | null;
@@ -112,6 +136,8 @@ export default function SimulationWidget() {
   const theme = useThemeColor();
   const [selectedQuote, setSelectedQuote_] = useState<{ time: number; price: number }>();
   const setSelectedQuote = throttle(setSelectedQuote_, 32);
+
+  const [selectedEvent, setSelectedEvent] = useState<{ id: number; date: Date; description: string }>();
 
   const [range, setRange] = useState<SimulationRange>(SimulationRange.Y);
   const [scenario, setScenario] = useState<Scenarios>(Scenarios.INFLATION_2021);
@@ -257,34 +283,49 @@ export default function SimulationWidget() {
           <>
             <Info quote={selectedQuote ?? currentQuote} range={range} percentage={percentage.value} />
 
-            <LineGraph
-              range={rangePoints}
-              points={points}
-              animated
-              color="#2E7877"
-              enablePanGesture
-              enableFadeInMask
-              enableIndicator
-              indicatorPulsating
-              verticalPadding={30}
-              panGestureDelay={200}
-              style={{ height: 225, marginBottom: 20, marginHorizontal: -24 }}
-              onGestureStart={() => {
-                isPanning.current = true;
-              }}
-              onGestureEnd={() => {
-                isPanning.current = false;
-                setSelectedQuote(undefined);
-              }}
-              onPointSelected={point => {
-                if (!isPanning.current) return;
-                const newQuote =
-                  simulationPricePoints.find(q => Math.abs(q.time - (point?.date.getTime() ?? 0) / 1000) < 1e-5) ??
-                  currentQuote;
+            <View className="relative">
+              <LineGraph
+                range={rangePoints}
+                points={points}
+                animated
+                color="#2E7877"
+                enablePanGesture
+                enableFadeInMask
+                enableIndicator
+                indicatorPulsating
+                customElements={mockEvents.map((event, index) => {
+                  return {
+                    date: event.date,
+                    component: props => (
+                      <EventDot
+                        {...props}
+                        onPress={() => setSelectedEvent({ id: index, ...event })}
+                        selectedEvent={selectedEvent?.id === index ? selectedEvent : undefined}
+                        setSelectedEvent={setSelectedEvent}
+                      />
+                    ),
+                  };
+                })}
+                verticalPadding={30}
+                panGestureDelay={200}
+                style={{ height: 225, marginBottom: 20, marginHorizontal: -24 }}
+                onGestureStart={() => {
+                  isPanning.current = true;
+                }}
+                onGestureEnd={() => {
+                  isPanning.current = false;
+                  setSelectedQuote(undefined);
+                }}
+                onPointSelected={point => {
+                  if (!isPanning.current) return;
+                  const newQuote =
+                    simulationPricePoints.find(q => Math.abs(q.time - (point?.date.getTime() ?? 0) / 1000) < 1e-5) ??
+                    currentQuote;
 
-                setSelectedQuote(newQuote);
-              }}
-            />
+                  setSelectedQuote(newQuote);
+                }}
+              />
+            </View>
           </>
         ))}
       <View className="flex-row justify-center" style={{ marginVertical: 10 }}>
