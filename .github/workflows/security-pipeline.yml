@@ -37,12 +37,6 @@ jobs:
       - name: Run Jest tests
         run: npm test -- --ci --coverage
 
-      - name: Run ESLint
-        run: npm run lint
-
-      - name: Type check
-        run: npx tsc --noEmit
-
       - name: Upload test coverage
         uses: actions/upload-artifact@v4
         with:

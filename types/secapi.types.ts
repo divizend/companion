@@ -56,7 +56,7 @@ export function getSecurityQuantity(
   requestedDate: Date,
 ): number | undefined {
   // Wir erstellen ein neues Array, welches alle Transaktionen und Splits beinhaltet.
-  let entries: QuantityCalculationEntry[] = [
+  const entries: QuantityCalculationEntry[] = [
     ...transactions
       .map(transaction => {
         return {

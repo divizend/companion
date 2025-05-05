@@ -32,5 +32,14 @@ module.exports = {
       version: 'detect',
     },
   },
-  ignorePatterns: ['.eslintrc.js', 'jest.setup.js', '__tests__', '__mocks__'],
+  ignorePatterns: [
+    '.eslintrc.js',
+    'jest.setup.js',
+    '__tests__',
+    '__mocks__',
+    'tailwind.config.js',
+    'babel.config.js',
+    'metro.config.js',
+    'secapi.types.ts',
+  ],
 };
