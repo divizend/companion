@@ -69,17 +69,18 @@ i18next.use(initReactI18next).init({
           if (!value) return '';
           const r = /^([A-Za-z0-9_.-]+)(:|$)/;
           const parts = [];
-          let match;
-          while (!!(match = value.match(r))) {
+          let match = value.match(r);
+          while (match) {
             parts.push(match[1]);
             value = value.slice(match[1].length + 1);
+            match = value.match(r);
           }
           if (parts.length === 0) return value;
           if (parts.length > 1 || value.length > 0) console.log(parts, value);
           return i18next.t('error:' + parts[0], { parts: parts.slice(1), rest: value });
         }
         case 'currency': {
-          function customIntl(number = 0, locale = 'en-US', currency = 'USD') {
+          const customIntl = (number = 0, locale = 'en-US', currency = 'USD') => {
             const absNumber = Math.abs(number);
             const units = ['', 'K', 'M', 'B', 'T'];
             let unitIndex = 0;
@@ -100,7 +101,7 @@ i18next.use(initReactI18next).init({
             }).format(Number(formattedNumber));
 
             return `${formattedCurrency}${units[unitIndex]}`;
-          }
+          };
 
           if (value?.options?.notation === 'compact') {
             return customIntl(value.amount, 'en-US', value.unit);

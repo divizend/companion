@@ -63,7 +63,7 @@ export const RevenueCatProvider: React.FC<RevenueCatProviderProps> = ({ children
           // This ensures that the customer is identified by their Divizend user ID.
           // Customers can benefit from their subscriptions on multiple platforms as long as they use the same Divizend account containing the subscription.
           Purchases.logIn(profile.id).then(loginResult =>
-            !!profile.flags.canAccessCompanionFeaturesWithoutSubscription
+            profile.flags.canAccessCompanionFeaturesWithoutSubscription
               ? setCustomerInfo(adminCustomerInfo)
               : setCustomerInfo(loginResult.customerInfo),
           ),
