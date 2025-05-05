@@ -17,7 +17,7 @@ permissions:
 jobs:
   # STAGE 1: Basic Testing & Quality Checks
   test-and-quality:
-    name: Testing & Code Quality
+    name: Testing
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -62,30 +62,30 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # Running CodeQL Analysis (SAST)
+      # Running CodeQL Analysis (SAST) - Updated to v3
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@v2
+        uses: github/codeql-action/init@v3
         with:
           languages: javascript, typescript
 
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v2
+        uses: github/codeql-action/analyze@v3
         with:
           category: '/language:javascript,typescript'
 
       # Semgrep (Free SAST alternative)
-      #   - name: Run Semgrep scan
-      #     uses: semgrep/semgrep-action@v1
-      #     with:
-      #       publishToken: ${{ secrets.GITHUB_TOKEN }}
-      #       publishDeployment: 1
-      #       generateSarif: "1"
-      #       config: >-
-      #         p/javascript
-      #         p/react
-      #         p/typescript
-      #         p/r2c-security-audit
-      #     continue-on-error: true
+      # - name: Run Semgrep scan
+      #   uses: semgrep/semgrep-action@v1
+      #   with:
+      #     publishToken: ${{ secrets.GITHUB_TOKEN }}
+      #     publishDeployment: 1
+      #     generateSarif: '1'
+      #     config: >-
+      #       p/javascript
+      #       p/react
+      #       p/typescript
+      #       p/r2c-security-audit
+      #   continue-on-error: true
 
       # ESLint with security plugins
       - name: Run ESLint with security rules
@@ -116,21 +116,22 @@ jobs:
         run: npm audit --audit-level=high
         continue-on-error: true
 
-      # OWASP Dependency Check
+      # OWASP Dependency Check - Fixed format parameter
       - name: Run OWASP Dependency Check
         uses: dependency-check/Dependency-Check_Action@main
         with:
           project: 'divizend-companion'
           path: '.'
-          format: 'HTML,SARIF'
+          format: 'HTML'
           out: 'reports'
           args: >
             --failOnCVSS 7
             --enableRetired
+            --format SARIF
 
       # Upload OWASP Dependency Check results
       - name: Upload dependency check results
-        uses: github/codeql-action/upload-sarif@v2
+        uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: 'reports/dependency-check-report.sarif'
 
