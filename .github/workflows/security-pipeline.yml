@@ -1,0 +1,250 @@
+name: Comprehensive Security Pipeline
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+  # Weekly scheduled scan for ongoing monitoring
+  schedule:
+    - cron: '0 0 * * 0' # Run weekly on Sunday at midnight
+
+permissions:
+  contents: read
+  security-events: write
+  actions: read
+
+jobs:
+  # STAGE 1: Basic Testing & Quality Checks
+  test-and-quality:
+    name: Testing & Code Quality
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Jest tests
+        run: npm test -- --ci --coverage
+
+      - name: Run ESLint
+        run: npm run lint
+
+      - name: Type check
+        run: npx tsc --noEmit
+
+      - name: Upload test coverage
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage/
+          retention-days: 7
+
+  # STAGE 2: Static Application Security Testing (SAST)
+  sast:
+    name: Static Application Security Testing
+    runs-on: ubuntu-latest
+    needs: test-and-quality
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      # Running CodeQL Analysis (SAST)
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v2
+        with:
+          languages: javascript, typescript
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v2
+        with:
+          category: '/language:javascript,typescript'
+
+      # Semgrep (Free SAST alternative)
+      #   - name: Run Semgrep scan
+      #     uses: semgrep/semgrep-action@v1
+      #     with:
+      #       publishToken: ${{ secrets.GITHUB_TOKEN }}
+      #       publishDeployment: 1
+      #       generateSarif: "1"
+      #       config: >-
+      #         p/javascript
+      #         p/react
+      #         p/typescript
+      #         p/r2c-security-audit
+      #     continue-on-error: true
+
+      # ESLint with security plugins
+      - name: Run ESLint with security rules
+        run: |
+          npx eslint . --ext .js,.jsx,.ts,.tsx --config .eslintrc --no-eslintrc -c .eslintrc --plugin security --rule 'security/detect-unsafe-regex: 2, security/detect-buffer-noassert: 2, security/detect-child-process: 2, security/detect-disable-mustache-escape: 2, security/detect-eval-with-expression: 2, security/detect-no-csrf-before-method-override: 2, security/detect-non-literal-fs-filename: 2, security/detect-non-literal-regexp: 2, security/detect-non-literal-require: 2, security/detect-object-injection: 2, security/detect-possible-timing-attacks: 2, security/detect-pseudoRandomBytes: 2'
+        continue-on-error: true
+
+  # STAGE 3: Software Composition Analysis (SCA)
+  sca:
+    name: Dependency & Composition Analysis
+    runs-on: ubuntu-latest
+    needs: test-and-quality
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      # NPM Audit (Basic SCA)
+      - name: Check for vulnerable dependencies
+        run: npm audit --audit-level=high
+        continue-on-error: true
+
+      # OWASP Dependency Check
+      - name: Run OWASP Dependency Check
+        uses: dependency-check/Dependency-Check_Action@main
+        with:
+          project: 'divizend-companion'
+          path: '.'
+          format: 'HTML,SARIF'
+          out: 'reports'
+          args: >
+            --failOnCVSS 7
+            --enableRetired
+
+      # Upload OWASP Dependency Check results
+      - name: Upload dependency check results
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: 'reports/dependency-check-report.sarif'
+
+      - name: Upload dependency report
+        uses: actions/upload-artifact@v4
+        with:
+          name: dependency-check-report
+          path: reports/
+          retention-days: 7
+
+  # STAGE 4: Dynamic Application Security Testing (DAST)
+  dast:
+    name: Dynamic Application Security Testing
+    runs-on: ubuntu-latest
+    needs: [sast, sca]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      # For Mobile App - MobSF (Mobile Security Framework)
+      - name: Install MobSF requirements
+        run: |
+          pip install --upgrade pip
+          pip install --upgrade mobsfscan
+
+      - name: Run MobSF Scan
+        run: mobsfscan . --json
+        continue-on-error: true
+
+      # Expo Doctor - check for common configuration issues
+      - name: Run Expo Doctor
+        run: npx expo-doctor
+        continue-on-error: true
+
+      # React Native Doctor - check for common issues
+      - name: Run React Native Doctor
+        run: npx react-native doctor
+        continue-on-error: true
+
+  # STAGE 5: Secret Detection
+  secret-scanning:
+    name: Secret Detection & Scanning
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # Gitleaks for secret detection
+      - name: Check for secrets in code
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # STAGE 6: Generate Security Report
+  security-report:
+    name: Generate Security Report
+    runs-on: ubuntu-latest
+    needs: [sast, sca, dast, secret-scanning]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      # Download all artifact reports
+      - name: Download all workflow artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: security-reports
+
+      # Custom report generation script (simplified example)
+      - name: Generate security summary
+        run: |
+          echo "# Security Testing Summary" > security-summary.md
+          echo "## Date: $(date)" >> security-summary.md
+          echo "## Repository: ${{ github.repository }}" >> security-summary.md
+          echo "## Workflow Run: ${{ github.workflow }} #${{ github.run_number }}" >> security-summary.md
+          echo "## Tests Performed:" >> security-summary.md
+          echo "- Static Application Security Testing (SAST)" >> security-summary.md
+          echo "- Software Composition Analysis (SCA)" >> security-summary.md
+          echo "- Dynamic Application Security Testing (DAST)" >> security-summary.md
+          echo "- Secret Detection" >> security-summary.md
+          echo "## See attached reports for details" >> security-summary.md
+
+      # Upload final security report
+      - name: Upload security summary
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-testing-report
+          path: |
+            security-summary.md
+            security-reports/
+          retention-days: 14
