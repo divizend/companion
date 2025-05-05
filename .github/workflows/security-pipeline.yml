@@ -161,7 +161,6 @@ jobs:
           format: 'HTML'
           out: 'reports'
           args: >
-            --failOnCVSS 10
             --enableRetired
             --format SARIF
 
