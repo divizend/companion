@@ -5,7 +5,7 @@ export default ({ config }) => {
   const fusionAuthTenantId = process.env.EXPO_PUBLIC_FUSION_AUTH_TENANT_ID || '9c88929b-785c-5e8f-522b-760f28db724e';
 
   const appConfig = {
-    ...(false
+    ...(isProduction
       ? {
           auth: {
             url: 'https://auth.divizend.com',
