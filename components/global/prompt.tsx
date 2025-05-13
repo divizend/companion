@@ -1,6 +1,11 @@
 import React, { useRef } from 'react';
 
-import BottomSheet, { BottomSheetBackdrop, BottomSheetScrollView, BottomSheetTextInput } from '@gorhom/bottom-sheet';
+import BottomSheet, {
+  BottomSheetBackdrop,
+  BottomSheetScrollView,
+  BottomSheetTextInput,
+  BottomSheetView,
+} from '@gorhom/bottom-sheet';
 import { uniqueId } from 'lodash';
 import { KeyboardAvoidingView, Platform, TextInputProps, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -232,6 +237,7 @@ const renderModal = ({
   const PromptModal = (props: any) => {
     const theme = useThemeColor();
     const ref = useRef<BottomSheet>(null);
+    const BSView = prompt.type === 'custom' ? BottomSheetView : BottomSheetScrollView;
     return (
       <GestureHandlerRootView>
         <BottomSheet
@@ -256,11 +262,11 @@ const renderModal = ({
             <View {...backgroundProps} className="bg-primary-light dark:bg-primary-dark rounded-3xl" />
           )}
         >
-          <BottomSheetScrollView keyboardShouldPersistTaps="handled">
+          <BSView keyboardShouldPersistTaps="handled">
             <KeyboardAvoidingView behavior="padding" className={clsx('py-10 px-5', Platform.OS === 'ios' && 'mb-12')}>
               <Content prompt={prompt} resolve={resolve} dismiss={props.dismiss} />
             </KeyboardAvoidingView>
-          </BottomSheetScrollView>
+          </BSView>
         </BottomSheet>
       </GestureHandlerRootView>
     );
