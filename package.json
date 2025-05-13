@@ -57,7 +57,7 @@
     "i18next": "^24.2.3",
     "immer": "^10.1.1",
     "lodash": "^4.17.21",
-    "nativewind": "^4.1.23",
+    "nativewind": "^4.0.36",
     "react": "18.2.0",
     "react-dom": "18.3.1",
     "react-i18next": "^15.1.0",
