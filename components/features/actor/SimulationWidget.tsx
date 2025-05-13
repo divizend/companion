@@ -43,7 +43,7 @@ const mockEvents: Array<{ date: Date; description: string }> = [
   },
 ];
 // Uncomment this to see the mock events
-mockEvents.length = 3; // Clear the mock events for now
+// mockEvents.length = 0; // Clear the mock events for now
 
 interface Security {
   _id: string | null;
