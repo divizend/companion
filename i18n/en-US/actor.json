@@ -89,6 +89,11 @@
     "totalGrossDividend": "Total gross dividend: {{quantity}} x {{price}}/share = {{total}}",
     "noEvents": "No events this day"
   },
+  "portfolioSelector": {
+    "all": "All portfolios",
+    "label": "Portfolios selection",
+    "select": "Select portfolios"
+  },
   "error": {
     "simulation": "Failed to fetch simulation. Please try again later.",
     "insufficientData": "Insufficient Data for this scenario"
