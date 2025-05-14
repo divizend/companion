@@ -36,5 +36,12 @@
   "chat": {
     "title": "AI Chat",
     "inputPlaceholder": "Type a message..."
+  },
+  "select": {
+    "placeholder": "Select items",
+    "searchPlaceholder": "Search",
+    "modalTitle": "Select items",
+    "noResultsText": "No items found",
+    "selectedText": "{{count}} of {{total}} selected"
   }
 }

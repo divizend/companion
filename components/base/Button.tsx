@@ -27,6 +27,9 @@ export const Button: React.FC<StyledButtonProps> = ({
     variant === 'primary'
       ? {
           backgroundColor: theme,
+          borderColor: theme,
+          borderWidth: 1,
+          borderRadius: 12,
         }
       : {
           borderColor: theme,

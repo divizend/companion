@@ -12,6 +12,7 @@ import { usedConfig } from '@/common/config';
 import { useUserProfile } from '@/common/profile';
 import SectionList from '@/components/SectionList';
 import { Text } from '@/components/base';
+import { SelectModal } from '@/components/base/SelectModal';
 import { fetchSimulationData } from '@/components/features/analyze/portfolio-requests';
 import { useSnackbar } from '@/components/global/Snackbar';
 import { showCustom } from '@/components/global/prompt';
@@ -293,6 +294,29 @@ export default function SimulationWidget() {
                         ),
                         onPress: () => (percentage.value = !percentage.value),
                       },
+                      {
+                        leftIcon: { name: 'event', type: 'material' },
+                        title: (
+                          <SelectModal
+                            className="w-full h-min px-0"
+                            inputClassName="text-[16px] mt-1 font-normal"
+                            multiple={false}
+                            keyExtractor={item => item.id}
+                            labelExtractor={item => t(`actor.simulation.scenarioButton.${item.id.toUpperCase()}`)}
+                            onSelect={selected => {
+                              setScenario(selected[0].id as Scenarios);
+                            }}
+                            items={Object.values(Scenarios).map(v => ({
+                              id: v,
+                            }))}
+                            selectedItems={[
+                              {
+                                id: scenario,
+                              },
+                            ]}
+                          />
+                        ),
+                      },
                     ]}
                   />
                 </>
@@ -380,30 +404,6 @@ export default function SimulationWidget() {
             >
               <Text style={{ fontWeight: 'bold', color: range === v ? 'black' : 'gray' }}>
                 {t(`actor.simulation.radioButton.${k}`)}
-              </Text>
-            </Pressable>
-          ))}
-      </View>
-      <View className="flex-col items-center space-y-2" style={{ marginVertical: 10 }}>
-        {Object.entries(Scenarios)
-          .filter(([k]) => isNaN(+k))
-          .map(([k, v]) => (
-            <Pressable
-              key={k}
-              onPress={() => {
-                setSelectedQuote(undefined);
-                setScenario(v as Scenarios);
-              }}
-              style={{
-                paddingVertical: 8,
-                paddingHorizontal: 15,
-                marginHorizontal: 5,
-                borderRadius: 10,
-                backgroundColor: scenario === v ? '#ccc' : 'transparent',
-              }}
-            >
-              <Text style={{ fontWeight: 'bold', color: scenario === v ? 'black' : 'gray' }}>
-                {t(`actor.simulation.scenarioButton.${k}`)}
               </Text>
             </Pressable>
           ))}
