@@ -163,7 +163,7 @@ export enum Scenarios {
   BREXIT_UNCERTAINTY = 'brexit_uncertainty',
   US_EU_STEEL_TARIFFS = 'us_eu_steel_tariffs',
   US_CHINA_TRADE_WAR = 'us_china_trade_war',
-  TRUMP_TARIFFS_2025 = 'trump_tariffs_2025',
+  TRUMP_TARIFFS_2024 = 'trump_tariffs_2024',
 }
 
 /*

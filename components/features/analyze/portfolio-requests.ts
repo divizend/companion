@@ -165,7 +165,9 @@ export const fetchSimulationData = async (depotIDs: string[], range: number, sce
   const portfolioData = await getPortfolioData(portfolioID);
 
   const simulationAnswer = await createSimulation(portfolioID, scenario);
-  return { simulationData: await getSimulation(portfolioID, range), depotData: portfolioData, simulationAnswer };
+  const depotData = portfolioData;
+  const simulationData = await getSimulation(portfolioID, range);
+  return { simulationData, depotData, simulationAnswer };
 };
 
 export const fetchData = async (

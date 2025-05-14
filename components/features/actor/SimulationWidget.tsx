@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 
 import { LineGraph } from '@divizend/react-native-graph';
 import { useSignal, useSignals } from '@preact/signals-react/runtime';
+import { StringOmit } from '@rneui/base';
 import { CheckBox, Icon } from '@rneui/themed';
 import { throttle } from 'lodash';
 import { useTranslation } from 'react-i18next';
@@ -43,7 +44,7 @@ const mockEvents: Array<{ date: Date; description: string }> = [
   },
 ];
 // Uncomment this to see the mock events
-mockEvents.length = 0; // Clear the mock events for now
+// mockEvents.length = 0; // Clear the mock events for now
 
 interface Security {
   _id: string | null;
@@ -60,7 +61,27 @@ interface SimulationData {
   portfolio_id: string;
   scenario: string;
   simulation_data: Record<string, Record<string, number>>;
+  important_events: Record<string, string>;
+  impacted_securities: Record<string, string>;
 }
+
+const convertImpactedSecurities = (
+  impactedSecuritiesRecord: Record<string, string>,
+): { isin: string; impact: string }[] => {
+  return Object.entries(impactedSecuritiesRecord).map(([isin, impact]) => ({
+    isin,
+    impact: String(impact),
+  }));
+};
+
+const convertImportantEvents = (simulationData: SimulationData): { date: Date; description: string }[] => {
+  const { important_events } = simulationData;
+
+  return Object.entries(important_events).map(([dateStr, description]) => ({
+    date: new Date(dateStr),
+    description,
+  }));
+};
 
 const convertSimulationData = (
   simulationData: SimulationData,
@@ -147,6 +168,8 @@ export default function SimulationWidget() {
   const [depotIDs, setDepotIDs] = useState<string[]>([]);
 
   const [simulationPricePoints, setSimulationPricePoints] = useState<{ time: number; price: number }[]>([]);
+  const [importantEvents, setImportantEvents] = useState<{ date: Date; description: string }[]>([]);
+  const [impactedSecurities, setImpactedSecurities] = useState<{ isin: string; impact: string }[]>([]);
 
   const profile = useUserProfile();
   const depots = profile.profile.depots;
@@ -176,6 +199,8 @@ export default function SimulationWidget() {
         portfolio_id: '',
         scenario: '',
         simulation_data: {},
+        important_events: {},
+        impacted_securities: {},
       },
     },
   });
@@ -188,8 +213,13 @@ export default function SimulationWidget() {
       Object.keys(simulationData.simulation_data).length > 0
     ) {
       setSimulationPricePoints(convertSimulationData(simulationData, depotData));
+      setImportantEvents(convertImportantEvents(simulationData));
+      const { impacted_securities } = simulationData;
+      setImpactedSecurities(convertImpactedSecurities(impacted_securities));
     } else {
       setSimulationPricePoints([]);
+      setImportantEvents([]);
+      setImpactedSecurities([]);
     }
   }, [simulationData, depotData]);
 
@@ -264,29 +294,6 @@ export default function SimulationWidget() {
                         ),
                         onPress: () => (percentage.value = !percentage.value),
                       },
-                      {
-                        leftIcon: { name: 'event', type: 'material' },
-                        title: (
-                          <SelectModal
-                            className="w-full h-min px-0"
-                            inputClassName="text-[16px] mt-1 font-normal"
-                            multiple={false}
-                            keyExtractor={item => item.id}
-                            labelExtractor={item => t(`actor.simulation.scenarioButton.${item.id.toUpperCase()}`)}
-                            onSelect={selected => {
-                              setScenario(selected[0].id as Scenarios);
-                            }}
-                            items={Object.values(Scenarios).map(v => ({
-                              id: v,
-                            }))}
-                            selectedItems={[
-                              {
-                                id: scenario,
-                              },
-                            ]}
-                          />
-                        ),
-                      },
                     ]}
                   />
                 </>
@@ -317,7 +324,7 @@ export default function SimulationWidget() {
                 enableFadeInMask
                 enableIndicator
                 indicatorPulsating
-                customElements={mockEvents.map((event, index) => {
+                customElements={importantEvents.map((event, index) => {
                   return {
                     date: event.date,
                     component: props => (
@@ -326,6 +333,8 @@ export default function SimulationWidget() {
                         onPress={() => setSelectedEvent({ id: index, ...event })}
                         selectedEvent={selectedEvent?.id === index ? selectedEvent : undefined}
                         setSelectedEvent={setSelectedEvent}
+                        eventStyle="triangle"
+                        color="#F43611"
                       />
                     ),
                   };
@@ -376,6 +385,26 @@ export default function SimulationWidget() {
               </Text>
             </Pressable>
           ))}
+      </View>
+      <View>
+        <SelectModal
+          className="w-full h-min px-8 py-3"
+          inputClassName="text-[16px] mt-1 font-normal"
+          multiple={false}
+          keyExtractor={item => item.id}
+          labelExtractor={item => t(`actor.simulation.scenarioButton.${item.id.toUpperCase()}`)}
+          onSelect={selected => {
+            setScenario(selected[0].id as Scenarios);
+          }}
+          items={Object.values(Scenarios).map(v => ({
+            id: v,
+          }))}
+          selectedItems={[
+            {
+              id: scenario,
+            },
+          ]}
+        />
       </View>
     </Widget>
   );
