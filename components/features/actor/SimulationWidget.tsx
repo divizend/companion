@@ -323,7 +323,7 @@ export default function SimulationWidget() {
                 enableFadeInMask
                 enableIndicator
                 indicatorPulsating
-                customElements={mockEvents.map((event, index) => {
+                customElements={importantEvents.map((event, index) => {
                   return {
                     date: event.date,
                     component: props => (
@@ -332,6 +332,7 @@ export default function SimulationWidget() {
                         onPress={() => setSelectedEvent({ id: index, ...event })}
                         selectedEvent={selectedEvent?.id === index ? selectedEvent : undefined}
                         setSelectedEvent={setSelectedEvent}
+                        eventStyle="triangle"
                       />
                     ),
                   };

@@ -151,8 +151,8 @@ export function EventDot({
     ModalManager.showModal(({ dismiss }) => (
       <ChatModal
         dismiss={dismiss}
-        systemPrompt={`You are an AI assistant that helps the user with the goal of "${selectedEvent.description}". Never use Markdown.`}
-        initialUserMessage={selectedEvent.description}
+        systemPrompt={`Please explain the financial event: "${selectedEvent.description}". Never use Markdown. Give a short and comprehensive answer and explain, how it affect a portfolio from an investor.`}
+        initialUserMessage={`Please explain the financial event: "${selectedEvent.description}"`}
       />
     ));
   };
