@@ -294,29 +294,6 @@ export default function SimulationWidget() {
                         ),
                         onPress: () => (percentage.value = !percentage.value),
                       },
-                      {
-                        leftIcon: { name: 'event', type: 'material' },
-                        title: (
-                          <SelectModal
-                            className="w-full h-min px-0"
-                            inputClassName="text-[16px] mt-1 font-normal"
-                            multiple={false}
-                            keyExtractor={item => item.id}
-                            labelExtractor={item => t(`actor.simulation.scenarioButton.${item.id.toUpperCase()}`)}
-                            onSelect={selected => {
-                              setScenario(selected[0].id as Scenarios);
-                            }}
-                            items={Object.values(Scenarios).map(v => ({
-                              id: v,
-                            }))}
-                            selectedItems={[
-                              {
-                                id: scenario,
-                              },
-                            ]}
-                          />
-                        ),
-                      },
                     ]}
                   />
                 </>
@@ -407,6 +384,26 @@ export default function SimulationWidget() {
               </Text>
             </Pressable>
           ))}
+      </View>
+      <View>
+        <SelectModal
+          className="w-full h-min px-8 py-3"
+          inputClassName="text-[16px] mt-1 font-normal"
+          multiple={false}
+          keyExtractor={item => item.id}
+          labelExtractor={item => t(`actor.simulation.scenarioButton.${item.id.toUpperCase()}`)}
+          onSelect={selected => {
+            setScenario(selected[0].id as Scenarios);
+          }}
+          items={Object.values(Scenarios).map(v => ({
+            id: v,
+          }))}
+          selectedItems={[
+            {
+              id: scenario,
+            },
+          ]}
+        />
       </View>
     </Widget>
   );
