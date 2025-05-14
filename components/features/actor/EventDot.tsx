@@ -44,14 +44,14 @@ export function EventDot({
   setSelectedEvent,
   eventStyle = 'circle',
 }: ExtraProps): React.ReactElement {
-  const baseSize = useSharedValue(15);
+  const baseSize = useSharedValue(20);
   const x = useDerivedValue(() => coords?.value?.[index]?.cx ?? 0);
   const y = useDerivedValue(() => coords?.value?.[index]?.cy ?? 0);
   const isSelected = selectedEvent?.id === index;
 
   const animateDot = (value?: number) => {
     if (value !== undefined) {
-      baseSize.value = withSpring(15, {
+      baseSize.value = withSpring(20, {
         mass: 1,
         stiffness: 1000,
         damping: 50,

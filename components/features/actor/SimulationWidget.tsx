@@ -334,6 +334,7 @@ export default function SimulationWidget() {
                         selectedEvent={selectedEvent?.id === index ? selectedEvent : undefined}
                         setSelectedEvent={setSelectedEvent}
                         eventStyle="triangle"
+                        color="#F43611"
                       />
                     ),
                   };
