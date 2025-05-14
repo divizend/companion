@@ -32,6 +32,7 @@ interface SelectModalProps<T extends SelectableItem> {
   cancelText?: string;
   confirmText?: string;
   className?: string;
+  inputClassName?: string;
   disabled?: boolean;
   renderItem?: (item: T, isSelected: boolean, onPress: () => void) => React.JSX.Element;
   keyExtractor?: (item: T) => string;
@@ -51,6 +52,7 @@ export function SelectModal<T extends SelectableItem>({
   cancelText,
   confirmText,
   className,
+  inputClassName,
   disabled = false,
   renderItem,
   keyExtractor = item => item.id,
@@ -238,6 +240,7 @@ export function SelectModal<T extends SelectableItem>({
           'flex-1 mr-2',
           selectedItems.length === 0 ? 'text-gray-500' : '',
           selectedItems.length > 0 && 'font-medium',
+          inputClassName,
         )}
       >
         {capitalize(displayLabel)}
