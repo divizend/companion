@@ -11,6 +11,7 @@ import { usedConfig } from '@/common/config';
 import { useUserProfile } from '@/common/profile';
 import SectionList from '@/components/SectionList';
 import { Text } from '@/components/base';
+import { SelectModal } from '@/components/base/SelectModal';
 import { fetchSimulationData } from '@/components/features/analyze/portfolio-requests';
 import { useSnackbar } from '@/components/global/Snackbar';
 import { showCustom } from '@/components/global/prompt';
@@ -18,7 +19,31 @@ import usePortfolioQuery from '@/hooks/actor/useDepotQuery';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { Scenarios, SimulationRange } from '@/types/actor-api.types';
 
+import { EventDot } from './EventDot';
 import Widget from './Widget';
+
+// What is expected from Nico, is that given a timestamp, a flag should be correctly positioned
+// on the graph. The flag should be clickable and open a modal with the event description.
+const mockEvents: Array<{ date: Date; description: string }> = [
+  {
+    date: new Date('2000-03-26'),
+    description: 'Nasdaq hits all-time high before crashing',
+  },
+  {
+    date: new Date('2000-07-04'),
+    description: 'Nasdaq hits all-time high before crashing',
+  },
+  {
+    date: new Date('2000-11-15'),
+    description: 'Mass layoffs in tech industry begin',
+  },
+  {
+    date: new Date('2000-12-10'),
+    description: 'Dot-com bubble bursts',
+  },
+];
+// Uncomment this to see the mock events
+mockEvents.length = 0; // Clear the mock events for now
 
 interface Security {
   _id: string | null;
@@ -112,6 +137,8 @@ export default function SimulationWidget() {
   const theme = useThemeColor();
   const [selectedQuote, setSelectedQuote_] = useState<{ time: number; price: number }>();
   const setSelectedQuote = throttle(setSelectedQuote_, 32);
+
+  const [selectedEvent, setSelectedEvent] = useState<{ id: number; date: Date; description: string }>();
 
   const [range, setRange] = useState<SimulationRange>(SimulationRange.Y);
   const [scenario, setScenario] = useState<Scenarios>(Scenarios.INFLATION_2021);
@@ -237,6 +264,29 @@ export default function SimulationWidget() {
                         ),
                         onPress: () => (percentage.value = !percentage.value),
                       },
+                      {
+                        leftIcon: { name: 'event', type: 'material' },
+                        title: (
+                          <SelectModal
+                            className="w-full h-min px-0"
+                            inputClassName="text-[16px] mt-1 font-normal"
+                            multiple={false}
+                            keyExtractor={item => item.id}
+                            labelExtractor={item => t(`actor.simulation.scenarioButton.${item.id.toUpperCase()}`)}
+                            onSelect={selected => {
+                              setScenario(selected[0].id as Scenarios);
+                            }}
+                            items={Object.values(Scenarios).map(v => ({
+                              id: v,
+                            }))}
+                            selectedItems={[
+                              {
+                                id: scenario,
+                              },
+                            ]}
+                          />
+                        ),
+                      },
                     ]}
                   />
                 </>
@@ -257,34 +307,49 @@ export default function SimulationWidget() {
           <>
             <Info quote={selectedQuote ?? currentQuote} range={range} percentage={percentage.value} />
 
-            <LineGraph
-              range={rangePoints}
-              points={points}
-              animated
-              color="#2E7877"
-              enablePanGesture
-              enableFadeInMask
-              enableIndicator
-              indicatorPulsating
-              verticalPadding={30}
-              panGestureDelay={200}
-              style={{ height: 225, marginBottom: 20, marginHorizontal: -24 }}
-              onGestureStart={() => {
-                isPanning.current = true;
-              }}
-              onGestureEnd={() => {
-                isPanning.current = false;
-                setSelectedQuote(undefined);
-              }}
-              onPointSelected={point => {
-                if (!isPanning.current) return;
-                const newQuote =
-                  simulationPricePoints.find(q => Math.abs(q.time - (point?.date.getTime() ?? 0) / 1000) < 1e-5) ??
-                  currentQuote;
+            <View className="relative">
+              <LineGraph
+                range={rangePoints}
+                points={points}
+                animated
+                color="#2E7877"
+                enablePanGesture
+                enableFadeInMask
+                enableIndicator
+                indicatorPulsating
+                customElements={mockEvents.map((event, index) => {
+                  return {
+                    date: event.date,
+                    component: props => (
+                      <EventDot
+                        {...props}
+                        onPress={() => setSelectedEvent({ id: index, ...event })}
+                        selectedEvent={selectedEvent?.id === index ? selectedEvent : undefined}
+                        setSelectedEvent={setSelectedEvent}
+                      />
+                    ),
+                  };
+                })}
+                verticalPadding={30}
+                panGestureDelay={200}
+                style={{ height: 225, marginBottom: 20, marginHorizontal: -24 }}
+                onGestureStart={() => {
+                  isPanning.current = true;
+                }}
+                onGestureEnd={() => {
+                  isPanning.current = false;
+                  setSelectedQuote(undefined);
+                }}
+                onPointSelected={point => {
+                  if (!isPanning.current) return;
+                  const newQuote =
+                    simulationPricePoints.find(q => Math.abs(q.time - (point?.date.getTime() ?? 0) / 1000) < 1e-5) ??
+                    currentQuote;
 
-                setSelectedQuote(newQuote);
-              }}
-            />
+                  setSelectedQuote(newQuote);
+                }}
+              />
+            </View>
           </>
         ))}
       <View className="flex-row justify-center" style={{ marginVertical: 10 }}>
@@ -308,30 +373,6 @@ export default function SimulationWidget() {
             >
               <Text style={{ fontWeight: 'bold', color: range === v ? 'black' : 'gray' }}>
                 {t(`actor.simulation.radioButton.${k}`)}
-              </Text>
-            </Pressable>
-          ))}
-      </View>
-      <View className="flex-col items-center space-y-2" style={{ marginVertical: 10 }}>
-        {Object.entries(Scenarios)
-          .filter(([k]) => isNaN(+k))
-          .map(([k, v]) => (
-            <Pressable
-              key={k}
-              onPress={() => {
-                setSelectedQuote(undefined);
-                setScenario(v as Scenarios);
-              }}
-              style={{
-                paddingVertical: 8,
-                paddingHorizontal: 15,
-                marginHorizontal: 5,
-                borderRadius: 10,
-                backgroundColor: scenario === v ? '#ccc' : 'transparent',
-              }}
-            >
-              <Text style={{ fontWeight: 'bold', color: scenario === v ? 'black' : 'gray' }}>
-                {t(`actor.simulation.scenarioButton.${k}`)}
               </Text>
             </Pressable>
           ))}

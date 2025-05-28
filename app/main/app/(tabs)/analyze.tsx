@@ -4,16 +4,19 @@ import { LogBox } from 'react-native';
 import { RefreshControl } from 'react-native-gesture-handler';
 
 import { SafeAreaView, ScrollScreen, Text } from '@/components/base';
-import AssetClassesWidget from '@/components/features/actor/AssetClassesWidget';
-import CalendarWidget from '@/components/features/actor/CalendarWidget/CalendarWidget';
-import DivisionWidget from '@/components/features/actor/DivisionWidget';
+import {
+  AssetClassesWidget,
+  CalendarWidget,
+  DivisionWidget,
+  PortfolioSelector,
+  PortfolioStatsWidget,
+  QuotesWidget,
+  SimulationWidget,
+} from '@/components/features/actor';
 import GenericWidget from '@/components/features/actor/GenericWidget';
-import PortfolioStatsWidget from '@/components/features/actor/PortfolioStatsWidget';
-import QuotesWidget from '@/components/features/actor/QuotesWidget';
-import SimulationWidget from '@/components/features/actor/SimulationWidget';
 import useInitializeActor from '@/hooks/useInitializeActor';
 
-LogBox.ignoreLogs(['Image source "null" doesn\'t exist']);
+LogBox.ignoreLogs(['Image source "null" doesn\'t exist', 'No stops in gradient']);
 
 export default function Analyze() {
   const { t } = useTranslation();
@@ -37,6 +40,8 @@ export default function Analyze() {
         <Text h1 className="mb-5 mx-1.5">
           {t('common.tabs.analyze')}
         </Text>
+        <Text className="mb-2 ml-0.5 font-medium">{t('actor.portfolioSelector.label')}</Text>
+        <PortfolioSelector className="mb-5 flex-1" />
         <QuotesWidget />
         <GenericWidget
           config={{
