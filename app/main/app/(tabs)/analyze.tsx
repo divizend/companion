@@ -13,6 +13,7 @@ import {
   QuotesWidget,
   SimulationWidget,
 } from '@/components/features/actor';
+import GenericWidget from '@/components/features/actor/GenericWidget';
 import useInitializeActor from '@/hooks/useInitializeActor';
 
 LogBox.ignoreLogs(['Image source "null" doesn\'t exist', 'No stops in gradient']);
@@ -42,6 +43,40 @@ export default function Analyze() {
         <Text className="mb-2 ml-0.5 font-medium">{t('actor.portfolioSelector.label')}</Text>
         <PortfolioSelector className="mb-5 flex-1" />
         <QuotesWidget />
+        <GenericWidget
+          config={{
+            title: 'Generic Division',
+            type: 'half-piechart',
+            version: '1.0.0',
+            pluginVersion: '1.0.0',
+            meta: {
+              author: 'Mohamed Aziz Khayati',
+              description: 'This is a division widget that displays the portfolio division.',
+              tags: ['division', 'quotes', 'portfolio'],
+              created: '2025-04-08T00:00:00Z',
+            },
+            aggregation: [
+              {
+                type: 'query',
+                queryText: `query {
+                              performance {
+                                totalAmount
+                                entries {
+                                  amount
+                                  currency
+                                }
+                              }
+                            }`,
+              },
+            ],
+            outputOptions: {
+              centerText:
+                'Total Whatever $t(currency, {"amount": {"amount": $.performance.totalAmount,  "unit": "$.performance.entries.0.currency" } })',
+              entries: '$.performance.entries',
+              entryValue: '$.amount',
+            },
+          }}
+        />
         <DivisionWidget />
         <SimulationWidget />
         <PortfolioStatsWidget />
