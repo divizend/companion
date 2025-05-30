@@ -1,5 +1,6 @@
-import { apiGet } from '@/common/api';
+import { apiGet, apiPatch } from '@/common/api';
 import { ActorService } from '@/services/actor.service';
+import { ActorSettings } from '@/types/actor-api.types';
 import { SecurityAccount } from '@/types/secapi.types';
 
 import { ActorState, LoadingState, actor, initialState } from '../actor';
@@ -25,6 +26,32 @@ export const loadDepotReset = () => {
 
 export const setDepotIds = (depotIds: string[] | 'all') => {
   actor.value = { ...actor.value, depotIds };
+};
+
+const getActorSettingsSuccess = (settings: ActorSettings) => {
+  actor.value = { ...actor.value, settings };
+  return settings;
+};
+
+export const getActorSettings = async () => {
+  return apiGet<ActorSettings>('/actor/settings')
+    .then(getActorSettingsSuccess)
+    .catch(error => {
+      if (error?.includes('CanceledError')) return null;
+      throw error;
+    });
+};
+
+export const updateActorSettings = async (settings: Partial<ActorSettings>) => {
+  return apiPatch<ActorSettings>('/actor/settings', { method: 'POST', body: JSON.stringify(settings) })
+    .then(() => {
+      actor.value = { ...actor.value, settings: { ...actor.value.settings!, ...settings } };
+      return actor.value.settings;
+    })
+    .catch(error => {
+      if (error?.includes('CanceledError')) return null;
+      throw error;
+    });
 };
 
 export const loadDepot = async (
