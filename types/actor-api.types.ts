@@ -651,8 +651,13 @@ export type DividendHistorySettings = {
   displayOption: DividendDisplayOption;
 };
 
+export enum PerformanceQuotesType {
+  PERFORMANCE = 'performance',
+  TTWROR = 'ttwror',
+}
+
 export type PerformanceQuotesSettings = {
-  type: 'performance' | 'ttwror';
+  type: PerformanceQuotesType;
 };
 
 export interface ActorSettings {

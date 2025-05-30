@@ -9,7 +9,14 @@ import { Text } from '@/components/base';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { updateActorSettings } from '@/signals/actions/actor.actions';
 import { actor } from '@/signals/actor';
-import { ActorSettings, DisplayValue, DividendDisplayOption, ShownDividends, SortBy } from '@/types/actor-api.types';
+import {
+  ActorSettings,
+  DisplayValue,
+  DividendDisplayOption,
+  PerformanceQuotesType,
+  ShownDividends,
+  SortBy,
+} from '@/types/actor-api.types';
 
 /**
  * Generic setting option interface
@@ -126,7 +133,7 @@ export const createPerformanceQuotesField = (): SettingField<'performanceQuotesW
   settingKey: 'performanceQuotesWidget',
   nestedKey: 'type',
   title: 'common.options',
-  options: createUnionOptions(['performance', 'ttwror'] as const, 'actor.quotes.options.', {
+  options: createUnionOptions(Object.values(PerformanceQuotesType), 'actor.quotes.options.', {
     performance: { name: 'chart-line', type: 'material-community' },
     ttwror: { name: 'percent', type: 'material' },
   }),
