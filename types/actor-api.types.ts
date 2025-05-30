@@ -100,7 +100,7 @@ export interface GetQuotesRequest extends ActorRequest {
 
 export interface QuotesResponse extends ActorResponse {
   type: ActorResponseType.QUOTES_RESPONSE;
-  quotes: Quote[];
+  quotes: TTWRORQuote[];
 }
 
 export interface GetCompanyQuotesRequest extends ActorRequest {
@@ -140,30 +140,16 @@ export interface Quote {
   time: number;
 }
 
+export interface TTWRORQuote extends Quote {
+  ttwror: number;
+}
+
 export enum QuoteRange {
   'D' = 0,
   'W' = 1,
   'M' = 2,
   'Y' = 3,
   'ALL' = 4,
-}
-
-export enum SimulationRange {
-  '1M' = 1,
-  '3M' = 3,
-  '6M' = 6,
-  'Y' = 12, //change to 12 month later
-}
-
-export enum Scenarios {
-  DOT_COM = 'dot_com',
-  FIN_CRISIS_2007 = 'fin_crisis_2007',
-  COVID = 'covid',
-  INFLATION_2021 = 'inflation_2021',
-  BREXIT_UNCERTAINTY = 'brexit_uncertainty',
-  US_EU_STEEL_TARIFFS = 'us_eu_steel_tariffs',
-  US_CHINA_TRADE_WAR = 'us_china_trade_war',
-  TRUMP_TARIFFS_2025 = 'trump_tariffs_2025',
 }
 
 /*
@@ -665,12 +651,17 @@ export type DividendHistorySettings = {
   displayOption: DividendDisplayOption;
 };
 
+export type PerformanceQuotesSettings = {
+  type: 'performance' | 'ttwror';
+};
+
 export interface ActorSettings {
   topThreeWidget: TopThreeWorstThreeSettings;
   worstThreeWidget: TopThreeWorstThreeSettings;
   calendarWidget: CalendarSettings;
   isinWknWidget: IsinWknSettings;
   companyDividendHistoryWidget: DividendHistorySettings;
+  performanceQuotesWidget: PerformanceQuotesSettings;
 }
 
 export interface SecondStageFeature<T> {
