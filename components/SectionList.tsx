@@ -82,9 +82,13 @@ export default function SectionList({
                   )
                 ) : null}
                 <ListItem.Content style={styles.listItemContent}>
-                  <Text className="max-w-[90%]" style={[styles.listItemTitle, item.disabled && styles.disabledTitle]}>
-                    {item.title}
-                  </Text>
+                  {typeof item.title === 'string' ? (
+                    <Text className="max-w-[90%]" style={[styles.listItemTitle, item.disabled && styles.disabledTitle]}>
+                      {item.title}
+                    </Text>
+                  ) : (
+                    item.title
+                  )}
                   {typeof item.rightElement === 'string' ? (
                     <Text className="text-muted text-sm text-right shrink ml-3" numberOfLines={1} ellipsizeMode="tail">
                       {item.rightElement}
