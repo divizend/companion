@@ -43,7 +43,7 @@ export const getActorSettings = async () => {
 };
 
 export const updateActorSettings = async (settings: Partial<ActorSettings>) => {
-  return apiPatch<ActorSettings>('/actor/settings', { method: 'POST', body: JSON.stringify(settings) })
+  return apiPatch<ActorSettings>('/actor/settings', settings)
     .then(() => {
       actor.value = { ...actor.value, settings: { ...actor.value.settings!, ...settings } };
       return actor.value.settings;
