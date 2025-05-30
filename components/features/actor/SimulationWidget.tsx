@@ -17,7 +17,7 @@ import { useSnackbar } from '@/components/global/Snackbar';
 import { showCustom } from '@/components/global/prompt';
 import usePortfolioQuery from '@/hooks/actor/useDepotQuery';
 import { useThemeColor } from '@/hooks/useThemeColor';
-import { Scenarios, SimulationRange } from '@/types/actor-api.types';
+import { Scenarios, SimulationRange } from '@/types/aqarios.types';
 
 import { EventDot } from './EventDot';
 import Widget from './Widget';

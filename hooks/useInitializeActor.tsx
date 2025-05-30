@@ -3,7 +3,13 @@ import { useQuery } from '@tanstack/react-query';
 import { useUserProfileQuery } from '@/common/queries';
 import SocketHandler from '@/socket/socket-handler';
 
-import { initializeActor, loadDepot, loadDepotSuccess, setActorLoadingState } from '../signals/actions/actor.actions';
+import {
+  getActorSettings,
+  initializeActor,
+  loadDepot,
+  loadDepotSuccess,
+  setActorLoadingState,
+} from '../signals/actions/actor.actions';
 import { LoadingState, actor } from '../signals/actor';
 
 export default function useInitializeActor() {
@@ -22,6 +28,7 @@ export default function useInitializeActor() {
 
       SocketHandler.connect();
       const depot = await loadDepot(depotIds === 'all' ? undefined : depotIds);
+      const actorSettingsPromise = getActorSettings();
 
       if (!depot) return depot;
 
@@ -29,6 +36,7 @@ export default function useInitializeActor() {
       await initializeActor({ ...depot, currency: currency });
       setActorLoadingState(LoadingState.LOADING_WIDGETS);
 
+      await actorSettingsPromise;
       loadDepotSuccess(depot);
 
       return depot;

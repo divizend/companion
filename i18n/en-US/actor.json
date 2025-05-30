@@ -43,6 +43,10 @@
       "M": "M",
       "Y": "Y",
       "ALL": "All"
+    },
+    "options": {
+      "performance": "Performance",
+      "ttwror": "TTWROR (Total Time-Weighted Rate of Return)"
     }
   },
   "assetClasses": {

@@ -55,11 +55,11 @@ export const apiFetch = async (endpoint: string, options: any = {}) => {
   return json;
 };
 
-export const apiGet = (endpoint: string, queryParams?: Record<string, string>, options?: any) => {
+export const apiGet = <T = any>(endpoint: string, queryParams?: Record<string, string>, options?: any) => {
   return apiFetch(endpoint + (queryParams ? '?' + new URLSearchParams(queryParams).toString() : ''), {
     method: 'GET',
     ...options,
-  });
+  }) as Promise<T>;
 };
 
 export const apiPostJson = <T = any>(endpoint: string, body?: any) => {

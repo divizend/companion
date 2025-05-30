@@ -1,4 +1,6 @@
 export * from './PortfolioSelector';
+export { default as ActorSettingsModal } from './ActorSettingsModal';
+export * from './ActorSettingsModal';
 export { default as AssetClassesWidget } from './AssetClassesWidget';
 export { default as CalendarWidget } from './CalendarWidget/CalendarWidget';
 export { default as DivisionWidget } from './DivisionWidget';
