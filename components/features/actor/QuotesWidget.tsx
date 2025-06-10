@@ -7,11 +7,18 @@ import { useTranslation } from 'react-i18next';
 import { Pressable, View } from 'react-native';
 
 import { Text } from '@/components/base';
-import usePortfolioQuery from '@/hooks/actor/useDepotQuery';
-import { ActorService } from '@/services/actor.service';
 import { Quote, QuoteRange } from '@/types/actor-api.types';
 
 import Widget from './Widget';
+
+interface QuotesWidgetProps {
+  queryKey: (range: QuoteRange) => string[];
+  queryFn: (range: QuoteRange) => Promise<Quote[]>;
+  useQuery: (options: { queryFn: () => Promise<Quote[]>; queryKey: string[] }) => {
+    data: Quote[] | undefined;
+    isLoading: boolean;
+  };
+}
 
 const Info = ({ quote, currentQuote, range }: { quote: Quote | undefined; currentQuote: Quote; range: QuoteRange }) => {
   const { t } = useTranslation();
@@ -95,15 +102,15 @@ const Info = ({ quote, currentQuote, range }: { quote: Quote | undefined; curren
   );
 };
 
-export default function QuotesWidget() {
+export default function QuotesWidget({ queryFn, useQuery, queryKey }: QuotesWidgetProps) {
   const { t } = useTranslation();
   const isPanning = useRef(false);
   const [selectedQuote, setSelectedQuote_] = useState<Quote>();
   const setSelectedQuote = throttle(setSelectedQuote_, 32);
   const [range, setRange] = useState<QuoteRange>(QuoteRange.Y);
-  const { data: quotes = [], isLoading } = usePortfolioQuery({
-    queryFn: () => ActorService.getPerformanceQuotes(range),
-    queryKey: ['getPerformanceQuotes', range],
+  const { data: quotes = [], isLoading } = useQuery({
+    queryFn: () => queryFn(range),
+    queryKey: queryKey(range),
   });
 
   const currentQuote = quotes.at(-1);
