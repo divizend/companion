@@ -21,6 +21,7 @@ function Layout() {
         <JsStack initialRouteName="app" screenOptions={{ headerShown: false }}>
           <JsStack.Screen name="onboarding" options={{ presentation: 'modal' }} />
           <JsStack.Screen name="settings" options={{ presentation: 'modal' }} />
+          <JsStack.Screen name="company" options={{ headerShown: false }} />
         </JsStack>
       </ModalProvider>
     </RevenueCatProvider>
