@@ -91,6 +91,8 @@ export default function Company({}) {
               renderItem={renderResultItem}
               keyExtractor={item => item.isin.toString()}
               className="flex-1"
+              keyboardShouldPersistTaps="handled"
+              keyboardDismissMode="none"
             />
           )}
 
