@@ -5,6 +5,7 @@ import { Icon } from '@rneui/themed';
 import { throttle } from 'lodash';
 import { useTranslation } from 'react-i18next';
 import { Pressable, View } from 'react-native';
+import { runOnJS, useAnimatedReaction, useSharedValue } from 'react-native-reanimated';
 
 import { Text } from '@/components/base';
 import { Quote, QuoteRange } from '@/types/actor-api.types';
@@ -105,15 +106,28 @@ const Info = ({ quote, currentQuote, range }: { quote: Quote | undefined; curren
 export default function QuotesWidget({ queryFn, useQuery, queryKey }: QuotesWidgetProps) {
   const { t } = useTranslation();
   const isPanning = useRef(false);
-  const [selectedQuote, setSelectedQuote_] = useState<Quote>();
-  const setSelectedQuote = throttle(setSelectedQuote_, 32);
+
+  // Use shared values for UI thread updates
+  const selectedQuoteShared = useSharedValue<Quote | undefined>(undefined);
+
+  // State for React components
+  const [selectedQuote, setSelectedQuote] = useState<Quote>();
   const [range, setRange] = useState<QuoteRange>(QuoteRange.Y);
+
   const { data: quotes = [], isLoading } = useQuery({
     queryFn: () => queryFn(range),
     queryKey: queryKey(range),
   });
 
   const currentQuote = quotes.at(-1);
+
+  // Sync shared values to state for React components
+  useAnimatedReaction(
+    () => selectedQuoteShared.value,
+    value => {
+      runOnJS(setSelectedQuote)(value);
+    },
+  );
 
   const points = useMemo(() => {
     return quotes.map(q => ({
@@ -161,14 +175,14 @@ export default function QuotesWidget({ queryFn, useQuery, queryKey }: QuotesWidg
             }}
             onGestureEnd={() => {
               isPanning.current = false;
-              setSelectedQuote(undefined);
+              selectedQuoteShared.value = undefined;
             }}
-            onPointSelected={(point: { date: Date; value: number } | undefined) => {
+            onPointSelected={throttle((point: { date: Date; value: number } | undefined) => {
               if (!isPanning.current) return;
               const newQuote =
                 quotes.find(q => Math.abs(q.time - (point?.date.getTime() ?? 0) / 1000) < 1e-5) ?? currentQuote;
-              setSelectedQuote(newQuote);
-            }}
+              selectedQuoteShared.value = newQuote;
+            }, 16)}
           />
 
           <View className="flex-row justify-center" style={{ marginVertical: 10 }}>
@@ -179,7 +193,7 @@ export default function QuotesWidget({ queryFn, useQuery, queryKey }: QuotesWidg
                 <Pressable
                   key={k}
                   onPress={() => {
-                    setSelectedQuote(undefined);
+                    selectedQuoteShared.value = undefined;
                     setRange(v as QuoteRange);
                   }}
                   style={{
