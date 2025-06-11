@@ -13,6 +13,7 @@
   },
   "simulation": {
     "title": "Simulation",
+    "instruction": "Hold and swipe to explore different dates and events",
     "radioButton": {
       "1M": "1M",
       "3M": "3M",

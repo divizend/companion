@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 
-import { LineGraph } from '@divizend/react-native-graph';
+import { GraphPoint, LineGraph } from '@divizend/react-native-graph';
 import { useSignal, useSignals } from '@preact/signals-react/runtime';
 import { CheckBox, Icon } from '@rneui/themed';
 import { throttle } from 'lodash';
@@ -43,7 +43,7 @@ const mockEvents: Array<{ date: Date; description: string }> = [
   },
 ];
 // Uncomment this to see the mock events
-mockEvents.length = 0; // Clear the mock events for now
+// mockEvents.length = 0; // Clear the mock events for now
 
 interface Security {
   _id: string | null;
@@ -135,8 +135,7 @@ export default function SimulationWidget() {
 
   const isPanning = useRef(false);
   const theme = useThemeColor();
-  const [selectedQuote, setSelectedQuote_] = useState<{ time: number; price: number }>();
-  const setSelectedQuote = throttle(setSelectedQuote_, 32);
+  const [selectedQuote, setSelectedQuote] = useState<{ time: number; price: number }>();
 
   const [selectedEvent, setSelectedEvent] = useState<{ id: number; date: Date; description: string }>();
 
@@ -220,6 +219,33 @@ export default function SimulationWidget() {
       y: { min: minPrice, max: maxPrice },
     };
   }, [simulationPricePoints]);
+
+  const selectedPoint = throttle(
+    (point: GraphPoint) => {
+      if (!isPanning.current) return;
+      const newQuote =
+        simulationPricePoints.find(q => Math.abs(q.time - (point?.date.getTime() ?? 0) / 1000) < 1e-5) ?? currentQuote;
+
+      setSelectedQuote(newQuote);
+      const oneWeekInMs = 7 * 24 * 60 * 60 * 1000;
+      const selectedDate = point?.date;
+      if (selectedDate) {
+        const nearbyEvent = mockEvents.find((event, index) => {
+          const timeDiff = Math.abs(selectedDate.getTime() - event.date.getTime());
+          return timeDiff <= oneWeekInMs;
+        });
+
+        if (nearbyEvent) {
+          const eventIndex = mockEvents.findIndex(event => event === nearbyEvent);
+          setSelectedEvent({ id: eventIndex, ...nearbyEvent });
+        } else {
+          setSelectedEvent(undefined);
+        }
+      }
+    },
+    32,
+    { trailing: false },
+  );
 
   return (
     <Widget
@@ -307,6 +333,8 @@ export default function SimulationWidget() {
           <>
             <Info quote={selectedQuote ?? currentQuote} range={range} percentage={percentage.value} />
 
+            <Text className="text-center text-gray-500 text-xs mb-2 italic">{t('actor.simulation.instruction')}</Text>
+
             <View className="relative">
               <LineGraph
                 range={rangePoints}
@@ -320,7 +348,7 @@ export default function SimulationWidget() {
                 customElements={mockEvents.map((event, index) => {
                   return {
                     date: event.date,
-                    component: props => (
+                    component: (props: any) => (
                       <EventDot
                         {...props}
                         onPress={() => setSelectedEvent({ id: index, ...event })}
@@ -340,14 +368,7 @@ export default function SimulationWidget() {
                   isPanning.current = false;
                   setSelectedQuote(undefined);
                 }}
-                onPointSelected={point => {
-                  if (!isPanning.current) return;
-                  const newQuote =
-                    simulationPricePoints.find(q => Math.abs(q.time - (point?.date.getTime() ?? 0) / 1000) < 1e-5) ??
-                    currentQuote;
-
-                  setSelectedQuote(newQuote);
-                }}
+                onPointSelected={selectedPoint}
               />
             </View>
           </>
