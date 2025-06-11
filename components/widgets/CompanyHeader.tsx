@@ -39,7 +39,7 @@ export default function CompanyHeader({ name, isin, size = 'medium' }: CompanyHe
   };
 
   return (
-    <View className={`bg-white dark:bg-gray-800 rounded-lg shadow-sm ${config.containerPadding}`}>
+    <View className={`bg-white dark:bg-secondary-dark rounded-lg shadow-sm ${config.containerPadding}`}>
       <View className="flex-row items-center gap-3">
         {/* Company Logo */}
         <View className="justify-center items-center">

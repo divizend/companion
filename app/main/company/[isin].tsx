@@ -65,7 +65,7 @@ export default function StockDetails() {
         </View>
 
         {/* Key Statistics */}
-        <View className="bg-white dark:bg-gray-800 rounded-lg p-4 mb-4 shadow-sm">
+        <View className="bg-white dark:bg-secondary-dark rounded-lg p-4 mb-4 shadow-sm">
           <Text className="text-lg font-semibold dark:text-white mb-3">Key Statistics</Text>
 
           <View className="space-y-3">
@@ -90,14 +90,14 @@ export default function StockDetails() {
 
         {/* Company Description */}
         {stockDetails.description && (
-          <View className="bg-white dark:bg-gray-800 rounded-lg p-4 mb-4 shadow-sm">
+          <View className="bg-white dark:bg-secondary-dark rounded-lg p-4 mb-4 shadow-sm">
             <Text className="text-lg font-semibold dark:text-white mb-3">About</Text>
             <Text className="text-gray-700 dark:text-gray-300 leading-6">{stockDetails.description}</Text>
           </View>
         )}
 
         {/* Sector & Industry */}
-        <View className="bg-white dark:bg-gray-800 rounded-lg p-4 mb-4 shadow-sm">
+        <View className="bg-white dark:bg-secondary-dark rounded-lg p-4 mb-4 shadow-sm">
           <Text className="text-lg font-semibold dark:text-white mb-3">Classification</Text>
 
           <View className="space-y-2">
