@@ -10,6 +10,7 @@ import { apiGet } from '@/common/api';
 import { Text } from '@/components/base';
 import { QuotesWidget } from '@/components/features/actor';
 import CompanyHeader from '@/components/widgets/CompanyHeader';
+import useInitializeActor from '@/hooks/useInitializeActor';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { ActorService } from '@/services/actor.service';
 import { SecurityAccountSecurity } from '@/types/actor-api.types';
@@ -18,6 +19,7 @@ export default function StockDetails() {
   const { t } = useTranslation();
   const { isin } = useLocalSearchParams<{ isin: string }>();
   const theme = useThemeColor();
+  useInitializeActor();
 
   const {
     data: stockDetails,
@@ -33,7 +35,7 @@ export default function StockDetails() {
     return (
       <View className="flex-1 dark:bg-primary-dark bg-primary-light justify-center items-center">
         <ActivityIndicator size="large" color={theme.theme} />
-        <Text className="mt-2 text-gray-600 dark:text-gray-400">{t('stock.loading')}</Text>
+        <Text className="mt-2 text-gray-600 dark:text-gray-400">{t('common.loading')}</Text>
       </View>
     );
   }
@@ -117,7 +119,7 @@ export default function StockDetails() {
         <QuotesWidget
           queryKey={range => ['getCompanyPerformanceQuotes', isin, range.toString()]}
           useQuery={useQuery}
-          queryFn={range => ActorService.getCompanyQuotes(stockDetails, range)}
+          queryFn={range => ActorService.getCompanyQuotes({ ...stockDetails, isin }, range)}
         />
       </ScrollView>
     </View>
