@@ -1,11 +1,11 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 
 import { Icon } from '@rneui/themed';
 import { useQuery } from '@tanstack/react-query';
 import { router } from 'expo-router';
 import { debounce } from 'lodash';
 import { useTranslation } from 'react-i18next';
-import { ActivityIndicator, FlatList, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, FlatList, KeyboardAvoidingView, Platform, TouchableOpacity, View } from 'react-native';
 
 import { apiGet } from '@/common/api';
 import { Text, TextInput } from '@/components/base';
@@ -53,7 +53,10 @@ export default function Company({}) {
   );
 
   return (
-    <View className="flex-1 dark:bg-primary-dark bg-primary-light">
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      className="flex-1 dark:bg-primary-dark bg-primary-light"
+    >
       <View className="flex-row items-center px-4 py-2 gap-3">
         <TouchableOpacity onPress={() => router.back()}>
           <Icon size={24} name="arrow-back" type="material" color={theme.theme} />
@@ -109,6 +112,6 @@ export default function Company({}) {
           <Text className="text-gray-600 dark:text-gray-400">{t('common.search.startTyping')}</Text>
         </View>
       )}
-    </View>
+    </KeyboardAvoidingView>
   );
 }
