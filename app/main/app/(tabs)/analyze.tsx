@@ -47,6 +47,7 @@ export default function Analyze() {
           queryKey={range => ['getPerformanceQuotes', range.toString()]}
           useQuery={usePortfolioQuery}
           queryFn={range => ActorService.getPerformanceQuotes(range)}
+          enableTTWROR
         />
         <DivisionWidget />
         <SimulationWidget />
