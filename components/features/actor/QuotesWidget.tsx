@@ -1,28 +1,43 @@
 import React, { useMemo, useRef, useState } from 'react';
 
 import { LineGraph } from '@divizend/react-native-graph';
+import { useSignals } from '@preact/signals-react/runtime';
 import { Icon } from '@rneui/themed';
 import { throttle } from 'lodash';
 import { useTranslation } from 'react-i18next';
 import { Pressable, View } from 'react-native';
 import { runOnJS, useAnimatedReaction, useSharedValue } from 'react-native-reanimated';
 
+import { clsx } from '@/common/clsx';
 import { Text } from '@/components/base';
-import { Quote, QuoteRange } from '@/types/actor-api.types';
+import { showCustom } from '@/components/global/prompt';
+import { useThemeColor } from '@/hooks/useThemeColor';
+import { actor } from '@/signals/actor';
+import { QuoteRange, TTWRORQuote } from '@/types/actor-api.types';
 
+import { createPerformanceQuotesField, useActorSettingsModal } from './ActorSettingsModal';
 import Widget from './Widget';
 
 interface QuotesWidgetProps {
   queryKey: (range: QuoteRange) => string[];
-  queryFn: (range: QuoteRange) => Promise<Quote[]>;
-  useQuery: (options: { queryFn: () => Promise<Quote[]>; queryKey: string[] }) => {
-    data: Quote[] | undefined;
+  queryFn: (range: QuoteRange) => Promise<TTWRORQuote[]>;
+  useQuery: (options: { queryFn: () => Promise<TTWRORQuote[]>; queryKey: string[] }) => {
+    data: TTWRORQuote[] | undefined;
     isLoading: boolean;
   };
 }
 
-const Info = ({ quote, currentQuote, range }: { quote: Quote | undefined; currentQuote: Quote; range: QuoteRange }) => {
+const Info = ({
+  quote,
+  currentQuote,
+  range,
+}: {
+  quote: TTWRORQuote | undefined;
+  currentQuote: TTWRORQuote;
+  range: QuoteRange;
+}) => {
   const { t } = useTranslation();
+  const theme = useThemeColor();
 
   const color =
     currentQuote.price - (quote?.price ?? 0) > 0
@@ -45,6 +60,20 @@ const Info = ({ quote, currentQuote, range }: { quote: Quote | undefined; curren
     return null;
   })();
 
+  const ttwrorArrowIcon = (() => {
+    if (!quote) return null;
+
+    const ttwrorDifference = quote.ttwror;
+
+    if (ttwrorDifference > 0) {
+      return <Icon name="arrow-upward" size={25} color={theme.text} type="material" />;
+    } else if (ttwrorDifference < 0) {
+      return <Icon name="arrow-downward" size={25} color="red" type="material" />;
+    }
+
+    return null;
+  })();
+
   return (
     <>
       <Text className=" text-gray-600 font-bold text-lg">
@@ -52,15 +81,38 @@ const Info = ({ quote, currentQuote, range }: { quote: Quote | undefined; curren
           date: new Date((quote?.time ?? 0) * 1000),
         }).replace(/(\d{2}):(\d{2}):\d{2}/g, '$1:$2')}
       </Text>
-      <Text h1 className="font-bold">
-        {t('currency', {
-          amount: {
-            amount: quote?.price ?? 0,
-            unit: quote?.currency ?? 'EUR',
-          },
-        })}
-      </Text>
-      <View className="flex-row items-center">
+      {actor.value.settings?.performanceQuotesWidget.type === 'ttwror' ? (
+        <Text
+          h1
+          className={clsx('font-bold', 'flex items-center')}
+          style={{ color: (quote?.ttwror ?? 0) < 0 ? 'red' : theme.text }}
+        >
+          {ttwrorArrowIcon}
+          {t('percent', {
+            value: {
+              value: quote?.ttwror ?? 0,
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+              signDisplay: 'exceptZero',
+            },
+          })}
+        </Text>
+      ) : (
+        <Text h1 className="font-bold">
+          {t('currency', {
+            amount: {
+              amount: quote?.price ?? 0,
+              unit: quote?.currency ?? 'EUR',
+            },
+          })}
+        </Text>
+      )}
+      <View
+        className={clsx(
+          'flex-row items-center',
+          actor.value.settings?.performanceQuotesWidget.type === 'ttwror' && 'hidden',
+        )}
+      >
         {arrowIcon}
         <Text
           h4
@@ -108,16 +160,18 @@ export default function QuotesWidget({ queryFn, useQuery, queryKey }: QuotesWidg
   const isPanning = useRef(false);
 
   // Use shared values for UI thread updates
-  const selectedQuoteShared = useSharedValue<Quote | undefined>(undefined);
+  const selectedQuoteShared = useSharedValue<TTWRORQuote | undefined>(undefined);
 
   // State for React components
-  const [selectedQuote, setSelectedQuote] = useState<Quote>();
+  const [selectedQuote, setSelectedQuote] = useState<TTWRORQuote>();
   const [range, setRange] = useState<QuoteRange>(QuoteRange.Y);
 
   const { data: quotes = [], isLoading } = useQuery({
     queryFn: () => queryFn(range),
     queryKey: queryKey(range),
   });
+
+  useSignals();
 
   const currentQuote = quotes.at(-1);
 
@@ -128,17 +182,19 @@ export default function QuotesWidget({ queryFn, useQuery, queryKey }: QuotesWidg
       runOnJS(setSelectedQuote)(value);
     },
   );
+  const SettingsModalComponent = useActorSettingsModal([createPerformanceQuotesField()]);
 
   const points = useMemo(() => {
     return quotes.map(q => ({
       date: new Date(q.time * 1000),
-      value: q.price,
+      value: actor.value.settings?.performanceQuotesWidget.type === 'ttwror' ? q.ttwror : q.price,
     }));
-  }, [quotes]);
+  }, [quotes, actor.value.settings?.performanceQuotesWidget.type]);
 
   const rangePoints = useMemo(() => {
-    const maxQuote = quotes.reduce((max, quote) => (quote.price > max ? quote.price : max), 0);
-    const minQuote = quotes.reduce((min, quote) => (quote.price < min ? quote.price : min), maxQuote);
+    const key = actor.value.settings?.performanceQuotesWidget.type === 'ttwror' ? 'ttwror' : 'price';
+    const maxQuote = quotes.reduce((max, quote) => (quote[key] > max ? quote[key] : max), 0);
+    const minQuote = quotes.reduce((min, quote) => (quote[key] < min ? quote[key] : min), maxQuote);
     if (!quotes.length) return undefined;
     return {
       x: {
@@ -150,10 +206,19 @@ export default function QuotesWidget({ queryFn, useQuery, queryKey }: QuotesWidg
         max: maxQuote,
       },
     };
-  }, [quotes]);
+  }, [quotes, actor.value.settings?.performanceQuotesWidget.type, range]);
 
   return (
-    <Widget title={t('actor.quotes.title')} ready={!isLoading && !!quotes} styles={{ root: { overflow: 'hidden' } }}>
+    <Widget
+      title={t('actor.quotes.title')}
+      ready={!isLoading && !!quotes}
+      styles={{ root: { overflow: 'hidden' } }}
+      settings={
+        <Pressable onPress={() => showCustom(SettingsModalComponent)}>
+          <Icon name="settings" type="material" color="gray" size={24} />
+        </Pressable>
+      }
+    >
       {!isLoading && quotes.length > 0 && (
         <>
           <Info quote={selectedQuote ?? currentQuote} currentQuote={currentQuote!} range={range} />

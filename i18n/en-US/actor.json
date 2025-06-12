@@ -44,6 +44,10 @@
       "M": "M",
       "Y": "Y",
       "ALL": "All"
+    },
+    "options": {
+      "performance": "Performance",
+      "ttwror": "TTWROR (Total Time-Weighted Rate of Return)"
     }
   },
   "assetClasses": {
@@ -97,6 +101,7 @@
   },
   "error": {
     "simulation": "Failed to fetch simulation. Please try again later.",
-    "insufficientData": "Insufficient Data for this scenario"
+    "insufficientData": "Insufficient Data for this scenario",
+    "failedUpdate": "Failed to update data. Please try again."
   }
 }

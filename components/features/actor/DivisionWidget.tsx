@@ -95,10 +95,14 @@ export default function DivisionWidget() {
     <>
       <PieChartWidget
         data={entries}
-        legendEntries={entries
-          .slice(0, 5)
-          .concat([entries.at(-1)!])
-          .filter(Boolean)}
+        legendEntries={
+          entries.at(-1)?.id === 'others'
+            ? entries
+                .slice(0, 5)
+                .concat([entries.at(-1)!])
+                .filter(Boolean)
+            : entries.slice(0, 6)
+        }
         title={t('actor.division.title')}
         ready={!isLoading}
         renderCenterLabel={() => (
