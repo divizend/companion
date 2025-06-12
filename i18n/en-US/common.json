@@ -18,6 +18,8 @@
   "placeholder": "Type here...",
   "confirm": "Confirm",
   "percent": "{{value}} %",
+  "options": "Options",
+  "settings": "Settings",
   "comingSoon": {
     "title": "Coming soon",
     "stayTuned": "Stay tuned for the revolution of financial intelligence with Divizend!"
