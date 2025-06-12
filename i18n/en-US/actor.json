@@ -98,5 +98,8 @@
   "error": {
     "simulation": "Failed to fetch simulation. Please try again later.",
     "insufficientData": "Insufficient Data for this scenario"
+  },
+  "company": {
+    "unknwon": "Unknown"
   }
 }

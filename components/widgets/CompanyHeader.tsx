@@ -77,6 +77,14 @@ export default function CompanyHeader({ name, isin, size = 'medium' }: CompanyHe
 
         <View className="flex-1">
           <Text className={`font-semibold dark:text-white ${config.nameSize}`}>{name}</Text>
+          <Text
+            className="text-sm mr-2"
+            style={{
+              color: theme.muted,
+            }}
+          >
+            {isin}
+          </Text>
         </View>
       </View>
     </View>
