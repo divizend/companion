@@ -58,14 +58,20 @@ export default function StockDetails() {
         <Text className="text-lg font-semibold dark:text-white flex-1">{stockDetails.name || 'Stock Details'}</Text>
       </View>
 
-      <ScrollView className="flex-1 px-4">
+      <ScrollView className="flex-1 px-4 mt-4">
         {/* Company Header Widget */}
         <View className="mb-4">
-          <CompanyHeader name={stockDetails.name || t('company.unknown')} isin={isin} size="large" />
+          <CompanyHeader name={stockDetails.name || t('actor.company.unknwon')} isin={isin} size="large" />
         </View>
 
+        <QuotesWidget
+          queryKey={range => ['getCompanyPerformanceQuotes', isin, range.toString()]}
+          useQuery={useQuery}
+          queryFn={range => ActorService.getCompanyQuotes({ ...stockDetails, isin }, range)}
+        />
+
         {/* Key Statistics */}
-        <View className="bg-white dark:bg-gray-800 rounded-lg p-4 mb-4 shadow-sm">
+        {/* <View className="bg-white dark:bg-gray-800 rounded-lg p-4 mb-4 shadow-sm">
           <Text className="text-lg font-semibold dark:text-white mb-3">Key Statistics</Text>
 
           <View className="space-y-3">
@@ -86,18 +92,18 @@ export default function StockDetails() {
               <Text className="dark:text-white">{stockDetails.dividendYield || 'N/A'}</Text>
             </View>
           </View>
-        </View>
+        </View> */}
 
         {/* Company Description */}
-        {stockDetails.description && (
+        {/* {stockDetails.description && (
           <View className="bg-white dark:bg-gray-800 rounded-lg p-4 mb-4 shadow-sm">
             <Text className="text-lg font-semibold dark:text-white mb-3">About</Text>
             <Text className="text-gray-700 dark:text-gray-300 leading-6">{stockDetails.description}</Text>
           </View>
-        )}
+        )} */}
 
         {/* Sector & Industry */}
-        <View className="bg-white dark:bg-gray-800 rounded-lg p-4 mb-4 shadow-sm">
+        {/* <View className="bg-white dark:bg-gray-800 rounded-lg p-4 mb-4 shadow-sm">
           <Text className="text-lg font-semibold dark:text-white mb-3">Classification</Text>
 
           <View className="space-y-2">
@@ -114,13 +120,7 @@ export default function StockDetails() {
               <Text className="dark:text-white">{stockDetails.country || 'N/A'}</Text>
             </View>
           </View>
-        </View>
-
-        <QuotesWidget
-          queryKey={range => ['getCompanyPerformanceQuotes', isin, range.toString()]}
-          useQuery={useQuery}
-          queryFn={range => ActorService.getCompanyQuotes({ ...stockDetails, isin }, range)}
-        />
+        </View> */}
       </ScrollView>
     </View>
   );
