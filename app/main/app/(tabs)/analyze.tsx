@@ -13,7 +13,9 @@ import {
   QuotesWidget,
   SimulationWidget,
 } from '@/components/features/actor';
+import usePortfolioQuery from '@/hooks/actor/useDepotQuery';
 import useInitializeActor from '@/hooks/useInitializeActor';
+import { ActorService } from '@/services/actor.service';
 
 LogBox.ignoreLogs(['Image source "null" doesn\'t exist', 'No stops in gradient']);
 
@@ -41,7 +43,11 @@ export default function Analyze() {
         </Text>
         <Text className="mb-2 ml-0.5 font-medium">{t('actor.portfolioSelector.label')}</Text>
         <PortfolioSelector className="mb-5 flex-1" />
-        <QuotesWidget />
+        <QuotesWidget
+          queryKey={range => ['getPerformanceQuotes', range.toString()]}
+          useQuery={usePortfolioQuery}
+          queryFn={range => ActorService.getPerformanceQuotes(range)}
+        />
         <DivisionWidget />
         <SimulationWidget />
         <PortfolioStatsWidget />

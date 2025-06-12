@@ -43,5 +43,12 @@
     "modalTitle": "Select items",
     "noResultsText": "No items found",
     "selectedText": "{{count}} of {{total}} selected"
+  },
+  "search": {
+    "placeholder": "Search for security",
+    "showingResults": "Showing results for \"{{query}}\"",
+    "searching": "Searching...",
+    "noResults": "No results found",
+    "startTyping": "Start typing to search..."
   }
 }
