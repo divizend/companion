@@ -54,6 +54,27 @@ export const updateActorSettings = async (settings: Partial<ActorSettings>) => {
     });
 };
 
+export const updateActorSettingsOptimistically = async (settings: Partial<ActorSettings>) => {
+  const previousSettings = JSON.parse(JSON.stringify(actor.value.settings));
+
+  actor.value = {
+    ...actor.value,
+    settings: { ...actor.value.settings!, ...settings },
+  };
+
+  try {
+    await apiPatch<ActorSettings>('/actor/settings', settings);
+    return actor.value.settings;
+  } catch (error) {
+    actor.value = {
+      ...actor.value,
+      settings: previousSettings,
+    };
+
+    throw error;
+  }
+};
+
 export const loadDepot = async (
   depotIds: string[] | undefined,
   signal?: AbortSignal,

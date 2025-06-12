@@ -6,8 +6,9 @@ import { useTranslation } from 'react-i18next';
 
 import SectionList from '@/components/SectionList';
 import { Text } from '@/components/base';
+import { useSnackbar } from '@/components/global/Snackbar';
 import { useThemeColor } from '@/hooks/useThemeColor';
-import { updateActorSettings } from '@/signals/actions/actor.actions';
+import { updateActorSettingsOptimistically } from '@/signals/actions/actor.actions';
 import { actor } from '@/signals/actor';
 import {
   ActorSettings,
@@ -231,6 +232,7 @@ export function createMixedField<K extends keyof ActorSettings>(
 function ActorSettingsModal({ fields, title, useTranslation: useGlobalTranslation = true }: ActorSettingsModalProps) {
   const { t } = useTranslation();
   const theme = useThemeColor();
+  const { showSnackbar } = useSnackbar();
 
   useSignals();
   const settings = actor.value.settings;
@@ -244,12 +246,16 @@ function ActorSettingsModal({ fields, title, useTranslation: useGlobalTranslatio
     nestedKey: keyof ActorSettings[T],
     value: ActorSettings[T][keyof ActorSettings[T]],
   ) => {
-    return () => {
-      updateActorSettings({
-        [settingKey]: {
-          [nestedKey]: value,
-        },
-      });
+    return async () => {
+      try {
+        await updateActorSettingsOptimistically({
+          [settingKey]: {
+            [nestedKey]: value,
+          },
+        });
+      } catch (error) {
+        showSnackbar(t('actor.error.failedUpdate'), { type: 'error' });
+      }
     };
   };
 
