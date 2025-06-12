@@ -48,7 +48,8 @@
     "options": {
       "performance": "Performance",
       "ttwror": "TTWROR (Total Time-Weighted Rate of Return)"
-    }
+    },
+    "noQuotes": "No available quotes"
   },
   "assetClasses": {
     "title": "Asset classes",

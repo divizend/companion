@@ -284,6 +284,11 @@ export default function QuotesWidget({ queryFn, useQuery, queryKey, enableTTWROR
           </View>
         </>
       )}
+      {!isLoading && quotes.length === 0 && (
+        <View className="flex-1 justify-center items-center" style={{ height: 225 }}>
+          <Text className="text-gray-500 text-lg">{t('actor.quotes.noQuotes')}</Text>
+        </View>
+      )}
     </Widget>
   );
 }
