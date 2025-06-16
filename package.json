@@ -34,7 +34,6 @@
     "@rneui/themed": "^4.0.0-rc.8",
     "@shopify/react-native-skia": "^1.11.11",
     "@tanstack/react-query": "^5.52.2",
-    "@visx/scale": "^3.12.0",
     "axios": "^1.7.9",
     "eslint-plugin-react": "^7.37.2",
     "event-target-polyfill": "^0.0.4",
