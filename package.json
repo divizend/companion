@@ -20,8 +20,8 @@
     "preset": "jest-expo"
   },
   "dependencies": {
-    "@divizend/react-native-graph": "git+https://github.com/divizend/react-native-graph.git",
     "@divizend/react-native-calendars": "git+https://github.com/divizend/react-native-calendars.git",
+    "@divizend/react-native-graph": "git+https://github.com/divizend/react-native-graph.git",
     "@expo/vector-icons": "^14.0.2",
     "@gorhom/bottom-sheet": "^5.0.4",
     "@preact/signals-react": "^2.2.0",
@@ -34,12 +34,14 @@
     "@rneui/themed": "^4.0.0-rc.8",
     "@shopify/react-native-skia": "^1.11.11",
     "@tanstack/react-query": "^5.52.2",
+    "@visx/scale": "^3.12.0",
     "axios": "^1.7.9",
     "eslint-plugin-react": "^7.37.2",
     "event-target-polyfill": "^0.0.4",
     "expo": "~51.0.39",
     "expo-auth-session": "~5.5.2",
     "expo-blur": "^13.0.2",
+    "expo-clipboard": "~6.0.3",
     "expo-constants": "~16.0.2",
     "expo-crypto": "~13.0.2",
     "expo-dev-client": "~4.0.29",
@@ -82,8 +84,8 @@
     "sse.js": "^2.5.0",
     "tailwind-merge": "^2.5.2",
     "tailwindcss": "^3.4.13",
-    "yup": "^1.6.1",
-    "expo-clipboard": "~6.0.3"
+    "victory-native": "^41.17.4",
+    "yup": "^1.6.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
