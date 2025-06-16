@@ -55,7 +55,7 @@ export default function Company({}) {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      className="flex-1 dark:bg-primary-dark bg-primary-light"
+      className="flex-1 bg-primary-light dark:bg-primary-dark"
     >
       <View className="flex-row items-center px-4 py-2 gap-3">
         <TouchableOpacity onPress={() => router.back()}>
