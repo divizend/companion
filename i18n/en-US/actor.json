@@ -100,6 +100,15 @@
     "label": "Portfolios selection",
     "select": "Select portfolios"
   },
+  "dividendHistory": {
+    "title": "Company dividend history",
+    "displayOption": {
+      "title": "Display option",
+      "ABSOLUTE": "Absolute",
+      "ABSOLUTESPLITADJUSTED": "Absolute (split adjusted)",
+      "YIELDS": "Yields"
+    }
+  },
   "error": {
     "simulation": "Failed to fetch simulation. Please try again later.",
     "insufficientData": "Insufficient Data for this scenario",

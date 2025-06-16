@@ -165,7 +165,6 @@ export default function QuotesWidget({ queryFn, useQuery, queryKey, enableTTWROR
   // Use shared values for UI thread updates
   const selectedQuoteShared = useSharedValue<TTWRORQuote | undefined>(undefined);
 
-  // State for React components
   const [selectedQuote, setSelectedQuote] = useState<TTWRORQuote>();
   const [range, setRange] = useState<QuoteRange>(QuoteRange.Y);
 
@@ -180,7 +179,6 @@ export default function QuotesWidget({ queryFn, useQuery, queryKey, enableTTWROR
 
   const useTTWROR = !!enableTTWROR && actor.value.settings?.performanceQuotesWidget.type === 'ttwror';
 
-  // Sync shared values to state for React components
   useAnimatedReaction(
     () => selectedQuoteShared.value,
     value => {
@@ -229,6 +227,8 @@ export default function QuotesWidget({ queryFn, useQuery, queryKey, enableTTWROR
       {!isLoading && quotes.length > 0 && (
         <>
           <Info isTTWROR={useTTWROR} quote={selectedQuote ?? currentQuote} currentQuote={currentQuote!} range={range} />
+
+          <Text className="text-center text-gray-500 text-xs mb-2 italic">{t('actor.simulation.instruction')}</Text>
 
           <LineGraph
             range={rangePoints}
@@ -291,4 +291,21 @@ export default function QuotesWidget({ queryFn, useQuery, queryKey, enableTTWROR
       )}
     </Widget>
   );
+}
+{
+  /* <Widget styles={{ container: { height: 200 } }} ready>
+        <CartesianChart
+          axisOptions={{ lineWidth: 0 }}
+          frame={{ lineWidth: 0 }}
+          data={quotes.map((quote, index) => ({
+            day: new Date(quote.time * 1000),
+            price: quote.price,
+            date: index,
+          }))}
+          xKey="date"
+          yKeys={['price']}
+        >
+          {({ points }) => <Line curveType="basis" points={points.price} color="red" strokeWidth={3} />}
+        </CartesianChart>
+      </Widget> */
 }

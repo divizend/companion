@@ -9,11 +9,12 @@ import { ActivityIndicator, ScrollView, TouchableOpacity, View } from 'react-nat
 import { apiGet } from '@/common/api';
 import { Text } from '@/components/base';
 import { QuotesWidget } from '@/components/features/actor';
+import BarChart from '@/components/features/actor/BarChart';
 import CompanyHeader from '@/components/widgets/CompanyHeader';
 import useInitializeActor from '@/hooks/useInitializeActor';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { ActorService } from '@/services/actor.service';
-import { SecurityAccountSecurity } from '@/types/actor-api.types';
+import { DividendDisplayOption, SecurityAccountSecurity } from '@/types/actor-api.types';
 
 export default function StockDetails() {
   const { t } = useTranslation();
@@ -65,6 +66,13 @@ export default function StockDetails() {
           queryKey={range => ['getCompanyPerformanceQuotes', isin, range.toString()]}
           useQuery={useQuery}
           queryFn={range => ActorService.getCompanyQuotes({ ...stockDetails, isin }, range)}
+        />
+
+        <BarChart
+          queryKey={() => ['getCompanyDividendsHistory', isin]}
+          queryFn={() =>
+            ActorService.getCompanyDividendsHistory({ ...stockDetails, isin }, DividendDisplayOption.ABSOLUTE)
+          }
         />
 
         {/* Key Statistics */}
