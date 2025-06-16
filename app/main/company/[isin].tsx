@@ -60,10 +60,7 @@ export default function StockDetails() {
 
       <ScrollView className="flex-1 px-4 mt-4">
         {/* Company Header Widget */}
-        <View className="mb-4">
-          <CompanyHeader name={stockDetails.name || t('actor.company.unknwon')} isin={isin} size="large" />
-        </View>
-
+        <CompanyHeader isin={isin} name={stockDetails.name} size="large" />
         <QuotesWidget
           queryKey={range => ['getCompanyPerformanceQuotes', isin, range.toString()]}
           useQuery={useQuery}

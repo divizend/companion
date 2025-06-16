@@ -6,7 +6,7 @@ import { Text } from '@/components/base';
 import { useThemeColor } from '@/hooks/useThemeColor';
 
 type WidgetProps = {
-  title: string;
+  title?: string;
   children?: React.ReactNode;
   ready?: boolean;
   settings?: React.ReactNode;
@@ -29,12 +29,14 @@ export default function Widget({ title, children, ready, settings, styles }: Wid
         },
       ]}
     >
-      <View className="mb-4 flex flex-row justify-between items-center">
-        <Text h3 className="font-bold">
-          {title}
-        </Text>
-        {settings}
-      </View>
+      {(!!title || !!settings) && (
+        <View className="mb-4 flex flex-row justify-between items-center">
+          <Text h3 className="font-bold">
+            {title}
+          </Text>
+          {settings}
+        </View>
+      )}
       <View style={styles?.container}>{!ready ? <ActivityIndicator /> : children}</View>
     </View>
   );
