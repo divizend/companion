@@ -228,7 +228,7 @@ export default function QuotesWidget({ queryFn, useQuery, queryKey, enableTTWROR
         <>
           <Info isTTWROR={useTTWROR} quote={selectedQuote ?? currentQuote} currentQuote={currentQuote!} range={range} />
 
-          <Text className="text-center text-gray-500 text-xs mb-2 italic">{t('actor.simulation.instruction')}</Text>
+          <Text className="text-center text-gray-500 text-xs mb-2 italic">{t('actor.chartInstruction')}</Text>
 
           <LineGraph
             range={rangePoints}

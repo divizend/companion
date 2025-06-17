@@ -346,9 +346,7 @@ export default function SimulationWidget() {
         ) : (
           <>
             <Info quote={selectedQuote ?? currentQuote} range={range} percentage={percentage.value} />
-
-            <Text className="text-center text-gray-500 text-xs mb-2 italic">{t('actor.simulation.instruction')}</Text>
-
+            <Text className="text-center text-gray-500 text-xs mb-2 italic">{t('actor.chartInstruction')}</Text>
             <View className="relative">
               <LineGraph
                 range={rangePoints}

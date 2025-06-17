@@ -6,6 +6,7 @@
     "totalRefundableWithholdingTax": "Total refundable withholding tax",
     "nextDividend": "Next dividend"
   },
+  "chartInstruction": "Hold and swipe to explore different dates and events",
   "division": {
     "title": "Division",
     "totalAssets": "Total Assets",
@@ -13,7 +14,6 @@
   },
   "simulation": {
     "title": "Simulation",
-    "instruction": "Hold and swipe to explore different dates and events",
     "radioButton": {
       "1M": "1M",
       "3M": "3M",
@@ -107,6 +107,26 @@
       "ABSOLUTE": "Absolute",
       "ABSOLUTESPLITADJUSTED": "Absolute (split adjusted)",
       "YIELDS": "Yields"
+    },
+    "yield": "Yield",
+    "splitAdjusted": "Split adjusted",
+    "atPrice": "at {{price}}",
+    "absoluteInfo": "Dividend from {{date}}: <strong>{{price}} per share</strong>",
+    "absoluteSplitAdjustedInfo": {
+      "splits": {
+        "value": "Accumulated splits since then: <strong>{{from}}:{{to}}</strong>",
+        "splitAdjustedDividend": "Split-adjusted dividend: {{priceBeforeSplit}} * {{splits}} = <strong>{{price}}</strong> per share"
+      },
+      "noSplits": "No splits happened since then."
+    },
+    "yieldInfo": {
+      "splits": {
+        "dividendFrequency": "Dividend frequency: {{frequency}} → <strong>factor {{factor}}</strong>",
+        "sharePrice": "Share price at {{date}}: <strong>{{price}}</strong>",
+        "dividendYield": "Dividend yield: (({{yield}} * {{splits}}) * {{factor}}) / {{price}} = <strong>{{result}}</strong>"
+      },
+      "noSplits": "Dividend yield: ({{yield}} * {{factor}}) / {{price}} = <strong>{{result}}</strong>",
+      "dividendYield": "Dividend yield: {{yield}}  / {{price}} = <strong>{{result}}</strong>"
     }
   },
   "error": {
