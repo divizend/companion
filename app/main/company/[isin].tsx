@@ -51,7 +51,6 @@ export default function StockDetails() {
 
   return (
     <View className="flex-1 dark:bg-primary-dark bg-primary-light">
-      {/* Header */}
       <View className="flex-row items-center px-4 py-2 gap-3">
         <TouchableOpacity onPress={() => router.back()}>
           <Icon size={24} name="arrow-back" type="material" color={theme.theme} />
@@ -60,7 +59,6 @@ export default function StockDetails() {
       </View>
 
       <ScrollView className="flex-1 px-4 mt-4">
-        {/* Company Header Widget */}
         <CompanyHeader isin={isin} name={stockDetails.name} size="large" />
         <QuotesWidget
           queryKey={range => ['getCompanyPerformanceQuotes', isin, range.toString()]}
@@ -74,58 +72,6 @@ export default function StockDetails() {
             ActorService.getCompanyDividendsHistory({ ...stockDetails, isin }, DividendDisplayOption.ABSOLUTE)
           }
         />
-
-        {/* Key Statistics */}
-        {/* <View className="bg-white dark:bg-gray-800 rounded-lg p-4 mb-4 shadow-sm">
-          <Text className="text-lg font-semibold dark:text-white mb-3">Key Statistics</Text>
-
-          <View className="space-y-3">
-            <View className="flex-row justify-between">
-              <Text className="text-gray-600 dark:text-gray-400">Market Cap</Text>
-              <Text className="dark:text-white">{stockDetails.marketCap || 'N/A'}</Text>
-            </View>
-            <View className="flex-row justify-between">
-              <Text className="text-gray-600 dark:text-gray-400">Volume</Text>
-              <Text className="dark:text-white">{stockDetails.volume || 'N/A'}</Text>
-            </View>
-            <View className="flex-row justify-between">
-              <Text className="text-gray-600 dark:text-gray-400">P/E Ratio</Text>
-              <Text className="dark:text-white">{stockDetails.peRatio || 'N/A'}</Text>
-            </View>
-            <View className="flex-row justify-between">
-              <Text className="text-gray-600 dark:text-gray-400">Dividend Yield</Text>
-              <Text className="dark:text-white">{stockDetails.dividendYield || 'N/A'}</Text>
-            </View>
-          </View>
-        </View> */}
-
-        {/* Company Description */}
-        {/* {stockDetails.description && (
-          <View className="bg-white dark:bg-gray-800 rounded-lg p-4 mb-4 shadow-sm">
-            <Text className="text-lg font-semibold dark:text-white mb-3">About</Text>
-            <Text className="text-gray-700 dark:text-gray-300 leading-6">{stockDetails.description}</Text>
-          </View>
-        )} */}
-
-        {/* Sector & Industry */}
-        {/* <View className="bg-white dark:bg-gray-800 rounded-lg p-4 mb-4 shadow-sm">
-          <Text className="text-lg font-semibold dark:text-white mb-3">Classification</Text>
-
-          <View className="space-y-2">
-            <View className="flex-row justify-between">
-              <Text className="text-gray-600 dark:text-gray-400">Sector</Text>
-              <Text className="dark:text-white">{stockDetails.sector || 'N/A'}</Text>
-            </View>
-            <View className="flex-row justify-between">
-              <Text className="text-gray-600 dark:text-gray-400">Industry</Text>
-              <Text className="dark:text-white">{stockDetails.industry || 'N/A'}</Text>
-            </View>
-            <View className="flex-row justify-between">
-              <Text className="text-gray-600 dark:text-gray-400">Country</Text>
-              <Text className="dark:text-white">{stockDetails.country || 'N/A'}</Text>
-            </View>
-          </View>
-        </View> */}
       </ScrollView>
     </View>
   );
