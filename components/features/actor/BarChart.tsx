@@ -10,6 +10,8 @@ import { Pressable, View } from 'react-native';
 import { SharedValue, runOnJS, useAnimatedReaction, useSharedValue } from 'react-native-reanimated';
 import { Bar, CartesianChart, Line, useChartPressState } from 'victory-native';
 
+// @ts-ignore
+import inter from '@/assets/fonts/inter-var.ttf';
 import { Text } from '@/components/base';
 import { showCustom } from '@/components/global/prompt';
 import { actor } from '@/signals/actor';
@@ -22,8 +24,6 @@ import {
 
 import { createDividendHistoryDisplayField, useActorSettingsModal } from './ActorSettingsModal';
 import Widget from './Widget';
-// @ts-ignore
-import inter from './inter-var.ttf';
 
 interface BarChartProps {
   queryKey: () => string[];
@@ -99,9 +99,9 @@ function AbsoluteSplitAdjustedInfo({ data }: { data: CompanyDividendHistory }) {
   const splits = data.dividendSplits;
 
   return (
-    <View className="flex items-start">
-      <View className="flex-row items-start gap-4">
-        <View className="flex-1">
+    <View style={{ alignItems: 'flex-start' }}>
+      <View style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 16 }}>
+        <View>
           <Text h1 className="font-bold">
             {t('currency', {
               amount: {
@@ -114,8 +114,8 @@ function AbsoluteSplitAdjustedInfo({ data }: { data: CompanyDividendHistory }) {
             {t('dateTime.day', { date: new Date(data.date) })}
           </Text>
         </View>
-        {!!splits && (
-          <View className="flex-1">
+        {!!splits ? (
+          <View style={{ flex: 1 }}>
             <Text style={{ fontSize: 14, marginBottom: 4 }}>
               <Trans
                 i18nKey="actor.dividendHistory.absoluteSplitAdjustedInfo.splits.value"
@@ -132,9 +132,13 @@ function AbsoluteSplitAdjustedInfo({ data }: { data: CompanyDividendHistory }) {
               <Trans
                 i18nKey="actor.dividendHistory.absoluteSplitAdjustedInfo.splits.splitAdjustedDividend"
                 values={{
-                  priceBeforeSplit: `${data.yield.amount.toFixed(2)} ${data.yield.unit}`,
+                  priceBeforeSplit: t('currency', {
+                    amount: data.yield,
+                  }),
                   splits: `${splits.from}:${splits.to}`,
-                  price: `${data.absoluteSplitAdjusted.amount.toFixed(2)} ${data.absoluteSplitAdjusted.unit}`,
+                  price: t('currency', {
+                    amount: data?.absoluteSplitAdjusted,
+                  }),
                 }}
                 components={{
                   strong: <Text style={{ fontWeight: 'bold' }} />,
@@ -142,34 +146,16 @@ function AbsoluteSplitAdjustedInfo({ data }: { data: CompanyDividendHistory }) {
               />
             </Text>
           </View>
+        ) : (
+          <Text style={{ fontSize: 14 }}>{t('actor.dividendHistory.absoluteSplitAdjustedInfo.noSplits')}</Text>
         )}
       </View>
     </View>
   );
 }
 
-function DividendYieldInfo({ data }: { data: CompanyDividendYield }) {
-  const { t } = useTranslation();
-  const quote = data.quote;
-
-  if (!data.dividendYield || !quote) {
-    return (
-      <View className="flex items-center">
-        <Text className="text-2xl font-bold text-gray-900">N/A</Text>
-        <Text className="text-sm text-gray-500 mt-1">{t('actor.dividendHistory.yield')}</Text>
-      </View>
-    );
-  }
-
-  return (
-    <View className="flex items-center">
-      <Text className="text-2xl font-bold text-gray-900">{`${data.dividendYield.toFixed(2)}%`}</Text>
-      <Text className="text-sm text-gray-500 mt-1">{t('dateTime.day', { date: new Date(data.date) })}</Text>
-      <Text className="text-xs text-gray-400 mt-1">
-        {t('actor.dividendHistory.atPrice', { price: quote.price.toFixed(2) })}
-      </Text>
-    </View>
-  );
+function DividendYieldInfo({}: { data: CompanyDividendYield }) {
+  return <></>;
 }
 
 const OPTIONS = {
@@ -296,6 +282,11 @@ export default function BarChart({ queryFn, queryKey }: BarChartProps) {
 
   const SettingsModalComponent = useActorSettingsModal([createDividendHistoryDisplayField()]);
 
+  let selectedYield = undefined;
+  if (displayOption === DividendDisplayOption.YIELDS && data?.dividendYields?.length) {
+    selectedYield = isActive ? data.dividendYields.at(state.matchedIndex.value) : data.dividendYields.at(-1);
+  }
+
   return (
     <Widget
       styles={{ root: { overflow: 'hidden' } }}
@@ -313,9 +304,62 @@ export default function BarChart({ queryFn, queryKey }: BarChartProps) {
         pressedData={pressedData}
         displayOption={displayOption || DividendDisplayOption.YIELDS}
       />
+      {displayOption === DividendDisplayOption.YIELDS && selectedYield ? (
+        <View className="flex items-center">
+          <Text>
+            <Trans
+              i18nKey="actor.dividendHistory.yieldInfo.splits.sharePrice"
+              values={{
+                date: t('dateTime.day', {
+                  date: new Date(selectedYield.date ?? 0),
+                }),
+                price: t('currency', {
+                  amount: {
+                    amount: selectedYield.quote?.price,
+                    unit: selectedYield.quote?.currency,
+                  },
+                }),
+              }}
+              components={{
+                strong: <Text style={{ fontWeight: 'bold' }} />,
+              }}
+            />
+          </Text>
+
+          {selectedYield.dividendYield !== 0 && !!selectedYield.quote && (
+            <Text>
+              <Trans
+                i18nKey="actor.dividendHistory.yieldInfo.dividendYield"
+                values={{
+                  yield: t('currency', {
+                    amount: {
+                      amount: selectedYield.quote.price * selectedYield.dividendYield!,
+                      unit: selectedYield.quote?.currency,
+                    },
+                  }),
+                  price: t('currency', {
+                    amount: {
+                      amount: selectedYield.quote?.price,
+                      unit: selectedYield.quote?.currency,
+                    },
+                  }),
+                  result: t('percent', {
+                    value: {
+                      value: selectedYield.dividendYield,
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    },
+                  }),
+                }}
+                components={{
+                  strong: <Text style={{ fontWeight: 'bold' }} />,
+                }}
+              />
+            </Text>
+          )}
+        </View>
+      ) : null}
       <Text className="text-center text-gray-500 text-xs mb-4 italic">{t('actor.chartInstruction')}</Text>
-      {/* Yield values are incorrect */}
-      {/* Considered displaying the things directly here */}
       <View className="h-[200]">
         <CartesianChart
           chartPressState={state}

@@ -125,7 +125,6 @@
         "sharePrice": "Share price at {{date}}: <strong>{{price}}</strong>",
         "dividendYield": "Dividend yield: (({{yield}} * {{splits}}) * {{factor}}) / {{price}} = <strong>{{result}}</strong>"
       },
-      "noSplits": "Dividend yield: ({{yield}} * {{factor}}) / {{price}} = <strong>{{result}}</strong>",
       "dividendYield": "Dividend yield: {{yield}}  / {{price}} = <strong>{{result}}</strong>"
     }
   },
