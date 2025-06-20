@@ -14,6 +14,7 @@ import { Bar, CartesianChart, Line, useChartPressState } from 'victory-native';
 import inter from '@/assets/fonts/inter-var.ttf';
 import { Text } from '@/components/base';
 import { showCustom } from '@/components/global/prompt';
+import { useThemeColor } from '@/hooks/useThemeColor';
 import { actor } from '@/signals/actor';
 import {
   CompanyDividendData,
@@ -193,6 +194,7 @@ const OPTIONS = {
 
 export default function BarChart({ queryFn, queryKey }: BarChartProps) {
   const font = useFont(inter, 12);
+  const theme = useThemeColor();
   const { t } = useTranslation();
   const { data, isLoading } = useQuery<CompanyDividendData>({
     queryFn: () => queryFn(),
@@ -373,10 +375,33 @@ export default function BarChart({ queryFn, queryKey }: BarChartProps) {
           xAxis={{
             formatXLabel: label => new Date(label).getFullYear().toString(),
             font,
+            labelColor: theme.text,
             labelPosition: 'outset',
             lineWidth: 0,
           }}
-          yAxis={[{ font, labelPosition: 'outset', tickCount: 3 }]}
+          yAxis={[
+            {
+              font,
+              labelColor: theme.text,
+              labelPosition: 'outset',
+              tickCount: displayOption === DividendDisplayOption.YIELDS ? 2 : 4,
+              formatYLabel: label =>
+                displayOption === DividendDisplayOption.YIELDS
+                  ? t('percent', {
+                      value: {
+                        value: label,
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      },
+                    })
+                  : t('currency', {
+                      amount: {
+                        amount: label,
+                        unit: data?.dividends?.at(-1)?.yield.unit ?? 'EUR',
+                      },
+                    }),
+            },
+          ]}
         >
           {({ points, chartBounds }) => {
             const option = OPTIONS[displayOption || DividendDisplayOption.YIELDS];
