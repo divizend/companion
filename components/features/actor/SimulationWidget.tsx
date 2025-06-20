@@ -1,11 +1,12 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 
-import { LineGraph } from '@divizend/react-native-graph';
+import { GraphPoint, LineGraph } from '@divizend/react-native-graph';
 import { useSignal, useSignals } from '@preact/signals-react/runtime';
 import { CheckBox, Icon } from '@rneui/themed';
 import { throttle } from 'lodash';
 import { useTranslation } from 'react-i18next';
 import { Pressable, View } from 'react-native';
+import { runOnJS, useAnimatedReaction, useSharedValue } from 'react-native-reanimated';
 
 import { usedConfig } from '@/common/config';
 import { useUserProfile } from '@/common/profile';
@@ -43,7 +44,7 @@ const mockEvents: Array<{ date: Date; description: string }> = [
   },
 ];
 // Uncomment this to see the mock events
-mockEvents.length = 0; // Clear the mock events for now
+// mockEvents.length = 0; // Clear the mock events for now
 
 interface Security {
   _id: string | null;
@@ -135,9 +136,11 @@ export default function SimulationWidget() {
 
   const isPanning = useRef(false);
   const theme = useThemeColor();
-  const [selectedQuote, setSelectedQuote_] = useState<{ time: number; price: number }>();
-  const setSelectedQuote = throttle(setSelectedQuote_, 32);
 
+  const selectedQuoteShared = useSharedValue<{ time: number; price: number } | undefined>(undefined);
+  const selectedEventShared = useSharedValue<{ id: number; date: Date; description: string } | undefined>(undefined);
+
+  const [selectedQuote, setSelectedQuote] = useState<{ time: number; price: number }>();
   const [selectedEvent, setSelectedEvent] = useState<{ id: number; date: Date; description: string }>();
 
   const [range, setRange] = useState<SimulationRange>(SimulationRange.Y);
@@ -220,6 +223,43 @@ export default function SimulationWidget() {
       y: { min: minPrice, max: maxPrice },
     };
   }, [simulationPricePoints]);
+
+  useAnimatedReaction(
+    () => selectedQuoteShared.value,
+    value => {
+      runOnJS(setSelectedQuote)(value);
+    },
+  );
+
+  useAnimatedReaction(
+    () => selectedEventShared.value,
+    value => {
+      runOnJS(setSelectedEvent)(value);
+    },
+  );
+
+  const selectPoint = throttle((point: GraphPoint) => {
+    if (!isPanning.current) return;
+    const newQuote =
+      simulationPricePoints.find(q => Math.abs(q.time - (point?.date.getTime() ?? 0) / 1000) < 1e-5) ?? currentQuote;
+
+    selectedQuoteShared.value = newQuote;
+    const oneWeekInMs = 7 * 24 * 60 * 60 * 1000;
+    const selectedDate = point?.date;
+    if (selectedDate) {
+      const nearbyEvent = mockEvents.find((event, index) => {
+        const timeDiff = Math.abs(selectedDate.getTime() - event.date.getTime());
+        return timeDiff <= oneWeekInMs;
+      });
+
+      if (nearbyEvent) {
+        const eventIndex = mockEvents.findIndex(event => event === nearbyEvent);
+        selectedEventShared.value = { id: eventIndex, ...nearbyEvent };
+      } else {
+        selectedEventShared.value = undefined;
+      }
+    }
+  }, 16);
 
   return (
     <Widget
@@ -306,7 +346,7 @@ export default function SimulationWidget() {
         ) : (
           <>
             <Info quote={selectedQuote ?? currentQuote} range={range} percentage={percentage.value} />
-
+            <Text className="text-center text-gray-500 text-xs mb-2 italic">{t('actor.chartInstruction')}</Text>
             <View className="relative">
               <LineGraph
                 range={rangePoints}
@@ -320,12 +360,12 @@ export default function SimulationWidget() {
                 customElements={mockEvents.map((event, index) => {
                   return {
                     date: event.date,
-                    component: props => (
+                    component: (props: any) => (
                       <EventDot
                         {...props}
-                        onPress={() => setSelectedEvent({ id: index, ...event })}
+                        onPress={() => (selectedEventShared.value = { id: index, ...event })}
                         selectedEvent={selectedEvent?.id === index ? selectedEvent : undefined}
-                        setSelectedEvent={setSelectedEvent}
+                        setSelectedEvent={event => (selectedEventShared.value = event)}
                       />
                     ),
                   };
@@ -338,16 +378,9 @@ export default function SimulationWidget() {
                 }}
                 onGestureEnd={() => {
                   isPanning.current = false;
-                  setSelectedQuote(undefined);
+                  selectedQuoteShared.value = undefined;
                 }}
-                onPointSelected={point => {
-                  if (!isPanning.current) return;
-                  const newQuote =
-                    simulationPricePoints.find(q => Math.abs(q.time - (point?.date.getTime() ?? 0) / 1000) < 1e-5) ??
-                    currentQuote;
-
-                  setSelectedQuote(newQuote);
-                }}
+                onPointSelected={selectPoint}
               />
             </View>
           </>
@@ -360,7 +393,7 @@ export default function SimulationWidget() {
             <Pressable
               key={k}
               onPress={() => {
-                setSelectedQuote(undefined);
+                selectedQuoteShared.value = undefined;
                 setRange(v as SimulationRange);
               }}
               style={{

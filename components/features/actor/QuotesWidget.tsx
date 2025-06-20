@@ -6,27 +6,38 @@ import { Icon } from '@rneui/themed';
 import { throttle } from 'lodash';
 import { useTranslation } from 'react-i18next';
 import { Pressable, View } from 'react-native';
+import { runOnJS, useAnimatedReaction, useSharedValue } from 'react-native-reanimated';
 
 import { clsx } from '@/common/clsx';
 import { Text } from '@/components/base';
 import { showCustom } from '@/components/global/prompt';
-import usePortfolioQuery from '@/hooks/actor/useDepotQuery';
 import { useThemeColor } from '@/hooks/useThemeColor';
-import { ActorService } from '@/services/actor.service';
 import { actor } from '@/signals/actor';
 import { QuoteRange, TTWRORQuote } from '@/types/actor-api.types';
 
 import { createPerformanceQuotesField, useActorSettingsModal } from './ActorSettingsModal';
 import Widget from './Widget';
 
+interface QuotesWidgetProps {
+  queryKey: (range: QuoteRange) => string[];
+  queryFn: (range: QuoteRange) => Promise<TTWRORQuote[]>;
+  useQuery: (options: { queryFn: () => Promise<TTWRORQuote[]>; queryKey: string[] }) => {
+    data: TTWRORQuote[] | undefined;
+    isLoading: boolean;
+  };
+  enableTTWROR?: boolean;
+}
+
 const Info = ({
   quote,
   currentQuote,
   range,
+  isTTWROR = false,
 }: {
   quote: TTWRORQuote | undefined;
   currentQuote: TTWRORQuote;
   range: QuoteRange;
+  isTTWROR?: boolean;
 }) => {
   const { t } = useTranslation();
   const theme = useThemeColor();
@@ -73,7 +84,7 @@ const Info = ({
           date: new Date((quote?.time ?? 0) * 1000),
         }).replace(/(\d{2}):(\d{2}):\d{2}/g, '$1:$2')}
       </Text>
-      {actor.value.settings?.performanceQuotesWidget.type === 'ttwror' ? (
+      {isTTWROR ? (
         <Text
           h1
           className={clsx('font-bold', 'flex items-center')}
@@ -147,33 +158,44 @@ const Info = ({
   );
 };
 
-export default function QuotesWidget() {
+export default function QuotesWidget({ queryFn, useQuery, queryKey, enableTTWROR = false }: QuotesWidgetProps) {
   const { t } = useTranslation();
   const isPanning = useRef(false);
-  const theme = useThemeColor();
-  const [selectedQuote, setSelectedQuote_] = useState<TTWRORQuote>();
-  const setSelectedQuote = throttle(setSelectedQuote_, 32);
+
+  // Use shared values for UI thread updates
+  const selectedQuoteShared = useSharedValue<TTWRORQuote | undefined>(undefined);
+
+  const [selectedQuote, setSelectedQuote] = useState<TTWRORQuote>();
   const [range, setRange] = useState<QuoteRange>(QuoteRange.Y);
-  const { data: quotes = [], isLoading } = usePortfolioQuery({
-    queryFn: () => ActorService.getPerformanceQuotes(range),
-    queryKey: ['getPerformanceQuotes', range],
+
+  const { data: quotes = [], isLoading } = useQuery({
+    queryFn: () => queryFn(range),
+    queryKey: queryKey(range),
   });
 
   useSignals();
 
   const currentQuote = quotes.at(-1);
 
+  const useTTWROR = !!enableTTWROR && actor.value.settings?.performanceQuotesWidget.type === 'ttwror';
+
+  useAnimatedReaction(
+    () => selectedQuoteShared.value,
+    value => {
+      runOnJS(setSelectedQuote)(value);
+    },
+  );
   const SettingsModalComponent = useActorSettingsModal([createPerformanceQuotesField()]);
 
   const points = useMemo(() => {
     return quotes.map(q => ({
       date: new Date(q.time * 1000),
-      value: actor.value.settings?.performanceQuotesWidget.type === 'ttwror' ? q.ttwror : q.price,
+      value: useTTWROR ? q.ttwror : q.price,
     }));
-  }, [quotes, actor.value.settings?.performanceQuotesWidget.type]);
+  }, [quotes, useTTWROR]);
 
   const rangePoints = useMemo(() => {
-    const key = actor.value.settings?.performanceQuotesWidget.type === 'ttwror' ? 'ttwror' : 'price';
+    const key = useTTWROR ? 'ttwror' : 'price';
     const maxQuote = quotes.reduce((max, quote) => (quote[key] > max ? quote[key] : max), 0);
     const minQuote = quotes.reduce((min, quote) => (quote[key] < min ? quote[key] : min), maxQuote);
     if (!quotes.length) return undefined;
@@ -187,7 +209,7 @@ export default function QuotesWidget() {
         max: maxQuote,
       },
     };
-  }, [quotes, actor.value.settings?.performanceQuotesWidget.type, range]);
+  }, [quotes, useTTWROR, range]);
 
   return (
     <Widget
@@ -195,14 +217,18 @@ export default function QuotesWidget() {
       ready={!isLoading && !!quotes}
       styles={{ root: { overflow: 'hidden' } }}
       settings={
-        <Pressable onPress={() => showCustom(SettingsModalComponent)}>
-          <Icon name="settings" type="material" color="gray" size={24} />
-        </Pressable>
+        enableTTWROR ? (
+          <Pressable onPress={() => showCustom(SettingsModalComponent)}>
+            <Icon name="settings" type="material" color="gray" size={24} />
+          </Pressable>
+        ) : undefined
       }
     >
       {!isLoading && quotes.length > 0 && (
         <>
-          <Info quote={selectedQuote ?? currentQuote} currentQuote={currentQuote!} range={range} />
+          <Info isTTWROR={useTTWROR} quote={selectedQuote ?? currentQuote} currentQuote={currentQuote!} range={range} />
+
+          <Text className="text-center text-gray-500 text-xs mb-2 italic">{t('actor.chartInstruction')}</Text>
 
           <LineGraph
             range={rangePoints}
@@ -221,14 +247,14 @@ export default function QuotesWidget() {
             }}
             onGestureEnd={() => {
               isPanning.current = false;
-              setSelectedQuote(undefined);
+              selectedQuoteShared.value = undefined;
             }}
-            onPointSelected={(point: { date: Date; value: number } | undefined) => {
+            onPointSelected={throttle((point: { date: Date; value: number } | undefined) => {
               if (!isPanning.current) return;
               const newQuote =
                 quotes.find(q => Math.abs(q.time - (point?.date.getTime() ?? 0) / 1000) < 1e-5) ?? currentQuote;
-              setSelectedQuote(newQuote);
-            }}
+              selectedQuoteShared.value = newQuote;
+            }, 16)}
           />
 
           <View className="flex-row justify-center" style={{ marginVertical: 10 }}>
@@ -239,7 +265,7 @@ export default function QuotesWidget() {
                 <Pressable
                   key={k}
                   onPress={() => {
-                    setSelectedQuote(undefined);
+                    selectedQuoteShared.value = undefined;
                     setRange(v as QuoteRange);
                   }}
                   style={{
@@ -258,6 +284,28 @@ export default function QuotesWidget() {
           </View>
         </>
       )}
+      {!isLoading && quotes.length === 0 && (
+        <View className="flex-1 justify-center items-center" style={{ height: 225 }}>
+          <Text className="text-gray-500 text-lg">{t('actor.quotes.noQuotes')}</Text>
+        </View>
+      )}
     </Widget>
   );
+}
+{
+  /* <Widget styles={{ container: { height: 200 } }} ready>
+        <CartesianChart
+          axisOptions={{ lineWidth: 0 }}
+          frame={{ lineWidth: 0 }}
+          data={quotes.map((quote, index) => ({
+            day: new Date(quote.time * 1000),
+            price: quote.price,
+            date: index,
+          }))}
+          xKey="date"
+          yKeys={['price']}
+        >
+          {({ points }) => <Line curveType="basis" points={points.price} color="red" strokeWidth={3} />}
+        </CartesianChart>
+      </Widget> */
 }

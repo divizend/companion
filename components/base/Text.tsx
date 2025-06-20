@@ -15,7 +15,7 @@ const typeStyles = {
 };
 
 type Props = TextProps & {
-  children: React.ReactNode;
+  children?: React.ReactNode;
   className?: string;
   type?: keyof typeof typeStyles;
   h1?: boolean;
