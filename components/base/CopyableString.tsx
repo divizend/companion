@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
 import { Ionicons } from '@expo/vector-icons';
-import * as Clipboard from 'expo-clipboard';
+// import * as Clipboard from 'expo-clipboard';
 import { Pressable, Text } from 'react-native';
 
 import { clsx } from '@/common/clsx';
@@ -49,25 +49,25 @@ export default function CopyableString({ children, maxLength, crop }: CopyableSt
     isTrimmed = true;
   }
 
-  const handleCopy = async () => {
-    await Clipboard.setStringAsync(children);
-    setCopied(true);
+  // const handleCopy = async () => {
+  //   await Clipboard.setStringAsync(children);
+  //   setCopied(true);
 
-    if (resetTimeout) clearTimeout(resetTimeout);
-    setResetTimeout(
-      setTimeout(() => {
-        setCopied(false);
-        setResetTimeout(null);
-      }, 2000),
-    );
-  };
+  //   if (resetTimeout) clearTimeout(resetTimeout);
+  //   setResetTimeout(
+  //     setTimeout(() => {
+  //       setCopied(false);
+  //       setResetTimeout(null);
+  //     }, 2000),
+  //   );
+  // };
 
   return (
     <Pressable
-      onPress={handleCopy}
+      // onPress={handleCopy}
       onPressIn={() => setIsPressed(true)}
       onPressOut={() => setIsPressed(false)}
-      className={clsx('flex-row items-center rounded-md gap-1 p-2', isPressed ? 'bg-gray-100 dark:bg-gray-800' : '')}
+      className={clsx('flex-row items-center rounded-md gap-1', isPressed ? 'bg-gray-100 dark:bg-gray-800' : '')}
     >
       <Text
         className={`font-mono text-sm ${

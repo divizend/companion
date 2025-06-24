@@ -10,11 +10,16 @@ import { apiGet } from '@/common/api';
 import { Text } from '@/components/base';
 import { QuotesWidget } from '@/components/features/actor';
 import BarChart from '@/components/features/actor/BarChart';
+import CompanyDividendEvolutionWidget from '@/components/features/actor/CompanyDividendEvolutionWidget';
+import CompanyDividendYieldWidget from '@/components/features/actor/CompanyDividendYieldWidget';
+import CompanyIsinWknWidget from '@/components/features/actor/CompanyIsinWknWidget';
+import CompanySharePriceWidget from '@/components/features/actor/CompanySharePriceWidget';
 import CompanyHeader from '@/components/widgets/CompanyHeader';
 import useInitializeActor from '@/hooks/useInitializeActor';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { ActorService } from '@/services/actor.service';
 import { DividendDisplayOption, SecurityAccountSecurity } from '@/types/actor-api.types';
+import { SecurityAccountSecurityType } from '@/types/secapi.types';
 
 export default function StockDetails() {
   const { t } = useTranslation();
@@ -66,12 +71,16 @@ export default function StockDetails() {
           queryFn={range => ActorService.getCompanyQuotes({ ...stockDetails, isin }, range)}
         />
 
+        <CompanySharePriceWidget security={{ ...stockDetails, isin }} />
+        <CompanyIsinWknWidget security={{ ...stockDetails, isin }} />
         <BarChart
           queryKey={() => ['getCompanyDividendsHistory', isin]}
           queryFn={() =>
             ActorService.getCompanyDividendsHistory({ ...stockDetails, isin }, DividendDisplayOption.ABSOLUTE)
           }
         />
+        <CompanyDividendYieldWidget security={{ ...stockDetails, isin, type: SecurityAccountSecurityType.STOCK }} />
+        <CompanyDividendEvolutionWidget security={{ ...stockDetails, isin, type: SecurityAccountSecurityType.STOCK }} />
       </ScrollView>
     </View>
   );
