@@ -362,7 +362,7 @@ export default function BarChart({ queryFn, queryKey }: BarChartProps) {
         </View>
       ) : null}
       <Text className="text-center text-gray-500 text-xs mb-4 italic">{t('actor.chartInstruction')}</Text>
-      <View className="h-[200]">
+      <View className="h-[220]">
         <CartesianChart
           chartPressState={state}
           domainPadding={{ left: 20, right: 20 }}
