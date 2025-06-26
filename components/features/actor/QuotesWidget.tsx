@@ -198,7 +198,9 @@ export default function QuotesWidget({ queryFn, useQuery, queryKey, enableTWROR 
 
   const currentQuote = quotes.at(-1);
 
-  const mode = actor.value.settings?.performanceQuotesWidget.type ?? PerformanceQuotesType.PERFORMANCE;
+  const mode = enableTWROR
+    ? (actor.value.settings?.performanceQuotesWidget.type ?? PerformanceQuotesType.PERFORMANCE)
+    : PerformanceQuotesType.PERFORMANCE;
 
   useAnimatedReaction(
     () => selectedQuoteShared.value,
