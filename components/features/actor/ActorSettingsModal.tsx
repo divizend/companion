@@ -136,7 +136,7 @@ export const createPerformanceQuotesField = (): SettingField<'performanceQuotesW
   title: 'common.options',
   options: createUnionOptions(Object.values(PerformanceQuotesType), 'actor.quotes.options.', {
     performance: { name: 'chart-line', type: 'material-community' },
-    ttwror: { name: 'percent', type: 'material' },
+    twror: { name: 'percent', type: 'material' },
   }),
 });
 

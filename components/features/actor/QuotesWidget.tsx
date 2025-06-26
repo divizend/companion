@@ -13,31 +13,31 @@ import { Text } from '@/components/base';
 import { showCustom } from '@/components/global/prompt';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { actor } from '@/signals/actor';
-import { QuoteRange, TTWRORQuote } from '@/types/actor-api.types';
+import { PerformanceQuotesType, QuoteRange, TWRORQuote } from '@/types/actor-api.types';
 
 import { createPerformanceQuotesField, useActorSettingsModal } from './ActorSettingsModal';
 import Widget from './Widget';
 
 interface QuotesWidgetProps {
   queryKey: (range: QuoteRange) => string[];
-  queryFn: (range: QuoteRange) => Promise<TTWRORQuote[]>;
-  useQuery: (options: { queryFn: () => Promise<TTWRORQuote[]>; queryKey: string[] }) => {
-    data: TTWRORQuote[] | undefined;
+  queryFn: (range: QuoteRange) => Promise<TWRORQuote[]>;
+  useQuery: (options: { queryFn: () => Promise<TWRORQuote[]>; queryKey: string[] }) => {
+    data: TWRORQuote[] | undefined;
     isLoading: boolean;
   };
-  enableTTWROR?: boolean;
+  enableTWROR?: boolean;
 }
 
 const Info = ({
   quote,
   currentQuote,
   range,
-  isTTWROR = false,
+  isTWROR = false,
 }: {
-  quote: TTWRORQuote | undefined;
-  currentQuote: TTWRORQuote;
+  quote: TWRORQuote | undefined;
+  currentQuote: TWRORQuote;
   range: QuoteRange;
-  isTTWROR?: boolean;
+  isTWROR?: boolean;
 }) => {
   const { t } = useTranslation();
   const theme = useThemeColor();
@@ -63,14 +63,14 @@ const Info = ({
     return null;
   })();
 
-  const ttwrorArrowIcon = (() => {
+  const twrorArrowIcon = (() => {
     if (!quote) return null;
 
-    const ttwrorDifference = quote.ttwror;
+    const twrorDifference = quote.twror;
 
-    if (ttwrorDifference > 0) {
+    if (twrorDifference > 0) {
       return <Icon name="arrow-upward" size={25} color={theme.text} type="material" />;
-    } else if (ttwrorDifference < 0) {
+    } else if (twrorDifference < 0) {
       return <Icon name="arrow-downward" size={25} color="red" type="material" />;
     }
 
@@ -84,16 +84,16 @@ const Info = ({
           date: new Date((quote?.time ?? 0) * 1000),
         }).replace(/(\d{2}):(\d{2}):\d{2}/g, '$1:$2')}
       </Text>
-      {isTTWROR ? (
+      {isTWROR ? (
         <Text
           h1
           className={clsx('font-bold', 'flex items-center')}
-          style={{ color: (quote?.ttwror ?? 0) < 0 ? 'red' : theme.text }}
+          style={{ color: (quote?.twror ?? 0) < 0 ? 'red' : theme.text }}
         >
-          {ttwrorArrowIcon}
+          {twrorArrowIcon}
           {t('percent', {
             value: {
-              value: quote?.ttwror ?? 0,
+              value: quote?.twror ?? 0,
               minimumFractionDigits: 2,
               maximumFractionDigits: 2,
               signDisplay: 'exceptZero',
@@ -113,7 +113,7 @@ const Info = ({
       <View
         className={clsx(
           'flex-row items-center',
-          actor.value.settings?.performanceQuotesWidget.type === 'ttwror' && 'hidden',
+          actor.value.settings?.performanceQuotesWidget.type === PerformanceQuotesType.TWROR && 'hidden',
         )}
       >
         {arrowIcon}
@@ -158,14 +158,14 @@ const Info = ({
   );
 };
 
-export default function QuotesWidget({ queryFn, useQuery, queryKey, enableTTWROR = false }: QuotesWidgetProps) {
+export default function QuotesWidget({ queryFn, useQuery, queryKey, enableTWROR = false }: QuotesWidgetProps) {
   const { t } = useTranslation();
   const isPanning = useRef(false);
 
   // Use shared values for UI thread updates
-  const selectedQuoteShared = useSharedValue<TTWRORQuote | undefined>(undefined);
+  const selectedQuoteShared = useSharedValue<TWRORQuote | undefined>(undefined);
 
-  const [selectedQuote, setSelectedQuote] = useState<TTWRORQuote>();
+  const [selectedQuote, setSelectedQuote] = useState<TWRORQuote>();
   const [range, setRange] = useState<QuoteRange>(QuoteRange.Y);
 
   const { data: quotes = [], isLoading } = useQuery({
@@ -177,7 +177,7 @@ export default function QuotesWidget({ queryFn, useQuery, queryKey, enableTTWROR
 
   const currentQuote = quotes.at(-1);
 
-  const useTTWROR = !!enableTTWROR && actor.value.settings?.performanceQuotesWidget.type === 'ttwror';
+  const useTWROR = !!enableTWROR && actor.value.settings?.performanceQuotesWidget.type === PerformanceQuotesType.TWROR;
 
   useAnimatedReaction(
     () => selectedQuoteShared.value,
@@ -190,12 +190,12 @@ export default function QuotesWidget({ queryFn, useQuery, queryKey, enableTTWROR
   const points = useMemo(() => {
     return quotes.map(q => ({
       date: new Date(q.time * 1000),
-      value: useTTWROR ? q.ttwror : q.price,
+      value: useTWROR ? q.twror : q.price,
     }));
-  }, [quotes, useTTWROR]);
+  }, [quotes, useTWROR]);
 
   const rangePoints = useMemo(() => {
-    const key = useTTWROR ? 'ttwror' : 'price';
+    const key = useTWROR ? 'twror' : 'price';
     const maxQuote = quotes.reduce((max, quote) => (quote[key] > max ? quote[key] : max), 0);
     const minQuote = quotes.reduce((min, quote) => (quote[key] < min ? quote[key] : min), maxQuote);
     if (!quotes.length) return undefined;
@@ -209,7 +209,7 @@ export default function QuotesWidget({ queryFn, useQuery, queryKey, enableTTWROR
         max: maxQuote,
       },
     };
-  }, [quotes, useTTWROR, range]);
+  }, [quotes, useTWROR, range]);
 
   return (
     <Widget
@@ -217,7 +217,7 @@ export default function QuotesWidget({ queryFn, useQuery, queryKey, enableTTWROR
       ready={!isLoading && !!quotes}
       styles={{ root: { overflow: 'hidden' } }}
       settings={
-        enableTTWROR ? (
+        enableTWROR ? (
           <Pressable onPress={() => showCustom(SettingsModalComponent)}>
             <Icon name="settings" type="material" color="gray" size={24} />
           </Pressable>
@@ -226,7 +226,7 @@ export default function QuotesWidget({ queryFn, useQuery, queryKey, enableTTWROR
     >
       {!isLoading && quotes.length > 0 && (
         <>
-          <Info isTTWROR={useTTWROR} quote={selectedQuote ?? currentQuote} currentQuote={currentQuote!} range={range} />
+          <Info isTWROR={useTWROR} quote={selectedQuote ?? currentQuote} currentQuote={currentQuote!} range={range} />
 
           <Text className="text-center text-gray-500 text-xs mb-2 italic">{t('actor.chartInstruction')}</Text>
 
