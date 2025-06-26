@@ -52,7 +52,7 @@ export default function CompanyDividendYieldWidget({ security }: CompanyDividend
     >
       <View className="gap-4">
         {/* Dividend Yield Display */}
-        <View className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 min-h-[80px] flex flex-col justify-center">
+        <View className="dark:bg-primary-dark bg-primary-light rounded-lg p-4 min-h-[80px] flex flex-col justify-center">
           <Text className="text-4xl text-gray-700 dark:text-gray-200 font-extrabold">
             {currentDividendYield?.dividendYield
               ? t('percent', {
@@ -67,7 +67,7 @@ export default function CompanyDividendYieldWidget({ security }: CompanyDividend
         </View>
 
         {/* Next Payment Display */}
-        <View className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 min-h-[80px] flex flex-col justify-center">
+        <View className="dark:bg-primary-dark bg-primary-light rounded-lg p-4 min-h-[80px] flex flex-col justify-center">
           <Text className="text-gray-800 dark:text-gray-200 mb-2 font-medium text-sm">
             {t('actor.dividendYieldWidget.nextPayment')}
           </Text>

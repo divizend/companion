@@ -22,7 +22,7 @@ type InformationDisplayProps = {
 
 function InformationDisplay({ title, value }: InformationDisplayProps) {
   return (
-    <View className="bg-gray-50 rounded-lg p-3 min-h-[56px]">
+    <View className=" dark:bg-primary-dark bg-primary-light rounded-lg p-3 min-h-[56px]">
       <Text className="text-gray-500 mb-1 font-medium text-xs">{title}</Text>
       <View className="flex-row justify-between items-end">
         <Text className="text-sm text-gray-700 font-black">{value}</Text>
