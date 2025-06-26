@@ -52,5 +52,6 @@
     "searching": "Searching...",
     "noResults": "No results found",
     "startTyping": "Start typing to search..."
-  }
+  },
+  "notAvailable": "N/A"
 }

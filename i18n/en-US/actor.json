@@ -128,6 +128,41 @@
       "dividendYield": "Dividend yield: {{yield}}  / {{price}} = <strong>{{result}}</strong>"
     }
   },
+  "sharePriceWidget": {
+    "title": "Current price",
+    "noData": "No share price data available"
+  },
+  "isinWknWidget": {
+    "title": "Identification",
+    "isin": "ISIN",
+    "wkn": "WKN",
+    "valor": "VALOR",
+    "displayValue": {
+      "title": "Display value",
+      "WKN": "WKN",
+      "VALOR": "VALOR"
+    }
+  },
+  "dividendYieldWidget": {
+    "title": "Current yield",
+    "nextPayment": "Next dividend"
+  },
+  "dividendEvolutionWidget": {
+    "title": "Dividend evolution",
+    "continuousIncreasesYears": "Years of continuous dividend increases",
+    "noDividendsCuts": "Years with no dividend cuts",
+    "dividendGrowth": "Dividend growth % over the past",
+    "tenYears": "10 years",
+    "since": "since",
+    "noDividendPayments": "No dividend payments",
+    "intervalDisplay": "{{start}} - {{end}} ",
+    "displaySinceYear": "since {{start}}"
+  },
+  "sectorWidget": {
+    "title": "Company sectors",
+    "noData": "No data available",
+    "other": "Other"
+  },
   "error": {
     "simulation": "Failed to fetch simulation. Please try again later.",
     "insufficientData": "Insufficient Data for this scenario",
