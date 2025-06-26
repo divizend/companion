@@ -2,6 +2,7 @@ import actor from './actor.json';
 import common from './common.json';
 import country from './country.json';
 import date from './date.json';
+import gicsSectors from './gicsSectors.json';
 import learn from './learn.json';
 import learning from './learning.json';
 import onboarding from './onboarding.json';
@@ -22,4 +23,5 @@ export default {
   actor,
   learning,
   date,
+  gicsSectors,
 };

@@ -1,8 +1,10 @@
+import React from 'react';
+
 import { useSignalEffect } from '@preact/signals-react';
 import { BottomTabHeaderProps } from '@react-navigation/bottom-tabs';
 import { Icon } from '@rneui/themed';
 import { BlurView } from 'expo-blur';
-import { useSegments } from 'expo-router';
+import { router, useSegments } from 'expo-router';
 import { useColorScheme } from 'nativewind';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import Animated, {
@@ -75,6 +77,16 @@ export default function BlurredHeader(props: BlurredHeaderProps) {
       </Text>
 
       <View style={{ position: 'absolute', right: 15, bottom: 10 }} className="flex flex-row gap-3 items-center">
+        <TouchableOpacity onPress={() => router.push('/main/company')}>
+          <Icon
+            size={32}
+            name="search"
+            type="material"
+            className="rounded-full"
+            style={{ borderColor: theme.theme }}
+            color={theme.theme}
+          />
+        </TouchableOpacity>
         <TouchableOpacity onPress={() => ModalManager.showModal(PortfolioConnectModal)}>
           <Icon
             size={32}

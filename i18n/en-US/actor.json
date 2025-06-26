@@ -6,6 +6,7 @@
     "totalRefundableWithholdingTax": "Total refundable withholding tax",
     "nextDividend": "Next dividend"
   },
+  "chartInstruction": "Hold and swipe to explore different dates and events",
   "division": {
     "title": "Division",
     "totalAssets": "Total Assets",
@@ -47,7 +48,8 @@
     "options": {
       "performance": "Performance",
       "ttwror": "TTWROR (Total Time-Weighted Rate of Return)"
-    }
+    },
+    "noQuotes": "No available quotes"
   },
   "assetClasses": {
     "title": "Asset classes",
@@ -97,6 +99,69 @@
     "all": "All portfolios",
     "label": "Portfolios selection",
     "select": "Select portfolios"
+  },
+  "dividendHistory": {
+    "title": "Company dividend history",
+    "displayOption": {
+      "title": "Display option",
+      "ABSOLUTE": "Absolute",
+      "ABSOLUTESPLITADJUSTED": "Absolute (split adjusted)",
+      "YIELDS": "Yields"
+    },
+    "yield": "Yield",
+    "splitAdjusted": "Split adjusted",
+    "atPrice": "at {{price}}",
+    "absoluteInfo": "Dividend from {{date}}: <strong>{{price}} per share</strong>",
+    "absoluteSplitAdjustedInfo": {
+      "splits": {
+        "value": "Accumulated splits since then: <strong>{{from}}:{{to}}</strong>",
+        "splitAdjustedDividend": "Split-adjusted dividend: {{priceBeforeSplit}} * {{splits}} = <strong>{{price}}</strong> per share"
+      },
+      "noSplits": "No splits happened since then."
+    },
+    "yieldInfo": {
+      "splits": {
+        "dividendFrequency": "Dividend frequency: {{frequency}} → <strong>factor {{factor}}</strong>",
+        "sharePrice": "Share price at {{date}}: <strong>{{price}}</strong>",
+        "dividendYield": "Dividend yield: (({{yield}} * {{splits}}) * {{factor}}) / {{price}} = <strong>{{result}}</strong>"
+      },
+      "dividendYield": "Dividend yield: {{yield}}  / {{price}} = <strong>{{result}}</strong>"
+    }
+  },
+  "sharePriceWidget": {
+    "title": "Current price",
+    "noData": "No share price data available"
+  },
+  "isinWknWidget": {
+    "title": "Identification",
+    "isin": "ISIN",
+    "wkn": "WKN",
+    "valor": "VALOR",
+    "displayValue": {
+      "title": "Display value",
+      "WKN": "WKN",
+      "VALOR": "VALOR"
+    }
+  },
+  "dividendYieldWidget": {
+    "title": "Current yield",
+    "nextPayment": "Next dividend"
+  },
+  "dividendEvolutionWidget": {
+    "title": "Dividend evolution",
+    "continuousIncreasesYears": "Years of continuous dividend increases",
+    "noDividendsCuts": "Years with no dividend cuts",
+    "dividendGrowth": "Dividend growth % over the past",
+    "tenYears": "10 years",
+    "since": "since",
+    "noDividendPayments": "No dividend payments",
+    "intervalDisplay": "{{start}} - {{end}} ",
+    "displaySinceYear": "since {{start}}"
+  },
+  "sectorWidget": {
+    "title": "Company sectors",
+    "noData": "No data available",
+    "other": "Other"
   },
   "error": {
     "simulation": "Failed to fetch simulation. Please try again later.",

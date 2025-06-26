@@ -168,8 +168,8 @@ export const createIsinWknDisplayField = (): SettingField<'isinWknWidget'> => ({
   type: 'radio',
   settingKey: 'isinWknWidget',
   nestedKey: 'displayValue',
-  title: 'actor.isinWkn.displayValue.title',
-  options: createRadioOptions(DisplayValue, 'actor.isinWkn.displayValue.', {
+  title: 'actor.isinWknWidget.displayValue.title',
+  options: createRadioOptions(DisplayValue, 'actor.isinWknWidget.displayValue.', {
     WKN: { name: 'tag', type: 'material' },
     VALOR: { name: 'label', type: 'material' },
   }),

@@ -262,7 +262,7 @@ const renderModal = ({
             <View {...backgroundProps} className="bg-primary-light dark:bg-primary-dark rounded-3xl" />
           )}
         >
-          <BSView keyboardShouldPersistTaps="handled">
+          <BSView style={{ flex: 0, minHeight: 100 }} keyboardShouldPersistTaps="handled">
             <KeyboardAvoidingView behavior="padding" className={clsx('py-10 px-5', Platform.OS === 'ios' && 'mb-12')}>
               <Content prompt={prompt} resolve={resolve} dismiss={props.dismiss} />
             </KeyboardAvoidingView>
