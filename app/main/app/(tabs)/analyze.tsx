@@ -42,7 +42,7 @@ export default function Analyze() {
           {t('common.tabs.analyze')}
         </Text>
         <Text className="mb-2 ml-0.5 font-medium">{t('actor.portfolioSelector.label')}</Text>
-        <PortfolioSelector className="mb-5 flex-1" />
+        <PortfolioSelector style={{ marginBottom: 20 }} />
         <QuotesWidget
           queryKey={range => ['getPerformanceQuotes', range.toString()]}
           useQuery={usePortfolioQuery}
