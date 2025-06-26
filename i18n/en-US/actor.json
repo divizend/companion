@@ -47,7 +47,8 @@
     },
     "options": {
       "performance": "Performance",
-      "twror": "TWROR (Total Time-Weighted Rate of Return)"
+      "twror": "TWROR (Time-Weighted Rate of Return)",
+      "mwror": "MWROR (Money-Weighted Rate of Return)"
     },
     "noQuotes": "No available quotes"
   },

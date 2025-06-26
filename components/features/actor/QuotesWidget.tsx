@@ -13,16 +13,16 @@ import { Text } from '@/components/base';
 import { showCustom } from '@/components/global/prompt';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { actor } from '@/signals/actor';
-import { PerformanceQuotesType, QuoteRange, TWRORQuote } from '@/types/actor-api.types';
+import { ExtendedQuote, PerformanceQuotesType, QuoteRange } from '@/types/actor-api.types';
 
 import { createPerformanceQuotesField, useActorSettingsModal } from './ActorSettingsModal';
 import Widget from './Widget';
 
 interface QuotesWidgetProps {
   queryKey: (range: QuoteRange) => string[];
-  queryFn: (range: QuoteRange) => Promise<TWRORQuote[]>;
-  useQuery: (options: { queryFn: () => Promise<TWRORQuote[]>; queryKey: string[] }) => {
-    data: TWRORQuote[] | undefined;
+  queryFn: (range: QuoteRange) => Promise<ExtendedQuote[]>;
+  useQuery: (options: { queryFn: () => Promise<ExtendedQuote[]>; queryKey: string[] }) => {
+    data: ExtendedQuote[] | undefined;
     isLoading: boolean;
   };
   enableTWROR?: boolean;
@@ -32,12 +32,12 @@ const Info = ({
   quote,
   currentQuote,
   range,
-  isTWROR = false,
+  mode = PerformanceQuotesType.PERFORMANCE,
 }: {
-  quote: TWRORQuote | undefined;
-  currentQuote: TWRORQuote;
+  quote: ExtendedQuote | undefined;
+  currentQuote: ExtendedQuote;
   range: QuoteRange;
-  isTWROR?: boolean;
+  mode?: PerformanceQuotesType;
 }) => {
   const { t } = useTranslation();
   const theme = useThemeColor();
@@ -51,29 +51,34 @@ const Info = ({
 
   const arrowIcon = (() => {
     if (!quote) return null;
-
     const priceDifference = currentQuote.price - quote.price;
-
     if (priceDifference > 0) {
       return <Icon name="arrow-upward" size={15} color="#3c9d9b" type="material" />;
     } else if (priceDifference < 0) {
       return <Icon name="arrow-downward" size={15} color="red" type="material" />;
     }
-
     return null;
   })();
 
   const twrorArrowIcon = (() => {
     if (!quote) return null;
-
     const twrorDifference = quote.twror;
-
     if (twrorDifference > 0) {
       return <Icon name="arrow-upward" size={25} color={theme.text} type="material" />;
     } else if (twrorDifference < 0) {
       return <Icon name="arrow-downward" size={25} color="red" type="material" />;
     }
+    return null;
+  })();
 
+  const mwrorArrowIcon = (() => {
+    if (!quote) return null;
+    const mwrorDifference = quote.mwror;
+    if (mwrorDifference > 0) {
+      return <Icon name="arrow-upward" size={25} color={theme.text} type="material" />;
+    } else if (mwrorDifference < 0) {
+      return <Icon name="arrow-downward" size={25} color="red" type="material" />;
+    }
     return null;
   })();
 
@@ -84,7 +89,7 @@ const Info = ({
           date: new Date((quote?.time ?? 0) * 1000),
         }).replace(/(\d{2}):(\d{2}):\d{2}/g, '$1:$2')}
       </Text>
-      {isTWROR ? (
+      {mode === PerformanceQuotesType.TWROR ? (
         <Text
           h1
           className={clsx('font-bold', 'flex items-center')}
@@ -94,6 +99,22 @@ const Info = ({
           {t('percent', {
             value: {
               value: quote?.twror ?? 0,
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+              signDisplay: 'exceptZero',
+            },
+          })}
+        </Text>
+      ) : mode === PerformanceQuotesType.MWROR ? (
+        <Text
+          h1
+          className={clsx('font-bold', 'flex items-center')}
+          style={{ color: (quote?.mwror ?? 0) < 0 ? 'red' : theme.text }}
+        >
+          {mwrorArrowIcon}
+          {t('percent', {
+            value: {
+              value: quote?.mwror ?? 0,
               minimumFractionDigits: 2,
               maximumFractionDigits: 2,
               signDisplay: 'exceptZero',
@@ -113,7 +134,7 @@ const Info = ({
       <View
         className={clsx(
           'flex-row items-center',
-          actor.value.settings?.performanceQuotesWidget.type === PerformanceQuotesType.TWROR && 'hidden',
+          (mode === PerformanceQuotesType.TWROR || mode === PerformanceQuotesType.MWROR) && 'hidden',
         )}
       >
         {arrowIcon}
@@ -163,9 +184,9 @@ export default function QuotesWidget({ queryFn, useQuery, queryKey, enableTWROR 
   const isPanning = useRef(false);
 
   // Use shared values for UI thread updates
-  const selectedQuoteShared = useSharedValue<TWRORQuote | undefined>(undefined);
+  const selectedQuoteShared = useSharedValue<ExtendedQuote | undefined>(undefined);
 
-  const [selectedQuote, setSelectedQuote] = useState<TWRORQuote>();
+  const [selectedQuote, setSelectedQuote] = useState<ExtendedQuote>();
   const [range, setRange] = useState<QuoteRange>(QuoteRange.Y);
 
   const { data: quotes = [], isLoading } = useQuery({
@@ -177,7 +198,7 @@ export default function QuotesWidget({ queryFn, useQuery, queryKey, enableTWROR 
 
   const currentQuote = quotes.at(-1);
 
-  const useTWROR = !!enableTWROR && actor.value.settings?.performanceQuotesWidget.type === PerformanceQuotesType.TWROR;
+  const mode = actor.value.settings?.performanceQuotesWidget.type ?? PerformanceQuotesType.PERFORMANCE;
 
   useAnimatedReaction(
     () => selectedQuoteShared.value,
@@ -190,12 +211,13 @@ export default function QuotesWidget({ queryFn, useQuery, queryKey, enableTWROR 
   const points = useMemo(() => {
     return quotes.map(q => ({
       date: new Date(q.time * 1000),
-      value: useTWROR ? q.twror : q.price,
+      value: mode === PerformanceQuotesType.TWROR ? q.twror : mode === PerformanceQuotesType.MWROR ? q.mwror : q.price,
     }));
-  }, [quotes, useTWROR]);
+  }, [quotes, mode]);
 
   const rangePoints = useMemo(() => {
-    const key = useTWROR ? 'twror' : 'price';
+    const key =
+      mode === PerformanceQuotesType.TWROR ? 'twror' : mode === PerformanceQuotesType.MWROR ? 'mwror' : 'price';
     const maxQuote = quotes.reduce((max, quote) => (quote[key] > max ? quote[key] : max), 0);
     const minQuote = quotes.reduce((min, quote) => (quote[key] < min ? quote[key] : min), maxQuote);
     if (!quotes.length) return undefined;
@@ -209,7 +231,7 @@ export default function QuotesWidget({ queryFn, useQuery, queryKey, enableTWROR 
         max: maxQuote,
       },
     };
-  }, [quotes, useTWROR, range]);
+  }, [quotes, mode, range]);
 
   return (
     <Widget
@@ -226,7 +248,7 @@ export default function QuotesWidget({ queryFn, useQuery, queryKey, enableTWROR 
     >
       {!isLoading && quotes.length > 0 && (
         <>
-          <Info isTWROR={useTWROR} quote={selectedQuote ?? currentQuote} currentQuote={currentQuote!} range={range} />
+          <Info mode={mode} quote={selectedQuote ?? currentQuote} currentQuote={currentQuote!} range={range} />
 
           <Text className="text-center text-gray-500 text-xs mb-2 italic">{t('actor.chartInstruction')}</Text>
 
