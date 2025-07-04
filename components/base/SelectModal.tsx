@@ -4,14 +4,14 @@ import { BottomSheetTextInput } from '@gorhom/bottom-sheet';
 import { Icon } from '@rneui/themed';
 import { capitalize } from 'lodash';
 import { useTranslation } from 'react-i18next';
-import { FlatList, Keyboard, TouchableOpacity, View } from 'react-native';
+import { Keyboard, StyleProp, TouchableOpacity, View, ViewStyle } from 'react-native';
+import { FlatList } from 'react-native-gesture-handler';
 
 import { clsx } from '@/common/clsx';
 import { showCustom } from '@/components/global/prompt';
 import { useThemeColor } from '@/hooks/useThemeColor';
 
 import SectionList from '../SectionList';
-import { Button } from './Button';
 import { Text } from './Text';
 import { TextInput } from './TextInput';
 
@@ -31,7 +31,7 @@ interface SelectModalProps<T extends SelectableItem> {
   noResultsText?: string;
   cancelText?: string;
   confirmText?: string;
-  className?: string;
+  style?: StyleProp<ViewStyle>;
   inputClassName?: string;
   disabled?: boolean;
   renderItem?: (item: T, isSelected: boolean, onPress: () => void) => React.JSX.Element;
@@ -51,7 +51,7 @@ export function SelectModal<T extends SelectableItem>({
   noResultsText,
   cancelText,
   confirmText,
-  className,
+  style,
   inputClassName,
   disabled = false,
   renderItem,
@@ -228,10 +228,10 @@ export function SelectModal<T extends SelectableItem>({
     <TouchableOpacity
       onPress={handleOpenSelector}
       disabled={disabled}
+      style={style}
       className={clsx(
         'bg-secondary-light dark:bg-secondary-dark px-4 h-12 rounded-xl flex-row items-center justify-between',
         disabled && 'opacity-50',
-        className,
       )}
     >
       <Text

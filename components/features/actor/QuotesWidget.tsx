@@ -13,31 +13,31 @@ import { Text } from '@/components/base';
 import { showCustom } from '@/components/global/prompt';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { actor } from '@/signals/actor';
-import { QuoteRange, TTWRORQuote } from '@/types/actor-api.types';
+import { ExtendedQuote, PerformanceQuotesType, QuoteRange } from '@/types/actor-api.types';
 
 import { createPerformanceQuotesField, useActorSettingsModal } from './ActorSettingsModal';
 import Widget from './Widget';
 
 interface QuotesWidgetProps {
   queryKey: (range: QuoteRange) => string[];
-  queryFn: (range: QuoteRange) => Promise<TTWRORQuote[]>;
-  useQuery: (options: { queryFn: () => Promise<TTWRORQuote[]>; queryKey: string[] }) => {
-    data: TTWRORQuote[] | undefined;
+  queryFn: (range: QuoteRange) => Promise<ExtendedQuote[]>;
+  useQuery: (options: { queryFn: () => Promise<ExtendedQuote[]>; queryKey: string[] }) => {
+    data: ExtendedQuote[] | undefined;
     isLoading: boolean;
   };
-  enableTTWROR?: boolean;
+  enableTWROR?: boolean;
 }
 
 const Info = ({
   quote,
   currentQuote,
   range,
-  isTTWROR = false,
+  mode = PerformanceQuotesType.PERFORMANCE,
 }: {
-  quote: TTWRORQuote | undefined;
-  currentQuote: TTWRORQuote;
+  quote: ExtendedQuote | undefined;
+  currentQuote: ExtendedQuote;
   range: QuoteRange;
-  isTTWROR?: boolean;
+  mode?: PerformanceQuotesType;
 }) => {
   const { t } = useTranslation();
   const theme = useThemeColor();
@@ -51,29 +51,34 @@ const Info = ({
 
   const arrowIcon = (() => {
     if (!quote) return null;
-
     const priceDifference = currentQuote.price - quote.price;
-
     if (priceDifference > 0) {
       return <Icon name="arrow-upward" size={15} color="#3c9d9b" type="material" />;
     } else if (priceDifference < 0) {
       return <Icon name="arrow-downward" size={15} color="red" type="material" />;
     }
-
     return null;
   })();
 
-  const ttwrorArrowIcon = (() => {
+  const twrorArrowIcon = (() => {
     if (!quote) return null;
-
-    const ttwrorDifference = quote.ttwror;
-
-    if (ttwrorDifference > 0) {
+    const twrorDifference = quote.twror;
+    if (twrorDifference > 0) {
       return <Icon name="arrow-upward" size={25} color={theme.text} type="material" />;
-    } else if (ttwrorDifference < 0) {
+    } else if (twrorDifference < 0) {
       return <Icon name="arrow-downward" size={25} color="red" type="material" />;
     }
+    return null;
+  })();
 
+  const mwrorArrowIcon = (() => {
+    if (!quote) return null;
+    const mwrorDifference = quote.mwror;
+    if (mwrorDifference > 0) {
+      return <Icon name="arrow-upward" size={25} color={theme.text} type="material" />;
+    } else if (mwrorDifference < 0) {
+      return <Icon name="arrow-downward" size={25} color="red" type="material" />;
+    }
     return null;
   })();
 
@@ -84,16 +89,32 @@ const Info = ({
           date: new Date((quote?.time ?? 0) * 1000),
         }).replace(/(\d{2}):(\d{2}):\d{2}/g, '$1:$2')}
       </Text>
-      {isTTWROR ? (
+      {mode === PerformanceQuotesType.TWROR ? (
         <Text
           h1
           className={clsx('font-bold', 'flex items-center')}
-          style={{ color: (quote?.ttwror ?? 0) < 0 ? 'red' : theme.text }}
+          style={{ color: (quote?.twror ?? 0) < 0 ? 'red' : theme.text }}
         >
-          {ttwrorArrowIcon}
+          {twrorArrowIcon}
           {t('percent', {
             value: {
-              value: quote?.ttwror ?? 0,
+              value: quote?.twror ?? 0,
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+              signDisplay: 'exceptZero',
+            },
+          })}
+        </Text>
+      ) : mode === PerformanceQuotesType.MWROR ? (
+        <Text
+          h1
+          className={clsx('font-bold', 'flex items-center')}
+          style={{ color: (quote?.mwror ?? 0) < 0 ? 'red' : theme.text }}
+        >
+          {mwrorArrowIcon}
+          {t('percent', {
+            value: {
+              value: quote?.mwror ?? 0,
               minimumFractionDigits: 2,
               maximumFractionDigits: 2,
               signDisplay: 'exceptZero',
@@ -113,7 +134,7 @@ const Info = ({
       <View
         className={clsx(
           'flex-row items-center',
-          actor.value.settings?.performanceQuotesWidget.type === 'ttwror' && 'hidden',
+          (mode === PerformanceQuotesType.TWROR || mode === PerformanceQuotesType.MWROR) && 'hidden',
         )}
       >
         {arrowIcon}
@@ -158,14 +179,14 @@ const Info = ({
   );
 };
 
-export default function QuotesWidget({ queryFn, useQuery, queryKey, enableTTWROR = false }: QuotesWidgetProps) {
+export default function QuotesWidget({ queryFn, useQuery, queryKey, enableTWROR = false }: QuotesWidgetProps) {
   const { t } = useTranslation();
   const isPanning = useRef(false);
 
   // Use shared values for UI thread updates
-  const selectedQuoteShared = useSharedValue<TTWRORQuote | undefined>(undefined);
+  const selectedQuoteShared = useSharedValue<ExtendedQuote | undefined>(undefined);
 
-  const [selectedQuote, setSelectedQuote] = useState<TTWRORQuote>();
+  const [selectedQuote, setSelectedQuote] = useState<ExtendedQuote>();
   const [range, setRange] = useState<QuoteRange>(QuoteRange.Y);
 
   const { data: quotes = [], isLoading } = useQuery({
@@ -177,7 +198,9 @@ export default function QuotesWidget({ queryFn, useQuery, queryKey, enableTTWROR
 
   const currentQuote = quotes.at(-1);
 
-  const useTTWROR = !!enableTTWROR && actor.value.settings?.performanceQuotesWidget.type === 'ttwror';
+  const mode = enableTWROR
+    ? (actor.value.settings?.performanceQuotesWidget.type ?? PerformanceQuotesType.PERFORMANCE)
+    : PerformanceQuotesType.PERFORMANCE;
 
   useAnimatedReaction(
     () => selectedQuoteShared.value,
@@ -190,12 +213,20 @@ export default function QuotesWidget({ queryFn, useQuery, queryKey, enableTTWROR
   const points = useMemo(() => {
     return quotes.map(q => ({
       date: new Date(q.time * 1000),
-      value: useTTWROR ? q.ttwror : q.price,
+      value: mode === PerformanceQuotesType.TWROR ? q.twror : mode === PerformanceQuotesType.MWROR ? q.mwror : q.price,
     }));
-  }, [quotes, useTTWROR]);
+  }, [quotes, mode]);
+
+  const purchaseAmountPoints = useMemo(() => {
+    return quotes.map(q => ({
+      date: new Date(q.time * 1000),
+      value: q.purchaseValue,
+    }));
+  }, [quotes]);
 
   const rangePoints = useMemo(() => {
-    const key = useTTWROR ? 'ttwror' : 'price';
+    const key =
+      mode === PerformanceQuotesType.TWROR ? 'twror' : mode === PerformanceQuotesType.MWROR ? 'mwror' : 'price';
     const maxQuote = quotes.reduce((max, quote) => (quote[key] > max ? quote[key] : max), 0);
     const minQuote = quotes.reduce((min, quote) => (quote[key] < min ? quote[key] : min), maxQuote);
     if (!quotes.length) return undefined;
@@ -209,7 +240,7 @@ export default function QuotesWidget({ queryFn, useQuery, queryKey, enableTTWROR
         max: maxQuote,
       },
     };
-  }, [quotes, useTTWROR, range]);
+  }, [quotes, mode, range]);
 
   return (
     <Widget
@@ -217,7 +248,7 @@ export default function QuotesWidget({ queryFn, useQuery, queryKey, enableTTWROR
       ready={!isLoading && !!quotes}
       styles={{ root: { overflow: 'hidden' } }}
       settings={
-        enableTTWROR ? (
+        enableTWROR ? (
           <Pressable onPress={() => showCustom(SettingsModalComponent)}>
             <Icon name="settings" type="material" color="gray" size={24} />
           </Pressable>
@@ -226,36 +257,62 @@ export default function QuotesWidget({ queryFn, useQuery, queryKey, enableTTWROR
     >
       {!isLoading && quotes.length > 0 && (
         <>
-          <Info isTTWROR={useTTWROR} quote={selectedQuote ?? currentQuote} currentQuote={currentQuote!} range={range} />
+          <Info mode={mode} quote={selectedQuote ?? currentQuote} currentQuote={currentQuote!} range={range} />
 
           <Text className="text-center text-gray-500 text-xs mb-2 italic">{t('actor.chartInstruction')}</Text>
 
-          <LineGraph
-            range={rangePoints}
-            points={points}
-            animated
-            color="#2E7877"
-            enablePanGesture
-            enableFadeInMask
-            enableIndicator
-            indicatorPulsating
-            verticalPadding={30}
-            panGestureDelay={200}
-            style={{ height: 225, marginBottom: 20, marginHorizontal: -24 }}
-            onGestureStart={() => {
-              isPanning.current = true;
-            }}
-            onGestureEnd={() => {
-              isPanning.current = false;
-              selectedQuoteShared.value = undefined;
-            }}
-            onPointSelected={throttle((point: { date: Date; value: number } | undefined) => {
-              if (!isPanning.current) return;
-              const newQuote =
-                quotes.find(q => Math.abs(q.time - (point?.date.getTime() ?? 0) / 1000) < 1e-5) ?? currentQuote;
-              selectedQuoteShared.value = newQuote;
-            }, 16)}
-          />
+          <View>
+            {mode === PerformanceQuotesType.PERFORMANCE && (
+              <LineGraph
+                range={rangePoints}
+                points={purchaseAmountPoints}
+                animated
+                color="#2E7877"
+                enableFadeInMask
+                indicatorPulsating
+                verticalPadding={30}
+                panGestureDelay={200}
+                lineThickness={2}
+                style={{
+                  height: 225,
+                  marginBottom: 20,
+                  marginHorizontal: -24,
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  opacity: 0.25,
+                }}
+              />
+            )}
+            <LineGraph
+              range={rangePoints}
+              points={points}
+              animated
+              color="#2E7877"
+              enablePanGesture
+              enableFadeInMask
+              enableIndicator
+              indicatorPulsating
+              verticalPadding={30}
+              panGestureDelay={200}
+              style={{ height: 225, marginBottom: 20, marginHorizontal: -24 }}
+              onGestureStart={() => {
+                isPanning.current = true;
+              }}
+              onGestureEnd={() => {
+                isPanning.current = false;
+                selectedQuoteShared.value = undefined;
+              }}
+              onPointSelected={throttle((point: { date: Date; value: number } | undefined) => {
+                if (!isPanning.current) return;
+                const newQuote =
+                  quotes.find(q => Math.abs(q.time - (point?.date.getTime() ?? 0) / 1000) < 1e-5) ?? currentQuote;
+                selectedQuoteShared.value = newQuote;
+              }, 16)}
+            />
+          </View>
 
           <View className="flex-row justify-center" style={{ marginVertical: 10 }}>
             {Object.entries(QuoteRange)

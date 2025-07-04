@@ -308,7 +308,7 @@ export default function SimulationWidget() {
                         leftIcon: { name: 'event', type: 'material' },
                         title: (
                           <SelectModal
-                            className="w-full h-min px-0"
+                            style={{ width: '100%', height: 'auto', paddingHorizontal: 0 }}
                             inputClassName="text-[16px] mt-1 font-normal"
                             multiple={false}
                             keyExtractor={item => item.id}
