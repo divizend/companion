@@ -11,6 +11,7 @@ import { Text } from '@/components/base';
 import { QuotesWidget } from '@/components/features/actor';
 import BarChart from '@/components/features/actor/BarChart';
 import CompanyDividendEvolutionWidget from '@/components/features/actor/CompanyDividendEvolutionWidget';
+import CompanyDividendTableWidget from '@/components/features/actor/CompanyDividendTableWidget';
 import CompanyDividendYieldWidget from '@/components/features/actor/CompanyDividendYieldWidget';
 import CompanyIsinWknWidget from '@/components/features/actor/CompanyIsinWknWidget';
 import CompanySectorsWidget from '@/components/features/actor/CompanySectorsWidget';
@@ -76,6 +77,7 @@ export default function StockDetails() {
         <CompanyIsinWknWidget security={{ ...stockDetails, isin }} />
         <CompanyDividendYieldWidget security={{ ...stockDetails, isin, type: SecurityAccountSecurityType.STOCK }} />
         <CompanyDividendEvolutionWidget security={{ ...stockDetails, isin, type: SecurityAccountSecurityType.STOCK }} />
+        <CompanyDividendTableWidget security={{ ...stockDetails, isin }} />
         <BarChart
           queryKey={() => ['getCompanyDividendsHistory', isin]}
           queryFn={() =>
