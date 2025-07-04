@@ -7,7 +7,6 @@ import { throttle } from 'lodash';
 import { useTranslation } from 'react-i18next';
 import { Pressable, View } from 'react-native';
 import { runOnJS, useAnimatedReaction, useSharedValue } from 'react-native-reanimated';
-import { CartesianChart, Line } from 'victory-native';
 
 import { clsx } from '@/common/clsx';
 import { Text } from '@/components/base';
@@ -218,6 +217,13 @@ export default function QuotesWidget({ queryFn, useQuery, queryKey, enableTWROR 
     }));
   }, [quotes, mode]);
 
+  const purchaseAmountPoints = useMemo(() => {
+    return quotes.map(q => ({
+      date: new Date(q.time * 1000),
+      value: q.purchaseValue,
+    }));
+  }, [quotes]);
+
   const rangePoints = useMemo(() => {
     const key =
       mode === PerformanceQuotesType.TWROR ? 'twror' : mode === PerformanceQuotesType.MWROR ? 'mwror' : 'price';
@@ -255,58 +261,57 @@ export default function QuotesWidget({ queryFn, useQuery, queryKey, enableTWROR 
 
           <Text className="text-center text-gray-500 text-xs mb-2 italic">{t('actor.chartInstruction')}</Text>
 
-          <LineGraph
-            range={rangePoints}
-            points={points}
-            animated
-            color="#2E7877"
-            enablePanGesture
-            enableFadeInMask
-            enableIndicator
-            indicatorPulsating
-            verticalPadding={30}
-            panGestureDelay={200}
-            style={{ height: 225, marginBottom: 20, marginHorizontal: -24 }}
-            onGestureStart={() => {
-              isPanning.current = true;
-            }}
-            onGestureEnd={() => {
-              isPanning.current = false;
-              selectedQuoteShared.value = undefined;
-            }}
-            onPointSelected={throttle((point: { date: Date; value: number } | undefined) => {
-              if (!isPanning.current) return;
-              const newQuote =
-                quotes.find(q => Math.abs(q.time - (point?.date.getTime() ?? 0) / 1000) < 1e-5) ?? currentQuote;
-              selectedQuoteShared.value = newQuote;
-            }, 16)}
-          />
-
-          <View style={{ height: 225, marginBottom: 20, marginHorizontal: -20 }}>
-            <CartesianChart
-              axisOptions={{ lineWidth: 0 }}
-              frame={{ lineWidth: 0 }}
-              data={quotes.map((q, index) => ({
-                day: new Date(q.time * 1000),
-                price:
-                  mode === PerformanceQuotesType.TWROR
-                    ? q.twror
-                    : mode === PerformanceQuotesType.MWROR
-                      ? q.mwror
-                      : q.price,
-                purchaseAmount: q.purchaseValue,
-                date: index,
-              }))}
-              xKey="date"
-              yKeys={['price', 'purchaseAmount']}
-            >
-              {({ points }) => (
-                <>
-                  <Line curveType="basis" points={points.price} color="#2E7877" strokeWidth={3} />
-                  <Line curveType="basis" points={points.purchaseAmount} color="#2E7877" strokeWidth={3} />
-                </>
-              )}
-            </CartesianChart>
+          <View>
+            {mode === PerformanceQuotesType.PERFORMANCE && (
+              <LineGraph
+                range={rangePoints}
+                points={purchaseAmountPoints}
+                animated
+                color="#2E7877"
+                enableFadeInMask
+                indicatorPulsating
+                verticalPadding={30}
+                panGestureDelay={200}
+                lineThickness={2}
+                style={{
+                  height: 225,
+                  marginBottom: 20,
+                  marginHorizontal: -24,
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  opacity: 0.25,
+                }}
+              />
+            )}
+            <LineGraph
+              range={rangePoints}
+              points={points}
+              animated
+              color="#2E7877"
+              enablePanGesture
+              enableFadeInMask
+              enableIndicator
+              indicatorPulsating
+              verticalPadding={30}
+              panGestureDelay={200}
+              style={{ height: 225, marginBottom: 20, marginHorizontal: -24 }}
+              onGestureStart={() => {
+                isPanning.current = true;
+              }}
+              onGestureEnd={() => {
+                isPanning.current = false;
+                selectedQuoteShared.value = undefined;
+              }}
+              onPointSelected={throttle((point: { date: Date; value: number } | undefined) => {
+                if (!isPanning.current) return;
+                const newQuote =
+                  quotes.find(q => Math.abs(q.time - (point?.date.getTime() ?? 0) / 1000) < 1e-5) ?? currentQuote;
+                selectedQuoteShared.value = newQuote;
+              }, 16)}
+            />
           </View>
 
           <View className="flex-row justify-center" style={{ marginVertical: 10 }}>
