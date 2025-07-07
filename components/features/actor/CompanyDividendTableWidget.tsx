@@ -85,8 +85,8 @@ export default function CompanyDividendTableWidget({ security }: { security: Sec
   return (
     <Widget title={t('actor.dividendTableWidget.title')} ready={!isLoading}>
       <ScrollView horizontal>
-        <View className="bg-gray-100 rounded-lg overflow-hidden min-w-[350]">
-          <View className="flex-row px-3 py-2 border-b border-gray-200">
+        <View className="bg-primary-light dark:bg-primary-dark rounded-lg overflow-hidden min-w-[350]">
+          <View className="flex-row px-3 py-2">
             <Text className="uppercase flex-1 font-bold text-xs">{t('actor.dividendTableWidget.exDate')}</Text>
             <Text className="uppercase flex-1 font-bold text-xs">{t('actor.dividendTableWidget.yoy')}</Text>
             <Text className="uppercase flex-1 font-bold text-xs text-right">
@@ -98,13 +98,25 @@ export default function CompanyDividendTableWidget({ security }: { security: Sec
             .map(year => (
               <View key={year}>
                 <Pressable onPress={() => toggleYear(year)}>
-                  <View className="flex-row bg-gray-200 px-3 py-2 items-center">
+                  <View className="flex-row bg-secondary-light dark:bg-secondary-dark px-3 py-2 items-center">
                     <Text className="flex-1 font-bold">{year}</Text>
                     <View
-                      className={`px-2 py-0.5 rounded-md inline-flex items-center ${!!yoyGrowth[year] ? (yoyGrowth[year] < 0 ? 'bg-red-100' : 'bg-green-100') : ''}`}
+                      className={`px-2 py-0.5 rounded-md inline-flex items-center ${
+                        !!yoyGrowth[year]
+                          ? yoyGrowth[year] < 0
+                            ? 'bg-red-100 dark:bg-red-900'
+                            : 'bg-green-100 dark:bg-green-900'
+                          : ''
+                      }`}
                     >
                       {yoyGrowth[year] ? (
-                        <Text className={`font-bold ${yoyGrowth[year] < 0 ? 'text-red-700' : 'text-green-700'}`}>
+                        <Text
+                          className={`font-bold ${
+                            yoyGrowth[year] < 0
+                              ? 'text-red-700 dark:text-red-300'
+                              : 'text-green-700 dark:text-green-300'
+                          }`}
+                        >
                           {yoyGrowth[year] < 0 ? '↓' : '↑'}{' '}
                           {t('percent', {
                             value: {
@@ -127,7 +139,7 @@ export default function CompanyDividendTableWidget({ security }: { security: Sec
                 </Pressable>
                 {expandedYears[year] &&
                   (grouped[year] as any[]).map((div: any, idx: number) => (
-                    <View key={div.date + idx} className="flex-row px-3 py-2 border-b border-gray-100">
+                    <View key={div.date + idx} className="flex-row px-3 py-2">
                       <Text className="flex-1 text-xs">{t('dateTime.day', { date: new Date(div.date) })}</Text>
                       <Text className="flex-1 text-xs"></Text>
                       <Text className="flex-1 text-xs text-right">
