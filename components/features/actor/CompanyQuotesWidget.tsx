@@ -210,8 +210,6 @@ export default function CompanyQuotesWidget({ queryFn, useQuery, queryKey, enabl
     };
   }, [quotes, useTTWROR, range]);
 
-  console.log(quotes.length);
-
   return (
     <Widget
       title={t('actor.quotes.title')}
