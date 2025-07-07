@@ -191,7 +191,6 @@ export class ActorService {
     const dividendsPerYear = this.getDividendsPerYear(security);
     let startYear: number | null = null;
     let continuousIncreases: number[][] = [];
-    console.log(dividendsPerYear);
     Object.entries(dividendsPerYear).forEach(([year, amount]) => {
       const currentYear = parseInt(year);
       if (startYear === null) {
