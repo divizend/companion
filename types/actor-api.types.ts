@@ -100,7 +100,7 @@ export interface GetQuotesRequest extends ActorRequest {
 
 export interface QuotesResponse extends ActorResponse {
   type: ActorResponseType.QUOTES_RESPONSE;
-  quotes: TTWRORQuote[];
+  quotes: ExtendedQuote[];
 }
 
 export interface GetCompanyQuotesRequest extends ActorRequest {
@@ -140,8 +140,19 @@ export interface Quote {
   time: number;
 }
 
-export interface TTWRORQuote extends Quote {
-  ttwror: number;
+export interface TWRORQuote extends Quote {
+  twror: number;
+}
+
+export interface MWRORQuote extends Quote {
+  mwror: number;
+}
+
+export interface ExtendedQuote extends TWRORQuote, MWRORQuote {
+  currency: string;
+  purchaseValue: number;
+  currentValue: number;
+  quantity: number;
 }
 
 export enum QuoteRange {
@@ -653,7 +664,8 @@ export type DividendHistorySettings = {
 
 export enum PerformanceQuotesType {
   PERFORMANCE = 'performance',
-  TTWROR = 'ttwror',
+  TWROR = 'twror',
+  MWROR = 'mwror',
 }
 
 export type PerformanceQuotesSettings = {
