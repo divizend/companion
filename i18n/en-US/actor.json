@@ -169,11 +169,10 @@
     "failedUpdate": "Failed to update data. Please try again."
   },
   "dividendTableWidget": {
-    "title": "All Dividend Data",
-    "allDividendData": "All dividend data",
+    "title": "All dividends",
     "exDate": "Ex-date",
     "payDate": "Pay date",
-    "amount": "Payout",
-    "yield": "Yield"
+    "amount": "Yield",
+    "yoy": "Year over year growth"
   }
 }

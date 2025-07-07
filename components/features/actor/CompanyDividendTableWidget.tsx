@@ -2,7 +2,7 @@ import React, { useMemo, useState } from 'react';
 
 import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
-import { Pressable, View } from 'react-native';
+import { Pressable, ScrollView, View } from 'react-native';
 
 import { ActorService } from '@/services/actor.service';
 import { CompanyDividendData, DividendDisplayOption, SecurityAccountSecurity } from '@/types/actor-api.types';
@@ -17,17 +17,6 @@ export default function CompanyDividendTableWidget({ security }: { security: Sec
     queryFn: () => ActorService.getCompanyDividendsHistory(security, DividendDisplayOption.ABSOLUTE),
     enabled: !!security.isin,
   });
-
-  const yieldMap = useMemo(() => {
-    const map: Record<string, number | undefined> = {};
-    if (data?.dividendYields) {
-      data.dividendYields.forEach(y => {
-        const dateKey = new Date(y.date).toISOString().slice(0, 10);
-        map[dateKey] = y.dividendYield;
-      });
-    }
-    return map;
-  }, [data]);
 
   const grouped = useMemo(() => {
     if (!data?.dividends) return {};
@@ -91,70 +80,65 @@ export default function CompanyDividendTableWidget({ security }: { security: Sec
     return growth;
   }, [totalDividendsPerYear]);
 
+  if (!data?.dividends?.length) return <></>;
+
   return (
     <Widget title={t('actor.dividendTableWidget.title')} ready={!isLoading}>
-      <View className="bg-gray-100 rounded-lg overflow-hidden">
-        <View className="flex-row px-3 py-2 border-b border-gray-200">
-          <Text className="flex-1 font-bold text-xs">{t('actor.dividendTableWidget.exDate')}</Text>
-          <Text className="flex-1 font-bold text-xs">{t('actor.dividendTableWidget.yield')}</Text>
-          <Text className="flex-1 font-bold text-xs text-right">{t('actor.dividendTableWidget.amount')}</Text>
-        </View>
-        {Object.keys(grouped)
-          .sort((a, b) => Number(b) - Number(a))
-          .map(year => (
-            <View key={year}>
-              <Pressable onPress={() => toggleYear(year)}>
-                <View className="flex-row bg-gray-200 px-3 py-2 items-center">
-                  <Text className="flex-1 font-bold">{year}</Text>
-                  <View
-                    className={`px-2 py-0.5 rounded-md inline-flex items-center ${!!yoyGrowth[year] ? (yoyGrowth[year] < 0 ? 'bg-red-100' : 'bg-green-100') : ''}`}
-                  >
-                    {yoyGrowth[year] ? (
-                      <Text className={`font-bold ${yoyGrowth[year] < 0 ? 'text-red-700' : 'text-green-700'}`}>
-                        {yoyGrowth[year] < 0 ? '↓' : '↑'}{' '}
-                        {t('percent', {
-                          value: {
-                            value: Math.abs(yoyGrowth[year]),
-                            minimumFractionDigits: 2,
-                            maximumFractionDigits: 2,
-                          },
-                        })}
-                        %
-                      </Text>
-                    ) : (
-                      ''
-                    )}
+      <ScrollView horizontal>
+        <View className="bg-gray-100 rounded-lg overflow-hidden min-w-[350]">
+          <View className="flex-row px-3 py-2 border-b border-gray-200">
+            <Text className="uppercase flex-1 font-bold text-xs">{t('actor.dividendTableWidget.exDate')}</Text>
+            <Text className="uppercase flex-1 font-bold text-xs">{t('actor.dividendTableWidget.yoy')}</Text>
+            <Text className="uppercase flex-1 font-bold text-xs text-right">
+              {t('actor.dividendTableWidget.amount')}
+            </Text>
+          </View>
+          {Object.keys(grouped)
+            .sort((a, b) => Number(b) - Number(a))
+            .map(year => (
+              <View key={year}>
+                <Pressable onPress={() => toggleYear(year)}>
+                  <View className="flex-row bg-gray-200 px-3 py-2 items-center">
+                    <Text className="flex-1 font-bold">{year}</Text>
+                    <View
+                      className={`px-2 py-0.5 rounded-md inline-flex items-center ${!!yoyGrowth[year] ? (yoyGrowth[year] < 0 ? 'bg-red-100' : 'bg-green-100') : ''}`}
+                    >
+                      {yoyGrowth[year] ? (
+                        <Text className={`font-bold ${yoyGrowth[year] < 0 ? 'text-red-700' : 'text-green-700'}`}>
+                          {yoyGrowth[year] < 0 ? '↓' : '↑'}{' '}
+                          {t('percent', {
+                            value: {
+                              value: Math.abs(yoyGrowth[year]),
+                              minimumFractionDigits: 2,
+                              maximumFractionDigits: 2,
+                            },
+                          })}
+                        </Text>
+                      ) : (
+                        ''
+                      )}
+                    </View>
+                    <Text className="flex-1 font-bold text-right">
+                      {t('currency', {
+                        amount: { amount: totalDividendsPerYear[year], unit: data?.dividends?.[0].yield.unit && 'EUR' },
+                      })}
+                    </Text>
                   </View>
-                  <Text className="flex-1 font-bold text-right"></Text>
-                </View>
-              </Pressable>
-              {expandedYears[year] &&
-                (grouped[year] as any[]).map((div: any, idx: number) => {
-                  const dateKey = new Date(div.date).toISOString().slice(0, 10);
-                  const yieldValue = yieldMap[dateKey];
-                  return (
+                </Pressable>
+                {expandedYears[year] &&
+                  (grouped[year] as any[]).map((div: any, idx: number) => (
                     <View key={div.date + idx} className="flex-row px-3 py-2 border-b border-gray-100">
                       <Text className="flex-1 text-xs">{t('dateTime.day', { date: new Date(div.date) })}</Text>
-                      <Text className="flex-1 text-xs">
-                        {yieldValue != null
-                          ? t('percent', {
-                              value: {
-                                value: yieldValue,
-                                minimumFractionDigits: 2,
-                                maximumFractionDigits: 2,
-                              },
-                            })
-                          : '-'}
-                      </Text>
+                      <Text className="flex-1 text-xs"></Text>
                       <Text className="flex-1 text-xs text-right">
                         {t('currency', { amount: { amount: div.yield.amount, unit: div.yield.unit || 'EUR' } })}
                       </Text>
                     </View>
-                  );
-                })}
-            </View>
-          ))}
-      </View>
+                  ))}
+              </View>
+            ))}
+        </View>
+      </ScrollView>
     </Widget>
   );
 }
