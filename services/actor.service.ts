@@ -187,10 +187,11 @@ export class ActorService {
     return sortedDividendsPerYear;
   }
 
-  public static async getContinuousDividendIncreases(security: SecurityAccountSecurity) {
+  public static getContinuousDividendIncreases(security: SecurityAccountSecurity) {
     const dividendsPerYear = this.getDividendsPerYear(security);
     let startYear: number | null = null;
     let continuousIncreases: number[][] = [];
+    console.log(dividendsPerYear);
     Object.entries(dividendsPerYear).forEach(([year, amount]) => {
       const currentYear = parseInt(year);
       if (startYear === null) {
@@ -215,7 +216,7 @@ export class ActorService {
     return continuousIncreases.length > 0 ? continuousIncreases : undefined;
   }
 
-  public static async getYearsWithNoDividendCuts(security: SecurityAccountSecurity) {
+  public static getYearsWithNoDividendCuts(security: SecurityAccountSecurity) {
     const dividendsPerYear = this.getDividendsPerYear(security);
     let startYear: number | null = null;
     let yearsWithNoCuts: number[][] = [];

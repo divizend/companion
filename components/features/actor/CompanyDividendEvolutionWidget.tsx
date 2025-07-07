@@ -5,7 +5,6 @@ import { View } from 'react-native';
 
 import { SecurityAccountSecurity } from '@/types/secapi.types';
 
-import usePortfolioQuery from '../../../hooks/actor/useDepotQuery';
 import { ActorService } from '../../../services/actor.service';
 import { Text } from '../../base';
 import Widget from './Widget';
@@ -17,21 +16,15 @@ export type CompanyDividendEvolutionWidgetProps = {
 export default function CompanyDividendEvolutionWidget({ security }: CompanyDividendEvolutionWidgetProps) {
   const { t } = useTranslation();
 
-  // Fetch continuous dividend increases data
-  const { data: continuousIncreasesYears, isLoading: increaseLoading } = usePortfolioQuery({
-    queryKey: ['companyContinuousDividendIncreases', security.isin],
-    queryFn: () => ActorService.getContinuousDividendIncreases(security),
-    enabled: !!security.isin,
-  });
+  const continuousIncreasesYears = React.useMemo(
+    () => (security ? ActorService.getContinuousDividendIncreases(security) : undefined),
+    [security],
+  );
 
-  // Fetch no dividend cuts data
-  const { data: noDividendsCuts, isLoading: continuousLoading } = usePortfolioQuery({
-    queryKey: ['companyNoDividendCuts', security.isin],
-    queryFn: () => ActorService.getYearsWithNoDividendCuts(security),
-    enabled: !!security.isin,
-  });
-
-  const isLoading = increaseLoading || continuousLoading;
+  const noDividendsCuts = React.useMemo(
+    () => (security ? ActorService.getYearsWithNoDividendCuts(security) : undefined),
+    [security],
+  );
 
   const getCurrentYear = () => {
     return new Date().getFullYear();
@@ -66,7 +59,7 @@ export default function CompanyDividendEvolutionWidget({ security }: CompanyDivi
   };
 
   return (
-    <Widget title={t('actor.dividendEvolutionWidget.title')} ready={!isLoading}>
+    <Widget title={t('actor.dividendEvolutionWidget.title')} ready>
       {continuousIncreasesYears || noDividendsCuts ? (
         <View className="flex flex-col gap-5 mt-3 mb-3">
           {continuousIncreasesYears && (
