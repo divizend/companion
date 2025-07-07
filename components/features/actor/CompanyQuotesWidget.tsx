@@ -158,11 +158,10 @@ const Info = ({
   );
 };
 
-export default function QuotesWidget({ queryFn, useQuery, queryKey, enableTTWROR = false }: QuotesWidgetProps) {
+export default function CompanyQuotesWidget({ queryFn, useQuery, queryKey, enableTTWROR = false }: QuotesWidgetProps) {
   const { t } = useTranslation();
   const isPanning = useRef(false);
 
-  // Use shared values for UI thread updates
   const selectedQuoteShared = useSharedValue<TTWRORQuote | undefined>(undefined);
 
   const [selectedQuote, setSelectedQuote] = useState<TTWRORQuote>();
@@ -211,10 +210,12 @@ export default function QuotesWidget({ queryFn, useQuery, queryKey, enableTTWROR
     };
   }, [quotes, useTTWROR, range]);
 
+  console.log(quotes.length);
+
   return (
     <Widget
       title={t('actor.quotes.title')}
-      ready={!isLoading && !!quotes}
+      ready={!isLoading}
       styles={{ root: { overflow: 'hidden' } }}
       settings={
         enableTTWROR ? (
@@ -285,7 +286,7 @@ export default function QuotesWidget({ queryFn, useQuery, queryKey, enableTTWROR
         </>
       )}
       {!isLoading && quotes.length === 0 && (
-        <View className="flex-1 justify-center items-center" style={{ height: 225 }}>
+        <View className="flex-1 justify-center items-center">
           <Text className="text-gray-500 text-lg">{t('actor.quotes.noQuotes')}</Text>
         </View>
       )}

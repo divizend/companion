@@ -192,7 +192,7 @@ const OPTIONS = {
   },
 } as const;
 
-export default function BarChart({ queryFn, queryKey }: BarChartProps) {
+export default function CompanyDividendHistoryWidget({ queryFn, queryKey }: BarChartProps) {
   const font = useFont(inter, 12);
   const theme = useThemeColor();
   const { t } = useTranslation();
