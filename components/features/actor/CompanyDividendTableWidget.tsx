@@ -59,6 +59,38 @@ export default function CompanyDividendTableWidget({ security }: { security: Sec
     setExpandedYears(prev => ({ ...prev, [year]: !prev[year] }));
   };
 
+  const totalDividendsPerYear = useMemo(() => {
+    const totals: Record<string, number> = {};
+    if (data?.dividends) {
+      data.dividends.forEach(div => {
+        const year = new Date(div.date).getFullYear().toString();
+        if (!totals[year]) totals[year] = 0;
+        totals[year] += div.yield.amount;
+      });
+    }
+    return totals;
+  }, [data]);
+
+  const yoyGrowth: Record<string, number | null> = useMemo(() => {
+    const years = Object.keys(totalDividendsPerYear).sort((a, b) => Number(b) - Number(a));
+    const growth: Record<string, number | null> = {};
+    for (let i = 0; i < years.length - 1; i++) {
+      const year = years[i];
+      const prevYear = years[i + 1];
+      const prevTotal = totalDividendsPerYear[prevYear];
+      const currTotal = totalDividendsPerYear[year];
+      if (prevTotal && currTotal) {
+        growth[year] = currTotal / prevTotal - 1;
+      } else {
+        growth[year] = null;
+      }
+    }
+    if (years.length > 0) {
+      growth[years[years.length - 1]] = null;
+    }
+    return growth;
+  }, [totalDividendsPerYear]);
+
   return (
     <Widget title={t('actor.dividendTableWidget.title')} ready={!isLoading}>
       <View className="bg-gray-100 rounded-lg overflow-hidden">
@@ -74,7 +106,25 @@ export default function CompanyDividendTableWidget({ security }: { security: Sec
               <Pressable onPress={() => toggleYear(year)}>
                 <View className="flex-row bg-gray-200 px-3 py-2 items-center">
                   <Text className="flex-1 font-bold">{year}</Text>
-                  <Text className="text-xs">{expandedYears[year] ? '▲' : '▼'}</Text>
+                  <View
+                    className={`px-2 py-0.5 rounded-md inline-flex items-center ${!!yoyGrowth[year] ? (yoyGrowth[year] < 0 ? 'bg-red-100' : 'bg-green-100') : ''}`}
+                  >
+                    {yoyGrowth[year] ? (
+                      <Text className={`font-bold ${yoyGrowth[year] < 0 ? 'text-red-700' : 'text-green-700'}`}>
+                        {yoyGrowth[year] < 0 ? '↓' : '↑'}{' '}
+                        {t('percent', {
+                          value: {
+                            value: Math.abs(yoyGrowth[year]),
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2,
+                          },
+                        })}
+                        %
+                      </Text>
+                    ) : (
+                      ''
+                    )}
+                  </View>
                   <Text className="flex-1 font-bold text-right"></Text>
                 </View>
               </Pressable>
