@@ -7,10 +7,10 @@ import { SafeAreaView, ScrollScreen, Text } from '@/components/base';
 import {
   AssetClassesWidget,
   CalendarWidget,
+  CompanyQuotesWidget,
   DivisionWidget,
   PortfolioSelector,
   PortfolioStatsWidget,
-  QuotesWidget,
   SimulationWidget,
 } from '@/components/features/actor';
 import usePortfolioQuery from '@/hooks/actor/useDepotQuery';
@@ -43,7 +43,7 @@ export default function Analyze() {
         </Text>
         <Text className="mb-2 ml-0.5 font-medium">{t('actor.portfolioSelector.label')}</Text>
         <PortfolioSelector style={{ marginBottom: 20 }} />
-        <QuotesWidget
+        <CompanyQuotesWidget
           queryKey={range => ['getPerformanceQuotes', range.toString()]}
           useQuery={usePortfolioQuery}
           queryFn={range => ActorService.getPerformanceQuotes(range)}

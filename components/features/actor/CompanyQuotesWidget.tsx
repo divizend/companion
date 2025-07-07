@@ -183,8 +183,7 @@ export default function CompanyQuotesWidget({ queryFn, useQuery, queryKey, enabl
   const { t } = useTranslation();
   const isPanning = useRef(false);
 
-  // Use shared values for UI thread updates
-  const selectedQuoteShared = useSharedValue<TWRORQuote | undefined>(undefined);
+  const selectedQuoteShared = useSharedValue<ExtendedQuote | undefined>(undefined);
 
   const [selectedQuote, setSelectedQuote] = useState<ExtendedQuote>();
   const [range, setRange] = useState<QuoteRange>(QuoteRange.Y);
@@ -205,7 +204,7 @@ export default function CompanyQuotesWidget({ queryFn, useQuery, queryKey, enabl
   useAnimatedReaction(
     () => selectedQuoteShared.value,
     value => {
-      runOnJS(setSelectedQuote)(value);
+      if (value) runOnJS(setSelectedQuote)(value);
     },
   );
   const SettingsModalComponent = useActorSettingsModal([createPerformanceQuotesField()]);
