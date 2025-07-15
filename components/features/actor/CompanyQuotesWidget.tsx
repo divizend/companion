@@ -179,11 +179,10 @@ const Info = ({
   );
 };
 
-export default function QuotesWidget({ queryFn, useQuery, queryKey, enableTWROR = false }: QuotesWidgetProps) {
+export default function CompanyQuotesWidget({ queryFn, useQuery, queryKey, enableTWROR = false }: QuotesWidgetProps) {
   const { t } = useTranslation();
   const isPanning = useRef(false);
 
-  // Use shared values for UI thread updates
   const selectedQuoteShared = useSharedValue<ExtendedQuote | undefined>(undefined);
 
   const [selectedQuote, setSelectedQuote] = useState<ExtendedQuote>();
@@ -205,7 +204,7 @@ export default function QuotesWidget({ queryFn, useQuery, queryKey, enableTWROR 
   useAnimatedReaction(
     () => selectedQuoteShared.value,
     value => {
-      runOnJS(setSelectedQuote)(value);
+      if (value) runOnJS(setSelectedQuote)(value);
     },
   );
   const SettingsModalComponent = useActorSettingsModal([createPerformanceQuotesField()]);
@@ -245,7 +244,7 @@ export default function QuotesWidget({ queryFn, useQuery, queryKey, enableTWROR 
   return (
     <Widget
       title={t('actor.quotes.title')}
-      ready={!isLoading && !!quotes}
+      ready={!isLoading}
       styles={{ root: { overflow: 'hidden' } }}
       settings={
         enableTWROR ? (
@@ -342,7 +341,7 @@ export default function QuotesWidget({ queryFn, useQuery, queryKey, enableTWROR 
         </>
       )}
       {!isLoading && quotes.length === 0 && (
-        <View className="flex-1 justify-center items-center" style={{ height: 225 }}>
+        <View className="flex-1 justify-center items-center">
           <Text className="text-gray-500 text-lg">{t('actor.quotes.noQuotes')}</Text>
         </View>
       )}

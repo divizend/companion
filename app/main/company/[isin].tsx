@@ -8,13 +8,16 @@ import { ActivityIndicator, ScrollView, TouchableOpacity, View } from 'react-nat
 
 import { apiGet } from '@/common/api';
 import { Text } from '@/components/base';
-import { QuotesWidget } from '@/components/features/actor';
-import BarChart from '@/components/features/actor/BarChart';
-import CompanyDividendEvolutionWidget from '@/components/features/actor/CompanyDividendEvolutionWidget';
-import CompanyDividendYieldWidget from '@/components/features/actor/CompanyDividendYieldWidget';
-import CompanyIsinWknWidget from '@/components/features/actor/CompanyIsinWknWidget';
-import CompanySectorsWidget from '@/components/features/actor/CompanySectorsWidget';
-import CompanySharePriceWidget from '@/components/features/actor/CompanySharePriceWidget';
+import {
+  CompanyDividendEvolutionWidget,
+  CompanyDividendHistoryWidget,
+  CompanyDividendTableWidget,
+  CompanyDividendYieldWidget,
+  CompanyIsinWknWidget,
+  CompanyQuotesWidget,
+  CompanySectorsWidget,
+  CompanySharePriceWidget,
+} from '@/components/features/actor';
 import CompanyHeader from '@/components/widgets/CompanyHeader';
 import useInitializeActor from '@/hooks/useInitializeActor';
 import { useThemeColor } from '@/hooks/useThemeColor';
@@ -66,7 +69,7 @@ export default function StockDetails() {
 
       <ScrollView className="flex-1 px-4 mt-4">
         <CompanyHeader isin={isin} name={stockDetails.name} size="large" />
-        <QuotesWidget
+        <CompanyQuotesWidget
           queryKey={range => ['getCompanyPerformanceQuotes', isin, range.toString()]}
           useQuery={useQuery}
           queryFn={range => ActorService.getCompanyQuotes({ ...stockDetails, isin }, range)}
@@ -76,12 +79,13 @@ export default function StockDetails() {
         <CompanyIsinWknWidget security={{ ...stockDetails, isin }} />
         <CompanyDividendYieldWidget security={{ ...stockDetails, isin, type: SecurityAccountSecurityType.STOCK }} />
         <CompanyDividendEvolutionWidget security={{ ...stockDetails, isin, type: SecurityAccountSecurityType.STOCK }} />
-        <BarChart
+        <CompanyDividendHistoryWidget
           queryKey={() => ['getCompanyDividendsHistory', isin]}
           queryFn={() =>
             ActorService.getCompanyDividendsHistory({ ...stockDetails, isin }, DividendDisplayOption.ABSOLUTE)
           }
         />
+        <CompanyDividendTableWidget security={{ ...stockDetails, isin }} />
         <CompanySectorsWidget security={{ ...stockDetails, isin }} />
       </ScrollView>
     </View>

@@ -168,5 +168,12 @@
     "simulation": "Failed to fetch simulation. Please try again later.",
     "insufficientData": "Insufficient Data for this scenario",
     "failedUpdate": "Failed to update data. Please try again."
+  },
+  "dividendTableWidget": {
+    "title": "All dividends",
+    "exDate": "Ex-date",
+    "payDate": "Pay date",
+    "amount": "Yield",
+    "yoy": "Year over year growth"
   }
 }

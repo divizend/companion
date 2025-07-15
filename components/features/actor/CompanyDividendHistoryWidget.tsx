@@ -192,7 +192,7 @@ const OPTIONS = {
   },
 } as const;
 
-export default function BarChart({ queryFn, queryKey }: BarChartProps) {
+export default function CompanyDividendHistoryWidget({ queryFn, queryKey }: BarChartProps) {
   const font = useFont(inter, 12);
   const theme = useThemeColor();
   const { t } = useTranslation();
@@ -300,141 +300,149 @@ export default function BarChart({ queryFn, queryKey }: BarChartProps) {
         </Pressable>
       }
     >
-      <InfoComponent
-        data={data}
-        isActive={isActive}
-        pressedData={pressedData}
-        displayOption={displayOption || DividendDisplayOption.YIELDS}
-      />
-      {displayOption === DividendDisplayOption.YIELDS && selectedYield ? (
-        <View className="flex items-center">
-          <Text>
-            <Trans
-              i18nKey="actor.dividendHistory.yieldInfo.splits.sharePrice"
-              values={{
-                date: t('dateTime.day', {
-                  date: new Date(selectedYield.date ?? 0),
-                }),
-                price: t('currency', {
-                  amount: {
-                    amount: selectedYield.quote?.price,
-                    unit: selectedYield.quote?.currency,
-                  },
-                }),
-              }}
-              components={{
-                strong: <Text style={{ fontWeight: 'bold' }} />,
-              }}
-            />
-          </Text>
-
-          {selectedYield.dividendYield !== 0 && !!selectedYield.quote && (
-            <Text>
-              <Trans
-                i18nKey="actor.dividendHistory.yieldInfo.dividendYield"
-                values={{
-                  yield: t('currency', {
-                    amount: {
-                      amount: selectedYield.quote.price * selectedYield.dividendYield!,
-                      unit: selectedYield.quote?.currency,
-                    },
-                  }),
-                  price: t('currency', {
-                    amount: {
-                      amount: selectedYield.quote?.price,
-                      unit: selectedYield.quote?.currency,
-                    },
-                  }),
-                  result: t('percent', {
-                    value: {
-                      value: selectedYield.dividendYield,
-                      minimumFractionDigits: 2,
-                      maximumFractionDigits: 2,
-                    },
-                  }),
-                }}
-                components={{
-                  strong: <Text style={{ fontWeight: 'bold' }} />,
-                }}
-              />
-            </Text>
-          )}
-        </View>
-      ) : null}
-      <Text className="text-center text-gray-500 text-xs mb-4 italic">{t('actor.chartInstruction')}</Text>
-      <View className="h-[220]">
-        <CartesianChart
-          chartPressState={state}
-          domainPadding={{ left: 20, right: 20 }}
-          viewport={viewport}
-          axisOptions={{ lineWidth: 0 }}
-          frame={{ lineWidth: 0 }}
-          data={chartData!}
-          xKey="date"
-          yKeys={['amount']}
-          xAxis={{
-            formatXLabel: label => new Date(label).getFullYear().toString(),
-            font,
-            labelColor: theme.text,
-            labelPosition: 'outset',
-            lineWidth: 0,
-          }}
-          yAxis={[
-            {
-              font,
-              labelColor: theme.text,
-              labelPosition: 'outset',
-              tickCount: displayOption === DividendDisplayOption.YIELDS ? 2 : 4,
-              formatYLabel: label =>
-                displayOption === DividendDisplayOption.YIELDS
-                  ? t('percent', {
-                      value: {
-                        value: label,
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2,
-                      },
-                    })
-                  : t('currency', {
+      {!chartData || chartData.length === 0 ? (
+        <Text className="text-center text-gray-600 font-bold text-lg leading-7">
+          {t('actor.dividendEvolutionWidget.noDividendPayments')}
+        </Text>
+      ) : (
+        <>
+          <InfoComponent
+            data={data}
+            isActive={isActive}
+            pressedData={pressedData}
+            displayOption={displayOption || DividendDisplayOption.YIELDS}
+          />
+          {displayOption === DividendDisplayOption.YIELDS && selectedYield ? (
+            <View className="flex items-center">
+              <Text>
+                <Trans
+                  i18nKey="actor.dividendHistory.yieldInfo.splits.sharePrice"
+                  values={{
+                    date: t('dateTime.day', {
+                      date: new Date(selectedYield.date ?? 0),
+                    }),
+                    price: t('currency', {
                       amount: {
-                        amount: label,
-                        unit: data?.dividends?.at(-1)?.yield.unit ?? 'EUR',
+                        amount: selectedYield.quote?.price,
+                        unit: selectedYield.quote?.currency,
                       },
                     }),
-            },
-          ]}
-        >
-          {({ points, chartBounds }) => {
-            const option = OPTIONS[displayOption || DividendDisplayOption.YIELDS];
+                  }}
+                  components={{
+                    strong: <Text style={{ fontWeight: 'bold' }} />,
+                  }}
+                />
+              </Text>
 
-            if (points.amount.length > 0) {
-              const lastPoint = points.amount[points.amount.length - 1];
-              defaultTooltipX.value = lastPoint?.x ?? 0;
-              defaultTooltipY.value = lastPoint?.y ?? 0;
-            }
-
-            return (
-              <>
-                {option.showBars ? (
-                  <Bar
-                    roundedCorners={{ topLeft: 5, topRight: 5, bottomLeft: 5, bottomRight: 5 }}
-                    chartBounds={chartBounds}
-                    barWidth={5}
-                    points={points.amount}
-                    color="#2E7877"
+              {selectedYield.dividendYield !== 0 && !!selectedYield.quote && (
+                <Text>
+                  <Trans
+                    i18nKey="actor.dividendHistory.yieldInfo.dividendYield"
+                    values={{
+                      yield: t('currency', {
+                        amount: {
+                          amount: selectedYield.quote.price * selectedYield.dividendYield!,
+                          unit: selectedYield.quote?.currency,
+                        },
+                      }),
+                      price: t('currency', {
+                        amount: {
+                          amount: selectedYield.quote?.price,
+                          unit: selectedYield.quote?.currency,
+                        },
+                      }),
+                      result: t('percent', {
+                        value: {
+                          value: selectedYield.dividendYield,
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2,
+                        },
+                      }),
+                    }}
+                    components={{
+                      strong: <Text style={{ fontWeight: 'bold' }} />,
+                    }}
                   />
-                ) : (
-                  <Line points={points.amount} strokeWidth={3} color="#2E7877" />
-                )}
-                {isActive ? (
-                  <ToolTip x={state.x.position} y={state.y.amount.position} />
-                ) : (
-                  <ToolTip x={defaultTooltipX} y={defaultTooltipY} />
-                )}
-              </>
-            );
-          }}
-        </CartesianChart>
-      </View>
+                </Text>
+              )}
+            </View>
+          ) : null}
+          <Text className="text-center text-gray-500 text-xs mb-4 italic">{t('actor.chartInstruction')}</Text>
+          <View className="h-[220]">
+            <CartesianChart
+              chartPressState={state}
+              domainPadding={{ left: 20, right: 20 }}
+              viewport={viewport}
+              axisOptions={{ lineWidth: 0 }}
+              frame={{ lineWidth: 0 }}
+              data={chartData!}
+              xKey="date"
+              yKeys={['amount']}
+              xAxis={{
+                formatXLabel: label => new Date(label).getFullYear().toString(),
+                font,
+                labelColor: theme.text,
+                labelPosition: 'outset',
+                lineWidth: 0,
+              }}
+              yAxis={[
+                {
+                  font,
+                  labelColor: theme.text,
+                  labelPosition: 'outset',
+                  tickCount: displayOption === DividendDisplayOption.YIELDS ? 2 : 4,
+                  formatYLabel: label =>
+                    displayOption === DividendDisplayOption.YIELDS
+                      ? t('percent', {
+                          value: {
+                            value: label,
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2,
+                          },
+                        })
+                      : t('currency', {
+                          amount: {
+                            amount: label,
+                            unit: data?.dividends?.at(-1)?.yield.unit ?? 'EUR',
+                          },
+                        }),
+                },
+              ]}
+            >
+              {({ points, chartBounds }) => {
+                const option = OPTIONS[displayOption || DividendDisplayOption.YIELDS];
+
+                if (points.amount.length > 0) {
+                  const lastPoint = points.amount[points.amount.length - 1];
+                  defaultTooltipX.value = lastPoint?.x ?? 0;
+                  defaultTooltipY.value = lastPoint?.y ?? 0;
+                }
+
+                return (
+                  <>
+                    {option.showBars ? (
+                      <Bar
+                        roundedCorners={{ topLeft: 5, topRight: 5, bottomLeft: 5, bottomRight: 5 }}
+                        chartBounds={chartBounds}
+                        barWidth={5}
+                        points={points.amount}
+                        color="#2E7877"
+                      />
+                    ) : (
+                      <Line points={points.amount} strokeWidth={3} color="#2E7877" />
+                    )}
+                    {isActive ? (
+                      <ToolTip x={state.x.position} y={state.y.amount.position} />
+                    ) : (
+                      <ToolTip x={defaultTooltipX} y={defaultTooltipY} />
+                    )}
+                  </>
+                );
+              }}
+            </CartesianChart>
+          </View>
+        </>
+      )}
     </Widget>
   );
 }
